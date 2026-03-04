@@ -5,24 +5,32 @@ import type { FanCard as FanCardData } from '../store/useStore'
 // ─── Profile questions ────────────────────────────────────────────────────────
 const PROFILE_QUESTIONS = [
   {
-    id: 'fav_player',
-    label: 'Who is your all-time favourite player?',
-    placeholder: 'e.g. Ronaldo, Messi…',
+    id: 'playstyle' as const,
+    category: 'PLAYSTYLE',
+    icon: '⚙',
+    label: 'What kind of fan are you during a match?',
+    options: ['The Analyst', 'The superstitious', 'The Hype Leader', 'The calm watcher'],
   },
   {
-    id: 'fav_memory',
-    label: 'Greatest football memory?',
-    placeholder: 'e.g. World Cup 2022 Final…',
+    id: 'devotion' as const,
+    category: 'DEVOTION',
+    icon: '♡',
+    label: 'How do you follow the World Cup?',
+    options: ['Every game', 'My team + big games', 'Highlight only', "I'll catch what I can"],
   },
   {
-    id: 'fav_chant',
-    label: "Your team's chant or motto?",
-    placeholder: "e.g. You'll Never Walk Alone…",
+    id: 'vibes' as const,
+    category: 'VIBES',
+    icon: '♪',
+    label: "What's your match vibes?",
+    options: ['Loud and hype', 'Chill and focused', 'Social with friends', 'Family time'],
   },
   {
-    id: 'fan_since',
-    label: 'How long have you been a fan?',
-    placeholder: 'e.g. Since I was 5 years old…',
+    id: 'perks' as const,
+    category: 'PERKS',
+    icon: '⬡',
+    label: 'What\'s your World Cup "perk" goal?',
+    options: ['Win rewards', 'Collect badges & titles', 'Climb the leaderboard', 'Unlock exclusive benefits'],
   },
 ] as const
 
@@ -84,7 +92,7 @@ const backFaceStyle: React.CSSProperties = {
   transform: 'rotateY(180deg)',
   display: 'flex',
   flexDirection: 'column',
-  padding: '24px 20px 20px',
+  padding: '20px 20px 18px',
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -143,6 +151,7 @@ function FanPhoto({ photoDataUrl }: { photoDataUrl: string | null }) {
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function FanCard({ fanCard, onSave }: Props) {
   const [isFlipped, setIsFlipped] = useState(false)
+  const [wizardActive, setWizardActive] = useState(false)
   const [step, setStep] = useState(0)
   const [answers, setAnswers] = useState<Partial<Record<QuestionId, string>>>(
     () => ({ ...fanCard.answers } as Partial<Record<QuestionId, string>>)
@@ -150,21 +159,31 @@ export default function FanCard({ fanCard, onSave }: Props) {
   const [isSaved, setIsSaved] = useState(false)
 
   const isComplete = fanCard.completedAt !== null || isSaved
+  const currentQ = PROFILE_QUESTIONS[step]
+  const currentAnswer = answers[currentQ.id]
+  const isLast = step === PROFILE_QUESTIONS.length - 1
 
   // ── Flip handlers ────────────────────────────────────────────────────────
   const flipToBack = useCallback(() => {
     setIsFlipped(true)
-    setStep(0)
     track('card_flipped_to_back')
   }, [])
 
   const flipToFront = useCallback(() => {
     setIsFlipped(false)
+    setWizardActive(false)
     track('card_flipped_to_front')
   }, [])
 
-  // ── Answer handlers ──────────────────────────────────────────────────────
-  const handleAnswer = useCallback((id: QuestionId, value: string) => {
+  // ── Wizard handlers ──────────────────────────────────────────────────────
+  const startWizard = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
+    setStep(0)
+    setWizardActive(true)
+    track('card_wizard_started')
+  }, [])
+
+  const handleSelect = useCallback((id: QuestionId, value: string) => {
     setAnswers(prev => ({ ...prev, [id]: value }))
   }, [])
 
@@ -179,6 +198,7 @@ export default function FanCard({ fanCard, onSave }: Props) {
         )
         onSave(filled)
         setIsSaved(true)
+        setWizardActive(false)
         track('card_profile_saved')
         setTimeout(() => setIsFlipped(false), 400)
       }
@@ -186,14 +206,21 @@ export default function FanCard({ fanCard, onSave }: Props) {
     [step, answers, onSave]
   )
 
-  const handleBack = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation()
-    setStep(s => s - 1)
-  }, [])
+  const handleBack = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      if (step > 0) {
+        setStep(s => s - 1)
+      } else {
+        setWizardActive(false)
+      }
+    },
+    [step]
+  )
 
-  const currentQ = PROFILE_QUESTIONS[step]
-  const currentAnswer = answers[currentQ.id] ?? ''
-  const isLast = step === PROFILE_QUESTIONS.length - 1
+  // ── Resolved answers (prefer local edits, fall back to stored) ───────────
+  const resolvedAnswers = (id: QuestionId) =>
+    answers[id] ?? (fanCard.answers[id] as string | undefined) ?? '—'
 
   return (
     <div
@@ -220,13 +247,7 @@ export default function FanCard({ fanCard, onSave }: Props) {
             >
               FIFA Fan Zone
             </div>
-            <div
-              style={{
-                fontSize: 11,
-                color: '#ffffff66',
-                letterSpacing: 1,
-              }}
-            >
+            <div style={{ fontSize: 11, color: '#ffffff66', letterSpacing: 1 }}>
               Collector Edition
             </div>
           </div>
@@ -262,7 +283,6 @@ export default function FanCard({ fanCard, onSave }: Props) {
               </div>
             )}
 
-            {/* Completion badge */}
             {isComplete && (
               <div
                 style={{
@@ -304,10 +324,17 @@ export default function FanCard({ fanCard, onSave }: Props) {
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              marginBottom: 20,
+              marginBottom: 16,
             }}
           >
-            <div style={{ fontSize: 11, color: '#00d4aa', letterSpacing: 2, textTransform: 'uppercase' }}>
+            <div
+              style={{
+                fontSize: 11,
+                color: '#00d4aa',
+                letterSpacing: 2,
+                textTransform: 'uppercase',
+              }}
+            >
               Fan Profile
             </div>
             <button
@@ -327,102 +354,187 @@ export default function FanCard({ fanCard, onSave }: Props) {
             </button>
           </div>
 
-          {/* Step indicator */}
-          <div style={{ display: 'flex', gap: 6, marginBottom: 24 }}>
-            {PROFILE_QUESTIONS.map((_, i) => (
-              <div
-                key={i}
-                style={{
-                  flex: 1,
-                  height: 3,
-                  borderRadius: 2,
-                  background: i <= step ? '#00d4aa' : '#ffffff22',
-                  transition: 'background 300ms ease',
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Question */}
-          <div style={{ flex: 1 }}>
-            <label
+          {/* ── Completed: display rows ──────────────────────────── */}
+          {isComplete ? (
+            <div
               style={{
-                display: 'block',
-                fontSize: 14,
-                fontWeight: 600,
-                color: '#ffffff',
-                marginBottom: 12,
-                lineHeight: 1.4,
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 10,
               }}
             >
-              {currentQ.label}
-            </label>
-            <textarea
-              value={currentAnswer}
-              onChange={e => handleAnswer(currentQ.id, e.target.value)}
-              placeholder={currentQ.placeholder}
-              rows={3}
-              style={{
-                width: '100%',
-                background: '#ffffff0d',
-                border: '1px solid #ffffff22',
-                borderRadius: 10,
-                padding: '12px 14px',
-                color: '#fff',
-                fontSize: 13,
-                lineHeight: 1.5,
-                resize: 'none',
-                outline: 'none',
-                fontFamily: 'inherit',
-                WebkitUserSelect: 'text',
-                userSelect: 'text',
-              }}
-              onClick={e => e.stopPropagation()}
-              onFocus={e => {
-                e.currentTarget.style.border = '1px solid #00d4aa88'
-              }}
-              onBlur={e => {
-                e.currentTarget.style.border = '1px solid #ffffff22'
-              }}
-            />
-          </div>
+              {PROFILE_QUESTIONS.map(q => (
+                <div
+                  key={q.id}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 12,
+                    padding: '10px 12px',
+                    background: '#ffffff0d',
+                    borderRadius: 10,
+                  }}
+                >
+                  <span style={{ fontSize: 18, opacity: 0.6, flexShrink: 0 }}>
+                    {q.icon}
+                  </span>
+                  <div>
+                    <div
+                      style={{
+                        fontSize: 9,
+                        letterSpacing: 2,
+                        color: '#00d4aa',
+                        textTransform: 'uppercase',
+                        marginBottom: 2,
+                      }}
+                    >
+                      {q.category}
+                    </div>
+                    <div style={{ fontSize: 12, color: '#fff', fontWeight: 500 }}>
+                      {resolvedAnswers(q.id)}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-          {/* Navigation buttons */}
-          <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
-            {step > 0 && (
-              <button
-                onClick={handleBack}
+          ) : wizardActive ? (
+            /* ── Wizard: multiple-choice steps ─────────────────── */
+            <>
+              {/* Step progress bar */}
+              <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
+                {PROFILE_QUESTIONS.map((_, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      flex: 1,
+                      height: 3,
+                      borderRadius: 2,
+                      background: i <= step ? '#00d4aa' : '#ffffff22',
+                      transition: 'background 300ms ease',
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* Question label */}
+              <div
                 style={{
-                  flex: 1,
-                  padding: '10px 0',
-                  borderRadius: 10,
-                  border: '1px solid #ffffff22',
-                  background: 'none',
-                  color: '#ffffff88',
                   fontSize: 13,
-                  cursor: 'pointer',
+                  fontWeight: 600,
+                  color: '#fff',
+                  marginBottom: 12,
+                  lineHeight: 1.4,
                 }}
               >
-                Back
-              </button>
-            )}
-            <button
-              onClick={handleNext}
+                {currentQ.label}
+              </div>
+
+              {/* Options */}
+              <div
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 7,
+                }}
+              >
+                {currentQ.options.map(option => {
+                  const selected = currentAnswer === option
+                  return (
+                    <button
+                      key={option}
+                      onClick={e => {
+                        e.stopPropagation()
+                        handleSelect(currentQ.id, option)
+                      }}
+                      style={{
+                        padding: '9px 14px',
+                        borderRadius: 10,
+                        border: `1px solid ${selected ? '#00d4aa' : '#ffffff22'}`,
+                        background: selected ? '#00d4aa22' : '#ffffff0d',
+                        color: selected ? '#00d4aa' : '#ffffffcc',
+                        fontSize: 12,
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        transition: 'all 150ms ease',
+                        fontFamily: 'inherit',
+                      }}
+                    >
+                      {option}
+                    </button>
+                  )
+                })}
+              </div>
+
+              {/* Navigation */}
+              <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+                <button
+                  onClick={handleBack}
+                  style={{
+                    flex: 1,
+                    padding: '9px 0',
+                    borderRadius: 10,
+                    border: '1px solid #ffffff22',
+                    background: 'none',
+                    color: '#ffffff88',
+                    fontSize: 12,
+                    cursor: 'pointer',
+                    fontFamily: 'inherit',
+                  }}
+                >
+                  Back
+                </button>
+                <button
+                  onClick={handleNext}
+                  disabled={!currentAnswer}
+                  style={{
+                    flex: 2,
+                    padding: '9px 0',
+                    borderRadius: 10,
+                    border: 'none',
+                    background: currentAnswer ? '#00d4aa' : '#00d4aa33',
+                    color: currentAnswer ? '#000' : '#00000066',
+                    fontSize: 12,
+                    fontWeight: 700,
+                    cursor: currentAnswer ? 'pointer' : 'default',
+                    fontFamily: 'inherit',
+                  }}
+                >
+                  {isLast ? 'Save ✓' : 'Next →'}
+                </button>
+              </div>
+            </>
+
+          ) : (
+            /* ── Empty state: CTA ───────────────────────────────── */
+            <div
               style={{
-                flex: 2,
-                padding: '10px 0',
-                borderRadius: 10,
-                border: 'none',
-                background: '#00d4aa',
-                color: '#000',
-                fontSize: 13,
-                fontWeight: 700,
-                cursor: 'pointer',
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
-              {isLast ? 'Save ✓' : 'Next →'}
-            </button>
-          </div>
+              <button
+                onClick={startWizard}
+                style={{
+                  padding: '12px 28px',
+                  borderRadius: 24,
+                  border: '1px solid #ffffff44',
+                  background: 'none',
+                  color: '#fff',
+                  fontSize: 14,
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  letterSpacing: 0.3,
+                }}
+              >
+                Complete your card
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
