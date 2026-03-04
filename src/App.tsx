@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import Spinner from './components/Spinner'
 import AuthGuard from './components/AuthGuard'
 import { AuthProvider } from './lib/AuthContext'
+import { useRemoteControl } from './lib/useRemoteControl'
 
 const Landing = lazy(() => import('./routes/Landing'))
 const Identity = lazy(() => import('./routes/Identity'))
@@ -11,6 +12,8 @@ const Quiz = lazy(() => import('./routes/Quiz'))
 const Results = lazy(() => import('./routes/Results'))
 
 export default function App() {
+  useRemoteControl()
+
   return (
     <AuthProvider>
       <Suspense fallback={<Spinner fullScreen />}>

@@ -7,6 +7,8 @@ export interface QAAppInterface {
 declare global {
   interface Window {
     QAApp: QAAppInterface
+    // Remote-control bridge: called by the native WebView to push commands
+    handleRemoteCommand: (cmd: import('./remoteControl').RemoteCommand) => void
   }
 }
 
