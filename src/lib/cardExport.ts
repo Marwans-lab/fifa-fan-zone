@@ -164,6 +164,83 @@ export async function renderCardToBlob(fanCard: FanCard): Promise<Blob> {
   })
 }
 
+export async function renderScorecardToBlob(opts: {
+  score: number
+  total: number
+  quizTitle: string
+  totalPts: number
+}): Promise<Blob> {
+  const W = 320, H = 240, DPR = 2
+  const canvas = document.createElement('canvas')
+  canvas.width  = W * DPR
+  canvas.height = H * DPR
+  const ctx = canvas.getContext('2d')!
+  ctx.scale(DPR, DPR)
+
+  // Background
+  const bg = ctx.createLinearGradient(0, 0, W, H)
+  bg.addColorStop(0, '#1a1a2a')
+  bg.addColorStop(1, '#0d0d1a')
+  ctx.fillStyle = bg
+  rrect(ctx, 0, 0, W, H, 20)
+  ctx.fill()
+
+  // Pink border
+  ctx.strokeStyle = 'rgba(200,16,46,0.6)'
+  ctx.lineWidth = 2
+  rrect(ctx, 1, 1, W - 2, H - 2, 19)
+  ctx.stroke()
+
+  // Header
+  ctx.textAlign = 'center'
+  ctx.fillStyle = '#c8102e'
+  ctx.font = 'bold 11px -apple-system, sans-serif'
+  ctx.fillText('FIFA FAN ZONE', W / 2, 32)
+
+  ctx.fillStyle = 'rgba(255,255,255,0.5)'
+  ctx.font = '12px -apple-system, sans-serif'
+  ctx.fillText(opts.quizTitle, W / 2, 52)
+
+  // Score ring
+  const cx = W / 2, cy = 130, r = 52
+  ctx.strokeStyle = '#ffffff22'
+  ctx.lineWidth = 4
+  ctx.beginPath()
+  ctx.arc(cx, cy, r, 0, Math.PI * 2)
+  ctx.stroke()
+
+  const pct = opts.total > 0 ? opts.score / opts.total : 0
+  if (pct > 0) {
+    ctx.strokeStyle = '#00d4aa'
+    ctx.lineWidth = 4
+    ctx.beginPath()
+    ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + pct * Math.PI * 2)
+    ctx.stroke()
+  }
+
+  // Score number
+  ctx.fillStyle = '#ffffff'
+  ctx.font = 'bold 32px -apple-system, sans-serif'
+  ctx.textAlign = 'center'
+  ctx.fillText(`${opts.score}/${opts.total}`, cx, cy + 8)
+
+  ctx.fillStyle = 'rgba(255,255,255,0.5)'
+  ctx.font = '12px -apple-system, sans-serif'
+  ctx.fillText('Points', cx, cy + 26)
+
+  // Total pts footer
+  ctx.fillStyle = '#00d4aa'
+  ctx.font = 'bold 12px -apple-system, sans-serif'
+  ctx.fillText(`Total: ${opts.totalPts} pts`, W / 2, H - 24)
+
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(blob => {
+      if (blob) resolve(blob)
+      else reject(new Error('canvas.toBlob failed'))
+    }, 'image/png')
+  })
+}
+
 export function buildShareText(fanCard: FanCard): string {
   const lines: string[] = ['🏆 My FIFA Fan Zone card:']
   if (fanCard.teamId) lines.push(`⚽ Team: ${fanCard.teamId}`)
