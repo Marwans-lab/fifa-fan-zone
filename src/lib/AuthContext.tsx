@@ -1,49 +1,66 @@
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useRef, useState, useCallback, type ReactNode } from 'react'
 import { fetchAuthToken, isTokenExpired, type AuthState } from './auth'
 
+const SLOW_THRESHOLD_MS = 2_000 // show descriptive message after 2s
+
 interface AuthContextValue extends AuthState {
+  isSlow: boolean
   retry: () => void
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<AuthState>({ token: null, status: 'loading' })
-  const retryCount = useRef(0)
+  const [state, setState]   = useState<AuthState>({ token: null, status: 'loading' })
+  const [isSlow, setIsSlow] = useState(false)
+  const slowTimer           = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  async function resolveAuth() {
+  const resolveAuth = useCallback(async () => {
     setState(prev => ({ ...prev, status: 'loading' }))
-    const token = await fetchAuthToken()
-    setState({
-      token,
-      status: token ? 'authenticated' : 'unauthenticated',
-    })
-  }
+    setIsSlow(false)
 
-  // Periodic expiry check — every 60s
+    // Show slow message if loading takes > SLOW_THRESHOLD_MS
+    slowTimer.current = setTimeout(() => setIsSlow(true), SLOW_THRESHOLD_MS)
+
+    const token = await fetchAuthToken()
+
+    clearTimeout(slowTimer.current)
+    setIsSlow(false)
+    setState({ token, status: token ? 'authenticated' : 'unauthenticated' })
+  }, [])
+
+  // Initial auth on mount + 60s expiry poll
   useEffect(() => {
     resolveAuth()
 
     const interval = setInterval(() => {
       setState(prev => {
-        if (isTokenExpired(prev.token)) {
-          resolveAuth()
-        }
+        if (isTokenExpired(prev.token)) resolveAuth()
         return prev
       })
     }, 60_000)
 
     return () => clearInterval(interval)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [resolveAuth])
 
-  function retry() {
-    retryCount.current += 1
-    resolveAuth()
-  }
+  // Re-auth when app returns to foreground (iOS WebView lifecycle)
+  useEffect(() => {
+    function onVisibilityChange() {
+      if (document.visibilityState === 'visible') {
+        setState(prev => {
+          if (isTokenExpired(prev.token)) resolveAuth()
+          return prev
+        })
+      }
+    }
+    document.addEventListener('visibilitychange', onVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', onVisibilityChange)
+  }, [resolveAuth])
+
+  const retry = useCallback(() => { resolveAuth() }, [resolveAuth])
 
   return (
-    <AuthContext.Provider value={{ ...state, retry }}>
+    <AuthContext.Provider value={{ ...state, isSlow, retry }}>
       {children}
     </AuthContext.Provider>
   )

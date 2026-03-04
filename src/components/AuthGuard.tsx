@@ -9,10 +9,29 @@ interface AuthGuardProps {
 }
 
 export default function AuthGuard({ children }: AuthGuardProps) {
-  const { status, retry } = useAuth()
+  const { status, isSlow, retry } = useAuth()
 
   if (status === 'loading') {
-    return <Spinner fullScreen />
+    return (
+      <Screen centered>
+        <div style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
+          <Spinner />
+          {isSlow && (
+            <p
+              style={{
+                marginTop: 'var(--space-4)',
+                color: 'var(--color-text-secondary)',
+                fontSize: 'var(--font-size-sm)',
+                maxWidth: 260,
+                lineHeight: 1.5,
+              }}
+            >
+              Connecting to Qatar Airways&hellip; this is taking longer than usual.
+            </p>
+          )}
+        </div>
+      </Screen>
+    )
   }
 
   if (status === 'unauthenticated') {
@@ -23,12 +42,15 @@ export default function AuthGuard({ children }: AuthGuardProps) {
           <h2 style={{ fontSize: 'var(--font-size-lg)', marginBottom: 'var(--space-3)' }}>
             Session unavailable
           </h2>
-          <p style={{
-            color: 'var(--color-text-secondary)',
-            fontSize: 'var(--font-size-sm)',
-            marginBottom: 'var(--space-6)',
-          }}>
-            We couldn't establish a session. Please try again or re-open FanZone from the Qatar Airways app.
+          <p
+            style={{
+              color: 'var(--color-text-secondary)',
+              fontSize: 'var(--font-size-sm)',
+              marginBottom: 'var(--space-6)',
+            }}
+          >
+            We couldn&apos;t establish a session. Please try again or re-open FanZone from the Qatar
+            Airways app.
           </p>
           <Button fullWidth onClick={retry}>
             Retry
