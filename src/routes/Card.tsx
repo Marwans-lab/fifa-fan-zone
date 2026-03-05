@@ -8,71 +8,6 @@ import { useStore } from '../store/useStore'
 import { renderCardToBlob, buildShareText } from '../lib/cardExport'
 import { QUIZZES } from '../data/quizzes'
 
-// ─── Circular progress ring (SVG) ──────────────────────────────────────────────
-function ProgressRing({
-  progress, // 0..1
-  size = 72,
-  strokeWidth = 3,
-  color = '#00d4aa',
-  children,
-}: {
-  progress: number
-  size?: number
-  strokeWidth?: number
-  color?: string
-  children: React.ReactNode
-}) {
-  const r = (size - strokeWidth * 2) / 2
-  const cx = size / 2
-  const circumference = 2 * Math.PI * r
-
-  return (
-    <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
-      <svg
-        width={size}
-        height={size}
-        style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }}
-      >
-        {/* Track */}
-        <circle
-          cx={cx} cy={cx} r={r}
-          fill="none"
-          stroke="#2a2a2a"
-          strokeWidth={strokeWidth}
-        />
-        {/* Fill */}
-        {progress > 0 && (
-          <circle
-            cx={cx} cy={cx} r={r}
-            fill="none"
-            stroke={color}
-            strokeWidth={strokeWidth}
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            strokeDashoffset={circumference * (1 - progress)}
-            style={{ transition: 'stroke-dashoffset 400ms ease' }}
-          />
-        )}
-      </svg>
-      {/* Inner content */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: strokeWidth * 2,
-          borderRadius: '50%',
-          overflow: 'hidden',
-          background: '#1a1a1a',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  )
-}
-
 // ─── Single quiz card ──────────────────────────────────────────────────────────
 type QuizCardState = 'active' | 'done' | 'locked'
 
@@ -90,7 +25,6 @@ function QuizCard({
   const locked = cardState === 'locked'
   const done   = cardState === 'done'
 
-  const ringColor = done ? '#00d4aa' : '#c8102e'
   const overlayIcon = done ? '✓' : locked ? '🔒' : null
 
   return (
@@ -120,14 +54,30 @@ function QuizCard({
         transition: 'opacity 200ms ease, border-color 200ms ease',
       }}
     >
-      {/* Circular image + progress ring */}
-      <ProgressRing progress={progress} color={ringColor}>
+      {/* Square image container */}
+      <div
+        style={{
+          width: 64,
+          height: 64,
+          borderRadius: 8,
+          background: done
+            ? 'rgba(0,212,170,0.12)'
+            : locked
+            ? 'rgba(255,255,255,0.03)'
+            : 'rgba(200,16,46,0.10)',
+          border: `2px solid ${done ? '#00d4aa' : locked ? '#2a2a2a' : '#c8102e'}`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+        }}
+      >
         {overlayIcon ? (
           <span style={{ fontSize: done ? 22 : 18 }}>{overlayIcon}</span>
         ) : (
-          <span style={{ fontSize: 26 }}>{quiz.emoji}</span>
+          <span style={{ fontSize: 28 }}>{quiz.emoji}</span>
         )}
-      </ProgressRing>
+      </div>
 
       {/* Text */}
       <div style={{ flex: 1, minWidth: 0 }}>
