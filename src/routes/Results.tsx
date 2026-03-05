@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import Screen from '../components/Screen'
 import Button from '../components/Button'
@@ -19,6 +20,13 @@ function statusLabel(score: number, total: number): { label: string; color: stri
   return               { label: 'Better luck next time', color: 'var(--c-warn)' }
 }
 
+// SVG ring size constants
+const RING_SIZE = 136
+const RING_STROKE = 5
+const RING_R = (RING_SIZE - RING_STROKE * 2) / 2
+const RING_CX = RING_SIZE / 2
+const RING_CIRC = 2 * Math.PI * RING_R
+
 export default function Results() {
   const navigate = useNavigate()
   const location = useLocation()
@@ -26,6 +34,15 @@ export default function Results() {
 
   const result = location.state as QuizResult | undefined
   const homeRoute = appState.fanCard.teamId ? '/card' : '/'
+
+  // Hooks must be before any early return
+  const rawPct = result ? result.score / result.total : 0
+  const [ringProgress, setRingProgress] = useState(0)
+  useEffect(() => {
+    if (!result) return
+    const t = setTimeout(() => setRingProgress(rawPct), 60)
+    return () => clearTimeout(t)
+  }, [rawPct, result])
 
   if (!result) {
     return (
@@ -51,7 +68,7 @@ export default function Results() {
 
   const { score, total, quizTitle } = result
   const { label, color } = statusLabel(score, total)
-  const pct = Math.round((score / total) * 100)
+  const pct = Math.round(rawPct * 100)
   const emoji = score === total ? '🏆' : score >= total * 0.6 ? '⭐' : '⚽'
 
   return (
@@ -84,28 +101,48 @@ export default function Results() {
           {quizTitle}
         </div>
 
-        {/* Score ring */}
-        <div style={{
-          width: 136,
-          height: 136,
-          borderRadius: '50%',
-          border: `1.5px solid ${color}`,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: '0 auto var(--sp-8)',
-          background: 'var(--glass-bg)',
-          backdropFilter: 'var(--glass-blur)',
-          WebkitBackdropFilter: 'var(--glass-blur)',
-          boxShadow: `0 0 40px ${color}22, var(--glass-shine)`,
-        }}>
-          <span style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-2xl)', fontWeight: 'var(--weight-light)', letterSpacing: 'var(--tracking-tight)', color }}>
-            {score}/{total}
-          </span>
-          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', letterSpacing: 'var(--tracking-wide)', marginTop: 2 }}>
-            {pct}%
-          </span>
+        {/* Score ring — animated SVG progress */}
+        <div style={{ position: 'relative', width: RING_SIZE, height: RING_SIZE, margin: '0 auto var(--sp-8)' }}>
+          <svg
+            width={RING_SIZE}
+            height={RING_SIZE}
+            style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }}
+          >
+            {/* Track */}
+            <circle cx={RING_CX} cy={RING_CX} r={RING_R} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={RING_STROKE} />
+            {/* Progress arc */}
+            <circle
+              cx={RING_CX} cy={RING_CX} r={RING_R}
+              fill="none"
+              stroke={color}
+              strokeWidth={RING_STROKE}
+              strokeLinecap="round"
+              strokeDasharray={RING_CIRC}
+              strokeDashoffset={RING_CIRC * (1 - ringProgress)}
+              style={{ transition: 'stroke-dashoffset 900ms cubic-bezier(0.4,0,0.2,1)', filter: `drop-shadow(0 0 6px ${color}88)` }}
+            />
+          </svg>
+          {/* Inner content */}
+          <div style={{
+            position: 'absolute',
+            inset: RING_STROKE * 2,
+            borderRadius: '50%',
+            background: 'var(--glass-bg)',
+            backdropFilter: 'var(--glass-blur)',
+            WebkitBackdropFilter: 'var(--glass-blur)',
+            boxShadow: `0 0 32px ${color}22, var(--glass-shine)`,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <span style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-2xl)', fontWeight: 'var(--weight-light)', letterSpacing: 'var(--tracking-tight)', color }}>
+              {score}/{total}
+            </span>
+            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', letterSpacing: 'var(--tracking-wide)', marginTop: 2 }}>
+              {pct}%
+            </span>
+          </div>
         </div>
 
         {/* Points */}
