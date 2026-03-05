@@ -167,14 +167,14 @@ export default function Results() {
 
         {/* Actions */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)', width: '100%' }}>
-          <Button fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
-            Play Another Quiz
-          </Button>
-          <Button variant="secondary" fullWidth onClick={() => { track('results_leaderboard_tapped'); navigate('/leaderboard') }}>
+          <Button fullWidth onClick={() => { track('results_leaderboard_tapped'); navigate('/leaderboard') }}>
             View Leaderboard
           </Button>
-          <Button variant="ghost" fullWidth onClick={() => { track('results_home_tapped'); navigate(homeRoute) }}>
+          <Button variant="secondary" fullWidth onClick={() => { track('results_home_tapped'); navigate(homeRoute) }}>
             Back to Home
+          </Button>
+          <Button variant="ghost" fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
+            Play Another Quiz
           </Button>
         </div>
       </div>
