@@ -183,6 +183,33 @@ function OptionButton({
   )
 }
 
+// ─── Circular countdown timer ─────────────────────────────────────────────────
+function CircularTimer({ timeLeft, color }: { timeLeft: number; color: string }) {
+  const R = 16
+  const circumference = 2 * Math.PI * R
+  const offset = circumference * (1 - timeLeft / QUESTION_TIME)
+  return (
+    <div style={{ position: 'relative', width: 44, height: 44, flexShrink: 0 }}>
+      <svg width={44} height={44} style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx={22} cy={22} r={R} fill="none" stroke="#2a2a2a" strokeWidth={3} />
+        <circle
+          cx={22} cy={22} r={R}
+          fill="none"
+          stroke={color}
+          strokeWidth={3}
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s ease' }}
+        />
+      </svg>
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color }}>
+        {timeLeft}
+      </div>
+    </div>
+  )
+}
+
 // ─── Question screen ───────────────────────────────────────────────────────────
 interface QuestionScreenProps {
   quiz: Quiz
@@ -205,7 +232,6 @@ function QuestionScreen({
   onSelect, onNext, onBack,
 }: QuestionScreenProps) {
   const isLast   = qIndex === total - 1
-  const timerPct = (timeLeft / QUESTION_TIME) * 100
   const timerColor = timeLeft > 5 ? 'var(--color-accent)' : '#ffb800'
   const percentages = revealed ? getMockPercentages(question, chosenId) : {}
 
@@ -222,8 +248,8 @@ function QuestionScreen({
         }}
       >
         {/* ── Top bar (NOT animated — stays fixed) ─────────────── */}
-        <div style={{ padding: 'var(--space-4) var(--space-4) 0', flexShrink: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginBottom: 10 }}>
+        <div style={{ padding: 'var(--space-4) var(--space-4) var(--space-4)', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
             <button
               onClick={onBack}
               style={{
@@ -251,18 +277,7 @@ function QuestionScreen({
             <span style={{ fontSize: 12, color: 'var(--color-text-secondary)', flexShrink: 0 }}>
               {qIndex + 1}/{total}
             </span>
-          </div>
-          {/* Timer bar */}
-          <div style={{ height: 2, background: '#2a2a2a', borderRadius: 1, overflow: 'hidden', marginBottom: 'var(--space-4)' }}>
-            <div
-              style={{
-                height: '100%',
-                width: `${timerPct}%`,
-                background: timerColor,
-                borderRadius: 1,
-                transition: 'width 1s linear, background 1s ease',
-              }}
-            />
+            <CircularTimer timeLeft={timeLeft} color={timerColor} />
           </div>
         </div>
 
