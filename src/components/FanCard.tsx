@@ -147,14 +147,14 @@ function CardTexture() {
       {/* Dot-grid halftone */}
       <div style={{
         position: 'absolute', inset: 0, borderRadius: 20, pointerEvents: 'none',
-        backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.13) 1.5px, transparent 1.5px)',
+        backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.28) 1.5px, transparent 1.5px)',
         backgroundSize: '16px 16px',
         mixBlendMode: 'overlay',
       }} />
       {/* Diagonal shimmer stripes */}
       <div style={{
         position: 'absolute', inset: 0, borderRadius: 20, pointerEvents: 'none',
-        backgroundImage: 'repeating-linear-gradient(-55deg, transparent, transparent 18px, rgba(255,255,255,0.04) 18px, rgba(255,255,255,0.04) 19px)',
+        backgroundImage: 'repeating-linear-gradient(-55deg, transparent, transparent 18px, rgba(255,255,255,0.10) 18px, rgba(255,255,255,0.10) 19px)',
         mixBlendMode: 'overlay',
       }} />
     </>
