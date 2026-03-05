@@ -1,11 +1,11 @@
 :root {
   /* ─── Color roles ─────────────────────────────────────────────────────────── */
   --c-bg:            #05050a;
-  --c-surface:       rgba(255,255,255,0.06);
-  --c-surface-raise: rgba(255,255,255,0.10);
-  --c-surface-press: rgba(255,255,255,0.14);
-  --c-border:        rgba(255,255,255,0.13);
-  --c-border-raise:  rgba(255,255,255,0.22);
+  --c-surface:       rgba(255,255,255,0.09);
+  --c-surface-raise: rgba(255,255,255,0.14);
+  --c-surface-press: rgba(255,255,255,0.20);
+  --c-border:        rgba(255,255,255,0.18);
+  --c-border-raise:  rgba(255,255,255,0.30);
   --c-border-accent: rgba(0,212,170,0.32);
   --c-border-brand:  rgba(200,16,46,0.32);
 
@@ -20,10 +20,10 @@
   --c-warn:     #ffb800;
 
   /* ─── Glass / elevation ───────────────────────────────────────────────────── */
-  --glass-bg:     rgba(255,255,255,0.07);
-  --glass-border: rgba(255,255,255,0.13);
+  --glass-bg:     rgba(255,255,255,0.10);
+  --glass-border: rgba(255,255,255,0.18);
   --glass-blur:   blur(16px);
-  --glass-shine:  inset 0 1px 0 rgba(255,255,255,0.10);
+  --glass-shine:  inset 0 1px 0 rgba(255,255,255,0.14);
 
   --shadow-sm: 0 1px 4px rgba(0,0,0,0.45);
   --shadow-md: 0 4px 20px rgba(0,0,0,0.55), var(--glass-shine);
