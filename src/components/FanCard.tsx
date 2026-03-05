@@ -127,7 +127,7 @@ function ActionCircle({ icon, label, onClick, disabled }: { icon: string; label:
       }}
     >
       <div style={{
-        width: 40, height: 40, borderRadius: '50%',
+        width: 48, height: 48, borderRadius: '50%',
         background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15,
         color: '#fff',
