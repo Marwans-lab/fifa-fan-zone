@@ -84,10 +84,14 @@ function getFrontFaceStyle(teamId: string | null): React.CSSProperties {
   const bg = team
     ? `linear-gradient(160deg, ${team.colors[0]} 0%, ${team.colors[1]} 100%)`
     : 'linear-gradient(160deg, #1a2a1a 0%, #0d1a0d 50%, #001a0d 100%)'
+  const shadow = team
+    ? `0 16px 48px ${team.colors[0]}55, inset 0 1px 0 rgba(255,255,255,0.08)`
+    : '0 16px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)'
   return {
     ...faceBase,
     background: bg,
-    border: '1px solid rgba(255,255,255,0.1)',
+    border: '1px solid rgba(255,255,255,0.12)',
+    boxShadow: shadow,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -114,8 +118,7 @@ function HolographicStripe() {
         position: 'absolute',
         top: 0, left: 0, right: 0,
         height: 4,
-        background: 'linear-gradient(90deg, transparent, #00d4aa, #ffffff, #00d4aa, transparent)',
-        opacity: 0.6,
+        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent)',
       }}
     />
   )
@@ -127,7 +130,7 @@ function FanPhoto({ photoDataUrl }: { photoDataUrl: string | null }) {
       <img
         src={photoDataUrl}
         alt="Fan photo"
-        style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', border: '3px solid #00d4aa' }}
+        style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', border: '3px solid rgba(255,255,255,0.55)', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}
       />
     )
   }
@@ -135,7 +138,7 @@ function FanPhoto({ photoDataUrl }: { photoDataUrl: string | null }) {
     <div
       style={{
         width: 120, height: 120, borderRadius: '50%',
-        background: '#1e3a2e', border: '3px solid #00d4aa44',
+        background: 'rgba(0,0,0,0.28)', border: '2px dashed rgba(255,255,255,0.35)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40,
       }}
     >

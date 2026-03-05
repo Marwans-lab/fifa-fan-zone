@@ -143,7 +143,6 @@ export default function Identity() {
 
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const filtered = WORLD_CUP_TEAMS.filter(t =>
@@ -158,6 +157,14 @@ export default function Identity() {
     }
     setCameraActive(false)
   }, [])
+
+  // Attach stream to video element once it is rendered
+  useEffect(() => {
+    if (cameraActive && streamRef.current && videoRef.current) {
+      videoRef.current.srcObject = streamRef.current
+      videoRef.current.play().catch(() => {})
+    }
+  }, [cameraActive])
 
   useEffect(() => {
     return () => stopCamera()
@@ -176,12 +183,7 @@ export default function Identity() {
       })
       streamRef.current = stream
       setCameraActive(true)
-      // attach stream to video element after next tick
-      requestAnimationFrame(() => {
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream
-        }
-      })
+      // stream is attached in the useEffect below, after the video element mounts
       track('identity_camera_started')
     } catch {
       // getUserMedia denied or unavailable — fall back to file picker
@@ -192,15 +194,17 @@ export default function Identity() {
 
   const capturePhoto = useCallback(() => {
     const video = videoRef.current
-    if (!video) return
-    const canvas = canvasRef.current ?? document.createElement('canvas')
-    canvas.width = video.videoWidth || 640
-    canvas.height = video.videoHeight || 640
+    if (!video || video.readyState < 2 || !video.videoWidth) return
+    const w = video.videoWidth
+    const h = video.videoHeight
+    const canvas = document.createElement('canvas')
+    canvas.width = w
+    canvas.height = h
     const ctx = canvas.getContext('2d')!
-    // un-mirror the capture (flip back)
-    ctx.translate(canvas.width, 0)
+    // un-mirror the capture (flip back since preview is mirrored)
+    ctx.translate(w, 0)
     ctx.scale(-1, 1)
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+    ctx.drawImage(video, 0, 0, w, h)
     const url = canvas.toDataURL('image/jpeg', 0.92)
     stopCamera()
     setPhotoDataUrl(url)
@@ -362,9 +366,6 @@ export default function Identity() {
             cameraActive={cameraActive}
             onTakePhoto={startCamera}
           />
-
-          {/* Hidden canvas for capturing frame */}
-          <canvas ref={canvasRef} style={{ display: 'none' }} />
 
           {/* Hidden file input fallback */}
           <input
