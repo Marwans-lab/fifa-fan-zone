@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import { useLeaderboard, LEADERBOARD_REFRESH_MS } from '../lib/leaderboard'
+import { useStore } from '../store/useStore'
 
 function pad2(n: number) {
   return String(n).padStart(2, '0')
@@ -13,7 +14,9 @@ function formatRefresh(d: Date): string {
 
 export default function Leaderboard() {
   const navigate = useNavigate()
+  const { state } = useStore()
   const { entries, myRank, lastRefresh, refresh } = useLeaderboard()
+  const homeRoute = state.fanCard.teamId ? '/card' : '/'
 
   function handleRefresh() {
     track('leaderboard_refresh_tapped')
@@ -171,7 +174,7 @@ export default function Leaderboard() {
         }}
       >
         <button
-          onClick={() => { track('leaderboard_home_tapped'); navigate('/') }}
+          onClick={() => { track('leaderboard_home_tapped'); navigate(homeRoute) }}
           style={{
             width: '100%', maxWidth: 420, display: 'block', margin: '0 auto',
             padding: '16px 0', borderRadius: 50, border: 'none',

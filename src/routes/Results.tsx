@@ -25,6 +25,7 @@ export default function Results() {
   const { state: appState } = useStore()
 
   const result = location.state as QuizResult | undefined
+  const homeRoute = appState.fanCard.teamId ? '/card' : '/'
 
   if (!result) {
     // Direct navigation without quiz result — show total points
@@ -41,7 +42,7 @@ export default function Results() {
           <Button fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
             Play a Quiz
           </Button>
-          <Button variant="ghost" fullWidth style={{ marginTop: 'var(--space-3)' }} onClick={() => navigate('/')}>
+          <Button variant="ghost" fullWidth style={{ marginTop: 'var(--space-3)' }} onClick={() => navigate(homeRoute)}>
             Back to Home
           </Button>
         </div>
@@ -121,7 +122,7 @@ export default function Results() {
           <Button
             variant="ghost"
             fullWidth
-            onClick={() => { track('results_home_tapped'); navigate('/') }}
+            onClick={() => { track('results_home_tapped'); navigate(homeRoute) }}
           >
             Back to Home
           </Button>
