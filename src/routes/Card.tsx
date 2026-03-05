@@ -184,15 +184,15 @@ export default function Card() {
 
         <FanCard ref={cardRef} fanCard={state.fanCard} onSave={handleSave} />
 
-        {/* ── Progress card ─────────────────────────────────────── */}
-        <ProgressCard state={state} />
-
         {/* ── Edit / Share / Save actions ──────────────────────── */}
         <div style={{ display: 'flex', gap: 'var(--space-5)', justifyContent: 'center' }}>
           <ActionBtn icon="✏" label="Edit"  onClick={handleEdit} />
           <ActionBtn icon="⤴" label="Share" onClick={handleShare} loading={sharing} />
           <ActionBtn icon="⬇" label="Save"  onClick={handleSaveToDevice} loading={saving} />
         </div>
+
+        {/* ── Progress card ─────────────────────────────────────── */}
+        <ProgressCard state={state} />
 
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
           <Button
