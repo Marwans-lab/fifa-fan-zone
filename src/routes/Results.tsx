@@ -20,9 +20,9 @@ function statusLabel(score: number, total: number): { label: string; color: stri
   return               { label: 'Better luck next time', color: 'var(--c-warn)' }
 }
 
-// SVG ring size constants
-const RING_SIZE = 136
-const RING_STROKE = 5
+// SVG ring size constants — 1.5× the original 136px
+const RING_SIZE = 204
+const RING_STROKE = 6
 const RING_R = (RING_SIZE - RING_STROKE * 2) / 2
 const RING_CX = RING_SIZE / 2
 const RING_CIRC = 2 * Math.PI * RING_R
@@ -35,14 +35,35 @@ export default function Results() {
   const result = location.state as QuizResult | undefined
   const homeRoute = appState.fanCard.teamId ? '/card' : '/'
 
-  // Hooks must be before any early return
+  // Hooks before early return
   const rawPct = result ? result.score / result.total : 0
   const [ringProgress, setRingProgress] = useState(0)
+  const [displayPoints, setDisplayPoints] = useState(0)
+
   useEffect(() => {
     if (!result) return
     const t = setTimeout(() => setRingProgress(rawPct), 60)
     return () => clearTimeout(t)
   }, [rawPct, result])
+
+  useEffect(() => {
+    if (!result) return
+    const target = appState.points
+    const duration = 900
+    let rafId: number
+    const delay = setTimeout(() => {
+      const start = performance.now()
+      function step(now: number) {
+        const elapsed = now - start
+        const p = Math.min(elapsed / duration, 1)
+        const eased = 1 - Math.pow(1 - p, 3)
+        setDisplayPoints(Math.round(eased * target))
+        if (p < 1) rafId = requestAnimationFrame(step)
+      }
+      rafId = requestAnimationFrame(step)
+    }, 60)
+    return () => { clearTimeout(delay); cancelAnimationFrame(rafId) }
+  }, [appState.points, result])
 
   if (!result) {
     return (
@@ -68,7 +89,6 @@ export default function Results() {
 
   const { score, total, quizTitle } = result
   const { label, color } = statusLabel(score, total)
-  const pct = Math.round(rawPct * 100)
   const emoji = score === total ? '🏆' : score >= total * 0.6 ? '⭐' : '⚽'
 
   return (
@@ -101,7 +121,7 @@ export default function Results() {
           {quizTitle}
         </div>
 
-        {/* Score ring — animated SVG progress */}
+        {/* Score ring — animated SVG progress, count-up points inside */}
         <div style={{ position: 'relative', width: RING_SIZE, height: RING_SIZE, margin: '0 auto var(--sp-8)' }}>
           <svg
             width={RING_SIZE}
@@ -119,7 +139,7 @@ export default function Results() {
               strokeLinecap="round"
               strokeDasharray={RING_CIRC}
               strokeDashoffset={RING_CIRC * (1 - ringProgress)}
-              style={{ transition: 'stroke-dashoffset 900ms cubic-bezier(0.4,0,0.2,1)', filter: `drop-shadow(0 0 6px ${color}88)` }}
+              style={{ transition: 'stroke-dashoffset 900ms cubic-bezier(0.4,0,0.2,1)', filter: `drop-shadow(0 0 8px ${color}88)` }}
             />
           </svg>
           {/* Inner content */}
@@ -130,34 +150,19 @@ export default function Results() {
             background: 'var(--glass-bg)',
             backdropFilter: 'var(--glass-blur)',
             WebkitBackdropFilter: 'var(--glass-blur)',
-            boxShadow: `0 0 32px ${color}22, var(--glass-shine)`,
+            boxShadow: `0 0 40px ${color}22, var(--glass-shine)`,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-            <span style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-2xl)', fontWeight: 'var(--weight-light)', letterSpacing: 'var(--tracking-tight)', color }}>
-              {score}/{total}
+            <span style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-3xl)', fontWeight: 'var(--weight-light)', letterSpacing: 'var(--tracking-tight)', color, lineHeight: 1 }}>
+              {displayPoints}
             </span>
-            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', letterSpacing: 'var(--tracking-wide)', marginTop: 2 }}>
-              {pct}%
+            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginTop: 4 }}>
+              Points
             </span>
           </div>
-        </div>
-
-        {/* Points */}
-        <div style={{
-          padding: 'var(--sp-4) var(--sp-5)',
-          background: 'var(--glass-bg)',
-          border: '1px solid var(--c-border)',
-          borderRadius: 'var(--r-md)',
-          marginBottom: 'var(--sp-8)',
-          fontSize: 'var(--text-sm)',
-          color: 'var(--c-text-2)',
-          backdropFilter: 'var(--glass-blur)',
-          WebkitBackdropFilter: 'var(--glass-blur)',
-        }}>
-          Total points: <strong style={{ color: 'var(--c-accent)', fontWeight: 'var(--weight-med)' }}>{appState.points}</strong>
         </div>
 
         {/* Actions */}
