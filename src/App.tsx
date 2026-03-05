@@ -9,6 +9,7 @@ const Identity = lazy(() => import('./routes/Identity'))
 const Card = lazy(() => import('./routes/Card'))
 const Quiz = lazy(() => import('./routes/Quiz'))
 const Results = lazy(() => import('./routes/Results'))
+const Leaderboard = lazy(() => import('./routes/Leaderboard'))
 
 export default function App() {
   return (
@@ -34,6 +35,10 @@ export default function App() {
           <Route
             path="/results"
             element={<AuthGuard><Results /></AuthGuard>}
+          />
+          <Route
+            path="/leaderboard"
+            element={<AuthGuard><Leaderboard /></AuthGuard>}
           />
         </Routes>
       </Suspense>

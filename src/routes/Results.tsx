@@ -112,6 +112,13 @@ export default function Results() {
             Play Another Quiz
           </Button>
           <Button
+            variant="secondary"
+            fullWidth
+            onClick={() => { track('results_leaderboard_tapped'); navigate('/leaderboard') }}
+          >
+            View Leaderboard
+          </Button>
+          <Button
             variant="ghost"
             fullWidth
             onClick={() => { track('results_home_tapped'); navigate('/') }}
