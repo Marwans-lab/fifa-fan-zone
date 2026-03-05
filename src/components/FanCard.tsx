@@ -141,6 +141,26 @@ function ActionCircle({ icon, label, onClick, disabled }: { icon: string; label:
   )
 }
 
+function CardTexture() {
+  return (
+    <>
+      {/* Dot-grid halftone */}
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: 20, pointerEvents: 'none',
+        backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.13) 1.5px, transparent 1.5px)',
+        backgroundSize: '16px 16px',
+        mixBlendMode: 'overlay',
+      }} />
+      {/* Diagonal shimmer stripes */}
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: 20, pointerEvents: 'none',
+        backgroundImage: 'repeating-linear-gradient(-55deg, transparent, transparent 18px, rgba(255,255,255,0.04) 18px, rgba(255,255,255,0.04) 19px)',
+        mixBlendMode: 'overlay',
+      }} />
+    </>
+  )
+}
+
 function HolographicStripe() {
   return (
     <div
@@ -290,6 +310,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
 
         {/* ── FRONT ─────────────────────────────────────────────── */}
         <div style={getFrontFaceStyle(fanCard.teamId)}>
+          <CardTexture />
           <HolographicStripe />
 
           <div style={{ textAlign: 'center', width: '100%' }}>
