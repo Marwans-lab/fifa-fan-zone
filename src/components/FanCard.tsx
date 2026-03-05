@@ -1,6 +1,7 @@
 import { useState, useCallback, forwardRef, useImperativeHandle } from 'react'
 import { track } from '../lib/analytics'
 import type { FanCard as FanCardData } from '../store/useStore'
+import { getTeam } from '../data/teams'
 
 // ─── Public handle (for Edit button) ─────────────────────────────────────────
 export interface FanCardHandle {
@@ -78,15 +79,21 @@ const faceBase: React.CSSProperties = {
   overflow: 'hidden',
 }
 
-const frontFaceStyle: React.CSSProperties = {
-  ...faceBase,
-  background: 'linear-gradient(160deg, #1a2a1a 0%, #0d1a0d 50%, #001a0d 100%)',
-  border: '1px solid #00d4aa44',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  padding: '24px 20px 20px',
+function getFrontFaceStyle(teamId: string | null): React.CSSProperties {
+  const team = teamId ? getTeam(teamId) : null
+  const bg = team
+    ? `linear-gradient(160deg, ${team.colors[0]} 0%, ${team.colors[1]} 100%)`
+    : 'linear-gradient(160deg, #1a2a1a 0%, #0d1a0d 50%, #001a0d 100%)'
+  return {
+    ...faceBase,
+    background: bg,
+    border: '1px solid rgba(255,255,255,0.1)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '24px 20px 20px',
+  }
 }
 
 const backFaceStyle: React.CSSProperties = {
@@ -231,7 +238,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
       <div style={innerStyle(isFlipped)}>
 
         {/* ── FRONT ─────────────────────────────────────────────── */}
-        <div style={frontFaceStyle}>
+        <div style={getFrontFaceStyle(fanCard.teamId)}>
           <HolographicStripe />
 
           <div style={{ textAlign: 'center', width: '100%' }}>
@@ -246,12 +253,15 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
 
           <div style={{ textAlign: 'center' }}>
-            {fanCard.teamId ? (
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#00d4aa', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 4 }}>
-                {fanCard.teamId}
-              </div>
-            ) : (
-              <div style={{ fontSize: 12, color: '#ffffff44', fontStyle: 'italic', marginBottom: 4 }}>
+            {fanCard.teamId ? (() => {
+              const team = getTeam(fanCard.teamId)
+              return (
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.88)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 }}>
+                  {team ? `${team.flag} ${team.name}` : fanCard.teamId}
+                </div>
+              )
+            })() : (
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', fontStyle: 'italic', marginBottom: 4 }}>
                 No team selected
               </div>
             )}
