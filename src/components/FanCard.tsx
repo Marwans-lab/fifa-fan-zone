@@ -180,7 +180,7 @@ function FanPhoto({ photoDataUrl }: { photoDataUrl: string | null }) {
       <img
         src={photoDataUrl}
         alt="Fan photo"
-        style={{ width: 180, height: 180, borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', border: '3px solid rgba(255,255,255,0.55)', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}
+        style={{ width: 180, height: 180, borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', border: '3px solid rgba(255,255,255,0.55)', boxShadow: '0 4px 20px rgba(0,0,0,0.5)', position: 'relative', zIndex: 2 }}
       />
     )
   }
@@ -190,6 +190,7 @@ function FanPhoto({ photoDataUrl }: { photoDataUrl: string | null }) {
         width: 180, height: 180, borderRadius: '50%',
         background: 'rgba(0,0,0,0.28)', border: '2px dashed rgba(255,255,255,0.35)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40,
+        position: 'relative', zIndex: 2,
       }}
     >
       ⚽
