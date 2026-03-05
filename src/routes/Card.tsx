@@ -92,8 +92,7 @@ function QuizCard({ quiz, cardState, progress, onStart }: {
         {overlayIcon ? <span style={{ fontSize: done ? 22 : 18 }}>{overlayIcon}</span> : <span style={{ fontSize: 28 }}>{quiz.emoji}</span>}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 3 }}>{quiz.title}</div>
-        <div style={{ fontSize: 12, color: 'var(--color-text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: 5 }}>{quiz.description}</div>
+        <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 6 }}>{quiz.title}</div>
         <div style={{ fontSize: 11, color: done ? '#00d4aa' : locked ? '#444' : 'var(--color-accent)' }}>
           {done ? 'Completed · ' + Math.round(progress * quiz.questions.length) + '/' + quiz.questions.length + ' correct' : locked ? 'Complete the previous quiz to unlock' : quiz.questions.length + ' questions · ' + quiz.questions.length * 15 + 's'}
         </div>
