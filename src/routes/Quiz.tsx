@@ -279,8 +279,8 @@ function QuestionScreen({
           </div>
         </div>
 
-        {/* ── Animated content ─────────────────────────────────── */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle }}>
+        {/* ── Animated content (header + question + options only) ── */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
           {/* Question image header */}
           <div
             style={{
@@ -341,9 +341,10 @@ function QuestionScreen({
               />
             ))}
           </div>
+        </div>
 
-          {/* Score + Next */}
-          <div style={{ padding: 'var(--space-5) var(--space-4) var(--space-8)', flexShrink: 0 }}>
+        {/* ── Fixed bottom: score feedback + Next CTA (no slide) ── */}
+        <div style={{ padding: 'var(--space-5) var(--space-4) var(--space-8)', flexShrink: 0 }}>
             {revealed && (
               <div
                 style={{
@@ -382,7 +383,6 @@ function QuestionScreen({
             </button>
           </div>
         </div>
-      </div>
     </Screen>
   )
 }
