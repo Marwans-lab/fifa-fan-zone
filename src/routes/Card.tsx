@@ -51,8 +51,8 @@ function ProgressCard({ state }: { state: AppState }) {
           return (
             <div key={m.id} style={{ display: 'flex', alignItems: 'center', flex: isLast ? 'none' : 1, minWidth: 0 }}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-                <div style={{ width: 32, height: 32, borderRadius: 6, background: achieved ? '#c8102e' : 'transparent', border: '2px solid ' + (achieved ? '#c8102e' : '#333'), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, transition: 'background 300ms ease, border-color 300ms ease' }}>
-                  {achieved ? m.emoji : <span style={{ fontSize: 10, color: '#555' }}>○</span>}
+                <div style={{ width: 32, height: 32, borderRadius: '50%', background: achieved ? '#fff' : 'transparent', border: '2px solid ' + (achieved ? '#fff' : '#333'), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, transition: 'background 300ms ease, border-color 300ms ease' }}>
+                  {achieved ? <span style={{ fontSize: 14, fontWeight: 700, color: '#000' }}>✓</span> : <span style={{ fontSize: 10, color: '#555' }}>○</span>}
                 </div>
                 <span style={{ fontSize: 9, color: achieved ? 'var(--color-text-primary)' : '#444', whiteSpace: 'nowrap' }}>{m.label}</span>
               </div>
