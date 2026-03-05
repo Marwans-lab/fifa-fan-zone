@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
@@ -11,10 +11,14 @@ type Step = 'team' | 'camera' | 'preview'
 function CardPreview({
   teamId,
   photoDataUrl,
+  videoRef,
+  cameraActive,
   onTakePhoto,
 }: {
   teamId: string
   photoDataUrl: string | null
+  videoRef?: React.RefObject<HTMLVideoElement>
+  cameraActive?: boolean
   onTakePhoto?: () => void
 }) {
   const team = getTeam(teamId)!
@@ -55,7 +59,7 @@ function CardPreview({
         </div>
       </div>
 
-      {/* Photo / take-picture CTA */}
+      {/* Photo / live camera / take-picture CTA */}
       <div style={{ zIndex: 1 }}>
         {photoDataUrl ? (
           <img
@@ -68,6 +72,22 @@ function CardPreview({
               objectPosition: 'top',
               border: '3px solid rgba(255,255,255,0.55)',
               boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+            }}
+          />
+        ) : cameraActive && videoRef ? (
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            style={{
+              width: 120, height: 120,
+              borderRadius: '50%',
+              objectFit: 'cover',
+              objectPosition: 'center',
+              border: '3px solid rgba(255,255,255,0.55)',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+              transform: 'scaleX(-1)', // mirror for selfie
             }}
           />
         ) : (
@@ -99,10 +119,10 @@ function CardPreview({
         )}
       </div>
 
-      {/* Team name */}
+      {/* Team motto */}
       <div style={{ textAlign: 'center', zIndex: 1 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.88)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 2 }}>
-          {team.flag} {team.name}
+        <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.88)', letterSpacing: 1, marginBottom: 2, fontStyle: 'italic' }}>
+          {team.motto}
         </div>
       </div>
     </div>
@@ -118,21 +138,81 @@ export default function Identity() {
   const [query, setQuery] = useState('')
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null)
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null)
+  const [cameraActive, setCameraActive] = useState(false)
+  const [cameraError, setCameraError] = useState<string | null>(null)
+
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const streamRef = useRef<MediaStream | null>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const filtered = WORLD_CUP_TEAMS.filter(t =>
     t.name.toLowerCase().includes(query.toLowerCase())
   )
 
+  // Stop camera stream when leaving camera step
+  const stopCamera = useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(t => t.stop())
+      streamRef.current = null
+    }
+    setCameraActive(false)
+  }, [])
+
+  useEffect(() => {
+    return () => stopCamera()
+  }, [stopCamera])
+
+  const startCamera = useCallback(async () => {
+    setCameraError(null)
+    if (!navigator.mediaDevices?.getUserMedia) {
+      // Fallback to file picker
+      fileInputRef.current?.click()
+      return
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 640 } },
+      })
+      streamRef.current = stream
+      setCameraActive(true)
+      // attach stream to video element after next tick
+      requestAnimationFrame(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream
+        }
+      })
+      track('identity_camera_started')
+    } catch {
+      // getUserMedia denied or unavailable — fall back to file picker
+      setCameraError('Camera unavailable — picking from files instead')
+      fileInputRef.current?.click()
+    }
+  }, [])
+
+  const capturePhoto = useCallback(() => {
+    const video = videoRef.current
+    if (!video) return
+    const canvas = canvasRef.current ?? document.createElement('canvas')
+    canvas.width = video.videoWidth || 640
+    canvas.height = video.videoHeight || 640
+    const ctx = canvas.getContext('2d')!
+    // un-mirror the capture (flip back)
+    ctx.translate(canvas.width, 0)
+    ctx.scale(-1, 1)
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+    const url = canvas.toDataURL('image/jpeg', 0.92)
+    stopCamera()
+    setPhotoDataUrl(url)
+    setStep('preview')
+    track('identity_photo_captured')
+  }, [stopCamera])
+
   function handleTeamSelect(id: string) {
     setSelectedTeamId(id)
     setStep('camera')
     track('identity_team_selected', { teamId: id })
   }
-
-  const handleTakePhoto = useCallback(() => {
-    fileInputRef.current?.click()
-  }, [])
 
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -157,6 +237,7 @@ export default function Identity() {
   function handleRetake() {
     setPhotoDataUrl(null)
     if (fileInputRef.current) fileInputRef.current.value = ''
+    stopCamera()
     setStep('camera')
     track('identity_retake_tapped')
   }
@@ -268,18 +349,24 @@ export default function Identity() {
             letterSpacing: 'var(--tracking-tight)',
             marginBottom: 'var(--sp-2)',
           }}>
-            Take your selfie
+            {cameraActive ? 'Strike a pose!' : 'Take your selfie'}
           </h2>
           <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)', marginBottom: 'var(--sp-6)' }}>
-            Tap the card to take a photo
+            {cameraActive ? 'Tap Capture when ready' : 'Tap the card to start your camera'}
           </p>
 
           <CardPreview
             teamId={selectedTeamId!}
             photoDataUrl={null}
-            onTakePhoto={handleTakePhoto}
+            videoRef={videoRef}
+            cameraActive={cameraActive}
+            onTakePhoto={startCamera}
           />
 
+          {/* Hidden canvas for capturing frame */}
+          <canvas ref={canvasRef} style={{ display: 'none' }} />
+
+          {/* Hidden file input fallback */}
           <input
             ref={fileInputRef}
             type="file"
@@ -289,10 +376,26 @@ export default function Identity() {
             onChange={handleFileChange}
           />
 
+          {cameraError && (
+            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--c-warn)', marginTop: 'var(--sp-3)' }}>
+              {cameraError}
+            </p>
+          )}
+
+          {cameraActive && (
+            <button
+              onClick={capturePhoto}
+              className="btn btn-primary"
+              style={{ width: '100%', marginTop: 'var(--sp-5)' }}
+            >
+              📸 Capture
+            </button>
+          )}
+
           <button
-            onClick={() => setStep('team')}
+            onClick={() => { stopCamera(); setStep('team') }}
             style={{
-              marginTop: 'var(--sp-5)',
+              marginTop: 'var(--sp-4)',
               background: 'none', border: 'none',
               color: 'var(--c-text-2)',
               fontSize: 'var(--text-sm)',
@@ -324,15 +427,6 @@ export default function Identity() {
         </p>
 
         <CardPreview teamId={selectedTeamId!} photoDataUrl={photoDataUrl} />
-
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          capture="user"
-          style={{ display: 'none' }}
-          onChange={handleFileChange}
-        />
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)', marginTop: 'var(--sp-6)' }}>
           <button

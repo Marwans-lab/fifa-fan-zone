@@ -256,8 +256,8 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             {fanCard.teamId ? (() => {
               const team = getTeam(fanCard.teamId)
               return (
-                <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.88)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 }}>
-                  {team ? `${team.flag} ${team.name}` : fanCard.teamId}
+                <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.88)', letterSpacing: 1, fontStyle: 'italic', marginBottom: 4 }}>
+                  {team ? team.motto : fanCard.teamId}
                 </div>
               )
             })() : (
