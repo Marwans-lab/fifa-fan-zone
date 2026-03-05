@@ -9,13 +9,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<Variant, CSSProperties> = {
   primary: {
-    background: 'var(--color-accent)',
-    color: '#000',
+    background: '#ffffff',
+    color: 'var(--color-brand)',
   },
   secondary: {
-    background: 'transparent',
+    background: '#1e1e1e',
     color: 'var(--color-text-primary)',
-    border: '1px solid var(--color-border)',
+    border: '1.5px solid #3a3a3a',
   },
   ghost: {
     background: 'transparent',
