@@ -80,7 +80,7 @@ function QuizCard({ quiz, cardState, progress, onStart }: {
       onClick={locked ? undefined : onStart}
       disabled={locked}
       style={{
-        display: 'flex', alignItems: 'center', gap: 16, padding: 16, minHeight: 104, width: '100%',
+        display: 'flex', alignItems: 'center', gap: 16, padding: 16, minHeight: 125, width: '100%',
         background: done ? 'rgba(0,212,170,0.06)' : locked ? 'rgba(255,255,255,0.02)' : 'var(--color-surface)',
         border: '1px solid ' + (done ? 'rgba(0,212,170,0.25)' : locked ? '#1e1e1e' : 'var(--color-border)'),
         borderRadius: 'var(--radius-md)', cursor: locked ? 'default' : 'pointer', opacity: locked ? 0.45 : 1,
