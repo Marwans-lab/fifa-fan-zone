@@ -58,24 +58,33 @@ export function useStore() {
   }, [state])
 
   const updateFanCard = useCallback((patch: Partial<FanCard>) => {
-    setState(prev => ({
-      ...prev,
-      fanCard: { ...prev.fanCard, ...patch },
-    }))
+    setState(prev => {
+      const next = { ...prev, fanCard: { ...prev.fanCard, ...patch } }
+      saveState(next) // persist synchronously so navigating away doesn't lose state
+      return next
+    })
   }, [])
 
   const addPoints = useCallback((n: number) => {
-    setState(prev => ({ ...prev, points: prev.points + n }))
+    setState(prev => {
+      const next = { ...prev, points: prev.points + n }
+      saveState(next)
+      return next
+    })
   }, [])
 
   const recordQuizResult = useCallback((quizId: string, score: number, total: number) => {
-    setState(prev => ({
-      ...prev,
-      quizResults: {
-        ...prev.quizResults,
-        [quizId]: { score, total, completedAt: new Date().toISOString() },
-      },
-    }))
+    setState(prev => {
+      const next = {
+        ...prev,
+        quizResults: {
+          ...prev.quizResults,
+          [quizId]: { score, total, completedAt: new Date().toISOString() },
+        },
+      }
+      saveState(next)
+      return next
+    })
   }, [])
 
   const resetState = useCallback(() => {

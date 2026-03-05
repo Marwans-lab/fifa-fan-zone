@@ -363,10 +363,14 @@ export default function Card() {
             letterSpacing: 'var(--tracking-tight)',
             marginBottom: 'var(--sp-1)',
           }}>
-            Your Fan Card
+            {state.fanCard.completedAt ? 'Your Fan Card' : state.fanCard.teamId ? 'Card Created!' : 'Your Fan Card'}
           </h2>
           <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)' }}>
-            Tap to flip &amp; complete your profile
+            {state.fanCard.completedAt
+              ? 'Tap to flip & view your profile'
+              : state.fanCard.teamId
+              ? 'Flip to complete your fan profile'
+              : 'Tap to flip & complete your profile'}
           </p>
         </div>
 
