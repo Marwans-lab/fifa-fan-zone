@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
@@ -71,119 +71,6 @@ function optionStyle(
     textAlign: 'center',
     width: '100%',
   }
-}
-
-// ─── Selection screen ──────────────────────────────────────────────────────────
-function SelectionScreen({ onStart }: { onStart: (idx: number) => void }) {
-  const navigate = useNavigate()
-
-  return (
-    <Screen>
-      <div
-        style={{
-          padding: 'var(--space-6) var(--space-4)',
-          maxWidth: 420,
-          margin: '0 auto',
-          width: '100%',
-        }}
-      >
-        <div style={{ marginBottom: 'var(--space-6)' }}>
-          <h2 style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--space-1)' }}>
-            Earn Avios
-          </h2>
-          <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
-            Pick a quiz and test your football knowledge
-          </p>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
-          {QUIZZES.map((quiz, i) => (
-            <button
-              key={quiz.id}
-              onClick={() => onStart(i)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--space-4)',
-                padding: 'var(--space-4)',
-                background: 'var(--color-surface)',
-                border: '1px solid var(--color-border)',
-                borderRadius: 'var(--radius-md)',
-                cursor: 'pointer',
-                textAlign: 'left',
-                fontFamily: 'inherit',
-                color: 'var(--color-text-primary)',
-                transition: 'border-color var(--transition-fast)',
-              }}
-            >
-              {/* Emoji thumbnail */}
-              <div
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: 'var(--radius-md)',
-                  background: quiz.questions[0].accentColor,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: 28,
-                  flexShrink: 0,
-                }}
-              >
-                {quiz.emoji}
-              </div>
-
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 2 }}>
-                  {quiz.title}
-                </div>
-                <div
-                  style={{
-                    fontSize: 'var(--font-size-xs)',
-                    color: 'var(--color-text-secondary)',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {quiz.description}
-                </div>
-                <div
-                  style={{
-                    fontSize: 11,
-                    color: 'var(--color-accent)',
-                    marginTop: 4,
-                  }}
-                >
-                  {quiz.questions.length} questions · {quiz.questions.length * QUESTION_TIME}s
-                </div>
-              </div>
-
-              <span style={{ color: 'var(--color-text-secondary)', fontSize: 18 }}>›</span>
-            </button>
-          ))}
-        </div>
-
-        <button
-          onClick={() => navigate(-1)}
-          style={{
-            marginTop: 'var(--space-6)',
-            background: 'none',
-            border: 'none',
-            color: 'var(--color-text-secondary)',
-            fontSize: 'var(--font-size-sm)',
-            cursor: 'pointer',
-            fontFamily: 'inherit',
-            width: '100%',
-            textAlign: 'center',
-            padding: 'var(--space-3)',
-          }}
-        >
-          ← Back
-        </button>
-      </div>
-    </Screen>
-  )
 }
 
 // ─── Question screen ───────────────────────────────────────────────────────────
@@ -376,24 +263,28 @@ function QuestionScreen({
 // ─── Main quiz route ───────────────────────────────────────────────────────────
 export default function QuizRoute() {
   const navigate = useNavigate()
-  const { addPoints } = useStore()
+  const location = useLocation()
+  const { addPoints, recordQuizResult } = useStore()
 
-  const [phase, setPhase]       = useState<'selection' | 'playing'>('selection')
-  const [quizIdx, setQuizIdx]   = useState(0)
-  const [qIdx, setQIdx]         = useState(0)
-  const [score, setScore]       = useState(0)
-  const [chosenId, setChosenId] = useState<string | null>(null)
-  const [revealed, setRevealed] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(QUESTION_TIME)
+  // Resolve which quiz to play from navigation state
+  const quizId  = (location.state as { quizId?: string } | null)?.quizId
+  const quizIdx = quizId ? QUIZZES.findIndex(q => q.id === quizId) : 0
+  const resolvedIdx = quizIdx >= 0 ? quizIdx : 0
 
-  const quiz     = QUIZZES[quizIdx]
+  const [qIdx,      setQIdx]      = useState(0)
+  const [score,     setScore]     = useState(0)
+  const [chosenId,  setChosenId]  = useState<string | null>(null)
+  const [revealed,  setRevealed]  = useState(false)
+  const [timeLeft,  setTimeLeft]  = useState(QUESTION_TIME)
+
+  const quiz     = QUIZZES[resolvedIdx]
   const question = quiz?.questions[qIdx]
   const total    = quiz?.questions.length ?? 0
   const isLast   = qIdx === total - 1
 
   // ── Timer ──────────────────────────────────────────────────────────────────
   useEffect(() => {
-    if (phase !== 'playing' || revealed) return
+    if (revealed) return
     if (timeLeft <= 0) {
       setRevealed(true)
       track('quiz_question_timeout', { quizId: quiz.id, qIdx })
@@ -401,20 +292,9 @@ export default function QuizRoute() {
     }
     const t = setTimeout(() => setTimeLeft(n => n - 1), 1000)
     return () => clearTimeout(t)
-  }, [phase, revealed, timeLeft, quiz?.id, qIdx])
+  }, [revealed, timeLeft, quiz?.id, qIdx])
 
   // ── Handlers ───────────────────────────────────────────────────────────────
-  const startQuiz = useCallback((idx: number) => {
-    setQuizIdx(idx)
-    setQIdx(0)
-    setScore(0)
-    setChosenId(null)
-    setRevealed(false)
-    setTimeLeft(QUESTION_TIME)
-    setPhase('playing')
-    track('quiz_started', { quizId: QUIZZES[idx].id })
-  }, [])
-
   const handleSelect = useCallback((id: string) => {
     if (revealed) return
     setChosenId(id)
@@ -426,9 +306,9 @@ export default function QuizRoute() {
 
   const handleNext = useCallback(() => {
     if (isLast) {
-      // Use functional updater to get latest score after the last answer
       setScore(finalScore => {
         addPoints(finalScore)
+        recordQuizResult(quiz.id, finalScore, total)
         track('quiz_completed', { quizId: quiz.id, score: finalScore, total })
         navigate('/results', { state: { score: finalScore, total, quizTitle: quiz.title } })
         return finalScore
@@ -439,18 +319,14 @@ export default function QuizRoute() {
       setRevealed(false)
       setTimeLeft(QUESTION_TIME)
     }
-  }, [isLast, quiz, total, addPoints, navigate])
+  }, [isLast, quiz, total, addPoints, recordQuizResult, navigate])
 
   const handleBack = useCallback(() => {
-    setPhase('selection')
     track('quiz_abandoned', { quizId: quiz?.id, qIdx })
-  }, [quiz?.id, qIdx])
+    navigate(-1)
+  }, [quiz?.id, qIdx, navigate])
 
   // ── Render ─────────────────────────────────────────────────────────────────
-  if (phase === 'selection') {
-    return <SelectionScreen onStart={startQuiz} />
-  }
-
   return (
     <QuestionScreen
       quiz={quiz}
