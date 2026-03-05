@@ -111,24 +111,22 @@ function OptionButton({
         transition: 'border-color 200ms ease, background 200ms ease',
       }}
     >
-      {/* Percentage fill bar (behind content, shown after reveal) */}
-      {revealed && (
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: `${percentage}%`,
-            background: isCorrect
-              ? 'rgba(0,212,170,0.12)'
-              : isWrong
-              ? 'rgba(255,77,77,0.10)'
-              : 'rgba(255,255,255,0.04)',
-            borderRadius: 50,
-            transition: 'width 500ms ease',
-            pointerEvents: 'none',
-          }}
-        />
-      )}
+      {/* Percentage fill bar — always rendered so CSS transition fires left→right */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: revealed ? `${percentage}%` : '0%',
+          background: isCorrect
+            ? 'rgba(0,212,170,0.12)'
+            : isWrong
+            ? 'rgba(255,77,77,0.10)'
+            : 'rgba(255,255,255,0.04)',
+          borderRadius: 50,
+          transition: revealed ? 'width 600ms ease' : 'none',
+          pointerEvents: 'none',
+        }}
+      />
 
       {/* Letter badge */}
       <div
