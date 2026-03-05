@@ -50,47 +50,53 @@ function saveState(state: AppState): void {
   }
 }
 
+// ─── Module-level singleton ────────────────────────────────────────────────────
+// All useStore() calls share this single instance so updates in one component
+// (e.g. Identity) are immediately visible in another (e.g. Card) without
+// relying on localStorage round-trips between renders.
+
+let _state: AppState = loadState()
+const _listeners = new Set<() => void>()
+
+function _setState(updater: (prev: AppState) => AppState): void {
+  _state = updater(_state)
+  saveState(_state)
+  _listeners.forEach(l => l())
+}
+
+// ─── Hook ──────────────────────────────────────────────────────────────────────
 export function useStore() {
-  const [state, setState] = useState<AppState>(loadState)
+  // Local counter only used to trigger re-renders when singleton state changes
+  const [, forceRender] = useState(0)
 
   useEffect(() => {
-    saveState(state)
-  }, [state])
+    const notify = () => forceRender(n => n + 1)
+    _listeners.add(notify)
+    return () => { _listeners.delete(notify) }
+  }, [])
 
   const updateFanCard = useCallback((patch: Partial<FanCard>) => {
-    setState(prev => {
-      const next = { ...prev, fanCard: { ...prev.fanCard, ...patch } }
-      saveState(next) // persist synchronously so navigating away doesn't lose state
-      return next
-    })
+    _setState(prev => ({ ...prev, fanCard: { ...prev.fanCard, ...patch } }))
   }, [])
 
   const addPoints = useCallback((n: number) => {
-    setState(prev => {
-      const next = { ...prev, points: prev.points + n }
-      saveState(next)
-      return next
-    })
+    _setState(prev => ({ ...prev, points: prev.points + n }))
   }, [])
 
   const recordQuizResult = useCallback((quizId: string, score: number, total: number) => {
-    setState(prev => {
-      const next = {
-        ...prev,
-        quizResults: {
-          ...prev.quizResults,
-          [quizId]: { score, total, completedAt: new Date().toISOString() },
-        },
-      }
-      saveState(next)
-      return next
-    })
+    _setState(prev => ({
+      ...prev,
+      quizResults: {
+        ...prev.quizResults,
+        [quizId]: { score, total, completedAt: new Date().toISOString() },
+      },
+    }))
   }, [])
 
   const resetState = useCallback(() => {
-    setState(defaultState)
+    _setState(() => defaultState)
     localStorage.removeItem(STORAGE_KEY)
   }, [])
 
-  return { state, updateFanCard, addPoints, recordQuizResult, resetState }
+  return { state: _state, updateFanCard, addPoints, recordQuizResult, resetState }
 }

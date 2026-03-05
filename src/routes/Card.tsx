@@ -374,7 +374,9 @@ export default function Card() {
           </p>
         </div>
 
-        <FanCard ref={cardRef} fanCard={state.fanCard} onSave={handleSave} />
+        <div style={{ width: '100%' }}>
+          <FanCard ref={cardRef} fanCard={state.fanCard} onSave={handleSave} />
+        </div>
 
         {/* ── Edit / Share / Save actions ──────────────────────── */}
         <div style={{ display: 'flex', gap: 'var(--sp-5)', justifyContent: 'center' }}>
