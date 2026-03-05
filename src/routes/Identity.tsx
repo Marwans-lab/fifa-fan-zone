@@ -129,6 +129,25 @@ function CardPreview({
   )
 }
 
+// ─── Image compression ────────────────────────────────────────────────────────
+// Resizes any image to ≤480px on the longest side at 0.78 JPEG quality.
+// Keeps base64 output under ~50 KB so it fits in localStorage safely.
+function compressDataUrl(source: HTMLVideoElement | HTMLImageElement, flipX = false): string {
+  const sw = source instanceof HTMLVideoElement ? source.videoWidth  : source.naturalWidth
+  const sh = source instanceof HTMLVideoElement ? source.videoHeight : source.naturalHeight
+  const MAX = 480
+  const scale = Math.min(MAX / sw, MAX / sh, 1)
+  const w = Math.round(sw * scale)
+  const h = Math.round(sh * scale)
+  const canvas = document.createElement('canvas')
+  canvas.width  = w
+  canvas.height = h
+  const ctx = canvas.getContext('2d')!
+  if (flipX) { ctx.translate(w, 0); ctx.scale(-1, 1) }
+  ctx.drawImage(source, 0, 0, w, h)
+  return canvas.toDataURL('image/jpeg', 0.78)
+}
+
 // ─── Main Identity route ───────────────────────────────────────────────────────
 export default function Identity() {
   const navigate = useNavigate()
@@ -195,17 +214,7 @@ export default function Identity() {
   const capturePhoto = useCallback(() => {
     const video = videoRef.current
     if (!video || video.readyState < 2 || !video.videoWidth) return
-    const w = video.videoWidth
-    const h = video.videoHeight
-    const canvas = document.createElement('canvas')
-    canvas.width = w
-    canvas.height = h
-    const ctx = canvas.getContext('2d')!
-    // un-mirror the capture (flip back since preview is mirrored)
-    ctx.translate(w, 0)
-    ctx.scale(-1, 1)
-    ctx.drawImage(video, 0, 0, w, h)
-    const url = canvas.toDataURL('image/jpeg', 0.92)
+    const url = compressDataUrl(video, true /* un-mirror */)
     stopCamera()
     setPhotoDataUrl(url)
     setStep('preview')
@@ -223,10 +232,14 @@ export default function Identity() {
     if (!file) return
     const reader = new FileReader()
     reader.onload = ev => {
-      const url = ev.target?.result as string
-      setPhotoDataUrl(url)
-      setStep('preview')
-      track('identity_photo_taken')
+      const img = new Image()
+      img.onload = () => {
+        const url = compressDataUrl(img)
+        setPhotoDataUrl(url)
+        setStep('preview')
+        track('identity_photo_taken')
+      }
+      img.src = ev.target?.result as string
     }
     reader.readAsDataURL(file)
   }, [])
