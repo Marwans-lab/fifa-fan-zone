@@ -100,7 +100,7 @@ function OptionButton({
         borderRadius: 50,
         border: `1.5px solid ${borderColor}`,
         background: revealed && isCorrect
-          ? 'rgba(50,130,86,0.08)'
+          ? 'rgba(52,219,128,0.08)'
           : revealed && isWrong
           ? 'rgba(217,87,87,0.08)'
           : 'var(--c-surface)',
@@ -118,7 +118,7 @@ function OptionButton({
           inset: 0,
           width: revealed ? `${percentage}%` : '0%',
           background: isCorrect
-            ? 'rgba(50,130,86,0.12)'
+            ? 'rgba(52,219,128,0.12)'
             : isWrong
             ? 'rgba(217,87,87,0.10)'
             : 'rgba(255,255,255,0.04)',
