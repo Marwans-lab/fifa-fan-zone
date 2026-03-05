@@ -1,55 +1,143 @@
 :root {
-  /* Colours */
-  --color-bg: #0a0a0a;
-  --color-surface: #141414;
-  --color-border: #2a2a2a;
-  --color-accent: #00d4aa;
-  --color-brand: #c8102e;
-  --color-accent-dark: #009e7e;
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #a0a0a0;
-  --color-error: #ff4d4d;
-  --color-warning: #ffb800;
-  --color-success: #00d4aa;
+  /* ─── Color roles ─────────────────────────────────────────────────────────── */
+  --c-bg:            #05050a;
+  --c-surface:       rgba(255,255,255,0.06);
+  --c-surface-raise: rgba(255,255,255,0.10);
+  --c-surface-press: rgba(255,255,255,0.14);
+  --c-border:        rgba(255,255,255,0.13);
+  --c-border-raise:  rgba(255,255,255,0.22);
+  --c-border-accent: rgba(0,212,170,0.32);
+  --c-border-brand:  rgba(200,16,46,0.32);
 
-  /* Spacing */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
-  --space-10: 40px;
-  --space-12: 48px;
+  --c-text-1: rgba(255,255,255,0.94);
+  --c-text-2: rgba(255,255,255,0.48);
+  --c-text-3: rgba(255,255,255,0.24);
 
-  /* Typography */
-  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-md: 16px;
-  --font-size-lg: 20px;
-  --font-size-xl: 24px;
-  --font-size-2xl: 32px;
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-weight-bold: 700;
-  --line-height-tight: 1.2;
-  --line-height-normal: 1.5;
+  --c-accent:   #00d4aa;
+  --c-brand:    #c8102e;
+  --c-correct:  #328256;
+  --c-error:    #D95757;
+  --c-warn:     #ffb800;
 
-  /* Radii */
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-full: 9999px;
+  /* ─── Glass / elevation ───────────────────────────────────────────────────── */
+  --glass-bg:     rgba(255,255,255,0.07);
+  --glass-border: rgba(255,255,255,0.13);
+  --glass-blur:   blur(16px);
+  --glass-shine:  inset 0 1px 0 rgba(255,255,255,0.10);
 
-  /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-normal: 250ms ease;
-  --transition-slow: 400ms ease;
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.45);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.55), var(--glass-shine);
+  --shadow-lg: 0 8px 48px rgba(0,0,0,0.70), var(--glass-shine);
 
-  /* Z-index */
-  --z-base: 0;
+  /* ─── Typography ──────────────────────────────────────────────────────────── */
+  --font-display: 'Jotia', 'SF Pro Display', ui-rounded, -apple-system, system-ui, sans-serif;
+  --font-body:    'Graphik', 'SF Pro Text', ui-rounded, -apple-system, system-ui, sans-serif;
+
+  --text-2xs: 10px;
+  --text-xs:  11px;
+  --text-sm:  13px;
+  --text-md:  15px;
+  --text-lg:  18px;
+  --text-xl:  22px;
+  --text-2xl: 28px;
+  --text-3xl: 36px;
+
+  --weight-thin:  100;
+  --weight-light: 300;
+  --weight-reg:   400;
+  --weight-med:   500;
+  --weight-bold:  600;
+
+  --leading-tight:  1.12;
+  --leading-snug:   1.28;
+  --leading-normal: 1.52;
+
+  --tracking-tight:  -0.03em;
+  --tracking-snug:   -0.015em;
+  --tracking-normal: -0.005em;
+  --tracking-wide:   0.05em;
+  --tracking-wider:  0.09em;
+
+  /* ─── Spacing (8pt grid) ──────────────────────────────────────────────────── */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  20px;
+  --sp-6:  24px;
+  --sp-7:  28px;
+  --sp-8:  32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+  --sp-20: 80px;
+
+  /* ─── Radii ───────────────────────────────────────────────────────────────── */
+  --r-xs:   4px;
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   16px;
+  --r-xl:   20px;
+  --r-2xl:  28px;
+  --r-full: 9999px;
+
+  /* ─── Motion ──────────────────────────────────────────────────────────────── */
+  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-sharp: cubic-bezier(0.2, 0, 0, 1);
+
+  --dur-fast:  100ms;
+  --dur-base:  180ms;
+  --dur-slow:  320ms;
+  --dur-enter: 260ms;
+  --dur-exit:  160ms;
+
+  /* ─── Backward-compat aliases (keep existing vars working) ───────────────── */
+  --color-bg:             var(--c-bg);
+  --color-surface:        rgba(255,255,255,0.05);
+  --color-border:         var(--c-border);
+  --color-accent:         var(--c-accent);
+  --color-brand:          var(--c-brand);
+  --color-accent-dark:    #009e7e;
+  --color-text-primary:   var(--c-text-1);
+  --color-text-secondary: var(--c-text-2);
+  --color-error:          var(--c-error);
+  --color-warning:        var(--c-warn);
+  --color-success:        var(--c-accent);
+
+  --space-1:  var(--sp-1);
+  --space-2:  var(--sp-2);
+  --space-3:  var(--sp-3);
+  --space-4:  var(--sp-4);
+  --space-5:  var(--sp-5);
+  --space-6:  var(--sp-6);
+  --space-8:  var(--sp-8);
+  --space-10: var(--sp-10);
+  --space-12: var(--sp-12);
+
+  --font-family:         var(--font-body);
+  --font-size-xs:        var(--text-xs);
+  --font-size-sm:        var(--text-sm);
+  --font-size-md:        var(--text-md);
+  --font-size-lg:        var(--text-lg);
+  --font-size-xl:        var(--text-xl);
+  --font-size-2xl:       var(--text-2xl);
+  --font-weight-regular: var(--weight-reg);
+  --font-weight-medium:  var(--weight-med);
+  --font-weight-bold:    var(--weight-bold);
+  --line-height-tight:   var(--leading-tight);
+  --line-height-normal:  var(--leading-normal);
+
+  --radius-sm:   var(--r-sm);
+  --radius-md:   var(--r-md);
+  --radius-lg:   var(--r-xl);
+  --radius-full: var(--r-full);
+
+  --transition-fast:   var(--dur-fast) var(--ease-out);
+  --transition-normal: var(--dur-base) var(--ease-out);
+  --transition-slow:   var(--dur-slow) var(--ease-out);
+
+  --z-base:    0;
   --z-overlay: 100;
-  --z-modal: 200;
+  --z-modal:   200;
 }

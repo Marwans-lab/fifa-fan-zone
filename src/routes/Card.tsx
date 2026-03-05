@@ -234,20 +234,8 @@ function QuizCard({
       </ProgressRing>
 
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 'var(--text-md)', fontWeight: 'var(--weight-med)', marginBottom: 3 }}>
+        <div style={{ fontSize: 'var(--text-md)', fontWeight: 'var(--weight-med)', marginBottom: 5 }}>
           {quiz.title}
-        </div>
-        <div
-          style={{
-            fontSize: 'var(--text-sm)',
-            color: 'var(--c-text-2)',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            marginBottom: 5,
-          }}
-        >
-          {quiz.description}
         </div>
         <div style={{ fontSize: 'var(--text-xs)', color: done ? 'var(--c-accent)' : locked ? 'var(--c-text-3)' : 'var(--c-accent)', letterSpacing: 'var(--tracking-wide)' }}>
           {done
