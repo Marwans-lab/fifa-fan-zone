@@ -70,10 +70,10 @@ function OptionButton({
     badgeBg     = 'var(--c-accent)'
     badgeColor  = '#000'
   } else if (revealed && isCorrect) {
-    borderColor = 'var(--c-accent)'
-    badgeBg     = 'var(--c-accent)'
-    badgeColor  = '#000'
-    textColor   = 'var(--c-accent)'
+    borderColor = 'var(--c-correct)'
+    badgeBg     = 'var(--c-correct)'
+    badgeColor  = '#fff'
+    textColor   = 'var(--c-correct)'
   } else if (revealed && isWrong) {
     borderColor = 'var(--c-error)'
     badgeBg     = 'var(--c-error)'
@@ -100,9 +100,9 @@ function OptionButton({
         borderRadius: 50,
         border: `1.5px solid ${borderColor}`,
         background: revealed && isCorrect
-          ? 'rgba(0,212,170,0.08)'
+          ? 'rgba(50,130,86,0.08)'
           : revealed && isWrong
-          ? 'rgba(255,77,77,0.08)'
+          ? 'rgba(217,87,87,0.08)'
           : 'var(--c-surface)',
         cursor: revealed ? 'default' : 'pointer',
         fontFamily: 'inherit',
@@ -118,9 +118,9 @@ function OptionButton({
           inset: 0,
           width: revealed ? `${percentage}%` : '0%',
           background: isCorrect
-            ? 'rgba(0,212,170,0.12)'
+            ? 'rgba(50,130,86,0.12)'
             : isWrong
-            ? 'rgba(255,77,77,0.10)'
+            ? 'rgba(217,87,87,0.10)'
             : 'rgba(255,255,255,0.04)',
           borderRadius: 50,
           transition: revealed ? 'width 600ms ease' : 'none',
@@ -169,7 +169,7 @@ function OptionButton({
           style={{
             fontSize: 12,
             fontWeight: 700,
-            color: isCorrect ? 'var(--c-accent)' : isWrong ? 'var(--c-error)' : 'var(--c-text-3)',
+            color: isCorrect ? 'var(--c-correct)' : isWrong ? 'var(--c-error)' : 'var(--c-text-3)',
             flexShrink: 0,
             zIndex: 1,
           }}
@@ -354,7 +354,7 @@ function QuestionScreen({
                 style={{
                   textAlign: 'center',
                   fontSize: 'var(--text-sm)',
-                  color: chosenId === question.correctId ? 'var(--c-accent)' : 'var(--c-error)',
+                  color: chosenId === question.correctId ? 'var(--c-correct)' : 'var(--c-error)',
                   marginBottom: 'var(--sp-3)',
                   fontWeight: 'var(--weight-med)',
                   letterSpacing: 'var(--tracking-wide)',

@@ -2,7 +2,7 @@ import { useRef, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Screen from '../components/Screen'
 import Button from '../components/Button'
-import FanCard, { type FanCardHandle } from '../components/FanCard'
+import FanCard from '../components/FanCard'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import { renderCardToBlob, buildShareText } from '../lib/cardExport'
@@ -111,7 +111,7 @@ function ProgressCard({
                   flex: 1,
                   height: 2,
                   marginBottom: 20,
-                  background: done && achieved[i + 1] ? 'var(--c-brand)' : done ? `linear-gradient(90deg, var(--c-brand), var(--c-border))` : 'var(--c-border)',
+                  background: done && achieved[i + 1] ? 'var(--c-accent)' : done ? `linear-gradient(90deg, var(--c-accent), var(--c-border))` : 'var(--c-border)',
                   transition: 'background var(--dur-slow) var(--ease-out)',
                 }} />
               )}
@@ -197,7 +197,7 @@ function QuizCard({
   const locked = cardState === 'locked'
   const done   = cardState === 'done'
 
-  const ringColor = done ? 'var(--c-accent)' : 'var(--c-brand)'
+  const ringColor = 'var(--c-accent)'
   const overlayIcon = done ? '✓' : locked ? '🔒' : null
 
   return (
@@ -215,7 +215,7 @@ function QuizCard({
         border: `1px solid ${done ? 'rgba(0,212,170,0.2)' : 'var(--c-border)'}`,
         borderRadius: 'var(--r-md)',
         cursor: locked ? 'default' : 'pointer',
-        opacity: locked ? 0.4 : 1,
+        opacity: locked ? 0.6 : 1,
         textAlign: 'left',
         fontFamily: 'inherit',
         color: 'var(--c-text-1)',
@@ -269,7 +269,6 @@ function QuizCard({
 export default function Card() {
   const navigate    = useNavigate()
   const { state, updateFanCard, resetState } = useStore()
-  const cardRef     = useRef<FanCardHandle>(null)
   const quizRef     = useRef<HTMLDivElement>(null)
   const [sharing, setSharing] = useState(false)
   const [saving,  setSaving]  = useState(false)
@@ -277,10 +276,6 @@ export default function Card() {
   function handleSave(answers: Record<string, string>) {
     updateFanCard({ answers, completedAt: new Date().toISOString() })
   }
-
-  const handleEdit = useCallback(() => {
-    cardRef.current?.startEditing()
-  }, [])
 
   const handleShare = useCallback(async () => {
     setSharing(true)
@@ -375,14 +370,7 @@ export default function Card() {
         </div>
 
         <div style={{ width: '100%' }}>
-          <FanCard ref={cardRef} fanCard={state.fanCard} onSave={handleSave} />
-        </div>
-
-        {/* ── Edit / Share / Save actions ──────────────────────── */}
-        <div style={{ display: 'flex', gap: 'var(--sp-5)', justifyContent: 'center' }}>
-          <ActionBtn icon="✏" label="Edit"  onClick={handleEdit} />
-          <ActionBtn icon="⤴" label="Share" onClick={handleShare} loading={sharing} />
-          <ActionBtn icon="⬇" label="Save"  onClick={handleSaveToDevice} loading={saving} />
+          <FanCard fanCard={state.fanCard} onSave={handleSave} onShare={handleShare} onSaveToDevice={handleSaveToDevice} />
         </div>
 
         {/* ── Progress card ─────────────────────────────────────── */}
@@ -402,13 +390,6 @@ export default function Card() {
             }}
           >
             Start Quiz
-          </Button>
-          <Button
-            variant="ghost"
-            fullWidth
-            onClick={() => { track('card_back_tapped'); navigate(-1) }}
-          >
-            Back
           </Button>
         </div>
 
@@ -460,41 +441,3 @@ export default function Card() {
   )
 }
 
-// ─── Action button ─────────────────────────────────────────────────────────────
-function ActionBtn({
-  icon, label, onClick, loading,
-}: {
-  icon: string
-  label: string
-  onClick: () => void
-  loading?: boolean
-}) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={loading}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 'var(--sp-1)',
-        background: 'var(--glass-bg)',
-        border: '1px solid var(--c-border)',
-        borderRadius: 'var(--r-md)',
-        padding: 'var(--sp-3) var(--sp-5)',
-        cursor: loading ? 'default' : 'pointer',
-        opacity: loading ? 0.5 : 1,
-        color: 'var(--c-text-1)',
-        fontFamily: 'inherit',
-        backdropFilter: 'var(--glass-blur)',
-        WebkitBackdropFilter: 'var(--glass-blur)',
-        boxShadow: 'var(--glass-shine)',
-        transition: 'opacity var(--dur-base) var(--ease-out)',
-        minWidth: 64,
-      }}
-    >
-      <span style={{ fontSize: 20 }}>{loading ? '…' : icon}</span>
-      <span style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', letterSpacing: 'var(--tracking-wide)' }}>{label}</span>
-    </button>
-  )
-}

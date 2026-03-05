@@ -46,6 +46,8 @@ type QuestionId = (typeof PROFILE_QUESTIONS)[number]['id']
 interface Props {
   fanCard: FanCardData
   onSave: (answers: Record<string, string>) => void
+  onShare?: () => void
+  onSaveToDevice?: () => void
 }
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
@@ -111,6 +113,33 @@ const backFaceStyle: React.CSSProperties = {
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
+function ActionCircle({ icon, label, onClick, disabled }: { icon: string; label: string; onClick: (e: React.MouseEvent) => void; disabled?: boolean }) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
+        background: 'none', border: 'none',
+        cursor: disabled ? 'default' : 'pointer',
+        opacity: disabled ? 0.35 : 1,
+        fontFamily: 'inherit', padding: 0,
+      }}
+    >
+      <div style={{
+        width: 36, height: 36, borderRadius: '50%',
+        background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15,
+      }}>
+        {icon}
+      </div>
+      <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.55)', letterSpacing: 1, textTransform: 'uppercase' }}>
+        {label}
+      </span>
+    </button>
+  )
+}
+
 function HolographicStripe() {
   return (
     <div
@@ -148,7 +177,7 @@ function FanPhoto({ photoDataUrl }: { photoDataUrl: string | null }) {
 }
 
 // ─── Main component ───────────────────────────────────────────────────────────
-const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onSave }, ref) {
+const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onSave, onShare, onSaveToDevice }, ref) {
   const [isFlipped, setIsFlipped]       = useState(false)
   const [wizardActive, setWizardActive] = useState(false)
   const [step, setStep]                 = useState(0)
@@ -228,6 +257,24 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
     [step]
   )
 
+  const handleEditTap = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
+    setAnswers({ ...fanCard.answers } as Partial<Record<QuestionId, string>>)
+    setStep(0)
+    setWizardActive(true)
+    track('card_edit_tapped')
+  }, [fanCard.answers])
+
+  const handleShareTap = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
+    onShare?.()
+  }, [onShare])
+
+  const handleSaveTap = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
+    onSaveToDevice?.()
+  }, [onSaveToDevice])
+
   const resolvedAnswer = (id: QuestionId) =>
     answers[id] ?? (fanCard.answers[id] as string | undefined) ?? '—'
 
@@ -270,7 +317,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             )}
           </div>
 
-          <div style={{ fontSize: 11, color: '#ffffff33', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <div style={{ fontSize: 11, color: '#ffffff66', display: 'flex', alignItems: 'center', gap: 4 }}>
             <span style={{ fontSize: 14 }}>↩</span> Tap card to flip
           </div>
         </div>
@@ -297,7 +344,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           {wizardActive ? (
 
             /* ── Wizard ─────────────────────────────────────────── */
-            <div style={{ display: 'contents' }} onClick={e => e.stopPropagation()}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
               <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
                 {PROFILE_QUESTIONS.map((_, i) => (
                   <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i <= step ? '#00d4aa' : 'rgba(255,255,255,0.12)', transition: 'background 300ms ease' }} />
@@ -350,7 +397,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           ) : isComplete ? (
 
             /* ── Completed display rows ──────────────────────────── */
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {PROFILE_QUESTIONS.map(q => (
                 <div key={q.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10 }}>
                   <span style={{ fontSize: 18, opacity: 0.55, flexShrink: 0 }}>{q.icon}</span>
@@ -378,6 +425,18 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               </button>
             </div>
 
+          )}
+
+          {/* ── Action circles (Edit / Share / Save) ─────────────── */}
+          {isComplete && !wizardActive && (
+            <div
+              style={{ display: 'flex', justifyContent: 'center', gap: 20, paddingTop: 14 }}
+              onClick={e => e.stopPropagation()}
+            >
+              <ActionCircle icon="✏" label="Edit"  onClick={handleEditTap} />
+              <ActionCircle icon="⤴" label="Share" onClick={handleShareTap} />
+              <ActionCircle icon="⬇" label="Save"  onClick={handleSaveTap} />
+            </div>
           )}
         </div>
       </div>
