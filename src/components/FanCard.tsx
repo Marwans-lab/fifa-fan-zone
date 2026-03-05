@@ -52,11 +52,10 @@ const CARD_W = 300
 const CARD_H = 420
 
 const containerStyle: React.CSSProperties = {
-  width: CARD_W,
-  height: CARD_H,
+  width: '100%',
+  aspectRatio: `${CARD_W} / ${CARD_H}`,
   perspective: 1000,
   cursor: 'pointer',
-  flexShrink: 0,
 }
 
 function innerStyle(flipped: boolean): React.CSSProperties {
