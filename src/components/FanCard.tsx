@@ -130,10 +130,11 @@ function ActionCircle({ icon, label, onClick, disabled }: { icon: string; label:
         width: 36, height: 36, borderRadius: '50%',
         background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15,
+        color: '#fff',
       }}>
         {icon}
       </div>
-      <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.55)', letterSpacing: 1, textTransform: 'uppercase' }}>
+      <span style={{ fontSize: 9, color: '#fff', letterSpacing: 1, textTransform: 'uppercase' }}>
         {label}
       </span>
     </button>
@@ -159,14 +160,14 @@ function FanPhoto({ photoDataUrl }: { photoDataUrl: string | null }) {
       <img
         src={photoDataUrl}
         alt="Fan photo"
-        style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', border: '3px solid rgba(255,255,255,0.55)', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}
+        style={{ width: 180, height: 180, borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', border: '3px solid rgba(255,255,255,0.55)', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}
       />
     )
   }
   return (
     <div
       style={{
-        width: 120, height: 120, borderRadius: '50%',
+        width: 180, height: 180, borderRadius: '50%',
         background: 'rgba(0,0,0,0.28)', border: '2px dashed rgba(255,255,255,0.35)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40,
       }}
@@ -306,7 +307,8 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             {fanCard.teamId ? (() => {
               const team = getTeam(fanCard.teamId)
               return (
-                <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.88)', letterSpacing: 1, fontStyle: 'italic', marginBottom: 4 }}>
+                <div style={{ fontSize: 20, fontWeight: 600, color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic', marginBottom: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                  {team && <span style={{ fontStyle: 'normal', fontSize: 22 }}>{team.flag}</span>}
                   {team ? team.motto : fanCard.teamId}
                 </div>
               )
