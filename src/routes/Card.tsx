@@ -8,6 +8,121 @@ import { useStore } from '../store/useStore'
 import { renderCardToBlob, buildShareText } from '../lib/cardExport'
 import { QUIZZES } from '../data/quizzes'
 
+// ─── Progress card ─────────────────────────────────────────────────────────────
+const MILESTONES = [
+  { icon: '🪪', label: 'Fan Card',    key: 'card'     },
+  { icon: '🎯', label: '1st Quiz',    key: 'quiz1'    },
+  { icon: '🔥', label: '3 Quizzes',   key: 'quiz3'    },
+  { icon: '🏆', label: 'Champion',    key: 'champion' },
+] as const
+
+function statusLabel(done: number): string {
+  if (done === 0) return 'New Arrival'
+  if (done === 1) return 'Rising Fan'
+  if (done === 2) return 'Quiz Taker'
+  if (done === 3) return 'Top Fan'
+  return 'Quiz Champion'
+}
+
+function ProgressCard({
+  completedAt,
+  quizCount,
+  points,
+}: {
+  completedAt: string | null
+  quizCount: number
+  points: number
+}) {
+  const achieved = [
+    completedAt !== null,
+    quizCount >= 1,
+    quizCount >= 3,
+    quizCount >= 5,
+  ]
+  const doneCount = achieved.filter(Boolean).length
+  const status = statusLabel(doneCount)
+
+  return (
+    <div style={{
+      width: '100%',
+      padding: 'var(--sp-4) var(--sp-5)',
+      background: 'var(--glass-bg)',
+      border: '1px solid var(--c-border)',
+      borderRadius: 'var(--r-md)',
+      backdropFilter: 'var(--glass-blur)',
+      WebkitBackdropFilter: 'var(--glass-blur)',
+      boxShadow: 'var(--glass-shine)',
+    }}>
+      {/* Header row */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--sp-4)' }}>
+        <div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-3)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginBottom: 2 }}>
+            Your journey
+          </div>
+          <div style={{ fontSize: 'var(--text-md)', fontFamily: 'var(--font-display)', fontWeight: 'var(--weight-light)', letterSpacing: 'var(--tracking-tight)', color: 'var(--c-text-1)' }}>
+            {status}
+          </div>
+        </div>
+        {points > 0 && (
+          <div style={{
+            fontSize: 'var(--text-xs)', color: 'var(--c-accent)',
+            background: 'rgba(0,212,170,0.08)',
+            border: '1px solid rgba(0,212,170,0.2)',
+            borderRadius: 'var(--r-full)',
+            padding: '4px 10px',
+            letterSpacing: 'var(--tracking-wide)',
+            fontWeight: 'var(--weight-med)',
+          }}>
+            {points} pts
+          </div>
+        )}
+      </div>
+
+      {/* Milestone track */}
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        {MILESTONES.map((m, i) => {
+          const done = achieved[i]
+          const isLast = i === MILESTONES.length - 1
+          return (
+            <div key={m.key} style={{ display: 'flex', alignItems: 'center', flex: isLast ? 0 : 1 }}>
+              {/* Node */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--sp-1)' }}>
+                <div style={{
+                  width: 32, height: 32,
+                  borderRadius: '50%',
+                  background: done ? '#ffffff' : 'var(--c-surface-raise)',
+                  border: `1.5px solid ${done ? '#ffffff' : 'var(--c-border)'}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: done ? 14 : 16,
+                  fontWeight: done ? 700 : 400,
+                  color: done ? '#000' : 'var(--c-text-3)',
+                  transition: 'all var(--dur-base) var(--ease-out)',
+                  flexShrink: 0,
+                }}>
+                  {done ? '✓' : m.icon}
+                </div>
+                <div style={{ fontSize: 'var(--text-2xs)', color: done ? 'var(--c-text-2)' : 'var(--c-text-3)', letterSpacing: 'var(--tracking-wide)', whiteSpace: 'nowrap' }}>
+                  {m.label}
+                </div>
+              </div>
+              {/* Connector */}
+              {!isLast && (
+                <div style={{
+                  flex: 1,
+                  height: 2,
+                  marginBottom: 20,
+                  background: done && achieved[i + 1] ? 'var(--c-brand)' : done ? `linear-gradient(90deg, var(--c-brand), var(--c-border))` : 'var(--c-border)',
+                  transition: 'background var(--dur-slow) var(--ease-out)',
+                }} />
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 // ─── Circular progress ring (SVG) ──────────────────────────────────────────────
 function ProgressRing({
   progress,
@@ -263,6 +378,13 @@ export default function Card() {
           <ActionBtn icon="⤴" label="Share" onClick={handleShare} loading={sharing} />
           <ActionBtn icon="⬇" label="Save"  onClick={handleSaveToDevice} loading={saving} />
         </div>
+
+        {/* ── Progress card ─────────────────────────────────────── */}
+        <ProgressCard
+          completedAt={state.fanCard.completedAt}
+          quizCount={Object.keys(state.quizResults).length}
+          points={state.points}
+        />
 
         {/* ── Start Quiz CTA (scrolls down) ─────────────────────── */}
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)' }}>
