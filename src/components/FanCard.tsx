@@ -268,11 +268,6 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                 No team selected
               </div>
             )}
-            {isComplete && (
-              <div style={{ display: 'inline-block', fontSize: 10, color: '#00d4aa', border: '1px solid #00d4aa', borderRadius: 4, padding: '2px 8px', letterSpacing: 1 }}>
-                ✓ COMPLETE
-              </div>
-            )}
           </div>
 
           <div style={{ fontSize: 11, color: '#ffffff33', display: 'flex', alignItems: 'center', gap: 4 }}>

@@ -36,7 +36,13 @@ function loadState(): AppState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return defaultState
-    return { ...defaultState, ...JSON.parse(raw) }
+    const saved = JSON.parse(raw) as Partial<AppState>
+    return {
+      ...defaultState,
+      ...saved,
+      // deep-merge fanCard so missing fields fall back to defaults
+      fanCard: { ...defaultState.fanCard, ...(saved.fanCard ?? {}) },
+    }
   } catch {
     return defaultState
   }
