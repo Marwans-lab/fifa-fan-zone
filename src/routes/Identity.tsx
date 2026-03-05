@@ -8,11 +8,17 @@ export default function Identity() {
 
   return (
     <Screen centered>
-      <div style={{ padding: 'var(--space-8)', textAlign: 'center', maxWidth: 360, width: '100%' }}>
-        <h2 style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--space-4)' }}>
+      <div style={{ padding: 'var(--sp-8)', textAlign: 'center', maxWidth: 360, width: '100%' }}>
+        <h2 style={{
+          fontFamily: 'var(--font-display)',
+          fontSize: 'var(--text-xl)',
+          fontWeight: 'var(--weight-light)',
+          letterSpacing: 'var(--tracking-tight)',
+          marginBottom: 'var(--sp-4)',
+        }}>
           Entry &amp; Identity
         </h2>
-        <p style={{ color: 'var(--color-text-secondary)', marginBottom: 'var(--space-8)', fontSize: 'var(--font-size-sm)' }}>
+        <p style={{ color: 'var(--c-text-2)', marginBottom: 'var(--sp-8)', fontSize: 'var(--text-sm)', lineHeight: 'var(--leading-normal)' }}>
           M1 — Team selection, photo capture &amp; card save.<br />
           Implementation coming in MAR-27 / MAR-28.
         </p>
@@ -28,7 +34,7 @@ export default function Identity() {
         <Button
           variant="ghost"
           fullWidth
-          style={{ marginTop: 'var(--space-3)' }}
+          style={{ marginTop: 'var(--sp-3)' }}
           onClick={() => navigate('/')}
         >
           Back

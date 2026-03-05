@@ -60,29 +60,29 @@ function OptionButton({
   const isWrong   = isChosen && !isCorrect
 
   // colours
-  let borderColor = '#3a3a3a'
-  let badgeBg     = '#2a2a2a'
-  let textColor   = '#fff'
-  let badgeColor  = '#888'
+  let borderColor = 'var(--c-border)'
+  let badgeBg     = 'var(--c-surface-raise)'
+  let textColor   = 'var(--c-text-1)'
+  let badgeColor  = 'var(--c-text-3)'
 
   if (!revealed && isChosen) {
-    borderColor = 'var(--color-accent)'
-    badgeBg     = 'var(--color-accent)'
+    borderColor = 'var(--c-accent)'
+    badgeBg     = 'var(--c-accent)'
     badgeColor  = '#000'
   } else if (revealed && isCorrect) {
-    borderColor = '#00d4aa'
-    badgeBg     = '#00d4aa'
+    borderColor = 'var(--c-accent)'
+    badgeBg     = 'var(--c-accent)'
     badgeColor  = '#000'
-    textColor   = '#00d4aa'
+    textColor   = 'var(--c-accent)'
   } else if (revealed && isWrong) {
-    borderColor = '#ff4d4d'
-    badgeBg     = '#ff4d4d'
+    borderColor = 'var(--c-error)'
+    badgeBg     = 'var(--c-error)'
     badgeColor  = '#fff'
-    textColor   = '#ff4d4d'
+    textColor   = 'var(--c-error)'
   } else if (revealed) {
-    borderColor = '#222'
-    textColor   = '#555'
-    badgeColor  = '#444'
+    borderColor = 'var(--c-border)'
+    textColor   = 'var(--c-text-3)'
+    badgeColor  = 'var(--c-text-3)'
   }
 
   return (
@@ -103,7 +103,7 @@ function OptionButton({
           ? 'rgba(0,212,170,0.08)'
           : revealed && isWrong
           ? 'rgba(255,77,77,0.08)'
-          : '#1e1e1e',
+          : 'var(--c-surface)',
         cursor: revealed ? 'default' : 'pointer',
         fontFamily: 'inherit',
         textAlign: 'left',
@@ -169,7 +169,7 @@ function OptionButton({
           style={{
             fontSize: 12,
             fontWeight: 700,
-            color: isCorrect ? '#00d4aa' : isWrong ? '#ff4d4d' : '#555',
+            color: isCorrect ? 'var(--c-accent)' : isWrong ? 'var(--c-error)' : 'var(--c-text-3)',
             flexShrink: 0,
             zIndex: 1,
           }}
@@ -230,7 +230,7 @@ function QuestionScreen({
   onSelect, onNext, onBack,
 }: QuestionScreenProps) {
   const isLast   = qIndex === total - 1
-  const timerColor = timeLeft > 5 ? 'var(--color-accent)' : '#ffb800'
+  const timerColor = timeLeft > 5 ? 'var(--c-accent)' : 'var(--c-warn)'
   const percentages = revealed ? getMockPercentages(question, chosenId) : {}
 
   return (
@@ -246,33 +246,35 @@ function QuestionScreen({
         }}
       >
         {/* ── Top bar (NOT animated — stays fixed) ─────────────── */}
-        <div style={{ padding: 'var(--space-4) var(--space-4) var(--space-4)', flexShrink: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+        <div style={{ padding: 'var(--sp-4)', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
             <button
               onClick={onBack}
               style={{
                 width: 36, height: 36, borderRadius: '50%',
-                border: '1px solid var(--color-border)',
-                background: 'none', color: '#fff',
+                border: '1px solid var(--c-border)',
+                background: 'var(--glass-bg)', color: 'var(--c-text-1)',
                 cursor: 'pointer', flexShrink: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 16,
+                fontSize: 16, fontFamily: 'inherit',
+                backdropFilter: 'var(--glass-blur)',
+                WebkitBackdropFilter: 'var(--glass-blur)',
               }}
             >
               ‹
             </button>
-            <div style={{ flex: 1, height: 4, background: '#2a2a2a', borderRadius: 2, overflow: 'hidden' }}>
+            <div style={{ flex: 1, height: 4, background: 'var(--c-surface-raise)', borderRadius: 2, overflow: 'hidden' }}>
               <div
                 style={{
                   height: '100%',
                   width: `${((qIndex + (revealed ? 1 : 0)) / total) * 100}%`,
-                  background: 'var(--color-accent)',
+                  background: 'var(--c-accent)',
                   borderRadius: 2,
                   transition: 'width 300ms ease',
                 }}
               />
             </div>
-            <span style={{ fontSize: 12, color: 'var(--color-text-secondary)', flexShrink: 0 }}>
+            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', flexShrink: 0 }}>
               {qIndex + 1}/{total}
             </span>
             <CircularTimer timeLeft={timeLeft} color={timerColor} />
@@ -284,15 +286,15 @@ function QuestionScreen({
           {/* Question image header */}
           <div
             style={{
-              margin: '0 var(--space-4)',
+              margin: '0 var(--sp-4)',
               height: 180,
-              borderRadius: 16,
+              borderRadius: 'var(--r-lg)',
               background: question.accentColor,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: 64,
-              marginBottom: 'var(--space-5)',
+              marginBottom: 'var(--sp-5)',
               flexShrink: 0,
               overflow: 'hidden',
               boxShadow: `0 8px 32px ${question.accentColor}66`,
@@ -304,13 +306,15 @@ function QuestionScreen({
           {/* Question text */}
           <div
             style={{
-              padding: '0 var(--space-6)',
-              fontSize: 20,
-              fontWeight: 600,
-              color: '#fff',
-              lineHeight: 1.35,
+              padding: '0 var(--sp-6)',
+              fontFamily: 'var(--font-display)',
+              fontSize: 'var(--text-xl)',
+              fontWeight: 'var(--weight-light)',
+              color: 'var(--c-text-1)',
+              lineHeight: 'var(--leading-tight)',
+              letterSpacing: 'var(--tracking-tight)',
               textAlign: 'center',
-              marginBottom: 'var(--space-6)',
+              marginBottom: 'var(--sp-6)',
               flexShrink: 0,
             }}
           >
@@ -321,10 +325,10 @@ function QuestionScreen({
           <div
             style={{
               flex: 1,
-              padding: '0 var(--space-4)',
+              padding: '0 var(--sp-4)',
               display: 'flex',
               flexDirection: 'column',
-              gap: 'var(--space-3)',
+              gap: 'var(--sp-3)',
             }}
           >
             {question.options.map((opt, i) => (
@@ -344,15 +348,16 @@ function QuestionScreen({
         </div>
 
         {/* ── Fixed bottom: score feedback + Next CTA (no slide) ── */}
-        <div style={{ padding: 'var(--space-5) var(--space-4) var(--space-8)', flexShrink: 0 }}>
+        <div style={{ padding: 'var(--sp-5) var(--sp-4) var(--sp-8)', flexShrink: 0 }}>
             {revealed && (
               <div
                 style={{
                   textAlign: 'center',
-                  fontSize: 13,
-                  color: chosenId === question.correctId ? 'var(--color-accent)' : '#ff4d4d',
-                  marginBottom: 'var(--space-3)',
-                  fontWeight: 600,
+                  fontSize: 'var(--text-sm)',
+                  color: chosenId === question.correctId ? 'var(--c-accent)' : 'var(--c-error)',
+                  marginBottom: 'var(--sp-3)',
+                  fontWeight: 'var(--weight-med)',
+                  letterSpacing: 'var(--tracking-wide)',
                 }}
               >
                 {chosenId === question.correctId

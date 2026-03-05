@@ -292,11 +292,11 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             <>
               <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
                 {PROFILE_QUESTIONS.map((_, i) => (
-                  <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i <= step ? '#00d4aa' : '#ffffff22', transition: 'background 300ms ease' }} />
+                  <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i <= step ? '#00d4aa' : 'rgba(255,255,255,0.12)', transition: 'background 300ms ease' }} />
                 ))}
               </div>
 
-              <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', marginBottom: 12, lineHeight: 1.4 }}>
+              <div style={{ fontSize: 13, fontWeight: 500, color: '#fff', marginBottom: 12, lineHeight: 1.4, letterSpacing: 0.1 }}>
                 {currentQ.label}
               </div>
 
@@ -309,9 +309,9 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                       onClick={e => { e.stopPropagation(); handleSelect(currentQ.id, option) }}
                       style={{
                         padding: '9px 14px', borderRadius: 10, fontFamily: 'inherit',
-                        border: `1px solid ${selected ? '#00d4aa' : '#ffffff22'}`,
-                        background: selected ? '#00d4aa22' : '#ffffff0d',
-                        color: selected ? '#00d4aa' : '#ffffffcc',
+                        border: `1px solid ${selected ? '#00d4aa' : 'rgba(255,255,255,0.14)'}`,
+                        background: selected ? 'rgba(0,212,170,0.15)' : 'rgba(255,255,255,0.05)',
+                        color: selected ? '#00d4aa' : 'rgba(255,255,255,0.85)',
                         fontSize: 12, textAlign: 'left', cursor: 'pointer',
                         transition: 'all 150ms ease',
                       }}
@@ -325,14 +325,14 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
                 <button
                   onClick={handleBack}
-                  style={{ flex: 1, padding: '9px 0', borderRadius: 10, border: '1px solid #ffffff22', background: 'none', color: '#ffffff88', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}
+                  style={{ flex: 1, padding: '9px 0', borderRadius: 10, border: '1px solid rgba(255,255,255,0.14)', background: 'none', color: 'rgba(255,255,255,0.55)', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}
                 >
                   Back
                 </button>
                 <button
                   onClick={handleNext}
                   disabled={!currentAnswer}
-                  style={{ flex: 2, padding: '9px 0', borderRadius: 10, border: 'none', background: currentAnswer ? '#00d4aa' : '#00d4aa33', color: currentAnswer ? '#000' : '#00000066', fontSize: 12, fontWeight: 700, cursor: currentAnswer ? 'pointer' : 'default', fontFamily: 'inherit' }}
+                  style={{ flex: 2, padding: '9px 0', borderRadius: 10, border: 'none', background: currentAnswer ? '#00d4aa' : 'rgba(0,212,170,0.2)', color: currentAnswer ? '#000' : 'rgba(0,0,0,0.4)', fontSize: 12, fontWeight: 700, cursor: currentAnswer ? 'pointer' : 'default', fontFamily: 'inherit' }}
                 >
                   {isLast ? 'Save ✓' : 'Next →'}
                 </button>
@@ -344,13 +344,13 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             /* ── Completed display rows ──────────────────────────── */
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
               {PROFILE_QUESTIONS.map(q => (
-                <div key={q.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', background: '#ffffff0d', borderRadius: 10 }}>
-                  <span style={{ fontSize: 18, opacity: 0.6, flexShrink: 0 }}>{q.icon}</span>
+                <div key={q.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10 }}>
+                  <span style={{ fontSize: 18, opacity: 0.55, flexShrink: 0 }}>{q.icon}</span>
                   <div>
                     <div style={{ fontSize: 9, letterSpacing: 2, color: '#00d4aa', textTransform: 'uppercase', marginBottom: 2 }}>
                       {q.category}
                     </div>
-                    <div style={{ fontSize: 12, color: '#fff', fontWeight: 500 }}>
+                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>
                       {resolvedAnswer(q.id)}
                     </div>
                   </div>

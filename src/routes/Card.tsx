@@ -10,10 +10,10 @@ import { QUIZZES } from '../data/quizzes'
 
 // ─── Circular progress ring (SVG) ──────────────────────────────────────────────
 function ProgressRing({
-  progress, // 0..1
+  progress,
   size = 72,
   strokeWidth = 3,
-  color = '#00d4aa',
+  color = 'var(--c-accent)',
   children,
 }: {
   progress: number
@@ -33,14 +33,7 @@ function ProgressRing({
         height={size}
         style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }}
       >
-        {/* Track */}
-        <circle
-          cx={cx} cy={cx} r={r}
-          fill="none"
-          stroke="#2a2a2a"
-          strokeWidth={strokeWidth}
-        />
-        {/* Fill */}
+        <circle cx={cx} cy={cx} r={r} fill="none" stroke="#1e1e1e" strokeWidth={strokeWidth} />
         {progress > 0 && (
           <circle
             cx={cx} cy={cx} r={r}
@@ -54,14 +47,13 @@ function ProgressRing({
           />
         )}
       </svg>
-      {/* Inner content */}
       <div
         style={{
           position: 'absolute',
           inset: strokeWidth * 2,
           borderRadius: '50%',
           overflow: 'hidden',
-          background: '#1a1a1a',
+          background: 'var(--c-surface)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -84,13 +76,13 @@ function QuizCard({
 }: {
   quiz: (typeof QUIZZES)[number]
   cardState: QuizCardState
-  progress: number // 0..1
+  progress: number
   onStart: () => void
 }) {
   const locked = cardState === 'locked'
   const done   = cardState === 'done'
 
-  const ringColor = done ? '#00d4aa' : '#c8102e'
+  const ringColor = done ? 'var(--c-accent)' : 'var(--c-brand)'
   const overlayIcon = done ? '✓' : locked ? '🔒' : null
 
   return (
@@ -100,27 +92,24 @@ function QuizCard({
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: 16,
-        padding: '16px',
-        // 1.3× height: base ~80px → 104px via padding + min-height
+        gap: 'var(--sp-4)',
+        padding: 'var(--sp-4)',
         minHeight: 104,
         width: '100%',
-        background: done
-          ? 'rgba(0,212,170,0.06)'
-          : locked
-          ? 'rgba(255,255,255,0.02)'
-          : 'var(--color-surface)',
-        border: `1px solid ${done ? 'rgba(0,212,170,0.25)' : locked ? '#1e1e1e' : 'var(--color-border)'}`,
-        borderRadius: 'var(--radius-md)',
+        background: done ? 'rgba(0,212,170,0.05)' : 'var(--glass-bg)',
+        border: `1px solid ${done ? 'rgba(0,212,170,0.2)' : 'var(--c-border)'}`,
+        borderRadius: 'var(--r-md)',
         cursor: locked ? 'default' : 'pointer',
-        opacity: locked ? 0.45 : 1,
+        opacity: locked ? 0.4 : 1,
         textAlign: 'left',
         fontFamily: 'inherit',
-        color: 'var(--color-text-primary)',
-        transition: 'opacity 200ms ease, border-color 200ms ease',
+        color: 'var(--c-text-1)',
+        backdropFilter: 'var(--glass-blur)',
+        WebkitBackdropFilter: 'var(--glass-blur)',
+        boxShadow: 'var(--glass-shine)',
+        transition: 'opacity var(--dur-base) var(--ease-out)',
       }}
     >
-      {/* Circular image + progress ring */}
       <ProgressRing progress={progress} color={ringColor}>
         {overlayIcon ? (
           <span style={{ fontSize: done ? 22 : 18 }}>{overlayIcon}</span>
@@ -129,15 +118,14 @@ function QuizCard({
         )}
       </ProgressRing>
 
-      {/* Text */}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 3 }}>
+        <div style={{ fontSize: 'var(--text-md)', fontWeight: 'var(--weight-med)', marginBottom: 3 }}>
           {quiz.title}
         </div>
         <div
           style={{
-            fontSize: 12,
-            color: 'var(--color-text-secondary)',
+            fontSize: 'var(--text-sm)',
+            color: 'var(--c-text-2)',
             whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
@@ -146,7 +134,7 @@ function QuizCard({
         >
           {quiz.description}
         </div>
-        <div style={{ fontSize: 11, color: done ? '#00d4aa' : locked ? '#444' : 'var(--color-accent)' }}>
+        <div style={{ fontSize: 'var(--text-xs)', color: done ? 'var(--c-accent)' : locked ? 'var(--c-text-3)' : 'var(--c-accent)', letterSpacing: 'var(--tracking-wide)' }}>
           {done
             ? `Completed · ${Math.round(progress * quiz.questions.length)}/${quiz.questions.length} correct`
             : locked
@@ -156,7 +144,7 @@ function QuizCard({
       </div>
 
       {!locked && !done && (
-        <span style={{ color: 'var(--color-text-secondary)', fontSize: 18, flexShrink: 0 }}>›</span>
+        <span style={{ color: 'var(--c-text-2)', fontSize: 18, flexShrink: 0 }}>›</span>
       )}
     </button>
   )
@@ -218,7 +206,6 @@ export default function Card() {
     }
   }, [state.fanCard])
 
-  // Unlock logic: quiz i is unlocked when quiz i-1 is done
   function getCardState(i: number): QuizCardState {
     const quizId = QUIZZES[i].id
     if (state.quizResults[quizId]) return 'done'
@@ -245,8 +232,8 @@ export default function Card() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: 'var(--space-6)',
-          padding: 'var(--space-6) var(--space-4) var(--space-8)',
+          gap: 'var(--sp-6)',
+          padding: 'var(--sp-6) var(--sp-4) var(--sp-8)',
           width: '100%',
           maxWidth: 400,
           margin: '0 auto',
@@ -254,10 +241,16 @@ export default function Card() {
       >
         {/* ── Fan Card ────────────────────────────────────────────── */}
         <div style={{ textAlign: 'center' }}>
-          <h2 style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--space-1)' }}>
+          <h2 style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'var(--text-xl)',
+            fontWeight: 'var(--weight-light)',
+            letterSpacing: 'var(--tracking-tight)',
+            marginBottom: 'var(--sp-1)',
+          }}>
             Your Fan Card
           </h2>
-          <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+          <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)' }}>
             Tap to flip &amp; complete your profile
           </p>
         </div>
@@ -265,14 +258,14 @@ export default function Card() {
         <FanCard ref={cardRef} fanCard={state.fanCard} onSave={handleSave} />
 
         {/* ── Edit / Share / Save actions ──────────────────────── */}
-        <div style={{ display: 'flex', gap: 'var(--space-5)', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', gap: 'var(--sp-5)', justifyContent: 'center' }}>
           <ActionBtn icon="✏" label="Edit"  onClick={handleEdit} />
           <ActionBtn icon="⤴" label="Share" onClick={handleShare} loading={sharing} />
           <ActionBtn icon="⬇" label="Save"  onClick={handleSaveToDevice} loading={saving} />
         </div>
 
         {/* ── Start Quiz CTA (scrolls down) ─────────────────────── */}
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)' }}>
           <Button
             fullWidth
             onClick={() => {
@@ -293,14 +286,20 @@ export default function Card() {
 
         {/* ── Quiz selection ────────────────────────────────────── */}
         <div ref={quizRef} style={{ width: '100%' }}>
-          <div style={{ marginBottom: 'var(--space-4)' }}>
-            <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>Earn Avios</h3>
-            <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+          <div style={{ marginBottom: 'var(--sp-4)' }}>
+            <h3 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'var(--text-lg)',
+              fontWeight: 'var(--weight-light)',
+              letterSpacing: 'var(--tracking-tight)',
+              marginBottom: 'var(--sp-1)',
+            }}>Earn Avios</h3>
+            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)' }}>
               Complete quizzes to climb the leaderboard
             </p>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)' }}>
             {QUIZZES.map((quiz, i) => (
               <QuizCard
                 key={quiz.id}
@@ -334,20 +333,24 @@ function ActionBtn({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: 4,
-        background: 'none',
-        border: '1px solid var(--color-border)',
-        borderRadius: 'var(--radius-md)',
-        padding: '10px 20px',
+        gap: 'var(--sp-1)',
+        background: 'var(--glass-bg)',
+        border: '1px solid var(--c-border)',
+        borderRadius: 'var(--r-md)',
+        padding: 'var(--sp-3) var(--sp-5)',
         cursor: loading ? 'default' : 'pointer',
         opacity: loading ? 0.5 : 1,
-        color: 'var(--color-text-primary)',
+        color: 'var(--c-text-1)',
         fontFamily: 'inherit',
-        transition: 'opacity var(--transition-fast)',
+        backdropFilter: 'var(--glass-blur)',
+        WebkitBackdropFilter: 'var(--glass-blur)',
+        boxShadow: 'var(--glass-shine)',
+        transition: 'opacity var(--dur-base) var(--ease-out)',
+        minWidth: 64,
       }}
     >
       <span style={{ fontSize: 20 }}>{loading ? '…' : icon}</span>
-      <span style={{ fontSize: 11, color: 'var(--color-text-secondary)' }}>{label}</span>
+      <span style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', letterSpacing: 'var(--tracking-wide)' }}>{label}</span>
     </button>
   )
 }
