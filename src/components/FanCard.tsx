@@ -276,7 +276,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
         </div>
 
         {/* ── BACK ──────────────────────────────────────────────── */}
-        <div style={backFaceStyle} onClick={e => e.stopPropagation()}>
+        <div style={backFaceStyle} onClick={flipToFront}>
           <HolographicStripe />
 
           {/* Header */}
@@ -297,7 +297,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           {wizardActive ? (
 
             /* ── Wizard ─────────────────────────────────────────── */
-            <>
+            <div style={{ display: 'contents' }} onClick={e => e.stopPropagation()}>
               <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
                 {PROFILE_QUESTIONS.map((_, i) => (
                   <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i <= step ? '#00d4aa' : 'rgba(255,255,255,0.12)', transition: 'background 300ms ease' }} />
@@ -345,7 +345,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                   {isLast ? 'Save ✓' : 'Next →'}
                 </button>
               </div>
-            </>
+            </div>
 
           ) : isComplete ? (
 
