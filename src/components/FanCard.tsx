@@ -338,22 +338,25 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             <img src={qrLogo} width={32} height={28} alt="QR" style={{ opacity: 0.85 }} />
           </div>
 
-          <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
+          {/* Photo + motto grouped to control spacing between them */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+            <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
 
-          <div style={{ textAlign: 'center' }}>
-            {fanCard.teamId ? (() => {
-              const team = getTeam(fanCard.teamId)
-              return (
-                <div style={{ fontSize: 18, fontWeight: 600, color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic', marginBottom: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                  {team && <span style={{ fontStyle: 'normal', fontSize: 22 }}>{team.flag}</span>}
-                  {team ? team.motto : fanCard.teamId}
+            <div style={{ textAlign: 'center' }}>
+              {fanCard.teamId ? (() => {
+                const team = getTeam(fanCard.teamId)
+                return (
+                  <div style={{ fontSize: 18, fontWeight: 600, color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                    {team && <span style={{ fontStyle: 'normal', fontSize: 22 }}>{team.flag}</span>}
+                    {team ? team.motto : fanCard.teamId}
+                  </div>
+                )
+              })() : (
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' }}>
+                  No team selected
                 </div>
-              )
-            })() : (
-              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', fontStyle: 'italic', marginBottom: 4 }}>
-                No team selected
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
           <div style={{ fontSize: 14, color: '#ffffff66', display: 'flex', alignItems: 'center', gap: 4 }}>
