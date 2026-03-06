@@ -14,61 +14,82 @@ function useClockTime() {
   return time
 }
 
+// Exact Apple SF Symbol paths for iOS 17 status bar icons
+function CellSignalIcon() {
+  // 4 increasing bars — matches Apple SF Symbol "cellularbars"
+  return (
+    <svg width="17" height="12" viewBox="0 0 17 12" fill="white" aria-hidden="true">
+      <rect x="0"    y="9"   width="3" height="3"  rx="0.5" opacity="1"   />
+      <rect x="4.5"  y="6"   width="3" height="6"  rx="0.5" opacity="1"   />
+      <rect x="9"    y="3"   width="3" height="9"  rx="0.5" opacity="1"   />
+      <rect x="13.5" y="0"   width="3" height="12" rx="0.5" opacity="1"   />
+    </svg>
+  )
+}
+
+function WifiIcon() {
+  // 3-arc WiFi — matches Apple's exact proportions
+  return (
+    <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+      <circle cx="8" cy="11"  r="1.5"  fill="white" />
+      <path d="M4.6 8C5.8 6.7 6.8 6 8 6s2.2.7 3.4 2"   stroke="white" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+      <path d="M1.8 5.2C3.8 3 5.8 2 8 2s4.2 1 6.2 3.2"  stroke="white" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+    </svg>
+  )
+}
+
+function BatteryIcon() {
+  // Apple-spec battery: outer rect + nub + inner fill
+  return (
+    <svg width="27" height="13" viewBox="0 0 27 13" fill="none" aria-hidden="true">
+      {/* Body */}
+      <rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="white" strokeOpacity="0.35" strokeWidth="1" />
+      {/* Fill (~80%) */}
+      <rect x="2" y="2" width="16.5" height="9" rx="2" fill="white" />
+      {/* Nub */}
+      <path d="M24 4.5v4a2.5 2.5 0 0 0 0-4z" fill="white" fillOpacity="0.4" />
+    </svg>
+  )
+}
+
 function StatusBar() {
   const time = useClockTime()
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0, left: 0, right: 0,
-      height: 44,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '0 24px',
-      zIndex: 1000,
-      background: 'rgba(0,0,0,0.55)',
-      backdropFilter: 'blur(24px)',
-      WebkitBackdropFilter: 'blur(24px)',
-      pointerEvents: 'none',
-    }}>
-      {/* Time */}
-      <span style={{ fontSize: 15, fontWeight: 600, color: '#fff', fontFamily: '-apple-system, "SF Pro Text", sans-serif', letterSpacing: 0 }}>
+    <div
+      aria-hidden="true"
+      style={{
+        position: 'fixed',
+        top: 0, left: 0, right: 0,
+        height: 50,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 20px',
+        paddingTop: 10,
+        zIndex: 9999,
+        background: 'rgba(0,0,0,0.6)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        pointerEvents: 'none',
+      }}
+    >
+      {/* Time — SF Pro Semibold 15pt */}
+      <span style={{
+        fontSize: 15,
+        fontWeight: 600,
+        color: '#ffffff',
+        fontFamily: '-apple-system, "SF Pro Text", "Helvetica Neue", sans-serif',
+        letterSpacing: -0.3,
+        lineHeight: 1,
+      }}>
         {time}
       </span>
+
       {/* Right cluster */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-        {/* Signal bars */}
-        <svg width="17" height="12" viewBox="0 0 17 12" fill="white" aria-hidden="true">
-          <rect x="0"    y="8"   width="3" height="4"  rx="0.8" />
-          <rect x="4.5"  y="5.5" width="3" height="6.5" rx="0.8" />
-          <rect x="9"    y="3"   width="3" height="9"  rx="0.8" />
-          <rect x="13.5" y="0"   width="3" height="12" rx="0.8" />
-        </svg>
-        {/* WiFi */}
-        <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
-          <circle cx="8" cy="10.5" r="1.5" fill="white" />
-          <path d="M4 7.2C5.3 5.8 6.6 5 8 5s2.7.8 4 2.2" stroke="white" strokeWidth="1.4" strokeLinecap="round" />
-          <path d="M1.5 4.5C3.7 2.1 5.7 1 8 1s4.3 1.1 6.5 3.5" stroke="white" strokeWidth="1.4" strokeLinecap="round" />
-        </svg>
-        {/* Battery */}
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-          <div style={{
-            width: 25, height: 12,
-            border: '1.5px solid rgba(255,255,255,0.85)',
-            borderRadius: 3.5,
-            padding: '2px 2px',
-            display: 'flex', alignItems: 'center',
-          }}>
-            <div style={{ width: '75%', height: '100%', background: '#fff', borderRadius: 1.5 }} />
-          </div>
-          {/* Nub */}
-          <div style={{
-            position: 'absolute', right: -4,
-            width: 2.5, height: 5,
-            background: 'rgba(255,255,255,0.7)',
-            borderRadius: '0 1.5px 1.5px 0',
-          }} />
-        </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <CellSignalIcon />
+        <WifiIcon />
+        <BatteryIcon />
       </div>
     </div>
   )
@@ -80,12 +101,14 @@ function HomeIndicator() {
       aria-hidden="true"
       style={{
         position: 'fixed',
-        bottom: 8, left: '50%',
+        bottom: 8,
+        left: '50%',
         transform: 'translateX(-50%)',
-        width: 134, height: 5,
-        background: 'rgba(255,255,255,0.28)',
-        borderRadius: 3,
-        zIndex: 1000,
+        width: 134,
+        height: 5,
+        background: 'rgba(255,255,255,0.35)',
+        borderRadius: 100,
+        zIndex: 9999,
         pointerEvents: 'none',
       }}
     />
@@ -111,7 +134,7 @@ export default function Screen({ children, className = '', centered = false, sty
           width: '100%',
           overflowY: 'auto',
           WebkitOverflowScrolling: 'touch',
-          paddingTop: 44,
+          paddingTop: 50,
           paddingBottom: 34,
           ...(centered ? { alignItems: 'center', justifyContent: 'center' } : {}),
           ...style,
