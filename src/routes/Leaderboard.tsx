@@ -82,8 +82,8 @@ export default function Leaderboard() {
                 transition: 'background var(--dur-base) var(--ease-out)',
               }}
             >
-              <div style={{ width: 28, fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: row.rank <= 3 ? 'var(--c-accent)' : 'var(--c-text-3)', flexShrink: 0 }}>
-                {row.rank}
+              <div style={{ width: 28, fontSize: row.rank <= 3 ? 18 : 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: row.rank <= 3 ? 'var(--c-accent)' : 'var(--c-text-3)', flexShrink: 0, lineHeight: 1 }}>
+                {row.rank === 1 ? '🥇' : row.rank === 2 ? '🥈' : row.rank === 3 ? '🥉' : row.rank}
               </div>
               <div style={{ flex: 1, fontSize: 'var(--text-md)', color: 'var(--c-text-1)', fontWeight: row.isMe ? 'var(--weight-med)' : 'var(--weight-reg)' }}>
                 {row.name}

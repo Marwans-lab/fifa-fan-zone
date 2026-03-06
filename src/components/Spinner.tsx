@@ -30,14 +30,26 @@ export default function Spinner({ fullScreen = false, size = 32 }: SpinnerProps)
     <div
       style={{
         display: 'flex',
+        flexDirection: 'column',
         height: '100%',
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'var(--color-bg)',
+        gap: 'var(--sp-5)',
+        background: 'var(--c-bg)',
       }}
     >
       {spinner}
+      <span style={{
+        fontFamily: 'var(--font-display)',
+        fontSize: 'var(--text-xs)',
+        fontWeight: 'var(--weight-light)',
+        color: 'var(--c-text-3)',
+        letterSpacing: 'var(--tracking-wider)',
+        textTransform: 'uppercase',
+      }}>
+        FIFA Fan Zone
+      </span>
     </div>
   )
 }

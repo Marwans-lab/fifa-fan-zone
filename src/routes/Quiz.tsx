@@ -273,6 +273,7 @@ function QuestionScreen({
           {/* Question image header */}
           <div
             style={{
+              position: 'relative',
               margin: '0 var(--sp-4)',
               height: 180,
               borderRadius: 'var(--r-lg)',
@@ -284,10 +285,16 @@ function QuestionScreen({
               marginBottom: 'var(--sp-5)',
               flexShrink: 0,
               overflow: 'hidden',
-              boxShadow: `0 8px 32px ${question.accentColor}66`,
+              boxShadow: `0 8px 32px ${question.accentColor}55, inset 0 1px 0 rgba(255,255,255,0.15)`,
             }}
           >
             {quiz.emoji}
+            {/* Depth overlay */}
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 50%, rgba(0,0,0,0.18) 100%)',
+              pointerEvents: 'none',
+            }} />
           </div>
 
           {/* Question text */}
