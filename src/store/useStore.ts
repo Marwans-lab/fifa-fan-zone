@@ -21,6 +21,12 @@ export interface AppState {
 
 const STORAGE_KEY = 'fanzone_state'
 
+// Clear persisted state on every page reload so a hard refresh always starts fresh
+const _nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
+if (_nav?.type === 'reload') {
+  localStorage.removeItem(STORAGE_KEY)
+}
+
 const defaultState: AppState = {
   fanCard: {
     teamId: null,
