@@ -301,23 +301,18 @@ export default function Identity() {
               <button
                 key={team.id}
                 onClick={() => handleTeamSelect(team.id)}
+                className="glass-row"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: 'var(--sp-3)',
                   padding: 'var(--sp-3) var(--sp-4)',
-                  background: 'var(--glass-bg)',
-                  border: '1px solid var(--c-border)',
-                  borderRadius: 'var(--r-md)',
                   cursor: 'pointer',
                   fontFamily: 'inherit',
                   color: 'var(--c-text-1)',
-                  backdropFilter: 'var(--glass-blur)',
-                  WebkitBackdropFilter: 'var(--glass-blur)',
                   textAlign: 'left',
                   flexShrink: 0,
-                  boxShadow: 'var(--glass-shine)',
-                  transition: 'background var(--dur-base) var(--ease-out)',
+                  width: '100%',
                 }}
               >
                 {/* Colour swatch */}
@@ -396,13 +391,8 @@ export default function Identity() {
 
           <button
             onClick={() => { stopCamera(); setStep('team') }}
-            style={{
-              marginTop: 'var(--sp-4)',
-              background: 'none', border: 'none',
-              color: 'var(--c-text-2)',
-              fontSize: 'var(--text-sm)',
-              cursor: 'pointer', fontFamily: 'inherit',
-            }}
+            className="btn btn-ghost"
+            style={{ marginTop: 'var(--sp-4)', fontSize: 'var(--text-sm)' }}
           >
             ← Change team
           </button>

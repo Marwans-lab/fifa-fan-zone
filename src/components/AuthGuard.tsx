@@ -18,15 +18,22 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   if (status === 'unauthenticated') {
     return (
       <Screen centered>
-        <div style={{ textAlign: 'center', padding: 'var(--space-8)', maxWidth: 300 }}>
-          <div style={{ fontSize: 48, marginBottom: 'var(--space-4)' }}>🔒</div>
-          <h2 style={{ fontSize: 'var(--font-size-lg)', marginBottom: 'var(--space-3)' }}>
+        <div className="page-in" style={{ textAlign: 'center', padding: 'var(--sp-8) var(--sp-6)', maxWidth: 300 }}>
+          <div style={{ fontSize: 44, marginBottom: 'var(--sp-5)', opacity: 0.5 }}>🔒</div>
+          <h2 style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'var(--text-xl)',
+            fontWeight: 'var(--weight-light)',
+            letterSpacing: 'var(--tracking-tight)',
+            marginBottom: 'var(--sp-3)',
+          }}>
             Session unavailable
           </h2>
           <p style={{
-            color: 'var(--color-text-secondary)',
-            fontSize: 'var(--font-size-sm)',
-            marginBottom: 'var(--space-6)',
+            color: 'var(--c-text-2)',
+            fontSize: 'var(--text-sm)',
+            lineHeight: 'var(--leading-normal)',
+            marginBottom: 'var(--sp-6)',
           }}>
             We couldn't establish a session. Please try again or re-open FanZone from the Qatar Airways app.
           </p>

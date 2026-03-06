@@ -204,6 +204,7 @@ function QuizCard({
     <button
       onClick={locked ? undefined : onStart}
       disabled={locked}
+      className="glass-row"
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -211,18 +212,13 @@ function QuizCard({
         padding: 'var(--sp-4)',
         minHeight: 104,
         width: '100%',
-        background: done ? 'rgba(0,212,170,0.05)' : 'var(--glass-bg)',
-        border: `1px solid ${done ? 'rgba(0,212,170,0.2)' : 'var(--c-border)'}`,
-        borderRadius: 'var(--r-md)',
+        background: done ? 'rgba(0,212,170,0.05)' : undefined,
+        border: done ? '1px solid rgba(0,212,170,0.2)' : undefined,
         cursor: locked ? 'default' : 'pointer',
         opacity: locked ? 0.6 : 1,
         textAlign: 'left',
         fontFamily: 'inherit',
         color: 'var(--c-text-1)',
-        backdropFilter: 'var(--glass-blur)',
-        WebkitBackdropFilter: 'var(--glass-blur)',
-        boxShadow: 'var(--glass-shine)',
-        transition: 'opacity var(--dur-base) var(--ease-out)',
       }}
     >
       <ProgressRing progress={progress} color={ringColor}>

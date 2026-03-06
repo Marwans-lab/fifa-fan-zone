@@ -153,6 +153,37 @@ h1, h2, h3, h4 {
   box-shadow: var(--glass-shine), var(--shadow-sm);
 }
 
+/* ─── Global focus ring (all buttons, not just .btn) ─────────────────────── */
+button:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--c-bg), 0 0 0 4px var(--c-accent);
+}
+
+/* ─── Interactive glass row (team list, quiz cards, etc.) ─────────────────── */
+.glass-row {
+  background: var(--glass-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shine);
+  transition:
+    background var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.glass-row:hover:not(:disabled) {
+  background: var(--c-surface-raise);
+  border-color: var(--c-border-raise);
+}
+
+.glass-row:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
 /* ─── Page entrance animation ─────────────────────────────────────────────── */
 @keyframes page-in {
   from { opacity: 0; transform: translateY(10px); }
