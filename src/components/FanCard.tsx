@@ -328,14 +328,14 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
 
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%' }}>
             <div style={{ textAlign: 'left' }}>
-              <div style={{ fontSize: 10, letterSpacing: 3, color: '#ffffff', textTransform: 'uppercase', marginBottom: 4 }}>
+              <div style={{ fontSize: 14, letterSpacing: 3, color: '#ffffff', textTransform: 'uppercase', marginBottom: 4 }}>
                 Your Fan Card
               </div>
               <div style={{ fontSize: 11, color: '#ffffff66', letterSpacing: 1 }}>
                 Collector Edition
               </div>
             </div>
-            <img src={qrLogo} width={24} height={24} alt="QR" style={{ opacity: 0.85 }} />
+            <img src={qrLogo} width={32} height={28} alt="QR" style={{ opacity: 0.85 }} />
           </div>
 
           <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
@@ -344,7 +344,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             {fanCard.teamId ? (() => {
               const team = getTeam(fanCard.teamId)
               return (
-                <div style={{ fontSize: 20, fontWeight: 600, color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic', marginBottom: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                <div style={{ fontSize: 18, fontWeight: 600, color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic', marginBottom: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                   {team && <span style={{ fontStyle: 'normal', fontSize: 22 }}>{team.flag}</span>}
                   {team ? team.motto : fanCard.teamId}
                 </div>
@@ -356,7 +356,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             )}
           </div>
 
-          <div style={{ fontSize: 11, color: '#ffffff66', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <div style={{ fontSize: 14, color: '#ffffff66', display: 'flex', alignItems: 'center', gap: 4 }}>
             <img src={flipIcon} width={24} height={24} alt="" style={{ opacity: 0.5 }} /> Tap card to flip
           </div>
         </div>
@@ -370,13 +370,6 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             <div style={{ fontSize: 11, color: '#00d4aa', letterSpacing: 2, textTransform: 'uppercase' }}>
               Fan Profile
             </div>
-            <button
-              onClick={flipToFront}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.5 }}
-              aria-label="Flip back to front"
-            >
-              <img src={flipIcon} width={24} height={24} alt="" />
-            </button>
           </div>
 
           {/* Wizard takes priority so Edit works on completed cards */}
@@ -485,6 +478,11 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               <ActionCircle icon={<img src={saveIcon}  width={24} height={24} alt="" />} label="Save"  onClick={handleSaveTap} />
             </div>
           )}
+
+          {/* ── Tap to flip (bottom, mirrors front) ──────────────── */}
+          <div style={{ fontSize: 14, color: '#ffffff66', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, paddingTop: 12 }}>
+            <img src={flipIcon} width={24} height={24} alt="" style={{ opacity: 0.5 }} /> Tap card to flip
+          </div>
         </div>
       </div>
     </div>
