@@ -1,7 +1,6 @@
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Screen from '../components/Screen'
-import Button from '../components/Button'
 import FanCard from '../components/FanCard'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
@@ -10,36 +9,100 @@ import { QUIZZES } from '../data/quizzes'
 import lockIcon    from '../assets/icons/Lock-white.svg'
 import chevRight   from '../assets/icons/Chevron-right-white.svg'
 import tickBlack   from '../assets/icons/Tick-black.svg'
-import tickWhite   from '../assets/icons/Tick-white.svg'
 import targetIcon  from '../assets/icons/Target-white.svg'
 import fireIcon    from '../assets/icons/Fire-white.svg'
 import trophyIcon  from '../assets/icons/Trophy-white.svg'
 import qrIcon      from '../assets/icons/qr-logo.svg'
 
-// ─── Progress card ─────────────────────────────────────────────────────────────
+// ─── Milestone config ─────────────────────────────────────────────────────────
 const MILESTONES = [
-  { iconSrc: qrIcon,      label: 'Fan Card',    key: 'card'     },
-  { iconSrc: targetIcon,  label: '1st Quiz',    key: 'quiz1'    },
-  { iconSrc: fireIcon,    label: '3 Quizzes',   key: 'quiz3'    },
-  { iconSrc: trophyIcon,  label: 'Champion',    key: 'champion' },
+  { iconSrc: qrIcon,     label: 'Fan card',   key: 'card'     },
+  { iconSrc: targetIcon, label: '1st quiz',    key: 'quiz1'    },
+  { iconSrc: fireIcon,   label: '3 quizzes',   key: 'quiz3'    },
+  { iconSrc: trophyIcon, label: 'Champion',    key: 'champion' },
 ] as const
 
 function statusLabel(done: number): string {
-  if (done === 0) return 'New Arrival'
-  if (done === 1) return 'Rising Fan'
-  if (done === 2) return 'Quiz Taker'
-  if (done === 3) return 'Top Fan'
-  return 'Quiz Champion'
+  if (done === 0) return 'New arrival'
+  if (done === 1) return 'Rising fan'
+  if (done === 2) return 'Quiz taker'
+  if (done === 3) return 'Top fan'
+  return 'Quiz champion'
 }
 
-function ProgressCard({
+// ─── Journey Step ─────────────────────────────────────────────────────────────
+function JourneyStep({
+  iconSrc,
+  label,
+  isCompleted = false,
+  isCurrent = false,
+}: {
+  iconSrc: string
+  label: string
+  isCompleted?: boolean
+  isCurrent?: boolean
+}) {
+  const nodeStyle: React.CSSProperties = {
+    width: 56, height: 56, borderRadius: '50%',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+    transition: 'all 700ms ease',
+    flexShrink: 0, position: 'relative',
+    ...(isCompleted ? {
+      background: '#ffffff', border: '1px solid #ffffff',
+      boxShadow: '0 0 25px rgba(255,255,255,0.4)',
+      transform: 'scale(1.1)', zIndex: 20,
+    } : isCurrent ? {
+      background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.4)',
+      transform: 'scale(1.05)', zIndex: 20,
+      boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
+    } : {
+      background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)',
+      zIndex: 10,
+    }),
+  }
+
+  return (
+    <li style={{
+      position: 'relative', zIndex: 10,
+      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
+      width: 56, flexShrink: 0,
+    }}>
+      <div style={nodeStyle}>
+        {isCurrent && (
+          <div
+            className="animate-ping-slow"
+            style={{
+              position: 'absolute', inset: 0, borderRadius: '50%',
+              background: 'rgba(255,255,255,0.3)', pointerEvents: 'none',
+            }}
+          />
+        )}
+        {isCompleted ? (
+          <img src={tickBlack} width={22} height={22} alt="" style={{ position: 'relative', zIndex: 10 }} />
+        ) : (
+          <img src={iconSrc} width={16} height={16} alt="" style={{ opacity: isCurrent ? 1 : 0.3 }} />
+        )}
+      </div>
+      <span style={{
+        fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-reg)',
+        fontSize: 12, letterSpacing: '-0.02em', textAlign: 'center',
+        whiteSpace: 'nowrap', transition: 'color 500ms ease',
+        color: isCompleted || isCurrent ? '#ffffff' : 'rgba(255,255,255,0.3)',
+      }}>
+        {label}
+      </span>
+    </li>
+  )
+}
+
+// ─── Journey Card ─────────────────────────────────────────────────────────────
+function JourneyCard({
   completedAt,
   quizCount,
-  points,
 }: {
   completedAt: string | null
   quizCount: number
-  points: number
 }) {
   const achieved = [
     completedAt !== null,
@@ -50,147 +113,89 @@ function ProgressCard({
   const doneCount = achieved.filter(Boolean).length
   const status = statusLabel(doneCount)
 
+  // Find first incomplete milestone for "current" indicator
+  const currentIdx = achieved.findIndex(v => !v)
+
   return (
-    <div style={{
-      width: '100%',
-      padding: 'var(--sp-4) var(--sp-5)',
-      background: 'var(--glass-bg)',
-      border: '1px solid var(--c-border)',
-      borderRadius: 'var(--r-md)',
-      backdropFilter: 'var(--glass-blur)',
-      WebkitBackdropFilter: 'var(--glass-blur)',
-      boxShadow: 'var(--glass-shine)',
-    }}>
-      {/* Header row */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--sp-4)' }}>
+    <section
+      aria-label="Your Journey Progress"
+      style={{
+        width: '100%',
+        background: 'rgba(255,255,255,0.08)',
+        borderRadius: 20,
+        padding: 32,
+        border: '1px solid rgba(255,255,255,0.15)',
+        marginBottom: 24,
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 40 }}>
         <div>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-3)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginBottom: 2 }}>
-            Your journey
-          </div>
-          <div style={{ fontSize: 'var(--text-md)', fontFamily: 'var(--font-display)', fontWeight: 'var(--weight-light)', letterSpacing: 'var(--tracking-tight)', color: 'var(--c-text-1)' }}>
-            {status}
-          </div>
-        </div>
-        {points > 0 && (
-          <div style={{
-            fontSize: 'var(--text-xs)', color: 'var(--c-accent)',
-            background: 'rgba(0,212,170,0.08)',
-            border: '1px solid rgba(0,212,170,0.2)',
-            borderRadius: 'var(--r-full)',
-            padding: '4px 10px',
-            letterSpacing: 'var(--tracking-wide)',
-            fontWeight: 'var(--weight-med)',
+          <h2 style={{
+            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
+            fontSize: 12, letterSpacing: '0.05em',
+            color: 'rgba(255,255,255,0.7)', marginBottom: 4,
           }}>
-            {points} pts
-          </div>
-        )}
+            Your journey
+          </h2>
+          <p style={{
+            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
+            fontSize: 18, letterSpacing: '-0.02em', color: '#ffffff',
+          }}>
+            {status}
+          </p>
+        </div>
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: '10px 16px',
+          background: 'rgba(255,255,255,0.2)',
+          borderRadius: 9999,
+          border: '1px solid rgba(255,255,255,0.2)',
+        }}>
+          <span style={{
+            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-reg)',
+            fontSize: 12, color: '#ffffff', lineHeight: 1,
+          }}>
+            Step {Math.min(doneCount + 1, 4)}/4
+          </span>
+        </div>
       </div>
 
-      {/* Milestone track */}
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        {MILESTONES.map((m, i) => {
-          const done = achieved[i]
-          const isLast = i === MILESTONES.length - 1
-          return (
-            <div key={m.key} style={{ display: 'flex', alignItems: 'center', flex: isLast ? 0 : 1 }}>
-              {/* Node */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--sp-1)' }}>
-                <div style={{
-                  width: 40, height: 40,
-                  borderRadius: '50%',
-                  background: done ? '#ffffff' : 'var(--c-surface-raise)',
-                  border: `1.5px solid ${done ? '#ffffff' : 'var(--c-border)'}`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: done ? 14 : 16,
-                  fontWeight: done ? 700 : 400,
-                  color: done ? '#000' : 'var(--c-text-3)',
-                  transition: 'all var(--dur-base) var(--ease-out)',
-                  flexShrink: 0,
-                }}>
-                  {done
-                    ? <img src={tickBlack} width={24} height={24} alt="" />
-                    : <img src={m.iconSrc} width={24} height={24} alt="" />}
-                </div>
-                <div style={{ fontSize: 'var(--text-2xs)', color: done ? 'var(--c-text-2)' : 'var(--c-text-3)', letterSpacing: 'var(--tracking-wide)', whiteSpace: 'nowrap' }}>
-                  {m.label}
-                </div>
+      {/* Steps track */}
+      <nav aria-label="Journey Steps">
+        <ol style={{ display: 'flex', alignItems: 'flex-start', width: '100%', position: 'relative', listStyle: 'none' }}>
+          {MILESTONES.map((m, i) => {
+            const done = achieved[i]
+            const isCurrent = currentIdx === i
+            const isLast = i === MILESTONES.length - 1
+            return (
+              <div key={m.key} style={{ display: 'contents' }}>
+                <JourneyStep
+                  iconSrc={m.iconSrc}
+                  label={m.label}
+                  isCompleted={done}
+                  isCurrent={isCurrent}
+                />
+                {!isLast && (
+                  <div style={{
+                    flex: 1, height: 2, marginTop: 27,
+                    background: done
+                      ? 'linear-gradient(90deg, #ffffff, rgba(255,255,255,0.2))'
+                      : 'rgba(255,255,255,0.1)',
+                  }} />
+                )}
               </div>
-              {/* Connector */}
-              {!isLast && (
-                <div style={{
-                  flex: 1,
-                  height: 2,
-                  marginBottom: 20,
-                  background: done && achieved[i + 1] ? 'var(--c-accent)' : done ? `linear-gradient(90deg, var(--c-accent), var(--c-border))` : 'var(--c-border)',
-                  transition: 'background var(--dur-slow) var(--ease-out)',
-                }} />
-              )}
-            </div>
-          )
-        })}
-      </div>
-    </div>
+            )
+          })}
+        </ol>
+      </nav>
+    </section>
   )
 }
 
-// ─── Circular progress ring (SVG) ──────────────────────────────────────────────
-function ProgressRing({
-  progress,
-  size = 72,
-  strokeWidth = 3,
-  color = 'var(--c-accent)',
-  children,
-}: {
-  progress: number
-  size?: number
-  strokeWidth?: number
-  color?: string
-  children: React.ReactNode
-}) {
-  const r = (size - strokeWidth * 2) / 2
-  const cx = size / 2
-  const circumference = 2 * Math.PI * r
-
-  return (
-    <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
-      <svg
-        width={size}
-        height={size}
-        style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }}
-      >
-        <circle cx={cx} cy={cx} r={r} fill="none" stroke="#1e1e1e" strokeWidth={strokeWidth} />
-        {progress > 0 && (
-          <circle
-            cx={cx} cy={cx} r={r}
-            fill="none"
-            stroke={color}
-            strokeWidth={strokeWidth}
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            strokeDashoffset={circumference * (1 - progress)}
-            style={{ transition: 'stroke-dashoffset 400ms ease' }}
-          />
-        )}
-      </svg>
-      <div
-        style={{
-          position: 'absolute',
-          inset: strokeWidth * 2,
-          borderRadius: '50%',
-          overflow: 'hidden',
-          background: 'var(--c-surface)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  )
-}
-
-// ─── Single quiz card ──────────────────────────────────────────────────────────
+// ─── Quiz card ────────────────────────────────────────────────────────────────
 type QuizCardState = 'active' | 'done' | 'locked'
 
 function QuizCard({
@@ -207,94 +212,112 @@ function QuizCard({
   const locked = cardState === 'locked'
   const done   = cardState === 'done'
 
-  const ringColor = 'var(--c-accent)'
-
   return (
     <button
       onClick={locked ? undefined : onStart}
       disabled={locked}
-      className="glass-row"
       style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--sp-4)',
-        padding: 'var(--sp-4)',
-        minHeight: 104,
         width: '100%',
-        background: done ? 'rgba(0,212,170,0.05)' : undefined,
-        border: done ? '1px solid rgba(0,212,170,0.2)' : undefined,
-        cursor: locked ? 'default' : 'pointer',
-        opacity: locked ? 0.6 : 1,
-        textAlign: 'left',
-        fontFamily: 'inherit',
-        color: 'var(--c-text-1)',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: 10, borderRadius: 20,
+        border: `1px solid ${locked ? 'rgba(255,255,255,0.08)' : done ? 'rgba(0,212,170,0.2)' : 'rgba(255,255,255,0.1)'}`,
+        background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.05)' : 'rgba(255,255,255,0.05)',
+        opacity: locked ? 0.8 : 1,
+        cursor: locked ? 'not-allowed' : 'pointer',
+        textAlign: 'left', fontFamily: 'inherit', color: 'var(--c-text-1)',
+        transition: 'all 400ms ease',
+        WebkitTapHighlightColor: 'transparent',
       }}
     >
-      <ProgressRing progress={progress} color={ringColor}>
-        {locked ? (
-          <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.7 }} />
-        ) : done ? (
-          <img src={tickWhite} width={24} height={24} alt="" />
-        ) : (
-          <span style={{ fontSize: 26 }}>{quiz.emoji}</span>
-        )}
-      </ProgressRing>
-
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 'var(--text-md)', fontWeight: 'var(--weight-med)', marginBottom: 5 }}>
-          {quiz.title}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        {/* Thumbnail */}
+        <div style={{
+          width: 96, height: 96, borderRadius: 16,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          overflow: 'hidden', flexShrink: 0,
+          boxShadow: locked ? 'none' : '0 10px 25px rgba(0,0,0,0.3)',
+          transition: 'transform 300ms ease',
+          background: locked
+            ? 'rgba(255,255,255,0.06)'
+            : done
+            ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
+            : 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
+        }}>
+          {locked ? (
+            <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
+          ) : (
+            <span style={{ fontSize: 36 }}>{quiz.emoji}</span>
+          )}
         </div>
-        <div style={{ fontSize: 'var(--text-xs)', color: done ? 'var(--c-accent)' : locked ? 'var(--c-text-3)' : 'var(--c-accent)', letterSpacing: 'var(--tracking-wide)' }}>
-          {done
-            ? `Completed · ${Math.round(progress * quiz.questions.length)}/${quiz.questions.length} correct`
-            : locked
-            ? 'Complete the previous quiz to unlock'
-            : `${quiz.questions.length} questions · ${quiz.questions.length * 15}s`}
+
+        {/* Text */}
+        <div>
+          <h3 style={{
+            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
+            fontSize: 'var(--text-lg)',
+            color: locked ? 'rgba(255,255,255,0.7)' : '#ffffff',
+          }}>
+            {quiz.title}
+          </h3>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>
+            {done ? (
+              <span style={{ color: 'var(--c-accent)', fontWeight: 'var(--weight-med)' }}>
+                Completed · {Math.round(progress * quiz.questions.length)}/{quiz.questions.length} correct
+              </span>
+            ) : locked ? (
+              'Complete previous quiz to unlock'
+            ) : (
+              <span style={{ color: 'var(--c-accent)', fontWeight: 'var(--weight-med)' }}>
+                {quiz.questions.length} questions · {quiz.questions.length * 15}s
+              </span>
+            )}
+          </p>
         </div>
       </div>
 
       {!locked && !done && (
-        <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.4, flexShrink: 0 }} />
+        <div style={{
+          width: 36, height: 36, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          marginRight: 8,
+        }}>
+          <img src={chevRight} width={16} height={16} alt="" style={{ opacity: 0.5 }} />
+        </div>
       )}
     </button>
   )
 }
 
-// ─── Main Card route ───────────────────────────────────────────────────────────
+// ─── Main Card route ──────────────────────────────────────────────────────────
 export default function Card() {
-  const navigate    = useNavigate()
+  const navigate = useNavigate()
   const { state, updateFanCard } = useStore()
-  const quizRef     = useRef<HTMLDivElement>(null)
-  const [sharing, setSharing] = useState(false)
-  const [saving,  setSaving]  = useState(false)
+  const quizRef = useRef<HTMLDivElement>(null)
 
   function handleSave(answers: Record<string, string>) {
     updateFanCard({ answers, completedAt: new Date().toISOString() })
   }
 
   const handleShare = useCallback(async () => {
-    setSharing(true)
     try {
       const blob = await renderCardToBlob(state.fanCard)
       const file = new File([blob], 'fan-card.png', { type: 'image/png' })
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], title: 'My FIFA Fan Card' })
       } else {
-        await window.QAApp.openNativeShare({
+        await (window as any).QAApp.openNativeShare({
           title: 'My FIFA Fan Card',
           text: buildShareText(state.fanCard),
         })
       }
       track('card_shared')
     } catch {
-      // user cancelled — not an error
-    } finally {
-      setSharing(false)
+      // user cancelled
     }
   }, [state.fanCard])
 
   const handleSaveToDevice = useCallback(async () => {
-    setSaving(true)
     try {
       const blob = await renderCardToBlob(state.fanCard)
       const url  = URL.createObjectURL(blob)
@@ -306,8 +329,8 @@ export default function Card() {
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
       track('card_saved_to_device')
-    } finally {
-      setSaving(false)
+    } catch {
+      // silently fail
     }
   }, [state.fanCard])
 
@@ -330,94 +353,145 @@ export default function Card() {
     navigate('/quiz', { state: { quizId } })
   }
 
+  const subtitle = state.fanCard.completedAt
+    ? 'Tap to flip & view your profile'
+    : state.fanCard.teamId
+    ? 'Flip to complete your fan profile'
+    : 'Tap to flip & complete your profile'
+
   return (
     <Screen>
-      <div
-        className="page-in"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 'var(--sp-6)',
-          padding: 'var(--sp-6) var(--sp-4) var(--sp-8)',
-          width: '100%',
-          maxWidth: 400,
-          margin: '0 auto',
-        }}
-      >
-        {/* ── Fan Card ────────────────────────────────────────────── */}
-        <div style={{ textAlign: 'center' }}>
-          <h2 style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'var(--text-xl)',
-            fontWeight: 'var(--weight-light)',
-            letterSpacing: 'var(--tracking-tight)',
-            marginBottom: 'var(--sp-1)',
-          }}>
-            FIFA Fan Zone
-          </h2>
-          <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)' }}>
-            {state.fanCard.completedAt
-              ? 'Tap to flip & view your profile'
-              : state.fanCard.teamId
-              ? 'Flip to complete your fan profile'
-              : 'Tap to flip & complete your profile'}
-          </p>
-        </div>
+      {/* ── Background blobs ─────────────────────────────────── */}
+      <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }} aria-hidden="true">
+        <div
+          className="animate-blob-slow"
+          style={{ position: 'absolute', top: '5%', left: '-10%', width: 500, height: 500, background: 'rgba(142,33,87,0.3)', borderRadius: '50%', filter: 'blur(120px)' }}
+        />
+        <div
+          className="animate-blob-reverse"
+          style={{ position: 'absolute', bottom: '5%', right: '-10%', width: 600, height: 600, background: 'rgba(142,33,87,0.4)', borderRadius: '50%', filter: 'blur(140px)' }}
+        />
+        <div
+          className="animate-blob-float"
+          style={{ position: 'absolute', top: '45%', left: '15%', width: 350, height: 350, background: 'rgba(142,33,87,0.2)', borderRadius: '50%', filter: 'blur(100px)' }}
+        />
+      </div>
 
-        <div style={{ width: '100%' }}>
-          <FanCard fanCard={state.fanCard} onSave={handleSave} onShare={handleShare} onSaveToDevice={handleSaveToDevice} />
-        </div>
-
-        {/* ── Progress card ─────────────────────────────────────── */}
-        <ProgressCard
-          completedAt={state.fanCard.completedAt}
-          quizCount={Object.keys(state.quizResults).length}
-          points={state.points}
+      {/* ── Glass container ──────────────────────────────────── */}
+      <div style={{
+        position: 'relative', zIndex: 10,
+        maxWidth: 448, margin: '0 auto', minHeight: '100%',
+        background: 'rgba(255,255,255,0.02)',
+        backdropFilter: 'blur(45px)', WebkitBackdropFilter: 'blur(45px)',
+        borderLeft: '1px solid rgba(255,255,255,0.05)',
+        borderRight: '1px solid rgba(255,255,255,0.05)',
+        boxShadow: '0 25px 50px rgba(0,0,0,0.25)',
+        display: 'flex', flexDirection: 'column',
+      }}>
+        {/* Noise texture overlay */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute', inset: 0, opacity: 0.02, pointerEvents: 'none',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          }}
         />
 
-        {/* ── Start Quiz CTA (scrolls down) ─────────────────────── */}
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)' }}>
-          <Button
-            fullWidth
+        {/* ── Content ────────────────────────────────────────── */}
+        <div
+          className="page-in hide-scrollbar"
+          style={{
+            flex: 1, position: 'relative', zIndex: 20,
+            padding: '48px 24px',
+            overflowY: 'auto', WebkitOverflowScrolling: 'touch',
+          }}
+        >
+          {/* Header */}
+          <header style={{ textAlign: 'center', marginBottom: 48 }}>
+            <h1 style={{
+              fontFamily: 'var(--font-display)', fontWeight: 'var(--weight-thin)',
+              fontSize: 28, letterSpacing: '-0.04em', marginBottom: 8,
+              color: '#ffffff', lineHeight: 1.1,
+            }}>
+              FIFA Fan Zone
+            </h1>
+            <p style={{
+              fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
+              fontSize: 12, letterSpacing: '0.05em',
+              color: 'rgba(255,255,255,0.7)',
+            }}>
+              {subtitle}
+            </p>
+          </header>
+
+          {/* ── Fan Card ──────────────────────────────────────── */}
+          <section aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 40 }}>
+            <FanCard
+              fanCard={state.fanCard}
+              onSave={handleSave}
+              onShare={handleShare}
+              onSaveToDevice={handleSaveToDevice}
+            />
+          </section>
+
+          {/* ── Journey ───────────────────────────────────────── */}
+          <JourneyCard
+            completedAt={state.fanCard.completedAt}
+            quizCount={Object.keys(state.quizResults).length}
+          />
+
+          {/* ── Start Quiz CTA ────────────────────────────────── */}
+          <button
             onClick={() => {
               track('card_start_quiz_tapped')
               quizRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
             }}
+            style={{
+              width: '100%', height: 56,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: '#ffffff', color: '#8E2157',
+              fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-bold)',
+              fontSize: 16, borderRadius: 9999, border: 'none',
+              marginBottom: 56, cursor: 'pointer',
+              boxShadow: '0 20px 50px rgba(255,255,255,0.15)',
+              transition: 'all 150ms ease',
+              WebkitTapHighlightColor: 'transparent',
+            }}
           >
-            Start Quiz
-          </Button>
-        </div>
+            Start quiz
+          </button>
 
-        {/* ── Quiz selection ────────────────────────────────────── */}
-        <div ref={quizRef} style={{ width: '100%' }}>
-          <div style={{ marginBottom: 'var(--sp-4)' }}>
-            <h3 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'var(--text-lg)',
-              fontWeight: 'var(--weight-light)',
-              letterSpacing: 'var(--tracking-tight)',
-              marginBottom: 'var(--sp-1)',
-            }}>Earn Avios</h3>
-            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)' }}>
-              Complete quizzes to climb the leaderboard
-            </p>
-          </div>
+          {/* ── Quizzes ───────────────────────────────────────── */}
+          <section ref={quizRef} style={{ paddingBottom: 48 }}>
+            <div style={{ marginBottom: 32 }}>
+              <h2 style={{
+                fontFamily: 'var(--font-display)', fontWeight: 'var(--weight-thin)',
+                fontSize: 28, letterSpacing: '-0.04em', color: '#ffffff',
+              }}>
+                Earn Avios
+              </h2>
+              <p style={{
+                fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-reg)',
+                color: 'rgba(255,255,255,0.5)', fontSize: 14, marginTop: 4,
+              }}>
+                Complete quizzes to climb the leaderboard
+              </p>
+            </div>
 
-          <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)' }}>
-            {QUIZZES.map((quiz, i) => (
-              <QuizCard
-                key={quiz.id}
-                quiz={quiz}
-                cardState={getCardState(i)}
-                progress={getProgress(i)}
-                onStart={() => handleStartQuiz(quiz.id)}
-              />
-            ))}
-          </div>
+            <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {QUIZZES.map((quiz, i) => (
+                <QuizCard
+                  key={quiz.id}
+                  quiz={quiz}
+                  cardState={getCardState(i)}
+                  progress={getProgress(i)}
+                  onStart={() => handleStartQuiz(quiz.id)}
+                />
+              ))}
+            </div>
+          </section>
         </div>
       </div>
     </Screen>
   )
 }
-
