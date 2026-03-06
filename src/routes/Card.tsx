@@ -380,12 +380,9 @@ export default function Card() {
       {/* ── Glass container ──────────────────────────────────── */}
       <div style={{
         position: 'relative', zIndex: 10,
-        maxWidth: 448, margin: '0 auto', minHeight: '100%',
+        width: '100%', minHeight: '100%',
         background: 'rgba(255,255,255,0.02)',
         backdropFilter: 'blur(45px)', WebkitBackdropFilter: 'blur(45px)',
-        borderLeft: '1px solid rgba(255,255,255,0.05)',
-        borderRight: '1px solid rgba(255,255,255,0.05)',
-        boxShadow: '0 25px 50px rgba(0,0,0,0.25)',
         display: 'flex', flexDirection: 'column',
       }}>
         {/* Noise texture overlay */}
