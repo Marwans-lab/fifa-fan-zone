@@ -399,7 +399,7 @@ export default function Card() {
           className="page-in hide-scrollbar"
           style={{
             flex: 1, position: 'relative', zIndex: 20,
-            padding: '48px 0',
+            padding: '48px 24px',
             overflowY: 'auto', WebkitOverflowScrolling: 'touch',
           }}
         >
