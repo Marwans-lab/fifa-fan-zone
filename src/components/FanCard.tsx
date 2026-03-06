@@ -331,7 +331,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               <div style={{ fontSize: 14, letterSpacing: 2, color: '#ffffff', textTransform: 'uppercase' }}>
                 Your Fan Card
               </div>
-              <div style={{ fontSize: 11, color: '#ffffff66', letterSpacing: 1 }}>
+              <div style={{ fontSize: 11, color: '#ffffffaa', letterSpacing: 1 }}>
                 Collector Edition
               </div>
             </div>
