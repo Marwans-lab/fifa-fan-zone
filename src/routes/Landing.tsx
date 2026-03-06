@@ -52,7 +52,7 @@ function HeroCards() {
           border: '1px solid rgba(0,212,170,0.30)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
-          <img src={stadiumIcon} width={30} height={30} alt="" style={{ opacity: 0.7 }} />
+          <img src={stadiumIcon} width={24} height={24} alt="" style={{ opacity: 0.7 }} />
         </div>
         <div style={{ height: 10, width: '65%', borderRadius: 'var(--r-full)', background: 'rgba(255,255,255,0.10)' }} />
         <div style={{ height: 7, width: '40%', borderRadius: 'var(--r-full)', background: 'rgba(255,255,255,0.06)' }} />

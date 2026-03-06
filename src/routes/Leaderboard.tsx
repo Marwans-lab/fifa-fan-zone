@@ -61,7 +61,7 @@ export default function Leaderboard() {
             <span style={{ fontSize: 'var(--text-md)', fontWeight: 'var(--weight-med)', color: 'var(--c-accent)' }}>#{myRank}</span>
             {myRank <= 5 && (
               <span style={{ fontSize: 'var(--text-sm)', color: 'var(--c-accent)', marginLeft: 8, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                <img src={trophyIcon} width={16} height={16} alt="" /> Top 5 — Avios eligible!
+                <img src={trophyIcon} width={24} height={24} alt="" /> Top 5 — Avios eligible!
               </span>
             )}
           </div>
@@ -85,7 +85,7 @@ export default function Leaderboard() {
               }}
             >
               <div style={{ width: 28, fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: row.rank <= 3 ? 'var(--c-accent)' : 'var(--c-text-3)', flexShrink: 0, lineHeight: 1, display: 'flex', alignItems: 'center' }}>
-                {row.rank === 1 ? <img src={trophyIcon} width={20} height={20} alt="1" /> : row.rank}
+                {row.rank === 1 ? <img src={trophyIcon} width={24} height={24} alt="1" /> : row.rank}
               </div>
               <div style={{ flex: 1, fontSize: 'var(--text-md)', color: 'var(--c-text-1)', fontWeight: row.isMe ? 'var(--weight-med)' : 'var(--weight-reg)' }}>
                 {row.name}

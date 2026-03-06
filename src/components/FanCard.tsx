@@ -205,7 +205,7 @@ function FanPhoto({ photoDataUrl }: { photoDataUrl: string | null }) {
         position: 'relative', zIndex: 2,
       }}
     >
-      <img src={stadiumIcon} width={48} height={48} alt="" style={{ opacity: 0.5 }} />
+      <img src={stadiumIcon} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
     </div>
   )
 }
@@ -335,7 +335,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                 Collector Edition
               </div>
             </div>
-            <img src={qrLogo} width={36} height={36} alt="QR" style={{ opacity: 0.85 }} />
+            <img src={qrLogo} width={24} height={24} alt="QR" style={{ opacity: 0.85 }} />
           </div>
 
           <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
@@ -357,7 +357,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           </div>
 
           <div style={{ fontSize: 11, color: '#ffffff66', display: 'flex', alignItems: 'center', gap: 4 }}>
-            <img src={flipIcon} width={16} height={16} alt="" style={{ opacity: 0.5 }} /> Tap card to flip
+            <img src={flipIcon} width={24} height={24} alt="" style={{ opacity: 0.5 }} /> Tap card to flip
           </div>
         </div>
 
@@ -430,11 +430,11 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                 >
                   {isLast ? (
                     <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      Save <img src={tickBlack} width={14} height={14} alt="" />
+                      Save <img src={tickBlack} width={24} height={24} alt="" />
                     </span>
                   ) : (
                     <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      Next <img src={chevRight} width={14} height={14} alt="" style={{ opacity: 0.7 }} />
+                      Next <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.7 }} />
                     </span>
                   )}
                 </button>
@@ -447,7 +447,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {PROFILE_QUESTIONS.map(q => (
                 <div key={q.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10 }}>
-                  <img src={q.iconSrc} width={18} height={18} alt="" style={{ opacity: 0.55, flexShrink: 0 }} />
+                  <img src={q.iconSrc} width={24} height={24} alt="" style={{ opacity: 0.55, flexShrink: 0 }} />
                   <div>
                     <div style={{ fontSize: 9, letterSpacing: 2, color: '#00d4aa', textTransform: 'uppercase', marginBottom: 2 }}>
                       {q.category}

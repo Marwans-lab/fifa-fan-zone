@@ -108,8 +108,8 @@ function ProgressCard({
                   flexShrink: 0,
                 }}>
                   {done
-                    ? <img src={tickBlack} width={16} height={16} alt="" />
-                    : <img src={m.iconSrc} width={16} height={16} alt="" />}
+                    ? <img src={tickBlack} width={24} height={24} alt="" />
+                    : <img src={m.iconSrc} width={24} height={24} alt="" />}
                 </div>
                 <div style={{ fontSize: 'var(--text-2xs)', color: done ? 'var(--c-text-2)' : 'var(--c-text-3)', letterSpacing: 'var(--tracking-wide)', whiteSpace: 'nowrap' }}>
                   {m.label}
@@ -234,7 +234,7 @@ function QuizCard({
         {locked ? (
           <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.7 }} />
         ) : done ? (
-          <img src={tickWhite} width={22} height={22} alt="" />
+          <img src={tickWhite} width={24} height={24} alt="" />
         ) : (
           <span style={{ fontSize: 26 }}>{quiz.emoji}</span>
         )}

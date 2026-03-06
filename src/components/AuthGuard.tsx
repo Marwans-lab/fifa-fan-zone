@@ -20,7 +20,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     return (
       <Screen centered>
         <div className="page-in" style={{ textAlign: 'center', padding: 'var(--sp-8) var(--sp-6)', maxWidth: 300 }}>
-          <div style={{ marginBottom: 'var(--sp-5)', opacity: 0.5 }}><img src={lockIcon} width={44} height={44} alt="" /></div>
+          <div style={{ marginBottom: 'var(--sp-5)', opacity: 0.5 }}><img src={lockIcon} width={24} height={24} alt="" /></div>
           <h2 style={{
             fontFamily: 'var(--font-display)',
             fontSize: 'var(--text-xl)',
