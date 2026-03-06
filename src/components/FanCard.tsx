@@ -328,14 +328,14 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
 
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%' }}>
             <div style={{ textAlign: 'left' }}>
-              <div style={{ fontSize: 14, letterSpacing: 1, color: '#ffffff' }}>
+              <div style={{ fontSize: 14, letterSpacing: 2, color: '#ffffff', textTransform: 'uppercase' }}>
                 Your Fan Card
               </div>
               <div style={{ fontSize: 11, color: '#ffffff66', letterSpacing: 1 }}>
                 Collector Edition
               </div>
             </div>
-            <img src={qrLogo} width={32} height={28} alt="QR" style={{ opacity: 0.85 }} />
+            <img src={qrLogo} width={40} height={35} alt="QR" style={{ opacity: 0.85 }} />
           </div>
 
           {/* Photo + motto grouped to control spacing between them */}
