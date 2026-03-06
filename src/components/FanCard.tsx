@@ -81,7 +81,7 @@ const faceBase: React.CSSProperties = {
   overflow: 'hidden',
 }
 
-function getFrontFaceStyle(teamId: string | null): React.CSSProperties {
+function getFrontFaceStyle(teamId: string | null, isFlipped: boolean): React.CSSProperties {
   const team = teamId ? getTeam(teamId) : null
   const bg = team
     ? `linear-gradient(160deg, ${team.colors[0]} 0%, ${team.colors[1]} 100%)`
@@ -99,6 +99,7 @@ function getFrontFaceStyle(teamId: string | null): React.CSSProperties {
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '24px 20px 20px',
+    pointerEvents: isFlipped ? 'none' : 'auto',
   }
 }
 
@@ -310,7 +311,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
       <div style={innerStyle(isFlipped)}>
 
         {/* ── FRONT ─────────────────────────────────────────────── */}
-        <div style={getFrontFaceStyle(fanCard.teamId)}>
+        <div style={getFrontFaceStyle(fanCard.teamId, isFlipped)}>
           <CardTexture />
           <HolographicStripe />
 
@@ -440,7 +441,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           ) : (
 
             /* ── Empty CTA ───────────────────────────────────────── */
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={e => e.stopPropagation()}>
               <button
                 onClick={startWizard}
                 style={{ padding: '12px 28px', borderRadius: 24, border: '1px solid #ffffff44', background: 'none', color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', letterSpacing: 0.3 }}
