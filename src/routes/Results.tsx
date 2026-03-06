@@ -98,11 +98,6 @@ export default function Results() {
     <Screen centered>
       <div className="page-in" style={{ padding: 'var(--sp-10) var(--sp-6)', textAlign: 'center', maxWidth: 380, width: '100%' }}>
 
-        {/* Result icon */}
-        <div style={{ marginBottom: 'var(--sp-5)', lineHeight: 1 }}>
-          <img src={resultIcon} width={24} height={24} alt="" />
-        </div>
-
         {/* Status label */}
         <div style={{
           fontFamily: 'var(--font-display)',
