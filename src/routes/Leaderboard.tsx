@@ -20,7 +20,7 @@ export default function Leaderboard() {
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: 'var(--sp-2)' }}>
-          <button onClick={() => navigate(-1)} className="btn-icon"><img src={chevLeft} width={20} height={20} alt="Back" /></button>
+          <button onClick={() => navigate(-1)} className="btn-icon"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
           <div style={{ flex: 1, textAlign: 'center' }}>
             <h2 style={{
               fontFamily: 'var(--font-display)',

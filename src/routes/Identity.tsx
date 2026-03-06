@@ -112,7 +112,7 @@ function CardPreview({
               transition: 'background var(--dur-base) var(--ease-out)',
             }}
           >
-            <img src={cameraIcon} width={28} height={28} alt="" />
+            <img src={cameraIcon} width={24} height={24} alt="" />
             <span style={{ fontSize: 9, letterSpacing: 2, textTransform: 'uppercase', opacity: 0.8, lineHeight: 1.2, textAlign: 'center' }}>
               Take<br />Picture
             </span>

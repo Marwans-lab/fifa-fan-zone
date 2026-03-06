@@ -8,6 +8,7 @@ import saveIcon   from '../assets/icons/save-white.svg'
 import flipIcon   from '../assets/icons/flip-white.svg'
 import tickBlack  from '../assets/icons/Tick-black.svg'
 import chevRight  from '../assets/icons/Chevron-right-white.svg'
+import qrLogo     from '../assets/icons/qr-logo.svg'
 
 // ─── Public handle (for Edit button) ─────────────────────────────────────────
 export interface FanCardHandle {
@@ -320,13 +321,16 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           <CardTexture />
           <HolographicStripe />
 
-          <div style={{ textAlign: 'center', width: '100%' }}>
-            <div style={{ fontSize: 10, letterSpacing: 3, color: '#00d4aa', textTransform: 'uppercase', marginBottom: 4 }}>
-              FIFA Fan Zone
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%' }}>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontSize: 10, letterSpacing: 3, color: '#ffffff', textTransform: 'uppercase', marginBottom: 4 }}>
+                Your Fan Card
+              </div>
+              <div style={{ fontSize: 11, color: '#ffffff66', letterSpacing: 1 }}>
+                Collector Edition
+              </div>
             </div>
-            <div style={{ fontSize: 11, color: '#ffffff66', letterSpacing: 1 }}>
-              Collector Edition
-            </div>
+            <img src={qrLogo} width={36} height={36} alt="QR" style={{ opacity: 0.85 }} />
           </div>
 
           <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
@@ -348,7 +352,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           </div>
 
           <div style={{ fontSize: 11, color: '#ffffff66', display: 'flex', alignItems: 'center', gap: 4 }}>
-            <img src={flipIcon} width={14} height={14} alt="" style={{ opacity: 0.5 }} /> Tap card to flip
+            <img src={flipIcon} width={16} height={16} alt="" style={{ opacity: 0.5 }} /> Tap card to flip
           </div>
         </div>
 
@@ -366,7 +370,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.5 }}
               aria-label="Flip back to front"
             >
-              <img src={flipIcon} width={18} height={18} alt="" />
+              <img src={flipIcon} width={24} height={24} alt="" />
             </button>
           </div>
 
@@ -471,9 +475,9 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               style={{ display: 'flex', justifyContent: 'center', gap: 20, paddingTop: 14 }}
               onClick={e => e.stopPropagation()}
             >
-              <ActionCircle icon={<img src={editIcon}  width={20} height={20} alt="" />} label="Edit"  onClick={handleEditTap} />
-              <ActionCircle icon={<img src={shareIcon} width={20} height={20} alt="" />} label="Share" onClick={handleShareTap} />
-              <ActionCircle icon={<img src={saveIcon}  width={20} height={20} alt="" />} label="Save"  onClick={handleSaveTap} />
+              <ActionCircle icon={<img src={editIcon}  width={24} height={24} alt="" />} label="Edit"  onClick={handleEditTap} />
+              <ActionCircle icon={<img src={shareIcon} width={24} height={24} alt="" />} label="Share" onClick={handleShareTap} />
+              <ActionCircle icon={<img src={saveIcon}  width={24} height={24} alt="" />} label="Save"  onClick={handleSaveTap} />
             </div>
           )}
         </div>

@@ -224,7 +224,7 @@ function QuizCard({
     >
       <ProgressRing progress={progress} color={ringColor}>
         {locked ? (
-          <img src={lockIcon} width={18} height={18} alt="" style={{ opacity: 0.7 }} />
+          <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.7 }} />
         ) : done ? (
           <span style={{ fontSize: 22 }}>✓</span>
         ) : (
@@ -246,7 +246,7 @@ function QuizCard({
       </div>
 
       {!locked && !done && (
-        <img src={chevRight} width={18} height={18} alt="" style={{ opacity: 0.4, flexShrink: 0 }} />
+        <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.4, flexShrink: 0 }} />
       )}
     </button>
   )
@@ -346,7 +346,7 @@ export default function Card() {
             letterSpacing: 'var(--tracking-tight)',
             marginBottom: 'var(--sp-1)',
           }}>
-            {state.fanCard.completedAt ? 'Your Fan Card' : state.fanCard.teamId ? 'Card Created!' : 'Your Fan Card'}
+            FIFA Fan Zone
           </h2>
           <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)' }}>
             {state.fanCard.completedAt
