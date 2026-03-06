@@ -183,26 +183,27 @@ function OptionButton({
 }
 
 // ─── Circular countdown timer ─────────────────────────────────────────────────
-function CircularTimer({ timeLeft, color }: { timeLeft: number; color: string }) {
-  const R = 16
+function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: number }) {
+  const R = (size - 8) / 2
   const circumference = 2 * Math.PI * R
   const offset = circumference * (1 - timeLeft / QUESTION_TIME)
+  const cx = size / 2
   return (
-    <div style={{ position: 'relative', width: 44, height: 44, flexShrink: 0 }}>
-      <svg width={44} height={44} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={22} cy={22} r={R} fill="none" stroke="#2a2a2a" strokeWidth={3} />
+    <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
+      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx={cx} cy={cx} r={R} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={3} />
         <circle
-          cx={22} cy={22} r={R}
+          cx={cx} cy={cx} r={R}
           fill="none"
-          stroke={color}
+          stroke="#ffffff"
           strokeWidth={3}
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s ease' }}
+          style={{ transition: 'stroke-dashoffset 1s linear' }}
         />
       </svg>
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color }}>
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: size * 0.28, fontWeight: 700, color: '#ffffff' }}>
         {timeLeft}
       </div>
     </div>
@@ -230,8 +231,7 @@ function QuestionScreen({
   chosenId, revealed, timeLeft, slideStyle,
   onSelect, onNext, onBack,
 }: QuestionScreenProps) {
-  const isLast   = qIndex === total - 1
-  const timerColor = timeLeft > 5 ? 'var(--c-accent)' : 'var(--c-warn)'
+  const isLast = qIndex === total - 1
   const percentages = revealed ? getMockPercentages(question, chosenId) : {}
 
   return (
@@ -265,7 +265,6 @@ function QuestionScreen({
             <span style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', flexShrink: 0 }}>
               {qIndex + 1}/{total}
             </span>
-            <CircularTimer timeLeft={timeLeft} color={timerColor} />
           </div>
         </div>
 
@@ -296,6 +295,11 @@ function QuestionScreen({
               background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 50%, rgba(0,0,0,0.18) 100%)',
               pointerEvents: 'none',
             }} />
+          </div>
+
+          {/* Timer — between image and question */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--sp-4)', flexShrink: 0 }}>
+            <CircularTimer timeLeft={timeLeft} size={64} />
           </div>
 
           {/* Question text */}

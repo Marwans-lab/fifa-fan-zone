@@ -255,7 +255,7 @@ function QuizCard({
 // ─── Main Card route ───────────────────────────────────────────────────────────
 export default function Card() {
   const navigate    = useNavigate()
-  const { state, updateFanCard, resetState } = useStore()
+  const { state, updateFanCard } = useStore()
   const quizRef     = useRef<HTMLDivElement>(null)
   const [sharing, setSharing] = useState(false)
   const [saving,  setSaving]  = useState(false)
@@ -408,22 +408,6 @@ export default function Card() {
             ))}
           </div>
         </div>
-        {/* ── Start fresh ───────────────────────────────────────── */}
-        <button
-          onClick={() => { resetState(); navigate('/') }}
-          style={{
-            background: 'none', border: 'none',
-            color: 'var(--c-text-3)',
-            fontSize: 'var(--text-xs)',
-            cursor: 'pointer',
-            fontFamily: 'inherit',
-            letterSpacing: 'var(--tracking-wide)',
-            padding: 'var(--sp-2)',
-            marginTop: 'var(--sp-2)',
-          }}
-        >
-          Start fresh
-        </button>
       </div>
     </Screen>
   )
