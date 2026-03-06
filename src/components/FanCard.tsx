@@ -339,7 +339,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           </div>
 
           {/* Photo + motto grouped to control spacing between them */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
             <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
 
             <div style={{ textAlign: 'center' }}>
@@ -482,8 +482,8 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             </div>
           )}
 
-          {/* ── Tap to flip (bottom, mirrors front) ──────────────── */}
-          <div style={{ fontSize: 14, color: '#ffffff66', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, paddingTop: 12 }}>
+          {/* ── Tap to flip (pinned to bottom) ───────────────────── */}
+          <div style={{ fontSize: 14, color: '#ffffff66', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, marginTop: 'auto', paddingTop: 12 }}>
             <img src={flipIcon} width={24} height={24} alt="" style={{ opacity: 0.5 }} /> Tap card to flip
           </div>
         </div>
