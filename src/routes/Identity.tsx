@@ -263,7 +263,7 @@ export default function Identity() {
   if (step === 'team') {
     return (
       <Screen>
-        <div style={{
+        <div className="page-in" style={{
           display: 'flex', flexDirection: 'column',
           height: '100%',
           padding: 'var(--sp-6) var(--sp-5) var(--sp-4)',
@@ -291,19 +291,7 @@ export default function Identity() {
               placeholder="Search teams…"
               value={query}
               onChange={e => setQuery(e.target.value)}
-              style={{
-                width: '100%',
-                padding: 'var(--sp-3) var(--sp-4)',
-                background: 'var(--glass-bg)',
-                border: '1px solid var(--c-border)',
-                borderRadius: 'var(--r-full)',
-                color: 'var(--c-text-1)',
-                fontSize: 'var(--text-md)',
-                fontFamily: 'inherit',
-                outline: 'none',
-                backdropFilter: 'var(--glass-blur)',
-                WebkitBackdropFilter: 'var(--glass-blur)',
-              }}
+              className="input-field"
             />
           </div>
 
@@ -358,7 +346,7 @@ export default function Identity() {
   if (step === 'camera') {
     return (
       <Screen centered>
-        <div style={{ padding: 'var(--sp-8) var(--sp-5)', textAlign: 'center', maxWidth: 340, width: '100%' }}>
+        <div className="page-in" style={{ padding: 'var(--sp-8) var(--sp-5)', textAlign: 'center', maxWidth: 340, width: '100%' }}>
           <h2 style={{
             fontFamily: 'var(--font-display)',
             fontSize: 'var(--text-xl)',
@@ -426,7 +414,7 @@ export default function Identity() {
   // ── Step: preview ──────────────────────────────────────────────────────────
   return (
     <Screen centered>
-      <div style={{ padding: 'var(--sp-8) var(--sp-5)', textAlign: 'center', maxWidth: 340, width: '100%' }}>
+      <div className="page-in" style={{ padding: 'var(--sp-8) var(--sp-5)', textAlign: 'center', maxWidth: 340, width: '100%' }}>
         <h2 style={{
           fontFamily: 'var(--font-display)',
           fontSize: 'var(--text-xl)',

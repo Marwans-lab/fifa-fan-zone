@@ -15,23 +15,11 @@ export default function Leaderboard() {
 
   return (
     <Screen>
-      <div style={{ display: 'flex', flexDirection: 'column', padding: 'var(--sp-6) var(--sp-5) 100px', width: '100%', maxWidth: 420, margin: '0 auto' }}>
+      <div className="page-in" style={{ display: 'flex', flexDirection: 'column', padding: 'var(--sp-6) var(--sp-5) 100px', width: '100%', maxWidth: 420, margin: '0 auto' }}>
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: 'var(--sp-2)' }}>
-          <button
-            onClick={() => navigate(-1)}
-            style={{
-              width: 36, height: 36, borderRadius: '50%',
-              border: '1px solid var(--c-border)', background: 'var(--glass-bg)',
-              color: 'var(--c-text-1)', cursor: 'pointer', flexShrink: 0,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 16, fontFamily: 'inherit',
-              backdropFilter: 'var(--glass-blur)',
-              WebkitBackdropFilter: 'var(--glass-blur)',
-              transition: 'background var(--dur-base) var(--ease-out)',
-            }}
-          >‹</button>
+          <button onClick={() => navigate(-1)} className="btn-icon">‹</button>
           <div style={{ flex: 1, textAlign: 'center' }}>
             <h2 style={{
               fontFamily: 'var(--font-display)',
@@ -45,15 +33,8 @@ export default function Leaderboard() {
           </div>
           <button
             onClick={() => { track('leaderboard_refresh_tapped'); refresh() }}
-            style={{
-              width: 36, height: 36, borderRadius: '50%',
-              border: '1px solid var(--c-border)', background: 'var(--glass-bg)',
-              color: 'var(--c-text-2)', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 14, fontFamily: 'inherit',
-              backdropFilter: 'var(--glass-blur)',
-              WebkitBackdropFilter: 'var(--glass-blur)',
-            }}
+            className="btn-icon"
+            style={{ color: 'var(--c-text-2)', fontSize: 14 }}
             aria-label="Refresh leaderboard"
           >↻</button>
         </div>

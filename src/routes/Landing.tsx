@@ -5,104 +5,57 @@ import Button from '../components/Button'
 import { useStore } from '../store/useStore'
 import { track } from '../lib/analytics'
 
-// Stacked animated fan card hero — pure CSS, no JS animation loop
 function HeroCards() {
   return (
     <div aria-hidden="true" style={{ position: 'relative', width: 220, height: 280, margin: '0 auto' }}>
       <style>{`
-        @keyframes float-base {
-          0%, 100% { transform: rotate(-6deg) translateY(0px); }
-          50% { transform: rotate(-6deg) translateY(-8px); }
-        }
-        @keyframes float-mid {
-          0%, 100% { transform: rotate(2deg) translateY(0px); }
-          50% { transform: rotate(2deg) translateY(-12px); }
-        }
-        @keyframes float-top {
-          0%, 100% { transform: rotate(-1deg) translateY(0px); }
-          50% { transform: rotate(-1deg) translateY(-10px); }
-        }
+        @keyframes float-a { 0%,100%{transform:rotate(-5deg) translateY(0)} 50%{transform:rotate(-5deg) translateY(-8px)} }
+        @keyframes float-b { 0%,100%{transform:rotate(3deg) translateY(0)} 50%{transform:rotate(3deg) translateY(-12px)} }
+        @keyframes float-c { 0%,100%{transform:rotate(-1deg) translateY(0)} 50%{transform:rotate(-1deg) translateY(-10px)} }
       `}</style>
 
-      {/* Card 3 — back */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        borderRadius: 'var(--radius-lg)',
-        background: 'linear-gradient(135deg, #1a3a2a 0%, #0d4030 100%)',
-        border: '1px solid #2a5a40',
-        willChange: 'transform',
-        animation: 'float-base 4s ease-in-out infinite',
-        animationDelay: '0.4s',
-      }} />
+      {[
+        { style: { background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', animation: 'float-a 5s ease-in-out infinite', animationDelay: '0.6s' } },
+        { style: { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', animation: 'float-b 5s ease-in-out infinite', animationDelay: '0.3s' } },
+        { style: { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(0,212,170,0.25)', animation: 'float-c 5s ease-in-out infinite', animationDelay: '0s' } },
+      ].map((card, i) => (
+        <div
+          key={i}
+          style={{
+            position: 'absolute', inset: 0,
+            borderRadius: 'var(--r-xl)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            willChange: 'transform',
+            ...card.style,
+          }}
+        />
+      ))}
 
-      {/* Card 2 — middle */}
       <div style={{
-        position: 'absolute',
-        inset: 0,
-        borderRadius: 'var(--radius-lg)',
-        background: 'linear-gradient(135deg, #1a2a3a 0%, #0d2040 100%)',
-        border: '1px solid #2a4060',
-        willChange: 'transform',
-        animation: 'float-mid 4s ease-in-out infinite',
-        animationDelay: '0.2s',
-      }} />
-
-      {/* Card 1 — front */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        borderRadius: 'var(--radius-lg)',
-        background: 'linear-gradient(135deg, #141414 0%, #1e1e1e 100%)',
-        border: '1px solid var(--color-accent)',
-        willChange: 'transform',
-        animation: 'float-top 4s ease-in-out infinite',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 'var(--space-3)',
-        padding: 'var(--space-6)',
+        position: 'absolute', inset: 0,
+        borderRadius: 'var(--r-xl)',
+        border: '1px solid rgba(0,212,170,0.25)',
+        background: 'rgba(255,255,255,0.05)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        animation: 'float-c 5s ease-in-out infinite',
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        gap: 'var(--sp-3)', padding: 'var(--sp-6)',
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
       }}>
-        {/* Card avatar placeholder */}
         <div style={{
-          width: 72,
-          height: 72,
-          borderRadius: 'var(--radius-full)',
-          background: 'var(--color-surface)',
-          border: '2px solid var(--color-accent)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 32,
+          width: 72, height: 72, borderRadius: 'var(--r-full)',
+          background: 'rgba(0,212,170,0.08)',
+          border: '1px solid rgba(0,212,170,0.30)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30,
         }}>
           ⚽
         </div>
-        {/* Card name bar */}
-        <div style={{
-          height: 12,
-          width: '70%',
-          borderRadius: 'var(--radius-full)',
-          background: 'var(--color-border)',
-        }} />
-        {/* Card team bar */}
-        <div style={{
-          height: 8,
-          width: '45%',
-          borderRadius: 'var(--radius-full)',
-          background: 'var(--color-border)',
-          opacity: 0.6,
-        }} />
-        {/* Accent stripe */}
-        <div style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: 4,
-          borderRadius: '0 0 var(--radius-lg) var(--radius-lg)',
-          background: 'var(--color-accent)',
-        }} />
+        <div style={{ height: 10, width: '65%', borderRadius: 'var(--r-full)', background: 'rgba(255,255,255,0.10)' }} />
+        <div style={{ height: 7, width: '40%', borderRadius: 'var(--r-full)', background: 'rgba(255,255,255,0.06)' }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, borderRadius: '0 0 var(--r-xl) var(--r-xl)', background: 'linear-gradient(90deg, transparent, #00d4aa66, transparent)' }} />
       </div>
     </div>
   )
@@ -116,13 +69,9 @@ export default function Landing() {
 
   useEffect(() => {
     track('landing_viewed', { hasCard })
-
-    // Fire-and-forget auth token fetch for downstream use
     if (!authFetched.current) {
       authFetched.current = true
-      window.QAApp?.getAuthToken().catch(() => {
-        // Non-fatal — auth will be re-attempted at identity flow
-      })
+      window.QAApp?.getAuthToken().catch(() => {})
     }
   }, [hasCard])
 
@@ -138,69 +87,61 @@ export default function Landing() {
 
   return (
     <Screen>
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100%',
-        padding: 'var(--space-6)',
-      }}>
+      {/* Ambient top glow */}
+      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,212,170,0.06) 0%, transparent 70%)' }} />
 
-        {/* Header */}
-        <header style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          paddingBottom: 'var(--space-4)',
-        }}>
+      <div className="page-in" style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', padding: 'var(--sp-6)' }}>
+
+        <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 'var(--sp-4)' }}>
           <span style={{
-            fontSize: 'var(--font-size-sm)',
-            fontWeight: 700,
-            letterSpacing: '0.08em',
-            color: 'var(--color-accent)',
+            fontFamily: 'var(--font-display)',
+            fontSize: 'var(--text-xs)',
+            fontWeight: 'var(--weight-light)',
+            letterSpacing: 'var(--tracking-wider)',
+            color: 'var(--c-accent)',
             textTransform: 'uppercase',
           }}>
             FIFA FanZone
           </span>
           {state.points > 0 && (
             <span style={{
-              fontSize: 'var(--font-size-xs)',
-              color: 'var(--color-text-secondary)',
-              background: 'var(--color-surface)',
-              padding: '4px 10px',
-              borderRadius: 'var(--radius-full)',
-              border: '1px solid var(--color-border)',
+              fontSize: 'var(--text-xs)',
+              color: 'var(--c-text-2)',
+              background: 'var(--glass-bg)',
+              padding: '4px 12px',
+              borderRadius: 'var(--r-full)',
+              border: '1px solid var(--c-border)',
+              letterSpacing: 'var(--tracking-wide)',
             }}>
               {state.points} pts
             </span>
           )}
         </header>
 
-        {/* Hero */}
         <div style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 'var(--space-8)',
-          paddingTop: 'var(--space-8)',
-          paddingBottom: 'var(--space-8)',
+          flex: 1, display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          gap: 'var(--sp-10)', paddingTop: 'var(--sp-8)', paddingBottom: 'var(--sp-8)',
         }}>
           <HeroCards />
 
-          <div style={{ textAlign: 'center', maxWidth: 300 }}>
+          <div style={{ textAlign: 'center', maxWidth: 280 }}>
             <h1 style={{
-              fontSize: 'var(--font-size-2xl)',
-              fontWeight: 700,
-              lineHeight: 'var(--line-height-tight)',
-              marginBottom: 'var(--space-3)',
+              fontFamily: 'var(--font-display)',
+              fontSize: 'var(--text-3xl)',
+              fontWeight: 'var(--weight-light)',
+              letterSpacing: 'var(--tracking-tight)',
+              lineHeight: 'var(--leading-tight)',
+              color: 'var(--c-text-1)',
+              marginBottom: 'var(--sp-4)',
             }}>
-              {hasCard ? 'Welcome back,\nFan' : 'Show your\nteam spirit'}
+              {hasCard ? 'Welcome back' : 'Show your\nteam spirit'}
             </h1>
             <p style={{
-              color: 'var(--color-text-secondary)',
-              fontSize: 'var(--font-size-sm)',
-              lineHeight: 'var(--line-height-normal)',
+              color: 'var(--c-text-2)',
+              fontSize: 'var(--text-sm)',
+              lineHeight: 'var(--leading-normal)',
+              fontWeight: 'var(--weight-reg)',
             }}>
               {hasCard
                 ? 'Keep playing, climb the leaderboard and win Avios.'
@@ -209,8 +150,7 @@ export default function Landing() {
           </div>
         </div>
 
-        {/* CTAs */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', paddingBottom: 'var(--space-6)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)', paddingBottom: 'var(--sp-6)' }}>
           <Button fullWidth onClick={handlePrimary}>
             {hasCard ? 'Continue' : 'Create your fan card'}
           </Button>
@@ -221,14 +161,14 @@ export default function Landing() {
             </Button>
           )}
 
-          {/* Avios badge */}
           <p style={{
             textAlign: 'center',
-            fontSize: 'var(--font-size-xs)',
-            color: 'var(--color-text-secondary)',
-            marginTop: 'var(--space-2)',
+            fontSize: 'var(--text-xs)',
+            color: 'var(--c-text-3)',
+            marginTop: 'var(--sp-2)',
+            letterSpacing: 'var(--tracking-wide)',
           }}>
-            Top 5 fans win Avios ✈️
+            Top 5 fans win Avios ✈
           </p>
         </div>
       </div>

@@ -326,6 +326,7 @@ export default function Card() {
   return (
     <Screen>
       <div
+        className="page-in"
         style={{
           display: 'flex',
           flexDirection: 'column',

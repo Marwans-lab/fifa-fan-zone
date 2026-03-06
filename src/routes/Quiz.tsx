@@ -236,6 +236,7 @@ function QuestionScreen({
   return (
     <Screen>
       <div
+        className="page-in"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -248,21 +249,7 @@ function QuestionScreen({
         {/* ── Top bar (NOT animated — stays fixed) ─────────────── */}
         <div style={{ padding: 'var(--sp-4)', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
-            <button
-              onClick={onBack}
-              style={{
-                width: 36, height: 36, borderRadius: '50%',
-                border: '1px solid var(--c-border)',
-                background: 'var(--glass-bg)', color: 'var(--c-text-1)',
-                cursor: 'pointer', flexShrink: 0,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 16, fontFamily: 'inherit',
-                backdropFilter: 'var(--glass-blur)',
-                WebkitBackdropFilter: 'var(--glass-blur)',
-              }}
-            >
-              ‹
-            </button>
+            <button onClick={onBack} className="btn-icon">‹</button>
             <div style={{ flex: 1, height: 4, background: 'var(--c-surface-raise)', borderRadius: 2, overflow: 'hidden' }}>
               <div
                 style={{
@@ -370,18 +357,19 @@ function QuestionScreen({
             <button
               onClick={onNext}
               disabled={!revealed}
+              className="btn"
               style={{
                 width: '100%',
                 padding: '16px 0',
                 borderRadius: 50,
                 border: 'none',
-                background: revealed ? '#ffffff' : '#2a2a2a',
-                color: revealed ? '#c8102e' : '#555',
-                fontSize: 15,
-                fontWeight: 700,
+                background: revealed ? '#ffffff' : 'var(--c-surface-raise)',
+                color: revealed ? 'var(--c-brand)' : 'var(--c-text-3)',
+                fontSize: 'var(--text-md)',
+                fontWeight: 'var(--weight-bold)',
                 cursor: revealed ? 'pointer' : 'default',
                 fontFamily: 'inherit',
-                transition: 'all 200ms ease',
+                transition: 'background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out)',
               }}
             >
               {isLast && revealed ? `Finish · ${score}/${total}` : 'Next'}

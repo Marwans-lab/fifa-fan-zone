@@ -68,7 +68,7 @@ export default function Results() {
   if (!result) {
     return (
       <Screen centered>
-        <div style={{ padding: 'var(--sp-10) var(--sp-6)', textAlign: 'center', maxWidth: 360, width: '100%' }}>
+        <div className="page-in" style={{ padding: 'var(--sp-10) var(--sp-6)', textAlign: 'center', maxWidth: 360, width: '100%' }}>
           <div style={{ fontSize: 48, marginBottom: 'var(--sp-5)' }}>🏆</div>
           <h2 style={{ fontSize: 'var(--text-2xl)', fontWeight: 'var(--weight-light)', marginBottom: 'var(--sp-2)', letterSpacing: 'var(--tracking-tight)' }}>
             Your Score
@@ -93,7 +93,7 @@ export default function Results() {
 
   return (
     <Screen centered>
-      <div style={{ padding: 'var(--sp-10) var(--sp-6)', textAlign: 'center', maxWidth: 380, width: '100%' }}>
+      <div className="page-in" style={{ padding: 'var(--sp-10) var(--sp-6)', textAlign: 'center', maxWidth: 380, width: '100%' }}>
 
         {/* Emoji */}
         <div style={{ fontSize: 56, marginBottom: 'var(--sp-5)', lineHeight: 1 }}>{emoji}</div>

@@ -1,3 +1,34 @@
+/* ─── Font declarations ───────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Jotia';
+  src: local('Jotia Light'), local('Jotia-Light');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Jotia';
+  src: local('Jotia Thin'), local('Jotia-Thin');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Graphik';
+  src: local('Graphik'), local('Graphik-Regular');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Graphik';
+  src: local('Graphik Medium'), local('Graphik-Medium');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── Reset ───────────────────────────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -11,25 +42,186 @@ html, body, #root {
 }
 
 body {
-  background-color: var(--color-bg);
-  color: var(--color-text-primary);
-  font-family: var(--font-family);
-  font-size: var(--font-size-md);
-  line-height: var(--line-height-normal);
+  background-color: var(--c-bg);
+  color: var(--c-text-1);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: var(--weight-reg);
+  letter-spacing: var(--tracking-normal);
+  line-height: var(--leading-normal);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Prevent text selection in WebView */
   -webkit-user-select: none;
   user-select: none;
-  /* Prevent callout on long press in iOS WebView */
   -webkit-touch-callout: none;
 }
 
-button {
-  font-family: inherit;
+button, input, select, textarea {
+  font-family: var(--font-body);
+  letter-spacing: var(--tracking-normal);
 }
 
 img {
   display: block;
   max-width: 100%;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: var(--tracking-tight);
+  font-weight: var(--weight-light);
+  line-height: var(--leading-tight);
+}
+
+/* ─── Interactive states ──────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-4) var(--sp-6);
+  border-radius: var(--r-full);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: var(--weight-med);
+  letter-spacing: var(--tracking-wide);
+  border: none;
+  cursor: pointer;
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out),
+    background var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--c-bg), 0 0 0 4px var(--c-accent);
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.975);
+}
+
+.btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: #ffffff;
+  color: #111;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: rgba(255,255,255,0.92);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background: var(--glass-bg);
+  color: var(--c-text-1);
+  border: 1px solid var(--c-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--c-surface-raise);
+  border-color: var(--c-border-raise);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--c-text-2);
+  border: none;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  color: var(--c-text-1);
+  background: var(--c-surface);
+}
+
+/* ─── Glass surface utility ───────────────────────────────────────────────── */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shine), var(--shadow-sm);
+}
+
+/* ─── Page entrance animation ─────────────────────────────────────────────── */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-in {
+  animation: page-in var(--dur-slow) var(--ease-out) both;
+}
+
+/* ─── Circular icon button (back, refresh, etc.) ──────────────────────────── */
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--c-border);
+  background: var(--glass-bg);
+  color: var(--c-text-1);
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-family: inherit;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  transition:
+    background var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-icon:hover {
+  background: var(--c-surface-raise);
+  border-color: var(--c-border-raise);
+}
+
+.btn-icon:active {
+  transform: scale(0.93);
+}
+
+.btn-icon:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--c-bg), 0 0 0 4px var(--c-accent);
+}
+
+/* ─── Text input field ────────────────────────────────────────────────────── */
+.input-field {
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--glass-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-full);
+  color: var(--c-text-1);
+  font-size: var(--text-md);
+  font-family: inherit;
+  outline: none;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  transition: border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+}
+
+.input-field:focus {
+  border-color: var(--c-border-accent);
+  box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.08);
+}
+
+.input-field::placeholder {
+  color: var(--c-text-3);
 }
