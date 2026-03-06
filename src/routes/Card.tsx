@@ -96,7 +96,7 @@ function ProgressCard({
               {/* Node */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--sp-1)' }}>
                 <div style={{
-                  width: 32, height: 32,
+                  width: 40, height: 40,
                   borderRadius: '50%',
                   background: done ? '#ffffff' : 'var(--c-surface-raise)',
                   border: `1.5px solid ${done ? '#ffffff' : 'var(--c-border)'}`,
