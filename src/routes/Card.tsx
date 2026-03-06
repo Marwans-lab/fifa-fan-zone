@@ -404,7 +404,7 @@ export default function Card() {
             </p>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)' }}>
+          <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)' }}>
             {QUIZZES.map((quiz, i) => (
               <QuizCard
                 key={quiz.id}

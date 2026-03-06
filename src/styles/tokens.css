@@ -140,4 +140,17 @@
   --z-base:    0;
   --z-overlay: 100;
   --z-modal:   200;
+
+  /* ─── Glass variants ─────────────────────────────────────────────────────── */
+  --glass-bg-strong: rgba(255,255,255,0.14);
+  --glass-bg-subtle: rgba(255,255,255,0.05);
+
+  /* ─── Focus ring ─────────────────────────────────────────────────────────── */
+  --focus-ring: 0 0 0 2px var(--c-bg), 0 0 0 4px var(--c-accent);
+
+  /* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: rgba(255,255,255,0.12);
+  --scrollbar-thumb-hover: rgba(255,255,255,0.22);
+  --scrollbar-width: 4px;
 }

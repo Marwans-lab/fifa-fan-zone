@@ -141,7 +141,7 @@ function OptionButton({
           alignItems: 'center',
           justifyContent: 'center',
           fontSize: 12,
-          fontWeight: 700,
+          fontWeight: 500,
           flexShrink: 0,
           transition: 'background 200ms ease, color 200ms ease',
           zIndex: 1,
@@ -169,7 +169,7 @@ function OptionButton({
         <span
           style={{
             fontSize: 12,
-            fontWeight: 700,
+            fontWeight: 500,
             color: isCorrect ? 'var(--c-correct)' : isWrong ? 'var(--c-error)' : 'var(--c-text-3)',
             flexShrink: 0,
             zIndex: 1,
@@ -378,7 +378,7 @@ function QuestionScreen({
                 background: revealed ? '#ffffff' : 'var(--c-surface-raise)',
                 color: revealed ? 'var(--c-brand)' : 'var(--c-text-3)',
                 fontSize: 'var(--text-md)',
-                fontWeight: 'var(--weight-bold)',
+                fontWeight: 'var(--weight-med)',
                 cursor: revealed ? 'pointer' : 'default',
                 fontFamily: 'inherit',
                 transition: 'background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out)',

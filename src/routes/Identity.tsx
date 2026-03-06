@@ -122,7 +122,7 @@ function CardPreview({
 
       {/* Team motto */}
       <div style={{ textAlign: 'center', zIndex: 1 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.88)', letterSpacing: 1, marginBottom: 2, fontStyle: 'italic' }}>
+        <div style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: 'rgba(255,255,255,0.88)', letterSpacing: 1, marginBottom: 2, fontStyle: 'italic' }}>
           {team.motto}
         </div>
       </div>
@@ -297,7 +297,7 @@ export default function Identity() {
           </div>
 
           {/* Team list — scrollable */}
-          <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 'var(--sp-2)', paddingBottom: 'var(--sp-4)' }}>
+          <div className="scroll-y stagger" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--sp-2)', paddingBottom: 'var(--sp-4)' }}>
             {filtered.map(team => (
               <button
                 key={team.id}

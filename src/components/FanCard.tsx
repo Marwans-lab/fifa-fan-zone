@@ -118,7 +118,7 @@ function getFrontFaceStyle(teamId: string | null, isFlipped: boolean): React.CSS
 const backFaceStyle: React.CSSProperties = {
   ...faceBase,
   background: 'linear-gradient(160deg, #1a1a2a 0%, #0d0d1a 100%)',
-  border: '1px solid #00d4aa44',
+  border: '1px solid var(--c-border-accent)',
   transform: 'rotateY(180deg)',
   display: 'flex',
   flexDirection: 'column',
@@ -346,7 +346,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               {fanCard.teamId ? (() => {
                 const team = getTeam(fanCard.teamId)
                 return (
-                  <div style={{ fontSize: 18, fontWeight: 600, color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                  <div style={{ fontSize: 18, fontWeight: 500, color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                     {team && <span style={{ fontStyle: 'normal', fontSize: 22 }}>{team.flag}</span>}
                     {team ? team.motto : fanCard.teamId}
                   </div>
@@ -370,7 +370,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
 
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-            <div style={{ fontSize: 11, color: '#00d4aa', letterSpacing: 2, textTransform: 'uppercase' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--c-accent)', letterSpacing: 2, textTransform: 'uppercase' as const }}>
               Fan Profile
             </div>
           </div>
@@ -382,11 +382,11 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
               <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
                 {PROFILE_QUESTIONS.map((_, i) => (
-                  <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i <= step ? '#00d4aa' : 'rgba(255,255,255,0.12)', transition: 'background 300ms ease' }} />
+                  <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i <= step ? 'var(--c-accent)' : 'rgba(255,255,255,0.12)', transition: `background var(--dur-slow) var(--ease-out)` }} />
                 ))}
               </div>
 
-              <div style={{ fontSize: 13, fontWeight: 500, color: '#fff', marginBottom: 12, lineHeight: 1.4, letterSpacing: 0.1 }}>
+              <div style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: 'var(--c-text-1)', marginBottom: 12, lineHeight: 1.4, letterSpacing: 0.1 }}>
                 {currentQ.label}
               </div>
 
@@ -399,9 +399,9 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                       onClick={e => { e.stopPropagation(); handleSelect(currentQ.id, option) }}
                       style={{
                         padding: '9px 14px', borderRadius: 10, fontFamily: 'inherit',
-                        border: `1px solid ${selected ? '#00d4aa' : 'rgba(255,255,255,0.14)'}`,
-                        background: selected ? 'rgba(0,212,170,0.15)' : 'rgba(255,255,255,0.05)',
-                        color: selected ? '#00d4aa' : 'rgba(255,255,255,0.85)',
+                        border: `1px solid ${selected ? 'var(--c-accent)' : 'var(--c-border)'}`,
+                        background: selected ? 'rgba(0,212,170,0.15)' : 'var(--glass-bg-subtle)',
+                        color: selected ? 'var(--c-accent)' : 'var(--c-text-1)',
                         fontSize: 12, textAlign: 'left', cursor: 'pointer',
                         transition: 'all 150ms ease',
                       }}
@@ -422,7 +422,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                 <button
                   onClick={handleNext}
                   disabled={!currentAnswer}
-                  style={{ flex: 2, padding: '9px 0', borderRadius: 10, border: 'none', background: currentAnswer ? '#00d4aa' : 'rgba(0,212,170,0.2)', color: currentAnswer ? '#000' : 'rgba(0,0,0,0.4)', fontSize: 12, fontWeight: 700, cursor: currentAnswer ? 'pointer' : 'default', fontFamily: 'inherit' }}
+                  style={{ flex: 2, padding: '9px 0', borderRadius: 10, border: 'none', background: currentAnswer ? 'var(--c-accent)' : 'rgba(0,212,170,0.2)', color: currentAnswer ? '#000' : 'rgba(0,0,0,0.4)', fontSize: 12, fontWeight: 500, cursor: currentAnswer ? 'pointer' : 'default', fontFamily: 'inherit' }}
                 >
                   {isLast ? (
                     <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -445,10 +445,10 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                 <div key={q.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10 }}>
                   <img src={q.iconSrc} width={24} height={24} alt="" style={{ opacity: 0.55, flexShrink: 0 }} />
                   <div>
-                    <div style={{ fontSize: 9, letterSpacing: 2, color: '#00d4aa', textTransform: 'uppercase', marginBottom: 2 }}>
+                    <div style={{ fontSize: 'var(--text-2xs)', letterSpacing: 2, color: 'var(--c-accent)', textTransform: 'uppercase' as const, marginBottom: 2 }}>
                       {q.category}
                     </div>
-                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
                       {resolvedAnswer(q.id)}
                     </div>
                   </div>

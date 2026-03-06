@@ -18,7 +18,7 @@ export default function Leaderboard() {
 
   return (
     <Screen>
-      <div className="page-in" style={{ display: 'flex', flexDirection: 'column', padding: 'var(--sp-6) var(--sp-5) 100px', width: '100%', maxWidth: 420, margin: '0 auto' }}>
+      <div className="page-in scroll-y" style={{ display: 'flex', flexDirection: 'column', padding: 'var(--sp-6) var(--sp-5) 100px', width: '100%', maxWidth: 420, margin: '0 auto' }}>
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: 'var(--sp-2)' }}>
@@ -68,7 +68,7 @@ export default function Leaderboard() {
         )}
 
         {/* Rows */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-2)' }}>
+        <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-2)' }}>
           {entries.map(row => (
             <div
               key={row.rank}

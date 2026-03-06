@@ -56,7 +56,7 @@ function HeroCards() {
         </div>
         <div style={{ height: 10, width: '65%', borderRadius: 'var(--r-full)', background: 'rgba(255,255,255,0.10)' }} />
         <div style={{ height: 7, width: '40%', borderRadius: 'var(--r-full)', background: 'rgba(255,255,255,0.06)' }} />
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, borderRadius: '0 0 var(--r-xl) var(--r-xl)', background: 'linear-gradient(90deg, transparent, #00d4aa66, transparent)' }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, borderRadius: '0 0 var(--r-xl) var(--r-xl)', background: 'linear-gradient(90deg, transparent, rgba(0,212,170,0.4), transparent)' }} />
       </div>
     </div>
   )

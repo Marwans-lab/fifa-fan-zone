@@ -98,7 +98,7 @@ h1, h2, h3, h4 {
 
 .btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--c-bg), 0 0 0 4px var(--c-accent);
+  box-shadow: var(--focus-ring);
 }
 
 .btn:active:not(:disabled) {
@@ -157,7 +157,7 @@ h1, h2, h3, h4 {
 button:focus-visible,
 a:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--c-bg), 0 0 0 4px var(--c-accent);
+  box-shadow: var(--focus-ring);
 }
 
 /* ─── Interactive glass row (team list, quiz cards, etc.) ─────────────────── */
@@ -229,7 +229,7 @@ a:focus-visible {
 
 .btn-icon:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--c-bg), 0 0 0 4px var(--c-accent);
+  box-shadow: var(--focus-ring);
 }
 
 /* ─── Text input field ────────────────────────────────────────────────────── */
@@ -256,3 +256,49 @@ a:focus-visible {
 .input-field::placeholder {
   color: var(--c-text-3);
 }
+
+/* ─── Premium scrollbar ──────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: var(--r-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* ─── Selection ──────────────────────────────────────────────────────────── */
+::selection {
+  background: rgba(0,212,170,0.25);
+  color: var(--c-text-1);
+}
+
+/* ─── Smooth scroll containers ───────────────────────────────────────────── */
+.scroll-y {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+/* ─── Stagger entrance utility ───────────────────────────────────────────── */
+.stagger > * {
+  animation: page-in 380ms var(--ease-out) both;
+}
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 40ms; }
+.stagger > *:nth-child(3) { animation-delay: 80ms; }
+.stagger > *:nth-child(4) { animation-delay: 120ms; }
+.stagger > *:nth-child(5) { animation-delay: 160ms; }
+.stagger > *:nth-child(6) { animation-delay: 200ms; }
+.stagger > *:nth-child(n+7) { animation-delay: 240ms; }
