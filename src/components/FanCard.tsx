@@ -328,7 +328,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
 
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%' }}>
             <div style={{ textAlign: 'left' }}>
-              <div style={{ fontSize: 14, letterSpacing: 3, color: '#ffffff', textTransform: 'uppercase', marginBottom: 4 }}>
+              <div style={{ fontSize: 14, letterSpacing: 1, color: '#ffffff' }}>
                 Your Fan Card
               </div>
               <div style={{ fontSize: 11, color: '#ffffff66', letterSpacing: 1 }}>
