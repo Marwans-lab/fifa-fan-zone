@@ -2,6 +2,12 @@ import { useState, useCallback, forwardRef, useImperativeHandle } from 'react'
 import { track } from '../lib/analytics'
 import type { FanCard as FanCardData } from '../store/useStore'
 import { getTeam } from '../data/teams'
+import editIcon   from '../assets/icons/edit-white.svg'
+import shareIcon  from '../assets/icons/share-white.svg'
+import saveIcon   from '../assets/icons/save-white.svg'
+import flipIcon   from '../assets/icons/flip-white.svg'
+import tickBlack  from '../assets/icons/Tick-black.svg'
+import chevRight  from '../assets/icons/Chevron-right-white.svg'
 
 // ─── Public handle (for Edit button) ─────────────────────────────────────────
 export interface FanCardHandle {
@@ -114,7 +120,7 @@ const backFaceStyle: React.CSSProperties = {
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
-function ActionCircle({ icon, label, onClick, disabled }: { icon: string; label: string; onClick: (e: React.MouseEvent) => void; disabled?: boolean }) {
+function ActionCircle({ icon, label, onClick, disabled }: { icon: React.ReactNode; label: string; onClick: (e: React.MouseEvent) => void; disabled?: boolean }) {
   return (
     <button
       onClick={onClick}
@@ -130,8 +136,7 @@ function ActionCircle({ icon, label, onClick, disabled }: { icon: string; label:
       <div style={{
         width: 48, height: 48, borderRadius: '50%',
         background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15,
-        color: '#fff',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
         {icon}
       </div>
@@ -343,7 +348,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           </div>
 
           <div style={{ fontSize: 11, color: '#ffffff66', display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span style={{ fontSize: 14 }}>↩</span> Tap card to flip
+            <img src={flipIcon} width={14} height={14} alt="" style={{ opacity: 0.5 }} /> Tap card to flip
           </div>
         </div>
 
@@ -358,10 +363,10 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             </div>
             <button
               onClick={flipToFront}
-              style={{ background: 'none', border: 'none', color: '#ffffff66', cursor: 'pointer', fontSize: 18, lineHeight: 1, padding: 4 }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.5 }}
               aria-label="Flip back to front"
             >
-              ↩
+              <img src={flipIcon} width={18} height={18} alt="" />
             </button>
           </div>
 
@@ -414,7 +419,15 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                   disabled={!currentAnswer}
                   style={{ flex: 2, padding: '9px 0', borderRadius: 10, border: 'none', background: currentAnswer ? '#00d4aa' : 'rgba(0,212,170,0.2)', color: currentAnswer ? '#000' : 'rgba(0,0,0,0.4)', fontSize: 12, fontWeight: 700, cursor: currentAnswer ? 'pointer' : 'default', fontFamily: 'inherit' }}
                 >
-                  {isLast ? 'Save ✓' : 'Next →'}
+                  {isLast ? (
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      Save <img src={tickBlack} width={14} height={14} alt="" />
+                    </span>
+                  ) : (
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      Next <img src={chevRight} width={14} height={14} alt="" style={{ opacity: 0.7 }} />
+                    </span>
+                  )}
                 </button>
               </div>
             </div>
@@ -458,9 +471,9 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               style={{ display: 'flex', justifyContent: 'center', gap: 20, paddingTop: 14 }}
               onClick={e => e.stopPropagation()}
             >
-              <ActionCircle icon="✏" label="Edit"  onClick={handleEditTap} />
-              <ActionCircle icon="⤴" label="Share" onClick={handleShareTap} />
-              <ActionCircle icon="⬇" label="Save"  onClick={handleSaveTap} />
+              <ActionCircle icon={<img src={editIcon}  width={20} height={20} alt="" />} label="Edit"  onClick={handleEditTap} />
+              <ActionCircle icon={<img src={shareIcon} width={20} height={20} alt="" />} label="Share" onClick={handleShareTap} />
+              <ActionCircle icon={<img src={saveIcon}  width={20} height={20} alt="" />} label="Save"  onClick={handleSaveTap} />
             </div>
           )}
         </div>

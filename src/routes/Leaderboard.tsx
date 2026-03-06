@@ -3,6 +3,7 @@ import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import { useLeaderboard, LEADERBOARD_REFRESH_MS } from '../lib/leaderboard'
 import { useStore } from '../store/useStore'
+import chevLeft from '../assets/icons/Chevron-left-white.svg'
 
 function pad2(n: number) { return String(n).padStart(2, '0') }
 function formatRefresh(d: Date) { return `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}` }
@@ -19,7 +20,7 @@ export default function Leaderboard() {
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: 'var(--sp-2)' }}>
-          <button onClick={() => navigate(-1)} className="btn-icon">‹</button>
+          <button onClick={() => navigate(-1)} className="btn-icon"><img src={chevLeft} width={20} height={20} alt="Back" /></button>
           <div style={{ flex: 1, textAlign: 'center' }}>
             <h2 style={{
               fontFamily: 'var(--font-display)',

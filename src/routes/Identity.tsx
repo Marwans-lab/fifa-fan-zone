@@ -4,6 +4,7 @@ import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import { WORLD_CUP_TEAMS, getTeam } from '../data/teams'
+import cameraIcon from '../assets/icons/camera-white.svg'
 
 type Step = 'team' | 'camera' | 'preview'
 
@@ -111,7 +112,7 @@ function CardPreview({
               transition: 'background var(--dur-base) var(--ease-out)',
             }}
           >
-            <span style={{ fontSize: 28 }}>📷</span>
+            <img src={cameraIcon} width={28} height={28} alt="" />
             <span style={{ fontSize: 9, letterSpacing: 2, textTransform: 'uppercase', opacity: 0.8, lineHeight: 1.2, textAlign: 'center' }}>
               Take<br />Picture
             </span>

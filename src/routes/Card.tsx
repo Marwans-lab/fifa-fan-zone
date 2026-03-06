@@ -7,6 +7,8 @@ import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import { renderCardToBlob, buildShareText } from '../lib/cardExport'
 import { QUIZZES } from '../data/quizzes'
+import lockIcon   from '../assets/icons/Lock-white.svg'
+import chevRight  from '../assets/icons/Chevron-right-white.svg'
 
 // ─── Progress card ─────────────────────────────────────────────────────────────
 const MILESTONES = [
@@ -198,7 +200,6 @@ function QuizCard({
   const done   = cardState === 'done'
 
   const ringColor = 'var(--c-accent)'
-  const overlayIcon = done ? '✓' : locked ? '🔒' : null
 
   return (
     <button
@@ -222,8 +223,10 @@ function QuizCard({
       }}
     >
       <ProgressRing progress={progress} color={ringColor}>
-        {overlayIcon ? (
-          <span style={{ fontSize: done ? 22 : 18 }}>{overlayIcon}</span>
+        {locked ? (
+          <img src={lockIcon} width={18} height={18} alt="" style={{ opacity: 0.7 }} />
+        ) : done ? (
+          <span style={{ fontSize: 22 }}>✓</span>
         ) : (
           <span style={{ fontSize: 26 }}>{quiz.emoji}</span>
         )}
@@ -243,7 +246,7 @@ function QuizCard({
       </div>
 
       {!locked && !done && (
-        <span style={{ color: 'var(--c-text-2)', fontSize: 18, flexShrink: 0 }}>›</span>
+        <img src={chevRight} width={18} height={18} alt="" style={{ opacity: 0.4, flexShrink: 0 }} />
       )}
     </button>
   )

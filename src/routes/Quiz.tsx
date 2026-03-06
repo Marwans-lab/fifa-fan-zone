@@ -4,6 +4,7 @@ import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import { QUIZZES, type Quiz, type QuizQuestion } from '../data/quizzes'
+import chevLeft from '../assets/icons/Chevron-left-white.svg'
 
 const QUESTION_TIME = 15 // seconds
 const OPTION_LETTERS = ['A', 'B', 'C', 'D']
@@ -249,7 +250,7 @@ function QuestionScreen({
         {/* ── Top bar (NOT animated — stays fixed) ─────────────── */}
         <div style={{ padding: 'var(--sp-4)', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
-            <button onClick={onBack} className="btn-icon">‹</button>
+            <button onClick={onBack} className="btn-icon"><img src={chevLeft} width={20} height={20} alt="Back" /></button>
             <div style={{ flex: 1, height: 4, background: 'var(--c-surface-raise)', borderRadius: 2, overflow: 'hidden' }}>
               <div
                 style={{
