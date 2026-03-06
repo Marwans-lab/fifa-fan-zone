@@ -4,6 +4,7 @@ import Screen from '../components/Screen'
 import Button from '../components/Button'
 import { useStore } from '../store/useStore'
 import { track } from '../lib/analytics'
+import stadiumIcon from '../assets/icons/stadium-white.svg'
 
 function HeroCards() {
   return (
@@ -49,9 +50,9 @@ function HeroCards() {
           width: 72, height: 72, borderRadius: 'var(--r-full)',
           background: 'rgba(0,212,170,0.08)',
           border: '1px solid rgba(0,212,170,0.30)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
-          ⚽
+          <img src={stadiumIcon} width={30} height={30} alt="" style={{ opacity: 0.7 }} />
         </div>
         <div style={{ height: 10, width: '65%', borderRadius: 'var(--r-full)', background: 'rgba(255,255,255,0.10)' }} />
         <div style={{ height: 7, width: '40%', borderRadius: 'var(--r-full)', background: 'rgba(255,255,255,0.06)' }} />
@@ -168,7 +169,7 @@ export default function Landing() {
             marginTop: 'var(--sp-2)',
             letterSpacing: 'var(--tracking-wide)',
           }}>
-            Top 5 fans win Avios ✈
+            Top 5 fans win Avios
           </p>
         </div>
       </div>

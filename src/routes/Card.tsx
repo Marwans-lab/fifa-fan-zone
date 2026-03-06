@@ -7,15 +7,21 @@ import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import { renderCardToBlob, buildShareText } from '../lib/cardExport'
 import { QUIZZES } from '../data/quizzes'
-import lockIcon   from '../assets/icons/Lock-white.svg'
-import chevRight  from '../assets/icons/Chevron-right-white.svg'
+import lockIcon    from '../assets/icons/Lock-white.svg'
+import chevRight   from '../assets/icons/Chevron-right-white.svg'
+import tickBlack   from '../assets/icons/Tick-black.svg'
+import tickWhite   from '../assets/icons/Tick-white.svg'
+import targetIcon  from '../assets/icons/Target-white.svg'
+import fireIcon    from '../assets/icons/Fire-white.svg'
+import trophyIcon  from '../assets/icons/Trophy-white.svg'
+import qrIcon      from '../assets/icons/qr-logo.svg'
 
 // ─── Progress card ─────────────────────────────────────────────────────────────
 const MILESTONES = [
-  { icon: '🪪', label: 'Fan Card',    key: 'card'     },
-  { icon: '🎯', label: '1st Quiz',    key: 'quiz1'    },
-  { icon: '🔥', label: '3 Quizzes',   key: 'quiz3'    },
-  { icon: '🏆', label: 'Champion',    key: 'champion' },
+  { iconSrc: qrIcon,      label: 'Fan Card',    key: 'card'     },
+  { iconSrc: targetIcon,  label: '1st Quiz',    key: 'quiz1'    },
+  { iconSrc: fireIcon,    label: '3 Quizzes',   key: 'quiz3'    },
+  { iconSrc: trophyIcon,  label: 'Champion',    key: 'champion' },
 ] as const
 
 function statusLabel(done: number): string {
@@ -101,7 +107,9 @@ function ProgressCard({
                   transition: 'all var(--dur-base) var(--ease-out)',
                   flexShrink: 0,
                 }}>
-                  {done ? '✓' : m.icon}
+                  {done
+                    ? <img src={tickBlack} width={16} height={16} alt="" />
+                    : <img src={m.iconSrc} width={16} height={16} alt="" />}
                 </div>
                 <div style={{ fontSize: 'var(--text-2xs)', color: done ? 'var(--c-text-2)' : 'var(--c-text-3)', letterSpacing: 'var(--tracking-wide)', whiteSpace: 'nowrap' }}>
                   {m.label}
@@ -226,7 +234,7 @@ function QuizCard({
         {locked ? (
           <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.7 }} />
         ) : done ? (
-          <span style={{ fontSize: 22 }}>✓</span>
+          <img src={tickWhite} width={22} height={22} alt="" />
         ) : (
           <span style={{ fontSize: 26 }}>{quiz.emoji}</span>
         )}

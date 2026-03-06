@@ -2,13 +2,18 @@ import { useState, useCallback, forwardRef, useImperativeHandle } from 'react'
 import { track } from '../lib/analytics'
 import type { FanCard as FanCardData } from '../store/useStore'
 import { getTeam } from '../data/teams'
-import editIcon   from '../assets/icons/edit-white.svg'
-import shareIcon  from '../assets/icons/share-white.svg'
-import saveIcon   from '../assets/icons/save-white.svg'
-import flipIcon   from '../assets/icons/flip-white.svg'
-import tickBlack  from '../assets/icons/Tick-black.svg'
-import chevRight  from '../assets/icons/Chevron-right-white.svg'
-import qrLogo     from '../assets/icons/qr-logo.svg'
+import editIcon      from '../assets/icons/edit-white.svg'
+import shareIcon     from '../assets/icons/share-white.svg'
+import saveIcon      from '../assets/icons/save-white.svg'
+import flipIcon      from '../assets/icons/flip-white.svg'
+import tickBlack     from '../assets/icons/Tick-black.svg'
+import chevRight     from '../assets/icons/Chevron-right-white.svg'
+import qrLogo        from '../assets/icons/qr-logo.svg'
+import styleIcon     from '../assets/icons/style-white.svg'
+import devotionIcon  from '../assets/icons/devotion-white.svg'
+import vibesIcon     from '../assets/icons/vibes-white.svg'
+import prksIcon      from '../assets/icons/prks-white.svg'
+import stadiumIcon   from '../assets/icons/stadium-white.svg'
 
 // ─── Public handle (for Edit button) ─────────────────────────────────────────
 export interface FanCardHandle {
@@ -20,28 +25,28 @@ const PROFILE_QUESTIONS = [
   {
     id: 'playstyle' as const,
     category: 'PLAYSTYLE',
-    icon: '⚙',
+    iconSrc: styleIcon,
     label: 'What kind of fan are you during a match?',
     options: ['The Analyst', 'The superstitious', 'The Hype Leader', 'The calm watcher'],
   },
   {
     id: 'devotion' as const,
     category: 'DEVOTION',
-    icon: '♡',
+    iconSrc: devotionIcon,
     label: 'How do you follow the World Cup?',
     options: ['Every game', 'My team + big games', 'Highlight only', "I'll catch what I can"],
   },
   {
     id: 'vibes' as const,
     category: 'VIBES',
-    icon: '♪',
+    iconSrc: vibesIcon,
     label: "What's your match vibes?",
     options: ['Loud and hype', 'Chill and focused', 'Social with friends', 'Family time'],
   },
   {
     id: 'perks' as const,
     category: 'PERKS',
-    icon: '⬡',
+    iconSrc: prksIcon,
     label: 'What\'s your World Cup "perk" goal?',
     options: ['Win rewards', 'Collect badges & titles', 'Climb the leaderboard', 'Unlock exclusive benefits'],
   },
@@ -196,11 +201,11 @@ function FanPhoto({ photoDataUrl }: { photoDataUrl: string | null }) {
       style={{
         width: 180, height: 180, borderRadius: '50%',
         background: 'rgba(0,0,0,0.28)', border: '2px dashed rgba(255,255,255,0.35)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
         position: 'relative', zIndex: 2,
       }}
     >
-      ⚽
+      <img src={stadiumIcon} width={48} height={48} alt="" style={{ opacity: 0.5 }} />
     </div>
   )
 }
@@ -442,7 +447,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {PROFILE_QUESTIONS.map(q => (
                 <div key={q.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10 }}>
-                  <span style={{ fontSize: 18, opacity: 0.55, flexShrink: 0 }}>{q.icon}</span>
+                  <img src={q.iconSrc} width={18} height={18} alt="" style={{ opacity: 0.55, flexShrink: 0 }} />
                   <div>
                     <div style={{ fontSize: 9, letterSpacing: 2, color: '#00d4aa', textTransform: 'uppercase', marginBottom: 2 }}>
                       {q.category}

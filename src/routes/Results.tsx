@@ -4,6 +4,9 @@ import Screen from '../components/Screen'
 import Button from '../components/Button'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
+import trophyIcon from '../assets/icons/Trophy-white.svg'
+import tickWhite  from '../assets/icons/Tick-white.svg'
+import targetIcon from '../assets/icons/Target-white.svg'
 
 interface QuizResult {
   score: number
@@ -69,7 +72,7 @@ export default function Results() {
     return (
       <Screen centered>
         <div className="page-in" style={{ padding: 'var(--sp-10) var(--sp-6)', textAlign: 'center', maxWidth: 360, width: '100%' }}>
-          <div style={{ fontSize: 48, marginBottom: 'var(--sp-5)' }}>🏆</div>
+          <div style={{ marginBottom: 'var(--sp-5)' }}><img src={trophyIcon} width={48} height={48} alt="" /></div>
           <h2 style={{ fontSize: 'var(--text-2xl)', fontWeight: 'var(--weight-light)', marginBottom: 'var(--sp-2)', letterSpacing: 'var(--tracking-tight)' }}>
             Your Score
           </h2>
@@ -89,14 +92,16 @@ export default function Results() {
 
   const { score, total, quizTitle } = result
   const { label, color } = statusLabel(score, total)
-  const emoji = score === total ? '🏆' : score >= total * 0.6 ? '⭐' : '⚽'
+  const resultIcon = score === total ? trophyIcon : score >= total * 0.6 ? tickWhite : targetIcon
 
   return (
     <Screen centered>
       <div className="page-in" style={{ padding: 'var(--sp-10) var(--sp-6)', textAlign: 'center', maxWidth: 380, width: '100%' }}>
 
-        {/* Emoji */}
-        <div style={{ fontSize: 56, marginBottom: 'var(--sp-5)', lineHeight: 1 }}>{emoji}</div>
+        {/* Result icon */}
+        <div style={{ marginBottom: 'var(--sp-5)', lineHeight: 1 }}>
+          <img src={resultIcon} width={56} height={56} alt="" />
+        </div>
 
         {/* Status label */}
         <div style={{

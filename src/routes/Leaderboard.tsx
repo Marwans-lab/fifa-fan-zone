@@ -3,7 +3,9 @@ import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import { useLeaderboard, LEADERBOARD_REFRESH_MS } from '../lib/leaderboard'
 import { useStore } from '../store/useStore'
-import chevLeft from '../assets/icons/Chevron-left-white.svg'
+import chevLeft   from '../assets/icons/Chevron-left-white.svg'
+import flipIcon   from '../assets/icons/flip-white.svg'
+import trophyIcon from '../assets/icons/Trophy-white.svg'
 
 function pad2(n: number) { return String(n).padStart(2, '0') }
 function formatRefresh(d: Date) { return `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}` }
@@ -35,9 +37,8 @@ export default function Leaderboard() {
           <button
             onClick={() => { track('leaderboard_refresh_tapped'); refresh() }}
             className="btn-icon"
-            style={{ color: 'var(--c-text-2)', fontSize: 14 }}
             aria-label="Refresh leaderboard"
-          >↻</button>
+          ><img src={flipIcon} width={24} height={24} alt="Refresh" /></button>
         </div>
 
         {/* Subtitle */}
@@ -59,8 +60,8 @@ export default function Leaderboard() {
             <span style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)' }}>Your rank: </span>
             <span style={{ fontSize: 'var(--text-md)', fontWeight: 'var(--weight-med)', color: 'var(--c-accent)' }}>#{myRank}</span>
             {myRank <= 5 && (
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--c-accent)', marginLeft: 8 }}>
-                🏆 Top 5 — Avios eligible!
+              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--c-accent)', marginLeft: 8, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                <img src={trophyIcon} width={16} height={16} alt="" /> Top 5 — Avios eligible!
               </span>
             )}
           </div>
@@ -83,8 +84,8 @@ export default function Leaderboard() {
                 transition: 'background var(--dur-base) var(--ease-out)',
               }}
             >
-              <div style={{ width: 28, fontSize: row.rank <= 3 ? 18 : 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: row.rank <= 3 ? 'var(--c-accent)' : 'var(--c-text-3)', flexShrink: 0, lineHeight: 1 }}>
-                {row.rank === 1 ? '🥇' : row.rank === 2 ? '🥈' : row.rank === 3 ? '🥉' : row.rank}
+              <div style={{ width: 28, fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: row.rank <= 3 ? 'var(--c-accent)' : 'var(--c-text-3)', flexShrink: 0, lineHeight: 1, display: 'flex', alignItems: 'center' }}>
+                {row.rank === 1 ? <img src={trophyIcon} width={20} height={20} alt="1" /> : row.rank}
               </div>
               <div style={{ flex: 1, fontSize: 'var(--text-md)', color: 'var(--c-text-1)', fontWeight: row.isMe ? 'var(--weight-med)' : 'var(--weight-reg)' }}>
                 {row.name}
