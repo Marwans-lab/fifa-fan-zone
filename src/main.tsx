@@ -11,11 +11,26 @@ import { saveFanCardStub } from './lib/saveFanCardStub'
 initQAApp()
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {
-      // SW registration failed — non-fatal in dev
+  // ✅ In production, force-uninstall old SW + caches so Netlify stops serving stale bundles
+  if (import.meta.env.PROD) {
+    window.addEventListener('load', async () => {
+      try {
+        const regs = await navigator.serviceWorker.getRegistrations()
+        await Promise.all(regs.map((r) => r.unregister()))
+        const keys = await caches.keys()
+        await Promise.all(keys.map((k) => caches.delete(k)))
+      } catch {
+        // ignore
+      }
     })
-  })
+  }
+
+  // ✅ Only register SW in dev (optional)
+  if (import.meta.env.DEV) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {})
+    })
+  }
 }
 
 async function start() {
