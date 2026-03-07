@@ -63,12 +63,12 @@ interface Props {
 }
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
-const CARD_W = 300
-const CARD_H = 420
+// Card fills parent width; aspect ratio locks the height automatically.
+const CARD_ASPECT = '5 / 7'
 
 const containerStyle: React.CSSProperties = {
   width: '100%',
-  aspectRatio: `${CARD_W} / ${CARD_H}`,
+  aspectRatio: CARD_ASPECT,
   perspective: 1000,
   cursor: 'pointer',
 }
