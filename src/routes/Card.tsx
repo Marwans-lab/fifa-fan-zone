@@ -195,8 +195,51 @@ function JourneyCard({
   )
 }
 
+// ─── Circular progress ring ───────────────────────────────────────────────────
+function ProgressRing({
+  radius,
+  stroke,
+  progress,
+  color,
+}: {
+  radius: number
+  stroke: number
+  progress: number // 0–1
+  color: string
+}) {
+  const norm = radius - stroke / 2
+  const circ = 2 * Math.PI * norm
+  const offset = circ * (1 - progress)
+  return (
+    <svg
+      width={radius * 2}
+      height={radius * 2}
+      style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }}
+    >
+      {/* background track */}
+      <circle
+        cx={radius} cy={radius} r={norm}
+        fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={stroke}
+      />
+      {/* progress arc */}
+      {progress > 0 && (
+        <circle
+          cx={radius} cy={radius} r={norm}
+          fill="none" stroke={color} strokeWidth={stroke}
+          strokeDasharray={circ} strokeDashoffset={offset}
+          strokeLinecap="round"
+          style={{ transition: 'stroke-dashoffset 600ms ease' }}
+        />
+      )}
+    </svg>
+  )
+}
+
 // ─── Quiz card ────────────────────────────────────────────────────────────────
 type QuizCardState = 'active' | 'done' | 'locked'
+
+const RING_RADIUS = 40
+const RING_STROKE = 3.5
 
 function QuizCard({
   quiz,
@@ -219,10 +262,11 @@ function QuizCard({
       style={{
         width: '100%',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: 10, borderRadius: 20,
-        border: `1px solid ${locked ? 'rgba(255,255,255,0.08)' : done ? 'rgba(0,212,170,0.2)' : 'rgba(255,255,255,0.1)'}`,
-        background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.05)' : 'rgba(255,255,255,0.05)',
-        opacity: locked ? 0.8 : 1,
+        padding: '18px 14px', borderRadius: 22,
+        minHeight: 120,
+        border: `1px solid ${locked ? 'rgba(255,255,255,0.06)' : done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
+        background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
+        opacity: locked ? 0.55 : 1,
         cursor: locked ? 'not-allowed' : 'pointer',
         textAlign: 'left', fontFamily: 'inherit', color: 'var(--c-text-1)',
         transition: 'all 400ms ease',
@@ -230,24 +274,40 @@ function QuizCard({
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        {/* Thumbnail */}
+        {/* Circular thumbnail with progress ring */}
         <div style={{
-          width: 96, height: 96, borderRadius: 16,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          overflow: 'hidden', flexShrink: 0,
-          boxShadow: locked ? 'none' : '0 10px 25px rgba(0,0,0,0.3)',
-          transition: 'transform 300ms ease',
-          background: locked
-            ? 'rgba(255,255,255,0.06)'
-            : done
-            ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
-            : 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
+          width: RING_RADIUS * 2, height: RING_RADIUS * 2,
+          position: 'relative', flexShrink: 0,
         }}>
-          {locked ? (
-            <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
-          ) : (
-            <span style={{ fontSize: 36 }}>{quiz.emoji}</span>
-          )}
+          <ProgressRing
+            radius={RING_RADIUS}
+            stroke={RING_STROKE}
+            progress={done ? 1 : 0}
+            color={done ? 'var(--c-accent)' : 'rgba(255,255,255,0.3)'}
+          />
+          {/* Inner circle */}
+          <div style={{
+            position: 'absolute',
+            top: RING_STROKE + 2, left: RING_STROKE + 2,
+            width: (RING_RADIUS - RING_STROKE - 2) * 2,
+            height: (RING_RADIUS - RING_STROKE - 2) * 2,
+            borderRadius: '50%',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: locked
+              ? 'rgba(255,255,255,0.04)'
+              : done
+              ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
+              : 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
+            boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.25)',
+          }}>
+            {locked ? (
+              <img src={lockIcon} width={20} height={20} alt="" style={{ opacity: 0.4 }} />
+            ) : done ? (
+              <img src={tickBlack} width={22} height={22} alt="" style={{ filter: 'invert(1)' }} />
+            ) : (
+              <span style={{ fontSize: 30 }}>{quiz.emoji}</span>
+            )}
+          </div>
         </div>
 
         {/* Text */}
@@ -255,11 +315,11 @@ function QuizCard({
           <h3 style={{
             fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
             fontSize: 'var(--text-lg)',
-            color: locked ? 'rgba(255,255,255,0.7)' : '#ffffff',
+            color: locked ? 'rgba(255,255,255,0.5)' : '#ffffff',
           }}>
             {quiz.title}
           </h3>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>
             {done ? (
               <span style={{ color: 'var(--c-accent)', fontWeight: 'var(--weight-med)' }}>
                 Completed · {Math.round(progress * quiz.questions.length)}/{quiz.questions.length} correct
@@ -280,7 +340,7 @@ function QuizCard({
           width: 36, height: 36, borderRadius: '50%',
           background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginRight: 8,
+          marginRight: 4,
         }}>
           <img src={chevRight} width={16} height={16} alt="" style={{ opacity: 0.5 }} />
         </div>
