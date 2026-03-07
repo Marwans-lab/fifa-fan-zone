@@ -172,6 +172,22 @@ function JourneyCard({
             const done = achieved[i]
             const isCurrent = currentIdx === i
             const isLast = i === MILESTONES.length - 1
+
+            // Progress line states:
+            // 1. Both sides done → fully active (solid white)
+            // 2. Left done, right undone → half active (gradient white→dim)
+            // 3. Both sides undone → inactive (low opacity)
+            let lineBackground = 'rgba(255,255,255,0.08)'
+            if (!isLast) {
+              const leftDone = achieved[i]
+              const rightDone = achieved[i + 1]
+              if (leftDone && rightDone) {
+                lineBackground = '#ffffff'
+              } else if (leftDone && !rightDone) {
+                lineBackground = 'linear-gradient(90deg, #ffffff, rgba(255,255,255,0.08))'
+              }
+            }
+
             return (
               <div key={m.key} style={{ display: 'contents' }}>
                 <JourneyStep
@@ -183,9 +199,8 @@ function JourneyCard({
                 {!isLast && (
                   <div style={{
                     flex: 1, height: 2, marginTop: 27,
-                    background: done
-                      ? 'linear-gradient(90deg, #ffffff, rgba(255,255,255,0.2))'
-                      : 'rgba(255,255,255,0.1)',
+                    background: lineBackground,
+                    transition: 'background 700ms ease',
                   }} />
                 )}
               </div>
