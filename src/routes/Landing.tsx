@@ -88,9 +88,6 @@ export default function Landing() {
 
   return (
     <Screen>
-      {/* Ambient top glow */}
-      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 100% 60% at 50% 0%, rgba(0,212,170,0.09) 0%, transparent 70%)' }} />
-
       <div className="page-in" style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', padding: 'var(--sp-6)' }}>
 
         <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 'var(--sp-4)', borderBottom: '1px solid var(--c-border)' }}>
