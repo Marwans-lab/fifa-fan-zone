@@ -413,12 +413,6 @@ export default function Card() {
     navigate('/quiz', { state: { quizId } })
   }
 
-  const subtitle = state.fanCard.completedAt
-    ? 'Tap to flip & view your profile'
-    : state.fanCard.teamId
-    ? 'Flip to complete your fan profile'
-    : 'Tap to flip & complete your profile'
-
   return (
     <Screen>
       {/* ── Background blobs ─────────────────────────────────── */}
@@ -463,23 +457,6 @@ export default function Card() {
             overflowY: 'auto', WebkitOverflowScrolling: 'touch',
           }}
         >
-          {/* Header */}
-          <header style={{ textAlign: 'center', marginBottom: 48 }}>
-            <h1 style={{
-              fontFamily: 'var(--font-display)', fontWeight: 'var(--weight-thin)',
-              fontSize: 28, letterSpacing: '-0.04em', marginBottom: 8,
-              color: '#ffffff', lineHeight: 1.1,
-            }}>
-              FIFA Fan Zone
-            </h1>
-            <p style={{
-              fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-              fontSize: 12, letterSpacing: '0.05em',
-              color: 'rgba(255,255,255,0.7)',
-            }}>
-              {subtitle}
-            </p>
-          </header>
 
           {/* ── Fan Card ──────────────────────────────────────── */}
           <section aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 40 }}>
