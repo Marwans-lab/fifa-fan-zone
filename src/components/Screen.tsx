@@ -67,9 +67,7 @@ function StatusBar() {
         padding: '0 20px',
         paddingTop: 10,
         zIndex: 9999,
-        background: 'rgba(0,0,0,0.6)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
+        background: 'transparent',
         pointerEvents: 'none',
       }}
     >
