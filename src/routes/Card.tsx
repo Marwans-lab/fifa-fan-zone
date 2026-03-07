@@ -100,9 +100,11 @@ function JourneyStep({
 function JourneyCard({
   completedAt,
   quizCount,
+  onStartQuiz,
 }: {
   completedAt: string | null
   quizCount: number
+  onStartQuiz: () => void
 }) {
   const achieved = [
     completedAt !== null,
@@ -191,6 +193,24 @@ function JourneyCard({
           })}
         </ol>
       </nav>
+
+      {/* Start Quiz CTA */}
+      <button
+        onClick={onStartQuiz}
+        style={{
+          width: '100%', height: 48,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: '#ffffff', color: '#8E2157',
+          fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-bold)',
+          fontSize: 15, borderRadius: 9999, border: 'none',
+          marginTop: 28, cursor: 'pointer',
+          boxShadow: '0 10px 30px rgba(255,255,255,0.12)',
+          transition: 'all 150ms ease',
+          WebkitTapHighlightColor: 'transparent',
+        }}
+      >
+        Start quiz
+      </button>
     </section>
   )
 }
@@ -472,28 +492,11 @@ export default function Card() {
           <JourneyCard
             completedAt={state.fanCard.completedAt}
             quizCount={Object.keys(state.quizResults).length}
-          />
-
-          {/* ── Start Quiz CTA ────────────────────────────────── */}
-          <button
-            onClick={() => {
+            onStartQuiz={() => {
               track('card_start_quiz_tapped')
               quizRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
             }}
-            style={{
-              width: '100%', height: 56,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: '#ffffff', color: '#8E2157',
-              fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-bold)',
-              fontSize: 16, borderRadius: 9999, border: 'none',
-              marginBottom: 16, cursor: 'pointer',
-              boxShadow: '0 20px 50px rgba(255,255,255,0.15)',
-              transition: 'all 150ms ease',
-              WebkitTapHighlightColor: 'transparent',
-            }}
-          >
-            Start quiz
-          </button>
+          />
 
           {/* ── Quizzes ───────────────────────────────────────── */}
           <section ref={quizRef} style={{ paddingBottom: 48 }}>
