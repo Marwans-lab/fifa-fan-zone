@@ -455,8 +455,7 @@ export default function Card() {
       <div style={{
         position: 'relative', zIndex: 10,
         width: '100%', minHeight: '100%',
-        background: 'rgba(255,255,255,0.02)',
-        backdropFilter: 'blur(45px)', WebkitBackdropFilter: 'blur(45px)',
+        background: 'transparent',
         display: 'flex', flexDirection: 'column',
       }}>
         {/* Noise texture overlay */}
