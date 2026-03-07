@@ -109,7 +109,7 @@ export default function Landing() {
               fontSize: 'var(--text-xs)',
               color: 'var(--c-text-2)',
               background: 'var(--glass-bg)',
-              padding: '4px 12px',
+              padding: 'var(--sp-1) var(--sp-3)',
               borderRadius: 'var(--r-full)',
               border: '1px solid var(--c-border)',
               letterSpacing: 'var(--tracking-wide)',

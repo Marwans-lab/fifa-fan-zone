@@ -69,16 +69,16 @@ function OptionButton({
   if (!revealed && isChosen) {
     borderColor = 'var(--c-accent)'
     badgeBg     = 'var(--c-accent)'
-    badgeColor  = '#000'
+    badgeColor  = 'var(--c-bg)'
   } else if (revealed && isCorrect) {
     borderColor = 'var(--c-correct)'
     badgeBg     = 'var(--c-correct)'
-    badgeColor  = '#fff'
+    badgeColor  = 'var(--c-text-1)'
     textColor   = 'var(--c-correct)'
   } else if (revealed && isWrong) {
     borderColor = 'var(--c-error)'
     badgeBg     = 'var(--c-error)'
-    badgeColor  = '#fff'
+    badgeColor  = 'var(--c-text-1)'
     textColor   = 'var(--c-error)'
   } else if (revealed) {
     borderColor = 'var(--c-border)'
@@ -94,11 +94,11 @@ function OptionButton({
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
-        gap: 14,
+        gap: 'var(--sp-4)',
         width: '100%',
         padding: '0 20px 0 16px',
         height: 58,
-        borderRadius: 50,
+        borderRadius: 'var(--r-full)',
         border: `1.5px solid ${borderColor}`,
         background: revealed && isCorrect
           ? 'rgba(52,219,128,0.08)'
@@ -123,7 +123,7 @@ function OptionButton({
             : isWrong
             ? 'rgba(217,87,87,0.10)'
             : 'rgba(255,255,255,0.04)',
-          borderRadius: 50,
+          borderRadius: 'var(--r-full)',
           transition: revealed ? 'width 600ms ease' : 'none',
           pointerEvents: 'none',
         }}
@@ -140,10 +140,10 @@ function OptionButton({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: 12,
-          fontWeight: 500,
+          fontSize: 'var(--text-xs)',
+          fontWeight: 'var(--weight-med)',
           flexShrink: 0,
-          transition: 'background 200ms ease, color 200ms ease',
+          transition: 'background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out)',
           zIndex: 1,
         }}
       >
@@ -154,7 +154,7 @@ function OptionButton({
       <span
         style={{
           flex: 1,
-          fontSize: 15,
+          fontSize: 'var(--text-md)',
           color: textColor,
           fontWeight: isChosen ? 600 : 400,
           transition: 'color 200ms ease',
@@ -168,8 +168,8 @@ function OptionButton({
       {revealed && (
         <span
           style={{
-            fontSize: 12,
-            fontWeight: 500,
+            fontSize: 'var(--text-xs)',
+            fontWeight: 'var(--weight-med)',
             color: isCorrect ? 'var(--c-correct)' : isWrong ? 'var(--c-error)' : 'var(--c-text-3)',
             flexShrink: 0,
             zIndex: 1,
@@ -195,7 +195,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
         <circle
           cx={cx} cy={cx} r={R}
           fill="none"
-          stroke="#ffffff"
+          stroke="var(--c-text-1)"
           strokeWidth={3}
           strokeDasharray={circumference}
           strokeDashoffset={offset}
@@ -203,7 +203,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
           style={{ transition: 'stroke-dashoffset 1s linear' }}
         />
       </svg>
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 500, fontFamily: 'var(--font-body)', color: '#ffffff' }}>
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', fontFamily: 'var(--font-body)', color: 'var(--c-text-1)' }}>
         {timeLeft}
       </div>
     </div>
@@ -372,8 +372,8 @@ function QuestionScreen({
               className="btn"
               style={{
                 width: '100%',
-                padding: '16px 0',
-                borderRadius: 50,
+                padding: 'var(--sp-4) 0',
+                borderRadius: 'var(--r-full)',
                 border: 'none',
                 background: revealed ? '#ffffff' : 'var(--c-surface-raise)',
                 color: revealed ? 'var(--c-brand)' : 'var(--c-text-3)',

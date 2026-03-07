@@ -45,19 +45,19 @@ function JourneyStep({
   const nodeStyle: React.CSSProperties = {
     width: 56, height: 56, borderRadius: '50%',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
-    backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+    backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)',
     transition: 'all 700ms ease',
     flexShrink: 0, position: 'relative',
     ...(isCompleted ? {
-      background: '#ffffff', border: '1px solid #ffffff',
+      background: 'var(--c-text-1)', border: '1px solid var(--c-text-1)',
       boxShadow: '0 0 25px rgba(255,255,255,0.4)',
       transform: 'scale(1.1)', zIndex: 20,
     } : isCurrent ? {
-      background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.4)',
+      background: 'var(--c-surface-raise)', border: '1px solid var(--c-border-raise)',
       transform: 'scale(1.05)', zIndex: 20,
       boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
     } : {
-      background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)',
+      background: 'var(--glass-bg-subtle)', border: '1px solid rgba(255,255,255,0.1)',
       zIndex: 10,
     }),
   }
@@ -65,7 +65,7 @@ function JourneyStep({
   return (
     <li style={{
       position: 'relative', zIndex: 10,
-      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
+      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--sp-3)',
       width: 56, flexShrink: 0,
     }}>
       <div style={nodeStyle}>
@@ -86,9 +86,9 @@ function JourneyStep({
       </div>
       <span style={{
         fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-reg)',
-        fontSize: 12, letterSpacing: '-0.02em', textAlign: 'center',
+        fontSize: 'var(--text-xs)', letterSpacing: 'var(--tracking-snug)', textAlign: 'center',
         whiteSpace: 'nowrap', transition: 'color 500ms ease',
-        color: isCompleted || isCurrent ? '#ffffff' : 'rgba(255,255,255,0.3)',
+        color: isCompleted || isCurrent ? 'var(--c-text-1)' : 'var(--c-text-3)',
       }}>
         {label}
       </span>
@@ -123,42 +123,42 @@ function JourneyCard({
       aria-label="Your Journey Progress"
       style={{
         width: '100%',
-        background: 'rgba(255,255,255,0.08)',
-        borderRadius: 20,
-        padding: 32,
-        border: '1px solid rgba(255,255,255,0.15)',
-        marginBottom: 16,
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
+        background: 'var(--glass-bg)',
+        borderRadius: 'var(--r-xl)',
+        padding: 'var(--sp-8)',
+        border: '1px solid var(--c-border)',
+        marginBottom: 'var(--sp-4)',
+        boxShadow: 'var(--glass-shine)',
         overflow: 'hidden',
       }}
     >
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 40 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--sp-10)' }}>
         <div>
           <h2 style={{
             fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 12, letterSpacing: '0.05em',
-            color: 'rgba(255,255,255,0.7)', marginBottom: 4,
+            fontSize: 'var(--text-xs)', letterSpacing: 'var(--tracking-wide)',
+            color: 'var(--c-text-2)', marginBottom: 'var(--sp-1)',
           }}>
             Your journey
           </h2>
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 18, letterSpacing: '-0.02em', color: '#ffffff',
+            fontSize: 'var(--text-lg)', letterSpacing: 'var(--tracking-snug)', color: 'var(--c-text-1)',
           }}>
             {status}
           </p>
         </div>
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: '10px 16px',
-          background: 'rgba(255,255,255,0.2)',
-          borderRadius: 9999,
-          border: '1px solid rgba(255,255,255,0.2)',
+          padding: 'var(--sp-3) var(--sp-4)',
+          background: 'var(--c-surface-press)',
+          borderRadius: 'var(--r-full)',
+          border: '1px solid var(--c-surface-press)',
         }}>
           <span style={{
             fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-reg)',
-            fontSize: 12, color: '#ffffff', lineHeight: 1,
+            fontSize: 'var(--text-xs)', color: 'var(--c-text-1)', lineHeight: 1,
           }}>
             Step {Math.min(doneCount + 1, 4)}/4
           </span>
@@ -212,16 +212,11 @@ function JourneyCard({
       {/* Start Quiz CTA */}
       <button
         onClick={onStartQuiz}
+        className="btn btn-primary"
         style={{
-          width: '100%', height: 48,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: '#ffffff', color: '#8E2157',
-          fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-bold)',
-          fontSize: 15, borderRadius: 9999, border: 'none',
-          marginTop: 28, cursor: 'pointer',
+          width: '100%',
+          marginTop: 'var(--sp-7)',
           boxShadow: '0 10px 30px rgba(255,255,255,0.12)',
-          transition: 'all 150ms ease',
-          WebkitTapHighlightColor: 'transparent',
         }}
       >
         Start quiz
@@ -297,10 +292,10 @@ function QuizCard({
       style={{
         width: '100%',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '18px 14px', borderRadius: 22,
+        padding: 'var(--sp-5) var(--sp-4)', borderRadius: 'var(--r-xl)',
         minHeight: 120,
-        border: `1px solid ${locked ? 'rgba(255,255,255,0.06)' : done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
-        background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
+        border: `1px solid ${locked ? 'rgba(255,255,255,0.06)' : done ? 'var(--c-border-accent)' : 'var(--c-border)'}`,
+        background: locked ? 'var(--glass-bg-subtle)' : done ? 'rgba(0,212,170,0.06)' : 'var(--glass-bg-subtle)',
         opacity: locked ? 0.55 : 1,
         cursor: locked ? 'not-allowed' : 'pointer',
         textAlign: 'left', fontFamily: 'inherit', color: 'var(--c-text-1)',
@@ -308,7 +303,7 @@ function QuizCard({
         WebkitTapHighlightColor: 'transparent',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-4)' }}>
         {/* Circular thumbnail with progress ring */}
         <div style={{
           width: RING_RADIUS * 2, height: RING_RADIUS * 2,
@@ -350,11 +345,11 @@ function QuizCard({
           <h3 style={{
             fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
             fontSize: 'var(--text-lg)',
-            color: locked ? 'rgba(255,255,255,0.5)' : '#ffffff',
+            color: locked ? 'var(--c-text-2)' : 'var(--c-text-1)',
           }}>
             {quiz.title}
           </h3>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>
+          <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)', marginTop: 'var(--sp-2)' }}>
             {done ? (
               <span style={{ color: 'var(--c-accent)', fontWeight: 'var(--weight-med)' }}>
                 Completed · {Math.round(progress * quiz.questions.length)}/{quiz.questions.length} correct
@@ -373,9 +368,9 @@ function QuizCard({
       {!locked && !done && (
         <div style={{
           width: 36, height: 36, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+          background: 'var(--glass-bg-subtle)', border: '1px solid var(--c-border)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginRight: 4,
+          marginRight: 'var(--sp-1)',
         }}>
           <img src={chevRight} width={16} height={16} alt="" style={{ opacity: 0.5 }} />
         </div>
@@ -487,13 +482,13 @@ export default function Card() {
           className="page-in hide-scrollbar"
           style={{
             flex: 1, position: 'relative', zIndex: 20,
-            padding: '16px 24px',
+            padding: 'var(--sp-4) var(--sp-6)',
             overflowY: 'auto', WebkitOverflowScrolling: 'touch',
           }}
         >
 
           {/* ── Fan Card ──────────────────────────────────────── */}
-          <section aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 16 }}>
+          <section aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 'var(--sp-4)' }}>
             <FanCard
               fanCard={state.fanCard}
               onSave={handleSave}
@@ -513,23 +508,23 @@ export default function Card() {
           />
 
           {/* ── Quizzes ───────────────────────────────────────── */}
-          <section ref={quizRef} style={{ paddingBottom: 48 }}>
-            <div style={{ marginBottom: 16 }}>
+          <section ref={quizRef} style={{ paddingBottom: 'var(--sp-12)' }}>
+            <div style={{ marginBottom: 'var(--sp-4)' }}>
               <h2 style={{
                 fontFamily: 'var(--font-display)', fontWeight: 'var(--weight-thin)',
-                fontSize: 28, letterSpacing: '-0.04em', color: '#ffffff',
+                fontSize: 'var(--text-2xl)', letterSpacing: 'var(--tracking-tight)', color: 'var(--c-text-1)',
               }}>
                 Earn Avios
               </h2>
               <p style={{
                 fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-reg)',
-                color: 'rgba(255,255,255,0.5)', fontSize: 14, marginTop: 4,
+                color: 'var(--c-text-2)', fontSize: 'var(--text-sm)', marginTop: 'var(--sp-1)',
               }}>
                 Complete quizzes to climb the leaderboard
               </p>
             </div>
 
-            <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
               {QUIZZES.map((quiz, i) => (
                 <QuizCard
                   key={quiz.id}
