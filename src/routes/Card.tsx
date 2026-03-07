@@ -79,9 +79,9 @@ function JourneyStep({
           />
         )}
         {isCompleted ? (
-          <img src={tickBlack} width={20} height={20} alt="" style={{ position: 'relative', zIndex: 10 }} />
+          <img src={tickBlack} width={24} height={24} alt="" style={{ position: 'relative', zIndex: 10 }} />
         ) : (
-          <img src={iconSrc} width={20} height={20} alt="" style={{ opacity: isCurrent ? 1 : 0.3 }} />
+          <img src={iconSrc} width={24} height={24} alt="" style={{ opacity: isCurrent ? 1 : 0.3 }} />
         )}
       </div>
       <span style={{
@@ -133,36 +133,20 @@ function JourneyCard({
       }}
     >
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--sp-6)' }}>
-        <div>
-          <h2 style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 'var(--text-xs)', letterSpacing: 'var(--tracking-wide)',
-            color: 'var(--c-text-2)', marginBottom: 'var(--sp-1)',
-          }}>
-            Your journey
-          </h2>
-          <p style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 'var(--text-lg)', letterSpacing: 'var(--tracking-snug)', color: 'var(--c-text-1)',
-          }}>
-            {status}
-          </p>
-        </div>
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: 'var(--sp-3) var(--sp-4)',
-          background: 'var(--c-surface-press)',
-          borderRadius: 'var(--r-full)',
-          border: '1px solid var(--c-surface-press)',
+      <div style={{ marginBottom: 'var(--sp-6)' }}>
+        <h2 style={{
+          fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
+          fontSize: 'var(--text-xs)', letterSpacing: 'var(--tracking-wide)',
+          color: 'var(--c-text-2)', marginBottom: 'var(--sp-1)',
         }}>
-          <span style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-reg)',
-            fontSize: 'var(--text-xs)', color: 'var(--c-text-1)', lineHeight: 1,
-          }}>
-            Step {Math.min(doneCount + 1, 4)}/4
-          </span>
-        </div>
+          Your journey
+        </h2>
+        <p style={{
+          fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
+          fontSize: 'var(--text-lg)', letterSpacing: 'var(--tracking-snug)', color: 'var(--c-text-1)',
+        }}>
+          {status}
+        </p>
       </div>
 
       {/* Steps track */}
