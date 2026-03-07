@@ -132,7 +132,7 @@ function ActionCircle({ icon, label, onClick, disabled }: { icon: React.ReactNod
       onClick={onClick}
       disabled={disabled}
       style={{
-        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--sp-1)',
         background: 'none', border: 'none',
         cursor: disabled ? 'default' : 'pointer',
         opacity: disabled ? 0.35 : 1,
@@ -141,12 +141,12 @@ function ActionCircle({ icon, label, onClick, disabled }: { icon: React.ReactNod
     >
       <div style={{
         width: 48, height: 48, borderRadius: '50%',
-        background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)',
+        background: 'var(--glass-bg)', border: '1px solid var(--glass-border)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
         {icon}
       </div>
-      <span style={{ fontSize: 9, color: '#fff', letterSpacing: 1, textTransform: 'uppercase' }}>
+      <span style={{ fontSize: 9, color: 'var(--c-text-1)', letterSpacing: 1, textTransform: 'uppercase' }}>
         {label}
       </span>
     </button>
@@ -328,10 +328,10 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
 
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%' }}>
             <div style={{ textAlign: 'left' }}>
-              <div style={{ fontSize: 14, letterSpacing: 2, color: '#ffffff', textTransform: 'uppercase' }}>
+              <div style={{ fontSize: 'var(--text-sm)', letterSpacing: 2, color: 'var(--c-text-1)', textTransform: 'uppercase' }}>
                 Your Fan Card
               </div>
-              <div style={{ fontSize: 11, color: '#ffffffaa', letterSpacing: 1 }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', letterSpacing: 1 }}>
                 Collector Edition
               </div>
             </div>
@@ -346,20 +346,20 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               {fanCard.teamId ? (() => {
                 const team = getTeam(fanCard.teamId)
                 return (
-                  <div style={{ fontSize: 18, fontWeight: 500, color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                  <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--weight-med)', color: 'var(--c-text-1)', letterSpacing: 0.5, fontStyle: 'italic', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--sp-2)' }}>
                     {team && <span style={{ fontStyle: 'normal', fontSize: 22 }}>{team.flag}</span>}
                     {team ? team.motto : fanCard.teamId}
                   </div>
                 )
               })() : (
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-3)', fontStyle: 'italic' }}>
                   No team selected
                 </div>
               )}
             </div>
           </div>
 
-          <div style={{ fontSize: 14, color: '#ffffff66', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-3)', display: 'flex', alignItems: 'center', gap: 'var(--sp-1)' }}>
             <img src={flipIcon} width={24} height={24} alt="" style={{ opacity: 0.5 }} /> Tap card to flip
           </div>
         </div>
@@ -369,7 +369,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           <HolographicStripe />
 
           {/* Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--sp-4)' }}>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--c-accent)', letterSpacing: 2, textTransform: 'uppercase' as const }}>
               Fan Profile
             </div>
@@ -380,17 +380,17 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
 
             /* ── Wizard ─────────────────────────────────────────── */
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
-              <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
+              <div style={{ display: 'flex', gap: 'var(--sp-2)', marginBottom: 'var(--sp-4)' }}>
                 {PROFILE_QUESTIONS.map((_, i) => (
                   <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i <= step ? 'var(--c-accent)' : 'rgba(255,255,255,0.12)', transition: `background var(--dur-slow) var(--ease-out)` }} />
                 ))}
               </div>
 
-              <div style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: 'var(--c-text-1)', marginBottom: 12, lineHeight: 1.4, letterSpacing: 0.1 }}>
+              <div style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: 'var(--c-text-1)', marginBottom: 'var(--sp-3)', lineHeight: 'var(--leading-snug)', letterSpacing: 0.1 }}>
                 {currentQ.label}
               </div>
 
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7 }}>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--sp-2)' }}>
                 {currentQ.options.map(option => {
                   const selected = currentAnswer === option
                   return (
@@ -398,7 +398,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                       key={option}
                       onClick={e => { e.stopPropagation(); handleSelect(currentQ.id, option) }}
                       style={{
-                        padding: '9px 14px', borderRadius: 10, fontFamily: 'inherit',
+                        padding: '9px 14px', borderRadius: 'var(--r-md)', fontFamily: 'inherit',
                         border: `1px solid ${selected ? 'var(--c-accent)' : 'var(--c-border)'}`,
                         background: selected ? 'rgba(0,212,170,0.15)' : 'var(--glass-bg-subtle)',
                         color: selected ? 'var(--c-accent)' : 'var(--c-text-1)',
@@ -412,17 +412,17 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                 })}
               </div>
 
-              <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+              <div style={{ display: 'flex', gap: 'var(--sp-2)', marginTop: 'var(--sp-3)' }}>
                 <button
                   onClick={handleBack}
-                  style={{ flex: 1, padding: '9px 0', borderRadius: 10, border: '1px solid rgba(255,255,255,0.14)', background: 'none', color: 'rgba(255,255,255,0.55)', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}
+                  style={{ flex: 1, padding: '9px 0', borderRadius: 'var(--r-md)', border: '1px solid var(--glass-border)', background: 'none', color: 'var(--c-text-2)', fontSize: 'var(--text-xs)', cursor: 'pointer', fontFamily: 'inherit' }}
                 >
                   Back
                 </button>
                 <button
                   onClick={handleNext}
                   disabled={!currentAnswer}
-                  style={{ flex: 2, padding: '9px 0', borderRadius: 10, border: 'none', background: currentAnswer ? 'var(--c-accent)' : 'rgba(0,212,170,0.2)', color: currentAnswer ? '#000' : 'rgba(0,0,0,0.4)', fontSize: 12, fontWeight: 500, cursor: currentAnswer ? 'pointer' : 'default', fontFamily: 'inherit' }}
+                  style={{ flex: 2, padding: '9px 0', borderRadius: 'var(--r-md)', border: 'none', background: currentAnswer ? 'var(--c-accent)' : 'rgba(0,212,170,0.2)', color: currentAnswer ? 'var(--c-bg)' : 'rgba(0,0,0,0.4)', fontSize: 'var(--text-xs)', fontWeight: 'var(--weight-med)', cursor: currentAnswer ? 'pointer' : 'default', fontFamily: 'inherit' }}
                 >
                   {isLast ? (
                     <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -440,9 +440,9 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           ) : isComplete ? (
 
             /* ── Completed display rows ──────────────────────────── */
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)' }}>
               {PROFILE_QUESTIONS.map(q => (
-                <div key={q.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10 }}>
+                <div key={q.id} style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)', padding: 'var(--sp-3)', background: 'var(--glass-bg-subtle)', border: '1px solid var(--c-border)', borderRadius: 'var(--r-md)' }}>
                   <img src={q.iconSrc} width={24} height={24} alt="" style={{ opacity: 0.55, flexShrink: 0 }} />
                   <div>
                     <div style={{ fontSize: 'var(--text-2xs)', letterSpacing: 2, color: 'var(--c-accent)', textTransform: 'uppercase' as const, marginBottom: 2 }}>
@@ -462,7 +462,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={e => e.stopPropagation()}>
               <button
                 onClick={startWizard}
-                style={{ padding: '12px 28px', borderRadius: 24, border: '1px solid #ffffff44', background: 'none', color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', letterSpacing: 0.3 }}
+                style={{ padding: 'var(--sp-3) var(--sp-7)', borderRadius: 'var(--r-xl)', border: '1px solid var(--c-border)', background: 'none', color: 'var(--c-text-1)', fontSize: 'var(--text-sm)', cursor: 'pointer', fontFamily: 'inherit', letterSpacing: 0.3 }}
               >
                 Complete your card
               </button>
@@ -473,7 +473,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           {/* ── Action circles (Edit / Share / Save) ─────────────── */}
           {isComplete && !wizardActive && (
             <div
-              style={{ display: 'flex', justifyContent: 'center', gap: 20, paddingTop: 14 }}
+              style={{ display: 'flex', justifyContent: 'center', gap: 'var(--sp-5)', paddingTop: 'var(--sp-4)' }}
               onClick={e => e.stopPropagation()}
             >
               <ActionCircle icon={<img src={editIcon}  width={24} height={24} alt="" />} label="Edit"  onClick={handleEditTap} />
@@ -483,7 +483,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           )}
 
           {/* ── Tap to flip (pinned to bottom) ───────────────────── */}
-          <div style={{ fontSize: 14, color: '#ffffff66', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, marginTop: 'auto', paddingTop: 12 }}>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--sp-1)', marginTop: 'auto', paddingTop: 'var(--sp-3)' }}>
             <img src={flipIcon} width={24} height={24} alt="" style={{ opacity: 0.5 }} /> Tap card to flip
           </div>
         </div>
