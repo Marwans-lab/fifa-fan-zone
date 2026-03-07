@@ -125,7 +125,7 @@ function JourneyCard({
         borderRadius: 20,
         padding: 32,
         border: '1px solid rgba(255,255,255,0.15)',
-        marginBottom: 24,
+        marginBottom: 16,
         boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
         overflow: 'hidden',
       }}
@@ -453,13 +453,13 @@ export default function Card() {
           className="page-in hide-scrollbar"
           style={{
             flex: 1, position: 'relative', zIndex: 20,
-            padding: '48px 24px',
+            padding: '16px 24px',
             overflowY: 'auto', WebkitOverflowScrolling: 'touch',
           }}
         >
 
           {/* ── Fan Card ──────────────────────────────────────── */}
-          <section aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 40 }}>
+          <section aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 16 }}>
             <FanCard
               fanCard={state.fanCard}
               onSave={handleSave}
@@ -486,7 +486,7 @@ export default function Card() {
               background: '#ffffff', color: '#8E2157',
               fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-bold)',
               fontSize: 16, borderRadius: 9999, border: 'none',
-              marginBottom: 56, cursor: 'pointer',
+              marginBottom: 16, cursor: 'pointer',
               boxShadow: '0 20px 50px rgba(255,255,255,0.15)',
               transition: 'all 150ms ease',
               WebkitTapHighlightColor: 'transparent',
@@ -497,7 +497,7 @@ export default function Card() {
 
           {/* ── Quizzes ───────────────────────────────────────── */}
           <section ref={quizRef} style={{ paddingBottom: 48 }}>
-            <div style={{ marginBottom: 32 }}>
+            <div style={{ marginBottom: 16 }}>
               <h2 style={{
                 fontFamily: 'var(--font-display)', fontWeight: 'var(--weight-thin)',
                 fontSize: 28, letterSpacing: '-0.04em', color: '#ffffff',
