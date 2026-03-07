@@ -79,9 +79,9 @@ function JourneyStep({
           />
         )}
         {isCompleted ? (
-          <img src={tickBlack} width={22} height={22} alt="" style={{ position: 'relative', zIndex: 10 }} />
+          <img src={tickBlack} width={20} height={20} alt="" style={{ position: 'relative', zIndex: 10 }} />
         ) : (
-          <img src={iconSrc} width={16} height={16} alt="" style={{ opacity: isCurrent ? 1 : 0.3 }} />
+          <img src={iconSrc} width={20} height={20} alt="" style={{ opacity: isCurrent ? 1 : 0.3 }} />
         )}
       </div>
       <span style={{
@@ -125,7 +125,7 @@ function JourneyCard({
         width: '100%',
         background: 'var(--glass-bg)',
         borderRadius: 'var(--r-xl)',
-        padding: 'var(--sp-8)',
+        padding: 'var(--sp-4)',
         border: '1px solid var(--c-border)',
         marginBottom: 'var(--sp-4)',
         boxShadow: 'var(--glass-shine)',
@@ -133,7 +133,7 @@ function JourneyCard({
       }}
     >
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--sp-10)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--sp-6)' }}>
         <div>
           <h2 style={{
             fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
