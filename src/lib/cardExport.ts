@@ -69,45 +69,8 @@ export async function renderCardToBlob(fanCard: FanCard): Promise<Blob> {
   ctx.font = '11px -apple-system, sans-serif'
   ctx.fillText('Collector Edition', W / 2, 54)
 
-  // ── Photo ─────────────────────────────────────────────────────────────────
-  const CX = W / 2, CY = 118, R = 52
-  if (fanCard.photoDataUrl) {
-    try {
-      const img = new Image()
-      await new Promise<void>((res, rej) => {
-        img.onload  = () => res()
-        img.onerror = () => rej(new Error('img load failed'))
-        img.src = fanCard.photoDataUrl!
-      })
-      ctx.save()
-      ctx.beginPath()
-      ctx.arc(CX, CY, R, 0, Math.PI * 2)
-      ctx.clip()
-      ctx.drawImage(img, CX - R, CY - R, R * 2, R * 2)
-      ctx.restore()
-    } catch {
-      // fall through to placeholder
-    }
-  }
-
-  if (!fanCard.photoDataUrl) {
-    ctx.fillStyle = '#1e3a2e'
-    ctx.beginPath()
-    ctx.arc(CX, CY, R, 0, Math.PI * 2)
-    ctx.fill()
-    ctx.font = '32px sans-serif'
-    ctx.fillStyle = '#fff'
-    ctx.fillText('⚽', CX, CY + 12)
-  }
-
-  ctx.strokeStyle = '#00d4aa'
-  ctx.lineWidth   = 3
-  ctx.beginPath()
-  ctx.arc(CX, CY, R, 0, Math.PI * 2)
-  ctx.stroke()
-
   // ── Team ──────────────────────────────────────────────────────────────────
-  let curY = 188
+  let curY = 80
   if (fanCard.teamId) {
     ctx.fillStyle = '#00d4aa'
     ctx.font = 'bold 13px -apple-system, sans-serif'
