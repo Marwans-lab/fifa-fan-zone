@@ -321,9 +321,9 @@ function QuizCard({
             boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.25)',
           }}>
             {locked ? (
-              <img src={lockIcon} width={20} height={20} alt="" style={{ opacity: 0.4 }} />
+              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4 }} />
             ) : done ? (
-              <img src={tickBlack} width={22} height={22} alt="" style={{ filter: 'invert(1)' }} />
+              <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
             ) : (
               <span style={{ fontSize: 30 }}>{quiz.emoji}</span>
             )}
@@ -362,7 +362,7 @@ function QuizCard({
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           marginRight: 4,
         }}>
-          <img src={chevRight} width={16} height={16} alt="" style={{ opacity: 0.5 }} />
+          <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
         </div>
       )}
     </button>
