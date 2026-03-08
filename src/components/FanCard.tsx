@@ -13,7 +13,6 @@ import styleIcon     from '../assets/icons/style-white.svg'
 import devotionIcon  from '../assets/icons/devotion-white.svg'
 import vibesIcon     from '../assets/icons/vibes-white.svg'
 import prksIcon      from '../assets/icons/prks-white.svg'
-import stadiumIcon   from '../assets/icons/stadium-white.svg'
 
 // ─── Public handle (for Edit button) ─────────────────────────────────────────
 export interface FanCardHandle {
@@ -186,30 +185,6 @@ function HolographicStripe() {
   )
 }
 
-function FanPhoto({ photoDataUrl }: { photoDataUrl: string | null }) {
-  if (photoDataUrl) {
-    return (
-      <img
-        src={photoDataUrl}
-        alt="Fan photo"
-        style={{ width: 180, height: 180, borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', border: '3px solid rgba(255,255,255,0.55)', boxShadow: '0 4px 20px rgba(0,0,0,0.5)', position: 'relative', zIndex: 2 }}
-      />
-    )
-  }
-  return (
-    <div
-      style={{
-        width: 180, height: 180, borderRadius: '50%',
-        background: 'rgba(0,0,0,0.28)', border: '2px dashed rgba(255,255,255,0.35)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        position: 'relative', zIndex: 2,
-      }}
-    >
-      <img src={stadiumIcon} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
-    </div>
-  )
-}
-
 // ─── Main component ───────────────────────────────────────────────────────────
 const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onSave, onShare, onSaveToDevice }, ref) {
   const [isFlipped, setIsFlipped]       = useState(false)
@@ -338,10 +313,8 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             <img src={qrLogo} width={40} height={35} alt="QR" style={{ opacity: 0.85 }} />
           </div>
 
-          {/* Photo + motto grouped to control spacing between them */}
+          {/* Team motto */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
-            <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
-
             <div style={{ textAlign: 'center' }}>
               {fanCard.teamId ? (() => {
                 const team = getTeam(fanCard.teamId)
