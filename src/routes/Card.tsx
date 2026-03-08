@@ -180,14 +180,21 @@ function JourneyCard({
                   isCompleted={done}
                   isCurrent={isCurrent}
                 />
-                {!isLast && (
-                  <div style={{
-                    flex: 1, height: 2, marginTop: 27,
-                    background: done
-                      ? 'linear-gradient(90deg, #ffffff, rgba(255,255,255,0.2))'
-                      : 'rgba(255,255,255,0.1)',
-                  }} />
-                )}
+                {!isLast && (() => {
+                  const nextDone = achieved[i + 1]
+                  const lineBg = done && nextDone
+                    ? '#ffffff'                                                       // fully active
+                    : done && !nextDone
+                    ? 'linear-gradient(90deg, #ffffff, rgba(255,255,255,0.2))'        // half active
+                    : 'rgba(255,255,255,0.08)'                                        // inactive
+                  return (
+                    <div style={{
+                      flex: 1, height: 2, marginTop: 27,
+                      background: lineBg,
+                      transition: 'background 700ms ease',
+                    }} />
+                  )
+                })()}
               </div>
             )
           })}
