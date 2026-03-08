@@ -79,9 +79,9 @@ function JourneyStep({
           />
         )}
         {isCompleted ? (
-          <img src={tickBlack} width={20} height={20} alt="" style={{ position: 'relative', zIndex: 10 }} />
+          <img src={tickBlack} width={24} height={24} alt="" style={{ position: 'relative', zIndex: 10 }} />
         ) : (
-          <img src={iconSrc} width={20} height={20} alt="" style={{ opacity: isCurrent ? 1 : 0.3 }} />
+          <img src={iconSrc} width={24} height={24} alt="" style={{ opacity: isCurrent ? 1 : 0.3 }} />
         )}
       </div>
       <span style={{
