@@ -117,8 +117,9 @@ function getFrontFaceStyle(teamId: string | null, isFlipped: boolean): React.CSS
 
 const backFaceStyle: React.CSSProperties = {
   ...faceBase,
-  background: 'linear-gradient(160deg, #1a1a2a 0%, #0d0d1a 100%)',
-  border: '1px solid var(--c-border-accent)',
+  background: 'rgba(255,255,255,0.08)',
+  border: '1px solid rgba(255,255,255,0.15)',
+  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
   transform: 'rotateY(180deg)',
   display: 'flex',
   flexDirection: 'column',
