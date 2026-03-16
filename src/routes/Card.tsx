@@ -348,13 +348,13 @@ function QuizCard({
           </h3>
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>
             {done ? (
-              <span style={{ color: 'var(--c-accent)', fontWeight: 'var(--weight-med)' }}>
+              <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 'var(--weight-med)' }}>
                 Completed · {Math.round(progress * quiz.questions.length)}/{quiz.questions.length} correct
               </span>
             ) : locked ? (
               'Complete previous quiz to unlock'
             ) : (
-              <span style={{ color: 'var(--c-accent)', fontWeight: 'var(--weight-med)' }}>
+              <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 'var(--weight-med)' }}>
                 {quiz.questions.length} questions · {quiz.questions.length * 15}s
               </span>
             )}
