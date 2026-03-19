@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fanzone-v1'
+const CACHE_NAME = 'fanzone-v2'
 const STATIC_ASSETS = ['./', './index.html']
 
 self.addEventListener('install', event => {
@@ -25,6 +25,21 @@ self.addEventListener('fetch', event => {
   const url = new URL(event.request.url)
   if (url.origin !== location.origin) return
 
+  // Network-first for navigation (HTML) so deploys are visible immediately
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          const clone = response.clone()
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone))
+          return response
+        })
+        .catch(() => caches.match(event.request))
+    )
+    return
+  }
+
+  // Cache-first for hashed assets (JS/CSS chunks)
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached
