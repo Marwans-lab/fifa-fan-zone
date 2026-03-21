@@ -44,17 +44,19 @@ You are a **senior frontend engineer** with 10+ years of experience building mob
 - Animations: use token durations/easings, CSS transitions preferred over JS animations
 - Test with `tsc && vite build` before committing — zero TypeScript errors allowed
 
-**Stitch Design Integration**:
-When an issue references a Stitch design (project name, screen name, or URL):
-1. Use the Stitch MCP tools to pull the design: `list_projects` → `get_screen_code` → `get_screen_image`
-2. Extract the HTML/CSS from the Stitch screen
-3. Convert to React + TypeScript following ALL conventions above:
-   - Map Stitch colors → closest CSS token (`--c-*`)
-   - Map Stitch spacing → token spacing (`--sp-*`)
-   - Map Stitch fonts → token fonts (`--font-display` for headings, `--font-body` for text)
-   - Use inline `React.CSSProperties` — never paste raw Stitch HTML
-4. Match existing component patterns (Screen wrapper, glass cards, button variants)
+**Stitch Design Integration (Source of Truth for UI)**:
+For ANY Frontend issue, ALWAYS check Stitch for a matching design FIRST:
+1. Use Stitch MCP tools: `list_projects` → find "FIFA Fan Zone" project → `get_screen_code` + `get_screen_image`
+2. If the issue title/description mentions a screen name, search for it in Stitch
+3. If a Stitch design exists for this screen/component, **the design is the source of truth** — replicate it exactly:
+   - Layout, spacing, sizing, colors, typography, element order — all come from the Stitch design
+   - Do NOT improvise or deviate from the design
+   - Convert Stitch HTML/CSS → React + TypeScript + inline `React.CSSProperties`
+   - Map Stitch hard-coded values to the closest CSS token when a near-exact match exists, but preserve the design intent if no token matches
+4. If NO Stitch design exists, fall back to the Guidelines above (tokens, patterns, conventions)
 5. If a screen updates an existing component, modify it in place — don't create duplicates
+
+**Issue format for Stitch designs**: Issues should include `[Stitch: <screen-name>]` in the title or description. Example: `[Stitch: Quiz Results]` or `Stitch screen: quiz-results-v2`
 
 ### Backend Engineer
 
