@@ -1,5 +1,5 @@
 #!/bin/bash
-# Start the full pipeline: Cyrus + Middleware + ngrok
+# Start the full pipeline: Cyrus + Middleware + ngrok + Stitch Watcher
 # Usage: ./pipeline/start.sh
 
 set -e
@@ -11,6 +11,9 @@ NGROK_DOMAIN="fishy-bao-profligately.ngrok-free.dev"
 
 # Linear token — reads from Cyrus config automatically
 export LINEAR_TOKEN=$(python3 -c "import json; print(json.load(open('$HOME/.cyrus/config.json'))['linearWorkspaces'][list(json.load(open('$HOME/.cyrus/config.json'))['linearWorkspaces'].keys())[0]]['linearToken'])")
+
+# Stitch API key
+export STITCH_API_KEY="AQ.Ab8RN6IuV4uy7xnLVvN2qpOt7N2w243O1LbDfHjnQ3Q_RrOrmw"
 
 echo "🔧 Pipeline Startup"
 echo "==================="
@@ -25,8 +28,9 @@ for port in $CYRUS_PORT $MIDDLEWARE_PORT; do
   fi
 done
 
-# Kill existing ngrok
+# Kill existing ngrok and stitch watcher
 pkill -f "ngrok http" 2>/dev/null || true
+pkill -f "stitch-watcher" 2>/dev/null || true
 sleep 1
 
 # 1. Start Cyrus
@@ -47,14 +51,20 @@ ngrok http $MIDDLEWARE_PORT --url $NGROK_DOMAIN &
 NGROK_PID=$!
 sleep 3
 
+# 4. Start Stitch watcher (polls for design changes → creates Linear issues)
+echo "Starting Stitch design watcher..."
+node "$SCRIPT_DIR/stitch-watcher.js" &
+STITCH_PID=$!
+sleep 2
+
 echo ""
 echo "✅ Pipeline running!"
-echo "   Cyrus:      http://localhost:$CYRUS_PORT (PID $CYRUS_PID)"
-echo "   Middleware:  http://localhost:$MIDDLEWARE_PORT (PID $MIDDLEWARE_PID)"
-echo "   ngrok:       https://$NGROK_DOMAIN → middleware"
+echo "   Cyrus:        http://localhost:$CYRUS_PORT (PID $CYRUS_PID)"
+echo "   Middleware:    http://localhost:$MIDDLEWARE_PORT (PID $MIDDLEWARE_PID)"
+echo "   ngrok:         https://$NGROK_DOMAIN → middleware"
+echo "   Stitch Watch:  polling every 60s (PID $STITCH_PID)"
 echo ""
-echo "   Flow: Linear → ngrok → Middleware(:$MIDDLEWARE_PORT) → Cyrus(:$CYRUS_PORT)"
-echo "   Stages: Todo → In Review (QA) → Done (Deploy) → Deployed"
+echo "   Flow: Stitch → Watcher → Linear(Todo) → Cyrus → In Review → QA → Done → Deploy → Deployed"
 echo ""
 echo "Press Ctrl+C to stop all"
 
