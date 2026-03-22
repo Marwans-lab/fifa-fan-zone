@@ -11,6 +11,7 @@ const Quiz = lazy(() => import('./routes/Quiz'))
 const Results = lazy(() => import('./routes/Results'))
 const Picture = lazy(() => import('./routes/Picture'))
 const Leaderboard = lazy(() => import('./routes/Leaderboard'))
+const SwipeQuiz = lazy(() => import('./routes/SwipeQuiz'))
 
 export default function App() {
   return (
@@ -40,6 +41,10 @@ export default function App() {
           <Route
             path="/results"
             element={<AuthGuard><Results /></AuthGuard>}
+          />
+          <Route
+            path="/swipe-quiz"
+            element={<AuthGuard><SwipeQuiz /></AuthGuard>}
           />
           <Route
             path="/leaderboard"
