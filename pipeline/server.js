@@ -155,7 +155,7 @@ async function handleWebhook(payload) {
     console.log(`[Pipeline] ${issueIdentifier}: Triggering QA review`);
     await postComment(
       issueId,
-      `@Claude **[QA REVIEW]** Review this ${labelInfo} implementation.\n\nCheck:\n- All acceptance criteria from the issue description are met\n- Code quality and no regressions\n- No hardcoded values, no leftover debug code\n- Edge cases handled\n\nIf everything passes, move to **Done**.\nIf anything fails, move back to **Todo** and explain exactly what needs fixing.`
+      `@Claude **[QA REVIEW]** Review this ${labelInfo} implementation.\n\nCheck:\n- All acceptance criteria from the issue description are met\n- If the issue has a Figma link, use Figma_ExportImage to compare the design against the implementation — it must match pixel-for-pixel\n- Code quality and no regressions\n- No hardcoded values, no leftover debug code\n- Edge cases handled\n\nIf everything passes, move to **Done**.\nIf anything fails, move back to **Todo** and explain exactly what needs fixing.`
     );
     return;
   }
