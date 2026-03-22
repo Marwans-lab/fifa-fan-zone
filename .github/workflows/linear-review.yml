@@ -1,0 +1,70 @@
+name: Linear → In Review on PR
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  transition:
+    if: contains(github.event.pull_request.title, 'MAR-')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract issue ID and transition
+        env:
+          LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+
+          # Extract MAR-XX from PR title
+          ISSUE_ID=$(echo "$PR_TITLE" | grep -oE 'MAR-[0-9]+' | head -1)
+          if [ -z "$ISSUE_ID" ]; then
+            echo "No MAR-XX found in PR title, skipping."
+            exit 0
+          fi
+          echo "Found issue: $ISSUE_ID"
+
+          # Find the Linear issue by identifier
+          ISSUE_DATA=$(curl -s -X POST https://api.linear.app/graphql \
+            -H "Authorization: $LINEAR_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"query\": \"{ issueSearch(filter: { identifier: { eq: \\\"$ISSUE_ID\\\" } }) { nodes { id team { id } } } }\"}")
+
+          ISSUE_UUID=$(echo "$ISSUE_DATA" | jq -r '.data.issueSearch.nodes[0].id // empty')
+          TEAM_UUID=$(echo "$ISSUE_DATA" | jq -r '.data.issueSearch.nodes[0].team.id // empty')
+
+          if [ -z "$ISSUE_UUID" ] || [ -z "$TEAM_UUID" ]; then
+            echo "Issue $ISSUE_ID not found in Linear."
+            exit 0
+          fi
+          echo "Issue UUID: $ISSUE_UUID, Team UUID: $TEAM_UUID"
+
+          # Get "In Review" workflow state ID
+          STATE_ID=$(curl -s -X POST https://api.linear.app/graphql \
+            -H "Authorization: $LINEAR_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"query\": \"{ workflowStates(filter: { team: { id: { eq: \\\"$TEAM_UUID\\\" } }, name: { eq: \\\"In Review\\\" } }) { nodes { id name } } }\"}" \
+            | jq -r '.data.workflowStates.nodes[0].id // empty')
+
+          if [ -z "$STATE_ID" ]; then
+            echo "No 'In Review' state found for team."
+            exit 1
+          fi
+          echo "In Review state ID: $STATE_ID"
+
+          # Transition issue to "In Review"
+          curl -s -X POST https://api.linear.app/graphql \
+            -H "Authorization: $LINEAR_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"query\": \"mutation { issueUpdate(id: \\\"$ISSUE_UUID\\\", input: { stateId: \\\"$STATE_ID\\\" }) { success } }\"}" \
+            | jq .
+
+          # Post QA trigger comment
+          curl -s -X POST https://api.linear.app/graphql \
+            -H "Authorization: $LINEAR_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"query\": \"mutation { commentCreate(input: { issueId: \\\"$ISSUE_UUID\\\", body: \\\"@Claude [QA REVIEW] PR #$PR_NUMBER is ready for review.\\\" }) { success } }\"}" \
+            | jq .
+
+          echo "Done: $ISSUE_ID → In Review, QA comment posted."
