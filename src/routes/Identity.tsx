@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
@@ -152,11 +152,15 @@ function compressDataUrl(source: HTMLVideoElement | HTMLImageElement, flipX = fa
 // ─── Main Identity route ───────────────────────────────────────────────────────
 export default function Identity() {
   const navigate = useNavigate()
-  const { updateFanCard } = useStore()
+  const location = useLocation()
+  const { state: appState, updateFanCard } = useStore()
 
-  const [step, setStep] = useState<Step>('team')
+  const fromTeamSelection = !!(location.state as { fromTeamSelection?: boolean } | null)?.fromTeamSelection
+  const preSelectedTeamId = fromTeamSelection ? appState.fanCard.teamId : null
+
+  const [step, setStep] = useState<Step>(preSelectedTeamId ? 'camera' : 'team')
   const [query, setQuery] = useState('')
-  const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null)
+  const [selectedTeamId, setSelectedTeamId] = useState<string | null>(preSelectedTeamId)
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null)
   const [cameraActive, setCameraActive] = useState(false)
   const [cameraError, setCameraError] = useState<string | null>(null)
@@ -391,7 +395,14 @@ export default function Identity() {
           )}
 
           <button
-            onClick={() => { stopCamera(); setStep('team') }}
+            onClick={() => {
+              stopCamera()
+              if (fromTeamSelection) {
+                navigate('/team-selection')
+              } else {
+                setStep('team')
+              }
+            }}
             className="btn btn-ghost"
             style={{ marginTop: 'var(--sp-4)', fontSize: 'var(--text-sm)' }}
           >
