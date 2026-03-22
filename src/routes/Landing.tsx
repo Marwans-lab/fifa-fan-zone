@@ -78,7 +78,7 @@ export default function Landing() {
 
   function handlePrimary() {
     track('landing_primary_cta_tapped', { hasCard })
-    navigate(hasCard ? '/card' : '/identity')
+    navigate(hasCard ? '/card' : '/team-selection')
   }
 
   function handleQuiz() {

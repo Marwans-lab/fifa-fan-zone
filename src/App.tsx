@@ -5,6 +5,7 @@ import AuthGuard from './components/AuthGuard'
 import { AuthProvider } from './lib/AuthContext'
 
 const Landing = lazy(() => import('./routes/Landing'))
+const TeamSelection = lazy(() => import('./routes/TeamSelection'))
 const Identity = lazy(() => import('./routes/Identity'))
 const Card = lazy(() => import('./routes/Card'))
 const Quiz = lazy(() => import('./routes/Quiz'))
@@ -20,6 +21,10 @@ export default function App() {
           <Route path="/" element={<Landing />} />
 
           {/* All identity/card/quiz/results routes require a valid session */}
+          <Route
+            path="/team-selection"
+            element={<AuthGuard><TeamSelection /></AuthGuard>}
+          />
           <Route
             path="/identity"
             element={<AuthGuard><Identity /></AuthGuard>}
