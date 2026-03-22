@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore'
 import { track } from '../lib/analytics'
 import { WORLD_CUP_TEAMS } from '../data/teams'
+import Screen from '../components/Screen'
 
 const CARD_TEAMS = [
   WORLD_CUP_TEAMS.find(t => t.id === 'usa')!,
@@ -47,10 +48,70 @@ function FanCardStack() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'space-between',
+              padding: '24px 20px 20px',
+              border: '1px solid rgba(255,255,255,0.12)',
+              position: 'relative',
             }}
           >
-            <span style={{ fontSize: 64, opacity: 0.3 }}>{team.flag}</span>
+            {/* Dot-grid halftone texture */}
+            <div style={{
+              position: 'absolute', inset: 0, borderRadius: 'var(--r-md)', pointerEvents: 'none',
+              backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.28) 1.5px, transparent 1.5px)',
+              backgroundSize: '16px 16px',
+              mixBlendMode: 'overlay',
+            }} />
+            {/* Diagonal shimmer stripes */}
+            <div style={{
+              position: 'absolute', inset: 0, borderRadius: 'var(--r-md)', pointerEvents: 'none',
+              backgroundImage: 'repeating-linear-gradient(-55deg, transparent, transparent 18px, rgba(255,255,255,0.10) 18px, rgba(255,255,255,0.10) 19px)',
+              mixBlendMode: 'overlay',
+            }} />
+            {/* Holographic top stripe */}
+            <div style={{
+              position: 'absolute', top: 0, left: 0, right: 0, height: 4,
+              background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent)',
+            }} />
+
+            {/* Card header */}
+            <div style={{ textAlign: 'left', width: '100%', position: 'relative', zIndex: 1 }}>
+              <div style={{
+                fontSize: 'var(--text-sm)', letterSpacing: 2, color: '#ffffff',
+                textTransform: 'uppercase',
+              }}>
+                Your Fan Card
+              </div>
+              <div style={{ fontSize: 'var(--text-2xs)', color: 'rgba(255,255,255,0.65)', letterSpacing: 1 }}>
+                Collector Edition
+              </div>
+            </div>
+
+            {/* Flag emoji as avatar placeholder */}
+            <div style={{
+              width: card.width * 0.45,
+              height: card.width * 0.45,
+              borderRadius: '50%',
+              background: 'rgba(0,0,0,0.2)',
+              border: '3px solid rgba(255,255,255,0.45)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
+              zIndex: 1,
+            }}>
+              <span style={{ fontSize: card.width * 0.18 }}>{team.flag}</span>
+            </div>
+
+            {/* Team name */}
+            <div style={{
+              fontSize: 'var(--text-lg)', fontWeight: 'var(--weight-med)',
+              color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic',
+              display: 'flex', alignItems: 'center', gap: 8,
+              position: 'relative', zIndex: 1,
+            }}>
+              <span style={{ fontStyle: 'normal', fontSize: 'var(--text-xl)' }}>{team.flag}</span>
+              {team.name}
+            </div>
           </div>
         )
       })}
@@ -78,7 +139,7 @@ export default function Landing() {
   }
 
   return (
-    <div
+    <Screen
       className="page-in"
       style={{
         display: 'flex',
@@ -123,7 +184,7 @@ export default function Landing() {
           background: '#8e2157',
           color: '#ffffff',
           fontFamily: 'var(--font-body)',
-          fontSize: 16,
+          fontSize: 'var(--text-md)',
           fontWeight: 'var(--weight-med)',
           lineHeight: '24px',
           border: 'none',
@@ -134,6 +195,6 @@ export default function Landing() {
       >
         {hasCard ? 'Continue' : 'Create your fan card'}
       </button>
-    </div>
+    </Screen>
   )
 }
