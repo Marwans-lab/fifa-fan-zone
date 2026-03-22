@@ -327,5 +327,9 @@ a:focus-visible {
 .animate-blob-float   { animation: blob-float 18s ease-in-out infinite; }
 .animate-ping-slow    { animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite; }
 
+@keyframes quiz-spin {
+  to { transform: rotate(360deg); }
+}
+
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

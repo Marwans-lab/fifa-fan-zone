@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Screen from '../components/Screen'
 import FanCard from '../components/FanCard'
@@ -281,11 +281,18 @@ function QuizCard({
 }) {
   const locked = cardState === 'locked'
   const done   = cardState === 'done'
+  const [loading, setLoading] = useState(false)
+
+  function handleClick() {
+    if (loading) return
+    setLoading(true)
+    setTimeout(() => onStart(), 300)
+  }
 
   return (
     <button
-      onClick={locked ? undefined : onStart}
-      disabled={locked}
+      onClick={locked ? undefined : handleClick}
+      disabled={locked || loading}
       style={{
         width: '100%',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -369,7 +376,19 @@ function QuizCard({
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           marginRight: 4,
         }}>
-          <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
+          {loading ? (
+            <div
+              aria-label="Loading"
+              style={{
+                width: 20, height: 20, borderRadius: '50%',
+                border: '2.5px solid rgba(255,255,255,0.15)',
+                borderTopColor: 'var(--c-accent)',
+                animation: 'quiz-spin 0.6s linear infinite',
+              }}
+            />
+          ) : (
+            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
+          )}
         </div>
       )}
     </button>
