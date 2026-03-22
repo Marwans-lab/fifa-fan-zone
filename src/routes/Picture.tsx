@@ -1,11 +1,8 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import cameraIcon from '../assets/icons/camera-white.svg'
 import chevLeft from '../assets/icons/Chevron-left-white.svg'
-
-type Phase = 'ready' | 'live' | 'preview'
 
 // ─── Image compression ────────────────────────────────────────────────────────
 function compressDataUrl(source: HTMLVideoElement | HTMLImageElement, flipX = false): string {
@@ -24,68 +21,62 @@ function compressDataUrl(source: HTMLVideoElement | HTMLImageElement, flipX = fa
   return canvas.toDataURL('image/jpeg', 0.78)
 }
 
-// ─── Viewfinder frame (decorative corner marks) ──────────────────────────────
-function ViewfinderFrame() {
-  const cornerStyle = (
-    top: boolean,
-    left: boolean,
-  ): React.CSSProperties => ({
-    position: 'absolute',
-    width: 28,
-    height: 28,
-    borderColor: 'var(--c-accent)',
-    borderStyle: 'solid',
-    borderWidth: 0,
-    ...(top ? { top: -1 } : { bottom: -1 }),
-    ...(left ? { left: -1 } : { right: -1 }),
-    ...(top && left ? { borderTopWidth: 3, borderLeftWidth: 3, borderTopLeftRadius: 'var(--r-md)' } : {}),
-    ...(top && !left ? { borderTopWidth: 3, borderRightWidth: 3, borderTopRightRadius: 'var(--r-md)' } : {}),
-    ...(!top && left ? { borderBottomWidth: 3, borderLeftWidth: 3, borderBottomLeftRadius: 'var(--r-md)' } : {}),
-    ...(!top && !left ? { borderBottomWidth: 3, borderRightWidth: 3, borderBottomRightRadius: 'var(--r-md)' } : {}),
-  })
-
+// ─── Silhouette SVG (dashed outline of head + shoulders) ─────────────────────
+function SilhouettePlaceholder() {
   return (
-    <>
-      <div style={cornerStyle(true, true)} />
-      <div style={cornerStyle(true, false)} />
-      <div style={cornerStyle(false, true)} />
-      <div style={cornerStyle(false, false)} />
-    </>
+    <svg
+      width="180"
+      height="220"
+      viewBox="0 0 180 220"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ opacity: 0.35 }}
+    >
+      {/* Head */}
+      <circle
+        cx="90"
+        cy="70"
+        r="42"
+        stroke="#9099a2"
+        strokeWidth="2"
+        strokeDasharray="8 6"
+        fill="none"
+      />
+      {/* Shoulders */}
+      <path
+        d="M20 210 C20 170, 45 145, 90 140 C135 145, 160 170, 160 210"
+        stroke="#9099a2"
+        strokeWidth="2"
+        strokeDasharray="8 6"
+        fill="none"
+      />
+    </svg>
   )
 }
 
-// ─── Shutter button ──────────────────────────────────────────────────────────
-function ShutterButton({ onClick, disabled }: { onClick: () => void; disabled?: boolean }) {
+// ─── Progress bar ─────────────────────────────────────────────────────────────
+function ProgressBar({ progress }: { progress: number }) {
   return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      aria-label="Take photo"
+    <div
       style={{
-        width: 72,
-        height: 72,
-        borderRadius: 'var(--r-full)',
-        background: 'none',
-        border: '3px solid var(--c-accent)',
-        padding: 4,
-        cursor: disabled ? 'default' : 'pointer',
-        opacity: disabled ? 0.4 : 1,
-        transition: `opacity var(--dur-base) var(--ease-out)`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        flex: 1,
+        height: 8,
+        borderRadius: 64,
+        background: '#dbdee8',
+        overflow: 'hidden',
       }}
     >
       <div
         style={{
-          width: '100%',
+          width: `${progress}%`,
           height: '100%',
-          borderRadius: 'var(--r-full)',
-          background: 'var(--c-accent)',
-          transition: `transform var(--dur-base) var(--ease-out)`,
+          borderRadius: 64,
+          background: 'linear-gradient(-90deg, #34DB80 61.5%, #1C7544 100%)',
+          boxShadow: '1px 0px 6px rgba(0,0,0,0.25)',
+          transition: `width var(--dur-slow) var(--ease-out)`,
         }}
       />
-    </button>
+    </div>
   )
 }
 
@@ -95,13 +86,13 @@ export default function Picture() {
   const location = useLocation()
   const { teamId } = (location.state as { teamId: string } | null) ?? { teamId: '' }
 
-  const [phase, setPhase] = useState<Phase>('ready')
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null)
   const [cameraError, setCameraError] = useState<string | null>(null)
 
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [cameraActive, setCameraActive] = useState(false)
 
   // ── Camera lifecycle ─────────────────────────────────────────────────────
   const stopCamera = useCallback(() => {
@@ -109,19 +100,19 @@ export default function Picture() {
       streamRef.current.getTracks().forEach(t => t.stop())
       streamRef.current = null
     }
+    setCameraActive(false)
   }, [])
 
   useEffect(() => {
     return () => stopCamera()
   }, [stopCamera])
 
-  // Attach stream to video once it renders
   useEffect(() => {
-    if (phase === 'live' && streamRef.current && videoRef.current) {
+    if (cameraActive && streamRef.current && videoRef.current) {
       videoRef.current.srcObject = streamRef.current
       videoRef.current.play().catch(() => {})
     }
-  }, [phase])
+  }, [cameraActive])
 
   const startCamera = useCallback(async () => {
     setCameraError(null)
@@ -134,7 +125,7 @@ export default function Picture() {
         video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 640 } },
       })
       streamRef.current = stream
-      setPhase('live')
+      setCameraActive(true)
       track('picture_camera_started')
     } catch {
       setCameraError('Camera unavailable — pick from files instead')
@@ -148,7 +139,6 @@ export default function Picture() {
     const url = compressDataUrl(video, true)
     stopCamera()
     setPhotoDataUrl(url)
-    setPhase('preview')
     track('picture_photo_captured')
   }, [stopCamera])
 
@@ -161,7 +151,6 @@ export default function Picture() {
       img.onload = () => {
         const url = compressDataUrl(img)
         setPhotoDataUrl(url)
-        setPhase('preview')
         track('picture_photo_picked')
       }
       img.src = ev.target?.result as string
@@ -169,15 +158,22 @@ export default function Picture() {
     reader.readAsDataURL(file)
   }, [])
 
+  const handleTakePhoto = useCallback(() => {
+    if (cameraActive) {
+      capturePhoto()
+    } else {
+      startCamera()
+    }
+  }, [cameraActive, capturePhoto, startCamera])
+
   const handleRetake = useCallback(() => {
     setPhotoDataUrl(null)
     if (fileInputRef.current) fileInputRef.current.value = ''
     stopCamera()
-    setPhase('ready')
     track('picture_retake_tapped')
   }, [stopCamera])
 
-  const handleConfirm = useCallback(() => {
+  const handleNext = useCallback(() => {
     track('picture_confirmed')
     navigate('/identity', { state: { teamId, photoDataUrl }, replace: true })
   }, [navigate, teamId, photoDataUrl])
@@ -187,88 +183,93 @@ export default function Picture() {
     navigate('/identity', { replace: true })
   }, [navigate, stopCamera])
 
-  // ── Viewfinder size (square, fits mobile width with padding) ─────────
-  const VIEWFINDER_SIZE = 280
+  const hasPhoto = !!photoDataUrl
 
   return (
-    <Screen>
-      <div
-        className="page-in"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          height: '100%',
-          padding: 'var(--sp-6) var(--sp-5)',
-        }}
-      >
-        {/* ── Header ──────────────────────────────────────────────── */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          width: '100%',
-          marginBottom: 'var(--sp-8)',
-        }}>
-          <button
-            onClick={handleBack}
-            aria-label="Go back"
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 'var(--sp-2)',
-              marginLeft: 'calc(-1 * var(--sp-2))',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <img src={chevLeft} width={24} height={24} alt="" />
-          </button>
-          <h2 style={{
-            flex: 1,
-            textAlign: 'center',
-            fontFamily: 'var(--font-display)',
-            fontSize: 'var(--text-xl)',
-            fontWeight: 'var(--weight-light)',
-            letterSpacing: 'var(--tracking-tight)',
-            color: 'var(--c-text-1)',
-            marginRight: 24,
+    <div
+      className="page-in"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        width: '100%',
+        background: '#f2f3fa',
+        overflowY: 'auto',
+        WebkitOverflowScrolling: 'touch',
+      }}
+    >
+      {/* ── Top bar: back button + progress ──────────────────── */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 'var(--sp-4)',
+        padding: '70px var(--sp-4) 0 var(--sp-4)',
+        flexShrink: 0,
+      }}>
+        <button
+          onClick={handleBack}
+          aria-label="Go back"
+          style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--r-full)',
+            background: '#ffffff',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+          }}
+        >
+          <img
+            src={chevLeft}
+            width={24}
+            height={24}
+            alt=""
+            style={{ filter: 'brightness(0)' }}
+          />
+        </button>
+
+        <ProgressBar progress={50} />
+      </div>
+
+      {/* ── Title ────────────────────────────────────────────── */}
+      <h2 style={{
+        fontFamily: 'var(--font-display)',
+        fontSize: 'var(--text-2xl)',
+        fontWeight: 'var(--weight-thin)',
+        lineHeight: '36px',
+        color: '#1f212b',
+        textAlign: 'center',
+        marginTop: 'var(--sp-6)',
+        flexShrink: 0,
+      }}>
+        Add your picture
+      </h2>
+
+      {/* ── Photo card ───────────────────────────────────────── */}
+      <div style={{
+        margin: 'var(--sp-6) var(--sp-4) 0',
+        background: '#ffffff',
+        borderRadius: 'var(--r-md)',
+        height: 515,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+        flexShrink: 0,
+      }}>
+        {cameraActive && !hasPhoto ? (
+          /* Live camera feed */
+          <div style={{
+            width: '100%',
+            height: '100%',
+            position: 'relative',
           }}>
-            {phase === 'preview' ? 'Looking good!' : 'Take a selfie'}
-          </h2>
-        </div>
-
-        {/* ── Subtitle ────────────────────────────────────────────── */}
-        <p style={{
-          fontSize: 'var(--text-sm)',
-          color: 'var(--c-text-2)',
-          textAlign: 'center',
-          marginBottom: 'var(--sp-8)',
-        }}>
-          {phase === 'preview'
-            ? 'This photo will appear on your fan card'
-            : phase === 'live'
-              ? 'Position your face in the frame'
-              : 'Your photo will be shown on your fan card'}
-        </p>
-
-        {/* ── Viewfinder area ─────────────────────────────────────── */}
-        <div style={{
-          position: 'relative',
-          width: VIEWFINDER_SIZE,
-          height: VIEWFINDER_SIZE,
-          borderRadius: 'var(--r-full)',
-          overflow: 'hidden',
-          background: 'rgba(255,255,255,0.04)',
-          border: '1px solid var(--c-border)',
-          flexShrink: 0,
-        }}>
-          {/* Corner frame marks (outside the clip) */}
-          <div style={{ position: 'absolute', inset: 'var(--sp-3)', pointerEvents: 'none', zIndex: 2 }}>
-            <ViewfinderFrame />
-          </div>
-
-          {phase === 'live' ? (
             <video
               ref={videoRef}
               autoPlay
@@ -282,9 +283,44 @@ export default function Picture() {
                 transform: 'scaleX(-1)',
               }}
             />
-          ) : phase === 'preview' && photoDataUrl ? (
+            {/* Capture button overlay */}
+            <button
+              onClick={capturePhoto}
+              aria-label="Capture photo"
+              style={{
+                position: 'absolute',
+                bottom: 'var(--sp-8)',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: 72,
+                height: 72,
+                borderRadius: 'var(--r-full)',
+                background: 'none',
+                border: '3px solid #ffffff',
+                padding: 4,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <div style={{
+                width: '100%',
+                height: '100%',
+                borderRadius: 'var(--r-full)',
+                background: '#ffffff',
+              }} />
+            </button>
+          </div>
+        ) : hasPhoto ? (
+          /* Photo preview */
+          <div style={{
+            width: '100%',
+            height: '100%',
+            position: 'relative',
+          }}>
             <img
-              src={photoDataUrl}
+              src={photoDataUrl!}
               alt="Your photo"
               style={{
                 width: '100%',
@@ -293,106 +329,116 @@ export default function Picture() {
                 objectPosition: 'center top',
               }}
             />
-          ) : (
-            /* Ready state — tap to start */
+            {/* Retake overlay button */}
             <button
-              onClick={startCamera}
-              aria-label="Open camera"
+              onClick={handleRetake}
+              aria-label="Retake photo"
               style={{
-                width: '100%',
-                height: '100%',
-                background: 'none',
+                position: 'absolute',
+                bottom: 'var(--sp-4)',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                padding: 'var(--sp-2) var(--sp-5)',
+                borderRadius: 'var(--r-full)',
+                background: 'rgba(0,0,0,0.5)',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                color: '#ffffff',
+                fontFamily: 'var(--font-body)',
+                fontSize: 'var(--text-sm)',
+                fontWeight: 'var(--weight-med)',
+                cursor: 'pointer',
+                letterSpacing: 'var(--tracking-wide)',
+              }}
+            >
+              Retake
+            </button>
+          </div>
+        ) : (
+          /* Empty state: silhouette + "Take a photo" */
+          <>
+            <SilhouettePlaceholder />
+
+            <button
+              onClick={handleTakePhoto}
+              style={{
+                position: 'absolute',
+                top: 209,
+                width: 197,
+                height: 56,
+                borderRadius: 32,
+                background: '#8e2157',
                 border: 'none',
                 cursor: 'pointer',
                 display: 'flex',
-                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 'var(--sp-3)',
-                color: 'var(--c-text-2)',
-                fontFamily: 'inherit',
+                boxShadow: '0px 8px 16px rgba(31,33,43,0.08)',
+                color: '#ffffff',
+                fontFamily: 'var(--font-body)',
+                fontSize: 16,
+                fontWeight: 'var(--weight-med)',
+                lineHeight: '24px',
               }}
             >
-              <img src={cameraIcon} width={40} height={40} alt="" style={{ opacity: 0.6 }} />
-              <span style={{
-                fontSize: 'var(--text-xs)',
-                letterSpacing: 'var(--tracking-wider)',
-                textTransform: 'uppercase',
-              }}>
-                Tap to start
-              </span>
+              <span>Take a photo</span>
+              <img src={cameraIcon} width={24} height={24} alt="" />
             </button>
-          )}
-        </div>
-
-        {/* ── Camera error message ────────────────────────────────── */}
-        {cameraError && (
-          <p style={{
-            fontSize: 'var(--text-xs)',
-            color: 'var(--c-warn)',
-            marginTop: 'var(--sp-3)',
-            textAlign: 'center',
-          }}>
-            {cameraError}
-          </p>
+          </>
         )}
-
-        {/* ── Hidden file input fallback ──────────────────────────── */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          capture="user"
-          style={{ display: 'none' }}
-          onChange={handleFileChange}
-        />
-
-        {/* ── Actions ─────────────────────────────────────────────── */}
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 'var(--sp-4)',
-          marginTop: 'auto',
-          paddingTop: 'var(--sp-8)',
-          paddingBottom: 'var(--sp-4)',
-          width: '100%',
-          maxWidth: 320,
-        }}>
-          {phase === 'live' && (
-            <ShutterButton onClick={capturePhoto} />
-          )}
-
-          {phase === 'preview' && (
-            <>
-              <button
-                onClick={handleConfirm}
-                className="btn btn-primary"
-                style={{ width: '100%' }}
-              >
-                Use this photo
-              </button>
-              <button
-                onClick={handleRetake}
-                className="btn btn-secondary"
-                style={{ width: '100%' }}
-              >
-                Retake
-              </button>
-            </>
-          )}
-
-          {phase === 'ready' && (
-            <button
-              onClick={() => handleConfirm()}
-              className="btn btn-ghost"
-              style={{ fontSize: 'var(--text-sm)' }}
-            >
-              Skip for now
-            </button>
-          )}
-        </div>
       </div>
-    </Screen>
+
+      {/* ── Camera error ─────────────────────────────────────── */}
+      {cameraError && (
+        <p style={{
+          fontSize: 'var(--text-xs)',
+          color: '#d95757',
+          marginTop: 'var(--sp-2)',
+          textAlign: 'center',
+          padding: '0 var(--sp-4)',
+        }}>
+          {cameraError}
+        </p>
+      )}
+
+      {/* ── Hidden file input fallback ───────────────────────── */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        capture="user"
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
+
+      {/* ── Next button ──────────────────────────────────────── */}
+      <div style={{
+        padding: 'var(--sp-6) var(--sp-4) var(--sp-8)',
+        flexShrink: 0,
+      }}>
+        <button
+          onClick={handleNext}
+          disabled={!hasPhoto}
+          style={{
+            width: '100%',
+            height: 56,
+            borderRadius: 32,
+            background: hasPhoto ? '#8e2157' : '#dbdee8',
+            border: 'none',
+            cursor: hasPhoto ? 'pointer' : 'default',
+            color: hasPhoto ? '#ffffff' : '#9099a2',
+            fontFamily: 'var(--font-body)',
+            fontSize: 16,
+            fontWeight: 'var(--weight-med)',
+            lineHeight: '24px',
+            transition: `background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out)`,
+          }}
+        >
+          Next
+        </button>
+      </div>
+    </div>
   )
 }
