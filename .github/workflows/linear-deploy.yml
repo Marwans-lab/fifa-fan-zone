@@ -29,10 +29,10 @@ jobs:
           ISSUE_DATA=$(curl -s -X POST https://api.linear.app/graphql \
             -H "Authorization: $LINEAR_API_KEY" \
             -H "Content-Type: application/json" \
-            -d "{\"query\": \"{ issueSearch(filter: { identifier: { eq: \\\"$ISSUE_ID\\\" } }) { nodes { id team { id } } } }\"}")
+            -d "{\"query\": \"{ issue(id: \\\"$ISSUE_ID\\\") { id team { id } } }\"}")
 
-          ISSUE_UUID=$(echo "$ISSUE_DATA" | jq -r '.data.issueSearch.nodes[0].id // empty')
-          TEAM_UUID=$(echo "$ISSUE_DATA" | jq -r '.data.issueSearch.nodes[0].team.id // empty')
+          ISSUE_UUID=$(echo "$ISSUE_DATA" | jq -r '.data.issue.id // empty')
+          TEAM_UUID=$(echo "$ISSUE_DATA" | jq -r '.data.issue.team.id // empty')
 
           if [ -z "$ISSUE_UUID" ] || [ -z "$TEAM_UUID" ]; then
             echo "Issue $ISSUE_ID not found in Linear."
