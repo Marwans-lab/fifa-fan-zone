@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
@@ -25,6 +25,44 @@ const FLIP_DURATION = 400
 const MISMATCH_DELAY = 800
 const MATCH_DELAY = 500
 const DEAL_STAGGER = 60
+
+// ─── Keyframe styles (injected once) ────────────────────────────────────────────
+
+const KEYFRAMES = `
+@keyframes card-shake {
+  0%, 100% { transform: rotateY(180deg) translateX(0); }
+  20% { transform: rotateY(180deg) translateX(-6px); }
+  40% { transform: rotateY(180deg) translateX(6px); }
+  60% { transform: rotateY(180deg) translateX(-4px); }
+  80% { transform: rotateY(180deg) translateX(3px); }
+}
+@keyframes card-match-pop {
+  0% { transform: rotateY(180deg) scale(1); }
+  40% { transform: rotateY(180deg) scale(1.08); }
+  100% { transform: rotateY(180deg) scale(1); }
+}
+@keyframes shimmer-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+@keyframes match-ring {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+@keyframes confetti-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(60px) rotate(360deg); opacity: 0; }
+}
+@keyframes stat-count-in {
+  0% { transform: translateY(8px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes card-press {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+`
 
 // ─── Helpers ────────────────────────────────────────────────────────────────────
 
@@ -75,18 +113,46 @@ function CardBack() {
         inset: 0,
         borderRadius: 'var(--r-md)',
         background: 'linear-gradient(135deg, rgba(142,33,87,0.4) 0%, rgba(0,212,170,0.2) 100%)',
+        border: '1px solid var(--c-border)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         backfaceVisibility: 'hidden',
+        overflow: 'hidden',
       }}
     >
+      {/* Animated shimmer */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.06) 50%, transparent 60%)',
+          animation: 'shimmer-slide 3s ease-in-out infinite',
+        }}
+      />
       {/* Diamond pattern */}
       <svg width="40" height="40" viewBox="0 0 40 40" style={{ opacity: 0.25 }}>
         <path d="M20 4L36 20L20 36L4 20Z" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" />
         <path d="M20 12L28 20L20 28L12 20Z" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1" />
       </svg>
     </div>
+  )
+}
+
+// ─── Match ring burst effect ────────────────────────────────────────────────────
+
+function MatchRing() {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        inset: -8,
+        borderRadius: 'var(--r-lg)',
+        border: '2px solid var(--c-correct)',
+        animation: 'match-ring 600ms var(--ease-out) forwards',
+        pointerEvents: 'none',
+      }}
+    />
   )
 }
 
@@ -101,6 +167,7 @@ interface GameCardProps {
 
 function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
   const [dealt, setDealt] = useState(false)
+  const [showRing, setShowRing] = useState(false)
   const isFlipped = status === 'flipped' || status === 'matched'
   const isMatched = status === 'matched'
   const isMismatched = status === 'mismatched'
@@ -109,6 +176,14 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
     const t = setTimeout(() => setDealt(true), dealDelay)
     return () => clearTimeout(t)
   }, [dealDelay])
+
+  useEffect(() => {
+    if (isMatched) {
+      setShowRing(true)
+      const t = setTimeout(() => setShowRing(false), 600)
+      return () => clearTimeout(t)
+    }
+  }, [isMatched])
 
   const glowColor = isMatched
     ? 'var(--c-correct-glow)'
@@ -133,24 +208,9 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
         WebkitTapHighlightColor: 'transparent',
         opacity: dealt ? 1 : 0,
         transform: dealt ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.85)',
-        transition: `opacity 400ms var(--ease-out), transform 400ms var(--ease-out)`,
+        transition: 'opacity 400ms var(--ease-out), transform 400ms var(--ease-out)',
       }}
     >
-      <style>{`
-        @keyframes card-shake {
-          0%, 100% { transform: rotateY(180deg) translateX(0); }
-          20% { transform: rotateY(180deg) translateX(-6px); }
-          40% { transform: rotateY(180deg) translateX(6px); }
-          60% { transform: rotateY(180deg) translateX(-4px); }
-          80% { transform: rotateY(180deg) translateX(3px); }
-        }
-        @keyframes card-match-pop {
-          0% { transform: rotateY(180deg) scale(1); }
-          40% { transform: rotateY(180deg) scale(1.08); }
-          100% { transform: rotateY(180deg) scale(1); }
-        }
-      `}</style>
-
       <div
         style={{
           position: 'relative',
@@ -160,9 +220,9 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
           transform: isFlipped || isMismatched ? 'rotateY(180deg)' : 'rotateY(0deg)',
           transition: `transform ${FLIP_DURATION}ms var(--ease-out)`,
           animation: isMismatched
-            ? `card-shake 500ms var(--ease-out)`
+            ? 'card-shake 500ms var(--ease-out)'
             : isMatched
-            ? `card-match-pop 400ms var(--ease-out)`
+            ? 'card-match-pop 400ms var(--ease-out)'
             : 'none',
         }}
       >
@@ -194,12 +254,12 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
             gap: 'var(--sp-1)',
             padding: 'var(--sp-2)',
             boxShadow: `0 0 16px ${glowColor}`,
-            transition: 'box-shadow 300ms ease, border-color 300ms ease',
+            transition: 'box-shadow 300ms ease, border-color 300ms ease, background 300ms ease',
             overflow: 'hidden',
           }}
         >
           {card.type === 'flag' ? (
-            <span style={{ fontSize: 36, lineHeight: 1 }}>{card.display}</span>
+            <span style={{ fontSize: 'var(--text-3xl)', lineHeight: 1 }}>{card.display}</span>
           ) : (
             <span
               style={{
@@ -216,6 +276,28 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
             </span>
           )}
 
+          {/* Match checkmark */}
+          {isMatched && (
+            <div
+              style={{
+                position: 'absolute',
+                top: 'var(--sp-1)',
+                right: 'var(--sp-1)',
+                width: 18,
+                height: 18,
+                borderRadius: 'var(--r-full)',
+                background: 'var(--c-correct)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                <path d="M1 4L3.5 6.5L9 1" stroke="var(--c-bg)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          )}
+
           {/* Subtle shimmer line */}
           <div
             style={{
@@ -229,6 +311,9 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
           />
         </div>
       </div>
+
+      {/* Match ring burst */}
+      {showRing && <MatchRing />}
     </button>
   )
 }
@@ -245,15 +330,80 @@ function StatPill({ icon, value }: { icon: string; value: string }) {
         background: 'var(--c-surface)',
         border: '1px solid var(--c-border)',
         borderRadius: 'var(--r-full)',
-        padding: '6px 12px',
+        padding: 'var(--sp-1) var(--sp-3)',
         fontSize: 'var(--text-xs)',
         color: 'var(--c-text-2)',
         letterSpacing: 'var(--tracking-wide)',
         fontFamily: 'var(--font-body)',
       }}
     >
-      <span style={{ fontSize: 13 }}>{icon}</span>
+      <span style={{ fontSize: 'var(--text-xs)' }}>{icon}</span>
       <span style={{ fontWeight: 'var(--weight-med)' }}>{value}</span>
+    </div>
+  )
+}
+
+// ─── Animated counter ───────────────────────────────────────────────────────────
+
+function AnimatedStat({ value, delay }: { value: string; delay: number }) {
+  const [show, setShow] = useState(false)
+
+  useEffect(() => {
+    const t = setTimeout(() => setShow(true), delay)
+    return () => clearTimeout(t)
+  }, [delay])
+
+  return (
+    <div
+      style={{
+        fontSize: 'var(--text-xl)',
+        fontWeight: 'var(--weight-bold)',
+        color: 'var(--c-accent)',
+        fontFamily: 'var(--font-body)',
+        opacity: show ? 1 : 0,
+        transform: show ? 'translateY(0)' : 'translateY(8px)',
+        transition: 'opacity 400ms var(--ease-out), transform 400ms var(--ease-out)',
+      }}
+    >
+      {value}
+    </div>
+  )
+}
+
+// ─── Confetti particles ─────────────────────────────────────────────────────────
+
+function Confetti() {
+  const particles = useMemo(() => {
+    const colors = ['var(--c-correct)', 'var(--c-accent)', 'var(--c-warn)', 'var(--c-brand)']
+    return Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      delay: `${Math.random() * 600}ms`,
+      duration: `${800 + Math.random() * 600}ms`,
+      color: colors[i % colors.length],
+      size: 4 + Math.random() * 4,
+      rotation: Math.random() * 360,
+    }))
+  }, [])
+
+  return (
+    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+      {particles.map(p => (
+        <div
+          key={p.id}
+          style={{
+            position: 'absolute',
+            top: -8,
+            left: p.left,
+            width: p.size,
+            height: p.size,
+            borderRadius: p.id % 3 === 0 ? 'var(--r-full)' : 0,
+            background: p.color,
+            animation: `confetti-fall ${p.duration} var(--ease-out) ${p.delay} forwards`,
+            transform: `rotate(${p.rotation}deg)`,
+          }}
+        />
+      ))}
     </div>
   )
 }
@@ -283,7 +433,7 @@ function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: Compl
       style={{
         position: 'fixed',
         inset: 0,
-        zIndex: 100,
+        zIndex: 'var(--z-overlay)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -296,6 +446,7 @@ function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: Compl
     >
       <div
         style={{
+          position: 'relative',
           width: '100%',
           maxWidth: 320,
           background: 'var(--c-surface)',
@@ -306,10 +457,14 @@ function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: Compl
           opacity: visible ? 1 : 0,
           transform: visible ? 'translateY(0) scale(1)' : 'translateY(30px) scale(0.9)',
           transition: 'opacity 500ms var(--ease-out) 150ms, transform 500ms var(--ease-out) 150ms',
+          overflow: 'hidden',
         }}
       >
+        {/* Confetti burst */}
+        {visible && stars >= 2 && <Confetti />}
+
         {/* Stars */}
-        <div style={{ fontSize: 40, marginBottom: 'var(--sp-4)', letterSpacing: 8 }}>
+        <div style={{ fontSize: 'var(--text-3xl)', marginBottom: 'var(--sp-4)', letterSpacing: 8 }}>
           {[1, 2, 3].map(i => (
             <span
               key={i}
@@ -317,8 +472,8 @@ function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: Compl
                 opacity: i <= stars ? 1 : 0.2,
                 filter: i <= stars ? 'drop-shadow(0 0 8px rgba(255,184,0,0.6))' : 'none',
                 display: 'inline-block',
-                transform: visible && i <= stars ? 'scale(1)' : 'scale(0.5)',
-                transition: `transform 400ms var(--ease-out) ${300 + i * 150}ms, opacity 300ms ease ${300 + i * 150}ms`,
+                transform: visible && i <= stars ? 'scale(1) rotate(0deg)' : 'scale(0) rotate(-30deg)',
+                transition: `transform 500ms var(--ease-out) ${300 + i * 180}ms, opacity 300ms ease ${300 + i * 180}ms`,
               }}
             >
               ⭐
@@ -359,32 +514,14 @@ function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: Compl
           }}
         >
           <div style={{ textAlign: 'center' }}>
-            <div
-              style={{
-                fontSize: 'var(--text-xl)',
-                fontWeight: 'var(--weight-bold)',
-                color: 'var(--c-accent)',
-                fontFamily: 'var(--font-body)',
-              }}
-            >
-              {moves}
-            </div>
+            <AnimatedStat value={String(moves)} delay={700} />
             <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--c-text-3)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginTop: 2 }}>
               Moves
             </div>
           </div>
           <div style={{ width: 1, background: 'var(--c-border)' }} />
           <div style={{ textAlign: 'center' }}>
-            <div
-              style={{
-                fontSize: 'var(--text-xl)',
-                fontWeight: 'var(--weight-bold)',
-                color: 'var(--c-accent)',
-                fontFamily: 'var(--font-body)',
-              }}
-            >
-              {formatTime(time)}
-            </div>
+            <AnimatedStat value={formatTime(time)} delay={900} />
             <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--c-text-3)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginTop: 2 }}>
               Time
             </div>
@@ -394,14 +531,12 @@ function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: Compl
         {/* Action buttons */}
         <button
           onClick={onResults}
-          className="btn"
+          className="btn btn-primary"
           style={{
             width: '100%',
-            padding: '14px 0',
+            padding: 'var(--sp-3) 0',
             borderRadius: 'var(--r-full)',
             border: 'none',
-            background: '#ffffff',
-            color: 'var(--c-brand)',
             fontSize: 'var(--text-md)',
             fontWeight: 'var(--weight-med)',
             fontFamily: 'inherit',
@@ -413,14 +548,11 @@ function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: Compl
         </button>
         <button
           onClick={onPlayAgain}
-          className="btn"
+          className="btn btn-secondary"
           style={{
             width: '100%',
-            padding: '14px 0',
+            padding: 'var(--sp-3) 0',
             borderRadius: 'var(--r-full)',
-            border: '1px solid var(--c-border)',
-            background: 'var(--c-surface)',
-            color: 'var(--c-text-1)',
             fontSize: 'var(--text-md)',
             fontWeight: 'var(--weight-med)',
             fontFamily: 'inherit',
@@ -478,9 +610,7 @@ export default function CardMatch() {
   }, [matchedPairs, moves, time, addPoints, recordQuizResult])
 
   const calculateScore = (m: number, t: number): number => {
-    // Perfect: 6 moves (one per pair), each additional move -1 point, min 1
     const moveScore = Math.max(1, PAIR_COUNT - Math.max(0, m - PAIR_COUNT))
-    // Time bonus: under 30s = +2, under 60s = +1
     const timeBonus = t <= 30 ? 2 : t <= 60 ? 1 : 0
     return moveScore + timeBonus
   }
@@ -515,7 +645,6 @@ export default function CardMatch() {
       const second = deck.find(c => c.id === secondId)!
 
       if (first.pairId === second.pairId) {
-        // Match!
         setTimeout(() => {
           setStatuses(prev => ({
             ...prev,
@@ -528,7 +657,6 @@ export default function CardMatch() {
           track('card_match_pair_found', { pairId: first.pairId })
         }, MATCH_DELAY)
       } else {
-        // Mismatch — show shake then flip back
         setTimeout(() => {
           setStatuses(prev => ({
             ...prev,
@@ -579,6 +707,7 @@ export default function CardMatch() {
 
   return (
     <Screen>
+      <style>{KEYFRAMES}</style>
       <div
         className="page-in"
         style={{
@@ -593,7 +722,7 @@ export default function CardMatch() {
         {/* ── Top bar ── */}
         <div style={{ padding: 'var(--sp-4)', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
-            <button onClick={handleBack} className="btn-icon">
+            <button onClick={handleBack} className="btn-icon" aria-label="Go back">
               <img src={chevLeft} width={24} height={24} alt="Back" />
             </button>
             <div style={{ flex: 1 }}>
@@ -621,6 +750,7 @@ export default function CardMatch() {
                 fontSize: 'var(--text-xs)',
                 color: 'var(--c-text-2)',
                 flexShrink: 0,
+                fontFamily: 'var(--font-body)',
               }}
             >
               {matchedPairs}/{PAIR_COUNT}
