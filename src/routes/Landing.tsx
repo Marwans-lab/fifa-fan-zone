@@ -1,63 +1,117 @@
 import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Screen from '../components/Screen'
-import Button from '../components/Button'
 import { useStore } from '../store/useStore'
 import { track } from '../lib/analytics'
-import stadiumIcon from '../assets/icons/stadium-white.svg'
+import { WORLD_CUP_TEAMS } from '../data/teams'
 
-function HeroCards() {
+const CARD_TEAMS = [
+  WORLD_CUP_TEAMS.find(t => t.id === 'bra')!,
+  WORLD_CUP_TEAMS.find(t => t.id === 'arg')!,
+]
+
+function FanCardStack() {
+  const cards: { width: number; height: number; rotate: number; zIndex: number; teamIndex: number }[] = [
+    { width: 272, height: 388, rotate: 5, zIndex: 1, teamIndex: 0 },
+    { width: 301, height: 430, rotate: -3, zIndex: 2, teamIndex: 1 },
+  ]
+
   return (
-    <div aria-hidden="true" style={{ position: 'relative', width: 220, height: 280, margin: '0 auto' }}>
-      <style>{`
-        @keyframes float-a { 0%,100%{transform:rotate(-5deg) translateY(0)} 50%{transform:rotate(-5deg) translateY(-8px)} }
-        @keyframes float-b { 0%,100%{transform:rotate(3deg) translateY(0)} 50%{transform:rotate(3deg) translateY(-12px)} }
-        @keyframes float-c { 0%,100%{transform:rotate(-1deg) translateY(0)} 50%{transform:rotate(-1deg) translateY(-10px)} }
-      `}</style>
+    <div
+      aria-hidden="true"
+      style={{
+        display: 'grid',
+        placeItems: 'center',
+        width: '100%',
+        maxWidth: 340,
+        aspectRatio: '340 / 440',
+        margin: '0 auto',
+      }}
+    >
+      {cards.map((card, i) => {
+        const team = CARD_TEAMS[card.teamIndex]
+        return (
+          <div
+            key={i}
+            style={{
+              gridArea: '1 / 1',
+              width: card.width,
+              height: card.height,
+              borderRadius: 'var(--r-lg)',
+              transform: `rotate(${card.rotate}deg)`,
+              background: `linear-gradient(160deg, ${team.colors[0]}, ${team.colors[1]})`,
+              boxShadow: '0 8px 32px var(--c-lt-shadow)',
+              zIndex: card.zIndex,
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '24px 20px 20px',
+              border: '1px solid rgba(255,255,255,0.12)',
+              position: 'relative',
+            }}
+          >
+            {/* Dot-grid halftone texture */}
+            <div style={{
+              position: 'absolute', inset: 0, borderRadius: 'var(--r-lg)', pointerEvents: 'none',
+              backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.28) 1.5px, transparent 1.5px)',
+              backgroundSize: '16px 16px',
+              mixBlendMode: 'overlay',
+            }} />
+            {/* Diagonal shimmer stripes */}
+            <div style={{
+              position: 'absolute', inset: 0, borderRadius: 'var(--r-lg)', pointerEvents: 'none',
+              backgroundImage: 'repeating-linear-gradient(-55deg, transparent, transparent 18px, rgba(255,255,255,0.10) 18px, rgba(255,255,255,0.10) 19px)',
+              mixBlendMode: 'overlay',
+            }} />
+            {/* Holographic top stripe */}
+            <div style={{
+              position: 'absolute', top: 0, left: 0, right: 0, height: 4,
+              background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent)',
+            }} />
 
-      {[
-        { style: { background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', animation: 'float-a 5s ease-in-out infinite', animationDelay: '0.6s' } },
-        { style: { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', animation: 'float-b 5s ease-in-out infinite', animationDelay: '0.3s' } },
-        { style: { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(0,212,170,0.25)', animation: 'float-c 5s ease-in-out infinite', animationDelay: '0s' } },
-      ].map((card, i) => (
-        <div
-          key={i}
-          style={{
-            position: 'absolute', inset: 0,
-            borderRadius: 'var(--r-xl)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            willChange: 'transform',
-            ...card.style,
-          }}
-        />
-      ))}
+            {/* Card header */}
+            <div style={{ textAlign: 'left', width: '100%', position: 'relative', zIndex: 1 }}>
+              <div style={{
+                fontSize: 'var(--text-sm)', letterSpacing: 2, color: 'var(--c-lt-surface)',
+                textTransform: 'uppercase',
+              }}>
+                Your Fan Card
+              </div>
+              <div style={{ fontSize: 'var(--text-2xs)', color: 'rgba(255,255,255,0.65)', letterSpacing: 1 }}>
+                Collector Edition
+              </div>
+            </div>
 
-      <div style={{
-        position: 'absolute', inset: 0,
-        borderRadius: 'var(--r-xl)',
-        border: '1px solid rgba(0,212,170,0.25)',
-        background: 'rgba(255,255,255,0.05)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        animation: 'float-c 5s ease-in-out infinite',
-        display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center',
-        gap: 'var(--sp-3)', padding: 'var(--sp-6)',
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
-      }}>
-        <div style={{
-          width: 72, height: 72, borderRadius: 'var(--r-full)',
-          background: 'rgba(0,212,170,0.08)',
-          border: '1px solid rgba(0,212,170,0.30)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <img src={stadiumIcon} width={24} height={24} alt="" style={{ opacity: 0.7 }} />
-        </div>
-        <div style={{ height: 10, width: '65%', borderRadius: 'var(--r-full)', background: 'rgba(255,255,255,0.10)' }} />
-        <div style={{ height: 7, width: '40%', borderRadius: 'var(--r-full)', background: 'rgba(255,255,255,0.06)' }} />
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, borderRadius: '0 0 var(--r-xl) var(--r-xl)', background: 'linear-gradient(90deg, transparent, rgba(0,212,170,0.4), transparent)' }} />
-      </div>
+            {/* Flag emoji as avatar placeholder */}
+            <div style={{
+              width: card.width * 0.45,
+              height: card.width * 0.45,
+              borderRadius: '50%',
+              background: 'var(--c-lt-overlay)',
+              border: '3px solid rgba(255,255,255,0.45)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
+              zIndex: 1,
+            }}>
+              <span style={{ fontSize: card.width * 0.18 }}>{team.flag}</span>
+            </div>
+
+            {/* Team name */}
+            <div style={{
+              fontSize: 'var(--text-lg)', fontWeight: 'var(--weight-med)',
+              color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic',
+              display: 'flex', alignItems: 'center', gap: 8,
+              position: 'relative', zIndex: 1,
+            }}>
+              <span style={{ fontStyle: 'normal', fontSize: 'var(--text-xl)' }}>{team.flag}</span>
+              {team.name}
+            </div>
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -81,96 +135,64 @@ export default function Landing() {
     navigate(hasCard ? '/card' : '/identity')
   }
 
-  function handleQuiz() {
-    track('landing_quiz_cta_tapped')
-    navigate('/quiz')
-  }
-
   return (
-    <Screen>
+    <div
+      className="page-in"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        minHeight: '100%',
+        background: 'var(--c-lt-bg)',
+        padding: '86px var(--sp-4) var(--sp-10)',
+        boxSizing: 'border-box',
+      }}
+    >
+      {/* Title */}
+      <h1
+        style={{
+          fontFamily: 'var(--font-display)',
+          fontSize: 'var(--text-2xl)',
+          fontWeight: 'var(--weight-thin)',
+          lineHeight: '36px',
+          color: 'var(--c-lt-text-1)',
+          textAlign: 'center',
+          margin: 0,
+          maxWidth: 361,
+        }}
+      >
+        You Could Win Tickets to FIFA World Cup 2026
+      </h1>
 
-      <div className="page-in" style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', padding: 'var(--sp-6)' }}>
-
-        <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 'var(--sp-4)', borderBottom: '1px solid var(--c-border)' }}>
-          <span style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'var(--text-xs)',
-            fontWeight: 'var(--weight-light)',
-            letterSpacing: 'var(--tracking-wider)',
-            color: 'var(--c-accent)',
-            textTransform: 'uppercase',
-          }}>
-            FIFA FanZone
-          </span>
-          {state.points > 0 && (
-            <span style={{
-              fontSize: 'var(--text-xs)',
-              color: 'var(--c-text-2)',
-              background: 'var(--glass-bg)',
-              padding: '4px 12px',
-              borderRadius: 'var(--r-full)',
-              border: '1px solid var(--c-border)',
-              letterSpacing: 'var(--tracking-wide)',
-            }}>
-              {state.points} pts
-            </span>
-          )}
-        </header>
-
-        <div style={{
-          flex: 1, display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center',
-          gap: 'var(--sp-10)', paddingTop: 'var(--sp-8)', paddingBottom: 'var(--sp-8)',
-        }}>
-          <HeroCards />
-
-          <div style={{ textAlign: 'center', maxWidth: 280 }}>
-            <h1 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'var(--text-3xl)',
-              fontWeight: 'var(--weight-light)',
-              letterSpacing: 'var(--tracking-tight)',
-              lineHeight: 'var(--leading-tight)',
-              color: 'var(--c-text-1)',
-              marginBottom: 'var(--sp-4)',
-            }}>
-              {hasCard ? 'Welcome back' : 'Show your\nteam spirit'}
-            </h1>
-            <p style={{
-              color: 'var(--c-text-2)',
-              fontSize: 'var(--text-sm)',
-              lineHeight: 'var(--leading-normal)',
-              fontWeight: 'var(--weight-reg)',
-            }}>
-              {hasCard
-                ? 'Keep playing, climb the leaderboard and win Avios.'
-                : 'Create your fan card, complete missions, and compete to win Avios.'}
-            </p>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)', paddingBottom: 'var(--sp-6)' }}>
-          <Button fullWidth onClick={handlePrimary}>
-            {hasCard ? 'Continue' : 'Create your fan card'}
-          </Button>
-
-          {hasCard && (
-            <Button variant="secondary" fullWidth onClick={handleQuiz}>
-              Play Quiz
-            </Button>
-          )}
-
-          <p style={{
-            textAlign: 'center',
-            fontSize: 'var(--text-xs)',
-            color: 'var(--c-text-3)',
-            marginTop: 'var(--sp-2)',
-            letterSpacing: 'var(--tracking-wide)',
-          }}>
-            Top 5 fans win Avios
-          </p>
-        </div>
+      {/* Fan Card Stack */}
+      <div style={{ marginTop: 'var(--sp-6)', width: '100%' }}>
+        <FanCardStack />
       </div>
-    </Screen>
+
+      {/* CTA Button */}
+      <button
+        onClick={handlePrimary}
+        style={{
+          marginTop: 'var(--sp-10)',
+          width: '100%',
+          maxWidth: 361,
+          height: 56,
+          borderRadius: 'var(--r-full)',
+          background: 'var(--c-lt-brand)',
+          color: 'var(--c-lt-surface)',
+          fontFamily: 'var(--font-body)',
+          fontSize: 'var(--text-md)',
+          fontWeight: 'var(--weight-med)',
+          lineHeight: '24px',
+          border: 'none',
+          cursor: 'pointer',
+          padding: 'var(--sp-4) var(--sp-8)',
+          WebkitTapHighlightColor: 'transparent',
+          boxShadow: '0 8px 16px var(--c-lt-shadow)',
+        }}
+      >
+        {hasCard ? 'Continue' : 'Create your fan card'}
+      </button>
+    </div>
   )
 }
