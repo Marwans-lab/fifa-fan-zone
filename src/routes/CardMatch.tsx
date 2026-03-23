@@ -1,10 +1,8 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import { WORLD_CUP_TEAMS } from '../data/teams'
-import chevLeft from '../assets/icons/Chevron-left-white.svg'
 
 // ─── Types ──────────────────────────────────────────────────────────────────────
 
@@ -20,11 +18,13 @@ type CardStatus = 'hidden' | 'flipped' | 'matched' | 'mismatched'
 
 // ─── Constants ──────────────────────────────────────────────────────────────────
 
-const PAIR_COUNT = 6
+const PAIR_COUNT = 3
+const CARD_COUNT = PAIR_COUNT * 2
 const FLIP_DURATION = 400
 const MISMATCH_DELAY = 800
 const MATCH_DELAY = 500
 const DEAL_STAGGER = 60
+const ROUND_TIME = 30
 
 // ─── Keyframe styles (injected once) ────────────────────────────────────────────
 
@@ -97,13 +97,7 @@ function buildDeck(): MatchCard[] {
   return shuffle(cards)
 }
 
-function formatTime(seconds: number): string {
-  const m = Math.floor(seconds / 60)
-  const s = seconds % 60
-  return `${m}:${s.toString().padStart(2, '0')}`
-}
-
-// ─── Card back SVG pattern ──────────────────────────────────────────────────────
+// ─── Card back with brand pattern ───────────────────────────────────────────────
 
 function CardBack() {
   return (
@@ -112,8 +106,7 @@ function CardBack() {
         position: 'absolute',
         inset: 0,
         borderRadius: 'var(--r-md)',
-        background: 'linear-gradient(135deg, rgba(142,33,87,0.4) 0%, rgba(0,212,170,0.2) 100%)',
-        border: '1px solid var(--c-border)',
+        background: 'var(--c-lt-brand)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -121,20 +114,35 @@ function CardBack() {
         overflow: 'hidden',
       }}
     >
-      {/* Animated shimmer */}
+      {/* Geometric overlay pattern */}
+      <svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 170 160"
+        style={{ position: 'absolute', inset: 0, opacity: 0.15 }}
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <defs>
+          <pattern id="card-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+            <circle cx="20" cy="20" r="12" fill="none" stroke="white" strokeWidth="0.8" />
+            <circle cx="0" cy="0" r="8" fill="none" stroke="white" strokeWidth="0.5" />
+            <circle cx="40" cy="0" r="8" fill="none" stroke="white" strokeWidth="0.5" />
+            <circle cx="0" cy="40" r="8" fill="none" stroke="white" strokeWidth="0.5" />
+            <circle cx="40" cy="40" r="8" fill="none" stroke="white" strokeWidth="0.5" />
+            <path d="M20 8L20 32M8 20L32 20" stroke="white" strokeWidth="0.4" />
+          </pattern>
+        </defs>
+        <rect width="170" height="160" fill="url(#card-pattern)" />
+      </svg>
+      {/* Shimmer */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.06) 50%, transparent 60%)',
+          background: 'linear-gradient(105deg, transparent 40%, var(--c-lt-shimmer) 50%, transparent 60%)',
           animation: 'shimmer-slide 3s ease-in-out infinite',
         }}
       />
-      {/* Diamond pattern */}
-      <svg width="40" height="40" viewBox="0 0 40 40" style={{ opacity: 0.25 }}>
-        <path d="M20 4L36 20L20 36L4 20Z" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" />
-        <path d="M20 12L28 20L20 28L12 20Z" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1" />
-      </svg>
     </div>
   )
 }
@@ -148,7 +156,7 @@ function MatchRing() {
         position: 'absolute',
         inset: -8,
         borderRadius: 'var(--r-lg)',
-        border: '2px solid var(--c-correct)',
+        border: '2px solid var(--c-lt-correct-dark)',
         animation: 'match-ring 600ms var(--ease-out) forwards',
         pointerEvents: 'none',
       }}
@@ -185,12 +193,6 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
     }
   }, [isMatched])
 
-  const glowColor = isMatched
-    ? 'var(--c-correct-glow)'
-    : isMismatched
-    ? 'var(--c-error-glow)'
-    : 'transparent'
-
   return (
     <button
       onClick={onFlip}
@@ -199,7 +201,7 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
       style={{
         position: 'relative',
         width: '100%',
-        aspectRatio: '3 / 4',
+        aspectRatio: '170 / 160',
         perspective: 600,
         background: 'none',
         border: 'none',
@@ -236,14 +238,14 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
             inset: 0,
             borderRadius: 'var(--r-md)',
             background: isMatched
-              ? 'var(--c-correct-bg)'
-              : `linear-gradient(145deg, ${card.teamColors[0]}22, ${card.teamColors[1]}22)`,
+              ? 'var(--c-lt-correct-bg)'
+              : 'var(--c-lt-surface)',
             border: `1.5px solid ${
               isMatched
-                ? 'var(--c-correct-border)'
+                ? 'var(--c-lt-correct-dark)'
                 : isMismatched
-                ? 'var(--c-error-border)'
-                : 'var(--c-border)'
+                ? 'var(--c-error)'
+                : 'var(--c-lt-border)'
             }`,
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
@@ -253,7 +255,11 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
             justifyContent: 'center',
             gap: 'var(--sp-1)',
             padding: 'var(--sp-2)',
-            boxShadow: `0 0 16px ${glowColor}`,
+            boxShadow: isMatched
+              ? '0 0 16px var(--c-lt-correct-glow)'
+              : isMismatched
+              ? '0 0 16px var(--c-lt-error-glow)'
+              : '0 2px 8px var(--c-lt-shadow)',
             transition: 'box-shadow 300ms ease, border-color 300ms ease, background 300ms ease',
             overflow: 'hidden',
           }}
@@ -265,7 +271,7 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
               style={{
                 fontSize: 'var(--text-xs)',
                 fontWeight: 'var(--weight-med)',
-                color: 'var(--c-text-1)',
+                color: 'var(--c-lt-text-1)',
                 textAlign: 'center',
                 lineHeight: 'var(--leading-snug)',
                 letterSpacing: 'var(--tracking-snug)',
@@ -286,29 +292,17 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
                 width: 18,
                 height: 18,
                 borderRadius: 'var(--r-full)',
-                background: 'var(--c-correct)',
+                background: 'var(--c-lt-correct-dark)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
               <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                <path d="M1 4L3.5 6.5L9 1" stroke="var(--c-bg)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           )}
-
-          {/* Subtle shimmer line */}
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              height: 1,
-              background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent)',
-            }}
-          />
         </div>
       </div>
 
@@ -318,27 +312,57 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
   )
 }
 
-// ─── Stats pill ─────────────────────────────────────────────────────────────────
+// ─── Timer ring ─────────────────────────────────────────────────────────────────
 
-function StatPill({ icon, value }: { icon: string; value: string }) {
+function TimerRing({ timeLeft, total }: { timeLeft: number; total: number }) {
+  const size = 48
+  const strokeWidth = 4
+  const radius = (size - strokeWidth) / 2
+  const circumference = 2 * Math.PI * radius
+  const progress = timeLeft / total
+  const dashOffset = circumference * (1 - progress)
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--sp-1)',
-        background: 'var(--c-surface)',
-        border: '1px solid var(--c-border)',
-        borderRadius: 'var(--r-full)',
-        padding: 'var(--sp-1) var(--sp-3)',
-        fontSize: 'var(--text-xs)',
-        color: 'var(--c-text-2)',
-        letterSpacing: 'var(--tracking-wide)',
-        fontFamily: 'var(--font-body)',
-      }}
-    >
-      <span style={{ fontSize: 'var(--text-xs)' }}>{icon}</span>
-      <span style={{ fontWeight: 'var(--weight-med)' }}>{value}</span>
+    <div style={{ position: 'relative', width: size, height: size }}>
+      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+        {/* Background track */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="var(--c-lt-border)"
+          strokeWidth={strokeWidth}
+        />
+        {/* Progress ring */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="var(--c-lt-brand)"
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={dashOffset}
+          strokeLinecap="round"
+          style={{ transition: 'stroke-dashoffset 1s linear' }}
+        />
+      </svg>
+      <span
+        style={{
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: 16,
+          fontWeight: 'var(--weight-med)',
+          fontFamily: 'var(--font-body)',
+          color: 'var(--c-lt-text-1)',
+        }}
+      >
+        {String(timeLeft).padStart(2, '0')}
+      </span>
     </div>
   )
 }
@@ -358,7 +382,7 @@ function AnimatedStat({ value, delay }: { value: string; delay: number }) {
       style={{
         fontSize: 'var(--text-xl)',
         fontWeight: 'var(--weight-bold)',
-        color: 'var(--c-accent)',
+        color: 'var(--c-lt-brand)',
         fontFamily: 'var(--font-body)',
         opacity: show ? 1 : 0,
         transform: show ? 'translateY(0)' : 'translateY(8px)',
@@ -374,7 +398,7 @@ function AnimatedStat({ value, delay }: { value: string; delay: number }) {
 
 function Confetti() {
   const particles = useMemo(() => {
-    const colors = ['var(--c-correct)', 'var(--c-accent)', 'var(--c-warn)', 'var(--c-brand)']
+    const colors = ['var(--c-lt-correct-dark)', 'var(--c-lt-brand)', 'var(--c-warn)', 'var(--c-accent)']
     return Array.from({ length: 20 }, (_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
@@ -412,13 +436,13 @@ function Confetti() {
 
 interface CompletionProps {
   moves: number
-  time: number
+  timeLeft: number
   stars: number
   onResults: () => void
   onPlayAgain: () => void
 }
 
-function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: CompletionProps) {
+function CompletionOverlay({ moves, timeLeft, stars, onResults, onPlayAgain }: CompletionProps) {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -427,6 +451,7 @@ function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: Compl
   }, [])
 
   const label = stars === 3 ? 'Perfect!' : stars === 2 ? 'Great Job!' : 'Well Done!'
+  const timeUsed = ROUND_TIME - timeLeft
 
   return (
     <div
@@ -437,7 +462,7 @@ function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: Compl
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: visible ? 'rgba(5,5,10,0.85)' : 'rgba(5,5,10,0)',
+        background: visible ? 'var(--c-lt-overlay-heavy)' : 'transparent',
         backdropFilter: visible ? 'blur(12px)' : 'blur(0px)',
         WebkitBackdropFilter: visible ? 'blur(12px)' : 'blur(0px)',
         transition: 'background 400ms ease, backdrop-filter 400ms ease',
@@ -449,8 +474,8 @@ function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: Compl
           position: 'relative',
           width: '100%',
           maxWidth: 320,
-          background: 'var(--c-surface)',
-          border: '1px solid var(--c-border)',
+          background: 'var(--c-lt-surface)',
+          border: '1px solid var(--c-lt-border)',
           borderRadius: 'var(--r-xl)',
           padding: 'var(--sp-8) var(--sp-6)',
           textAlign: 'center',
@@ -470,7 +495,7 @@ function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: Compl
               key={i}
               style={{
                 opacity: i <= stars ? 1 : 0.2,
-                filter: i <= stars ? 'drop-shadow(0 0 8px rgba(255,184,0,0.6))' : 'none',
+                filter: i <= stars ? 'drop-shadow(0 0 8px var(--c-lt-star-glow))' : 'none',
                 display: 'inline-block',
                 transform: visible && i <= stars ? 'scale(1) rotate(0deg)' : 'scale(0) rotate(-30deg)',
                 transition: `transform 500ms var(--ease-out) ${300 + i * 180}ms, opacity 300ms ease ${300 + i * 180}ms`,
@@ -486,7 +511,7 @@ function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: Compl
             fontFamily: 'var(--font-display)',
             fontSize: 'var(--text-2xl)',
             fontWeight: 'var(--weight-light)',
-            color: 'var(--c-text-1)',
+            color: 'var(--c-lt-text-1)',
             marginBottom: 'var(--sp-2)',
             letterSpacing: 'var(--tracking-tight)',
           }}
@@ -496,7 +521,7 @@ function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: Compl
         <p
           style={{
             fontSize: 'var(--text-sm)',
-            color: 'var(--c-text-2)',
+            color: 'var(--c-lt-text-2)',
             marginBottom: 'var(--sp-6)',
             lineHeight: 'var(--leading-normal)',
           }}
@@ -515,14 +540,14 @@ function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: Compl
         >
           <div style={{ textAlign: 'center' }}>
             <AnimatedStat value={String(moves)} delay={700} />
-            <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--c-text-3)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginTop: 2 }}>
+            <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--c-lt-text-2)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginTop: 2 }}>
               Moves
             </div>
           </div>
-          <div style={{ width: 1, background: 'var(--c-border)' }} />
+          <div style={{ width: 1, background: 'var(--c-lt-border)' }} />
           <div style={{ textAlign: 'center' }}>
-            <AnimatedStat value={formatTime(time)} delay={900} />
-            <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--c-text-3)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginTop: 2 }}>
+            <AnimatedStat value={`${timeUsed}s`} delay={900} />
+            <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--c-lt-text-2)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginTop: 2 }}>
               Time
             </div>
           </div>
@@ -531,13 +556,14 @@ function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: Compl
         {/* Action buttons */}
         <button
           onClick={onResults}
-          className="btn btn-primary"
           style={{
             width: '100%',
-            padding: 'var(--sp-3) 0',
-            borderRadius: 'var(--r-full)',
+            height: 56,
+            borderRadius: 32,
             border: 'none',
-            fontSize: 'var(--text-md)',
+            background: 'var(--c-lt-brand)',
+            color: 'var(--c-lt-white)',
+            fontSize: 16,
             fontWeight: 'var(--weight-med)',
             fontFamily: 'inherit',
             cursor: 'pointer',
@@ -548,12 +574,14 @@ function CompletionOverlay({ moves, time, stars, onResults, onPlayAgain }: Compl
         </button>
         <button
           onClick={onPlayAgain}
-          className="btn btn-secondary"
           style={{
             width: '100%',
-            padding: 'var(--sp-3) 0',
-            borderRadius: 'var(--r-full)',
-            fontSize: 'var(--text-md)',
+            height: 56,
+            borderRadius: 32,
+            border: '1.5px solid var(--c-lt-border)',
+            background: 'var(--c-lt-surface)',
+            color: 'var(--c-lt-text-1)',
+            fontSize: 16,
             fontWeight: 'var(--weight-med)',
             fontFamily: 'inherit',
             cursor: 'pointer',
@@ -581,41 +609,63 @@ export default function CardMatch() {
   const [flippedIds, setFlippedIds] = useState<string[]>([])
   const [moves, setMoves] = useState(0)
   const [matchedPairs, setMatchedPairs] = useState(0)
-  const [time, setTime] = useState(0)
+  const [timeLeft, setTimeLeft] = useState(ROUND_TIME)
   const [gameComplete, setGameComplete] = useState(false)
   const [started, setStarted] = useState(false)
 
   const lockRef = useRef(false)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  // Timer
+  // Countdown timer
   useEffect(() => {
     if (started && !gameComplete) {
-      timerRef.current = setInterval(() => setTime(t => t + 1), 1000)
+      timerRef.current = setInterval(() => {
+        setTimeLeft(t => {
+          if (t <= 1) {
+            clearInterval(timerRef.current!)
+            return 0
+          }
+          return t - 1
+        })
+      }, 1000)
     }
     return () => {
       if (timerRef.current) clearInterval(timerRef.current)
     }
   }, [started, gameComplete])
 
-  // Check completion
+  // Time-up auto-complete
+  useEffect(() => {
+    if (timeLeft === 0 && started && !gameComplete) {
+      setGameComplete(true)
+      const score = calculateScore(moves, matchedPairs)
+      addPoints(score)
+      recordQuizResult('card-match', score, PAIR_COUNT)
+      track('card_match_completed', { moves, timeLeft: 0, score, pairs: PAIR_COUNT, matchedPairs })
+    }
+  }, [timeLeft, started, gameComplete, moves, matchedPairs, addPoints, recordQuizResult])
+
+  // Check completion (all matched)
   useEffect(() => {
     if (matchedPairs === PAIR_COUNT && matchedPairs > 0) {
       setGameComplete(true)
-      const score = calculateScore(moves, time)
+      const score = calculateScore(moves, matchedPairs)
       addPoints(score)
       recordQuizResult('card-match', score, PAIR_COUNT)
-      track('card_match_completed', { moves, time, score, pairs: PAIR_COUNT })
+      track('card_match_completed', { moves, timeLeft, score, pairs: PAIR_COUNT })
     }
-  }, [matchedPairs, moves, time, addPoints, recordQuizResult])
+  }, [matchedPairs, moves, timeLeft, addPoints, recordQuizResult])
 
-  const calculateScore = (m: number, t: number): number => {
-    const moveScore = Math.max(1, PAIR_COUNT - Math.max(0, m - PAIR_COUNT))
-    const timeBonus = t <= 30 ? 2 : t <= 60 ? 1 : 0
-    return moveScore + timeBonus
+  const calculateScore = (m: number, matched: number): number => {
+    if (matched === 0) return 0
+    const matchBonus = matched * 2
+    const moveScore = Math.max(0, PAIR_COUNT - Math.max(0, m - PAIR_COUNT))
+    const timeBonus = timeLeft >= 20 ? 2 : timeLeft >= 10 ? 1 : 0
+    return matchBonus + moveScore + timeBonus
   }
 
   const getStars = (): number => {
+    if (matchedPairs < PAIR_COUNT) return 1
     if (moves <= PAIR_COUNT + 2) return 3
     if (moves <= PAIR_COUNT + 6) return 2
     return 1
@@ -624,6 +674,7 @@ export default function CardMatch() {
   const handleFlip = useCallback((cardId: string) => {
     if (lockRef.current) return
     if (statuses[cardId] !== 'hidden') return
+    if (gameComplete) return
 
     if (!started) setStarted(true)
 
@@ -675,7 +726,7 @@ export default function CardMatch() {
         }, MISMATCH_DELAY)
       }
     }
-  }, [deck, statuses, flippedIds, started])
+  }, [deck, statuses, flippedIds, started, gameComplete])
 
   const handlePlayAgain = useCallback(() => {
     const newDeck = buildDeck()
@@ -686,7 +737,7 @@ export default function CardMatch() {
     setFlippedIds([])
     setMoves(0)
     setMatchedPairs(0)
-    setTime(0)
+    setTimeLeft(ROUND_TIME)
     setGameComplete(false)
     setStarted(false)
     lockRef.current = false
@@ -694,100 +745,124 @@ export default function CardMatch() {
   }, [])
 
   const handleResults = useCallback(() => {
-    const score = calculateScore(moves, time)
+    const score = calculateScore(moves, matchedPairs)
     navigate('/results', {
       state: { score, total: PAIR_COUNT, quizTitle: 'Card Match' },
     })
-  }, [moves, time, navigate])
+  }, [moves, matchedPairs, navigate])
 
   const handleBack = useCallback(() => {
-    track('card_match_abandoned', { moves, time, matchedPairs })
+    track('card_match_abandoned', { moves, timeLeft, matchedPairs })
     navigate(-1)
-  }, [moves, time, matchedPairs, navigate])
+  }, [moves, timeLeft, matchedPairs, navigate])
+
+  const handleNext = useCallback(() => {
+    const score = calculateScore(moves, matchedPairs)
+    navigate('/results', {
+      state: { score, total: PAIR_COUNT, quizTitle: 'Card Match' },
+    })
+  }, [moves, matchedPairs, navigate])
+
+  const progressPercent = (matchedPairs / PAIR_COUNT) * 100
 
   return (
-    <Screen>
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        background: 'var(--c-lt-bg)',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'auto',
+        WebkitOverflowScrolling: 'touch',
+      }}
+    >
       <style>{KEYFRAMES}</style>
       <div
         className="page-in"
         style={{
           display: 'flex',
           flexDirection: 'column',
-          minHeight: '100%',
+          flex: 1,
           maxWidth: 420,
           margin: '0 auto',
           width: '100%',
+          padding: 'var(--sp-4)',
         }}
       >
-        {/* ── Top bar ── */}
-        <div style={{ padding: 'var(--sp-4)', flexShrink: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
-            <button onClick={handleBack} className="btn-icon" aria-label="Go back">
-              <img src={chevLeft} width={24} height={24} alt="Back" />
-            </button>
-            <div style={{ flex: 1 }}>
-              <div
-                style={{
-                  height: 4,
-                  background: 'var(--c-surface-raise)',
-                  borderRadius: 2,
-                  overflow: 'hidden',
-                }}
-              >
-                <div
-                  style={{
-                    height: '100%',
-                    width: `${(matchedPairs / PAIR_COUNT) * 100}%`,
-                    background: 'var(--c-accent)',
-                    borderRadius: 2,
-                    transition: 'width 400ms var(--ease-out)',
-                  }}
-                />
-              </div>
-            </div>
-            <span
-              style={{
-                fontSize: 'var(--text-xs)',
-                color: 'var(--c-text-2)',
-                flexShrink: 0,
-                fontFamily: 'var(--font-body)',
-              }}
-            >
-              {matchedPairs}/{PAIR_COUNT}
-            </span>
-          </div>
-        </div>
-
-        {/* ── Title + Stats ── */}
-        <div style={{ padding: '0 var(--sp-4) var(--sp-4)', flexShrink: 0 }}>
-          <h1
+        {/* ── Back button + Progress bar ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)', marginBottom: 'var(--sp-6)' }}>
+          <button
+            onClick={handleBack}
+            aria-label="Go back"
             style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'var(--text-xl)',
-              fontWeight: 'var(--weight-light)',
-              color: 'var(--c-text-1)',
-              letterSpacing: 'var(--tracking-tight)',
-              marginBottom: 'var(--sp-3)',
+              width: 48,
+              height: 48,
+              borderRadius: 'var(--r-full)',
+              background: 'var(--c-lt-surface)',
+              border: '1px solid var(--c-lt-border)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              flexShrink: 0,
+              boxShadow: '0 2px 8px var(--c-lt-shadow)',
+              padding: 0,
+              WebkitTapHighlightColor: 'transparent',
             }}
           >
-            Match the Pairs
-          </h1>
-          <div style={{ display: 'flex', gap: 'var(--sp-2)' }}>
-            <StatPill icon="⏱" value={formatTime(time)} />
-            <StatPill icon="👆" value={`${moves} moves`} />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M15 18.5C14.87 18.5 14.74 18.45 14.65 18.35L8.65 12.35C8.55 12.26 8.5 12.13 8.5 12C8.5 11.87 8.55 11.74 8.65 11.65L14.65 5.65C14.84 5.46 15.16 5.46 15.35 5.65C15.54 5.84 15.54 6.16 15.35 6.35L9.71 12L15.35 17.65C15.54 17.84 15.54 18.16 15.35 18.35C15.26 18.45 15.13 18.5 15 18.5Z"
+                fill="var(--c-lt-text-1)"
+              />
+            </svg>
+          </button>
+          <div style={{ flex: 1 }}>
+            <div
+              style={{
+                height: 8,
+                background: 'var(--c-lt-border)',
+                borderRadius: 4,
+                overflow: 'hidden',
+              }}
+            >
+              <div
+                style={{
+                  height: '100%',
+                  width: `${progressPercent}%`,
+                  background: 'linear-gradient(90deg, var(--c-accent), var(--c-lt-correct-dark))',
+                  borderRadius: 4,
+                  transition: 'width 400ms var(--ease-out)',
+                }}
+              />
+            </div>
           </div>
         </div>
 
-        {/* ── Card Grid ── */}
+        {/* ── Title ── */}
+        <h1
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'var(--text-2xl)',
+            fontWeight: 'var(--weight-light)',
+            color: 'var(--c-lt-text-1)',
+            letterSpacing: 'var(--tracking-tight)',
+            textAlign: 'center',
+            marginBottom: 'var(--sp-6)',
+          }}
+        >
+          Match the cards
+        </h1>
+
+        {/* ── Card Grid (2 columns x 3 rows) ── */}
         <div
           style={{
-            flex: 1,
-            padding: '0 var(--sp-4) var(--sp-8)',
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gridTemplateRows: 'repeat(4, 1fr)',
-            gap: 'var(--sp-2)',
-            alignContent: 'start',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gridTemplateRows: 'repeat(3, auto)',
+            gap: 'var(--sp-3)',
+            marginBottom: 'var(--sp-6)',
           }}
         >
           {deck.map((card, i) => (
@@ -800,18 +875,45 @@ export default function CardMatch() {
             />
           ))}
         </div>
+
+        {/* ── Timer ring ── */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--sp-6)' }}>
+          <TimerRing timeLeft={timeLeft} total={ROUND_TIME} />
+        </div>
+
+        {/* ── Next button ── */}
+        <div style={{ marginTop: 'auto' }}>
+          <button
+            onClick={handleNext}
+            style={{
+              width: '100%',
+              height: 56,
+              borderRadius: 32,
+              border: 'none',
+              background: 'var(--c-lt-brand)',
+              color: 'var(--c-lt-white)',
+              fontSize: 16,
+              fontWeight: 'var(--weight-med)',
+              fontFamily: 'inherit',
+              cursor: 'pointer',
+              WebkitTapHighlightColor: 'transparent',
+            }}
+          >
+            Next
+          </button>
+        </div>
       </div>
 
       {/* ── Completion overlay ── */}
       {gameComplete && (
         <CompletionOverlay
           moves={moves}
-          time={time}
+          timeLeft={timeLeft}
           stars={getStars()}
           onResults={handleResults}
           onPlayAgain={handlePlayAgain}
         />
       )}
-    </Screen>
+    </div>
   )
 }
