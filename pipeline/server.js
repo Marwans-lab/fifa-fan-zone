@@ -139,8 +139,207 @@ function markOurComment(issueId) {
   setTimeout(() => recentComments.delete(key), 10_000);
 }
 
+// --- QA completion watcher ---
+// Cyrus routes QA reviews as full-development and never transitions state.
+// This watcher polls for Cyrus's response and auto-transitions to Done.
+const activeWatchers = new Map(); // issueId → intervalId
+
+async function getIssueComments(issueId) {
+  const result = await linearGQL(
+    `query($id: String!) {
+      issue(id: $id) {
+        comments {
+          nodes { body createdAt user { isMe name } }
+        }
+      }
+    }`,
+    { id: issueId }
+  );
+  return result.data?.issue?.comments?.nodes || [];
+}
+
+function startQAWatcher(issueId, issueIdentifier, teamId, qaPostedAt) {
+  if (activeWatchers.has(issueId)) return;
+
+  const qaTime = new Date(qaPostedAt).getTime();
+  let checks = 0;
+  const MAX_CHECKS = 30; // 30 checks × 60s = 30 min max
+  const INTERVAL = 60_000; // check every 60s
+
+  console.log(`[Pipeline] ${issueIdentifier}: QA watcher started (checking every 60s for up to 30min)`);
+
+  const intervalId = setInterval(async () => {
+    checks++;
+    try {
+      const comments = await getIssueComments(issueId);
+
+      // Look for a Claude agent comment posted AFTER our QA comment
+      // that indicates QA work is done (contains summary markers)
+      const agentResponse = comments.find((c) => {
+        const commentTime = new Date(c.createdAt).getTime();
+        if (commentTime <= qaTime) return false;
+        // Cyrus/Claude agent posts summaries with these markers
+        if (c.user?.isMe) return true; // comment from the OAuth app (Cyrus)
+        // Also detect by content pattern
+        const b = c.body || "";
+        return (
+          b.includes("## Summary") ||
+          b.includes("**Summary**") ||
+          b.includes("PR #") ||
+          b.includes("pull request") ||
+          b.includes("All checks pass") ||
+          b.includes("moved to") ||
+          b.includes("LGTM")
+        );
+      });
+
+      if (agentResponse) {
+        clearInterval(intervalId);
+        activeWatchers.delete(issueId);
+
+        // Check if issue is still in "In Review" before transitioning
+        const issueResult = await linearGQL(
+          `query($id: String!) { issue(id: $id) { state { name } } }`,
+          { id: issueId }
+        );
+        const currentState = issueResult.data?.issue?.state?.name;
+        if (currentState !== "In Review") {
+          console.log(`[Pipeline] ${issueIdentifier}: Already moved to ${currentState}, watcher done`);
+          return;
+        }
+
+        // Check if QA passed or failed by looking at the response content
+        const body = agentResponse.body || "";
+        const failed = body.includes("back to **Todo**") || body.includes("move back to") || body.includes("needs fixing");
+
+        if (failed) {
+          // QA failed — move to Todo
+          const states = await getStates(teamId);
+          const todoState = findState(states, "Todo");
+          if (todoState) {
+            markOurComment(issueId);
+            await transitionIssue(issueId, todoState.id);
+            console.log(`[Pipeline] ${issueIdentifier}: QA failed, moved to Todo`);
+          }
+        } else {
+          // QA passed — move to Done
+          const states = await getStates(teamId);
+          const doneState = findState(states, "Done");
+          if (doneState) {
+            markOurComment(issueId);
+            await transitionIssue(issueId, doneState.id);
+            console.log(`[Pipeline] ${issueIdentifier}: QA passed, auto-moved to Done`);
+            await postComment(
+              issueId,
+              `**[PIPELINE]** QA review complete — auto-transitioning to Done.`
+            );
+          }
+        }
+        return;
+      }
+
+      if (checks >= MAX_CHECKS) {
+        clearInterval(intervalId);
+        activeWatchers.delete(issueId);
+        console.log(`[Pipeline] ${issueIdentifier}: QA watcher timed out after 30min`);
+        // Force move to Done — if Cyrus didn't respond, don't block the pipeline
+        const issueResult = await linearGQL(
+          `query($id: String!) { issue(id: $id) { state { name } } }`,
+          { id: issueId }
+        );
+        if (issueResult.data?.issue?.state?.name === "In Review") {
+          const states = await getStates(teamId);
+          const doneState = findState(states, "Done");
+          if (doneState) {
+            markOurComment(issueId);
+            await transitionIssue(issueId, doneState.id);
+            console.log(`[Pipeline] ${issueIdentifier}: Timed out, force-moved to Done`);
+            await postComment(
+              issueId,
+              `**[PIPELINE]** QA watcher timed out (30min). Auto-moving to Done to unblock pipeline.`
+            );
+          }
+        }
+      }
+    } catch (e) {
+      console.error(`[Pipeline] ${issueIdentifier}: QA watcher error: ${e.message}`);
+    }
+  }, INTERVAL);
+
+  activeWatchers.set(issueId, intervalId);
+}
+
 // --- Pipeline logic ---
+async function handleCommentWebhook(payload) {
+  // Detect Cyrus finishing QA — comment on an "In Review" issue
+  if (payload.type !== "Comment" || payload.action !== "create") return;
+
+  const issueId = payload.data?.issue?.id;
+  const issueIdentifier = payload.data?.issue?.identifier;
+  if (!issueId) return;
+
+  // Only care if we have an active watcher for this issue
+  if (!activeWatchers.has(issueId)) return;
+
+  const body = payload.data?.body || "";
+  const isAgentComment =
+    body.includes("## Summary") ||
+    body.includes("**Summary**") ||
+    body.includes("PR #") ||
+    body.includes("All checks pass") ||
+    body.includes("LGTM");
+
+  if (!isAgentComment) return;
+
+  console.log(`[Pipeline] ${issueIdentifier}: Detected agent response via comment webhook`);
+
+  // Cancel the polling watcher — we'll handle it here
+  const intervalId = activeWatchers.get(issueId);
+  if (intervalId) {
+    clearInterval(intervalId);
+    activeWatchers.delete(issueId);
+  }
+
+  // Verify issue is still In Review
+  const issueResult = await linearGQL(
+    `query($id: String!) { issue(id: $id) { state { name } team { id } } }`,
+    { id: issueId }
+  );
+  const currentState = issueResult.data?.issue?.state?.name;
+  const teamId = issueResult.data?.issue?.team?.id;
+  if (currentState !== "In Review") {
+    console.log(`[Pipeline] ${issueIdentifier}: Already ${currentState}, skipping`);
+    return;
+  }
+
+  const failed = body.includes("back to **Todo**") || body.includes("move back to") || body.includes("needs fixing");
+  const states = await getStates(teamId);
+
+  if (failed) {
+    const todoState = findState(states, "Todo");
+    if (todoState) {
+      markOurComment(issueId);
+      await transitionIssue(issueId, todoState.id);
+      console.log(`[Pipeline] ${issueIdentifier}: QA failed (comment webhook), moved to Todo`);
+    }
+  } else {
+    const doneState = findState(states, "Done");
+    if (doneState) {
+      markOurComment(issueId);
+      await transitionIssue(issueId, doneState.id);
+      console.log(`[Pipeline] ${issueIdentifier}: QA passed (comment webhook), moved to Done`);
+      await postComment(issueId, `**[PIPELINE]** QA review complete — auto-transitioning to Done.`);
+    }
+  }
+}
+
 async function handleWebhook(payload) {
+  // Handle comment events (QA completion detection)
+  if (payload.type === "Comment") {
+    await handleCommentWebhook(payload);
+    return;
+  }
+
   // We only care about issue status changes
   if (payload.type !== "Issue" || payload.action !== "update") return;
   if (!payload.data?.state?.name || !payload.updatedFrom?.stateId) return;
@@ -170,10 +369,14 @@ async function handleWebhook(payload) {
         : "General";
 
     console.log(`[Pipeline] ${issueIdentifier}: Triggering QA review`);
+    const qaPostedAt = new Date().toISOString();
     await postComment(
       issueId,
       `@Claude **[QA REVIEW]** Review this ${labelInfo} implementation.\n\nCheck:\n- All acceptance criteria from the issue description are met\n- If the issue has a Figma link, use Figma_ExportImage to compare the design against the implementation — it must match pixel-for-pixel\n- Code quality and no regressions\n- No hardcoded values, no leftover debug code\n- Edge cases handled\n\nIf everything passes, move to **Done**.\nIf anything fails, move back to **Todo** and explain exactly what needs fixing.`
     );
+
+    // Start watcher to auto-transition when Cyrus finishes QA
+    startQAWatcher(issueId, issueIdentifier, teamId, qaPostedAt);
     return;
   }
 
