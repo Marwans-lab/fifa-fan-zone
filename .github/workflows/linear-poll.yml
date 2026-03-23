@@ -1,8 +1,8 @@
-name: Linear Poller — Auto-merge Done issues
+name: Pipeline Poller — Unstick all stalled issues
 
 on:
   schedule:
-    - cron: '*/10 * * * *'  # Every 10 minutes
+    - cron: '*/5 * * * *'  # Every 5 minutes
   workflow_dispatch:  # Manual trigger for testing
 
 permissions:
@@ -10,10 +10,10 @@ permissions:
   pull-requests: write
 
 jobs:
-  poll-and-merge:
+  unstick:
     runs-on: ubuntu-latest
     steps:
-      - name: Poll Linear for Done issues and merge PRs
+      - name: Poll Linear and fix stuck issues
         env:
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -21,75 +21,144 @@ jobs:
         run: |
           set -euo pipefail
 
-          echo "=== Linear Poller: checking for Done issues ==="
+          # --- Helper: Linear GraphQL ---
+          gql() {
+            curl -s -X POST https://api.linear.app/graphql \
+              -H "Authorization: $LINEAR_API_KEY" \
+              -H "Content-Type: application/json" \
+              -d "{\"query\": \"$1\"}"
+          }
 
-          # Get the MAR team ID
-          TEAM_DATA=$(curl -s -X POST https://api.linear.app/graphql \
-            -H "Authorization: $LINEAR_API_KEY" \
-            -H "Content-Type: application/json" \
-            -d '{"query": "{ teams(filter: { key: { eq: \"MAR\" } }) { nodes { id } } }"}')
+          transition() {
+            local issue_uuid=$1 state_id=$2
+            gql "mutation { issueUpdate(id: \\\"$issue_uuid\\\", input: { stateId: \\\"$state_id\\\" }) { success } }" > /dev/null
+          }
 
+          comment() {
+            local issue_uuid=$1 body=$2
+            gql "mutation { commentCreate(input: { issueId: \\\"$issue_uuid\\\", body: \\\"$body\\\" }) { success } }" > /dev/null
+          }
+
+          echo "=== Pipeline Poller $(date -u +%H:%M:%S) ==="
+
+          # --- Fetch team + all workflow states ---
+          TEAM_DATA=$(gql "{ teams(filter: { key: { eq: \\\"MAR\\\" } }) { nodes { id } } }")
           TEAM_ID=$(echo "$TEAM_DATA" | jq -r '.data.teams.nodes[0].id // empty')
           if [ -z "$TEAM_ID" ]; then
             echo "MAR team not found. Exiting."
             exit 0
           fi
-          echo "Team ID: $TEAM_ID"
 
-          # Get the "Done" state ID
-          DONE_STATE_ID=$(curl -s -X POST https://api.linear.app/graphql \
-            -H "Authorization: $LINEAR_API_KEY" \
-            -H "Content-Type: application/json" \
-            -d "{\"query\": \"{ workflowStates(filter: { team: { id: { eq: \\\"$TEAM_ID\\\" } }, name: { eq: \\\"Done\\\" } }) { nodes { id } } }\"}" \
-            | jq -r '.data.workflowStates.nodes[0].id // empty')
+          STATES_DATA=$(gql "{ team(id: \\\"$TEAM_ID\\\") { states { nodes { id name } } } }")
+          get_state_id() {
+            echo "$STATES_DATA" | jq -r --arg n "$1" '.data.team.states.nodes[] | select(.name == $n) | .id // empty'
+          }
 
-          if [ -z "$DONE_STATE_ID" ]; then
-            echo "No 'Done' state found. Exiting."
-            exit 0
-          fi
-          echo "Done state ID: $DONE_STATE_ID"
+          IN_PROGRESS_ID=$(get_state_id "In Progress")
+          IN_REVIEW_ID=$(get_state_id "In Review")
+          DONE_ID=$(get_state_id "Done")
+          DEPLOYED_ID=$(get_state_id "Deployed")
 
-          # Get all issues in "Done" state
-          ISSUES=$(curl -s -X POST https://api.linear.app/graphql \
-            -H "Authorization: $LINEAR_API_KEY" \
-            -H "Content-Type: application/json" \
-            -d "{\"query\": \"{ issues(filter: { team: { id: { eq: \\\"$TEAM_ID\\\" } }, state: { id: { eq: \\\"$DONE_STATE_ID\\\" } } }) { nodes { id identifier } } }\"}")
+          echo "States: InProgress=$IN_PROGRESS_ID InReview=$IN_REVIEW_ID Done=$DONE_ID Deployed=$DEPLOYED_ID"
 
-          ISSUE_COUNT=$(echo "$ISSUES" | jq '.data.issues.nodes | length')
-          echo "Found $ISSUE_COUNT issues in Done state"
+          # --- Fetch all open PRs once ---
+          OPEN_PRS=$(gh pr list --repo "$REPO" --state open --json number,title,headRefName --limit 100)
 
-          if [ "$ISSUE_COUNT" -eq 0 ]; then
-            echo "No Done issues to process."
-            exit 0
-          fi
+          find_pr() {
+            echo "$OPEN_PRS" | jq -r --arg id "$1" '.[] | select(.title | contains($id)) | .number' | head -1
+          }
 
-          # Get list of open PRs from GitHub
-          OPEN_PRS=$(gh pr list --repo "$REPO" --state open --json number,title,headRefName --limit 50)
-
-          # Process each Done issue
-          echo "$ISSUES" | jq -r '.data.issues.nodes[] | "\(.id) \(.identifier)"' | while read -r ISSUE_UUID ISSUE_ID; do
+          # ============================================================
+          # STAGE 1: In Progress + has open PR → move to In Review
+          # ============================================================
+          if [ -n "$IN_PROGRESS_ID" ] && [ -n "$IN_REVIEW_ID" ]; then
+            PROGRESS_ISSUES=$(gql "{ issues(filter: { team: { id: { eq: \\\"$TEAM_ID\\\" } }, state: { id: { eq: \\\"$IN_PROGRESS_ID\\\" } } }) { nodes { id identifier } } }")
+            PROGRESS_COUNT=$(echo "$PROGRESS_ISSUES" | jq '.data.issues.nodes | length')
             echo ""
-            echo "--- Processing $ISSUE_ID ---"
+            echo "--- In Progress: $PROGRESS_COUNT issues ---"
 
-            # Find matching open PR
-            PR_NUMBER=$(echo "$OPEN_PRS" | jq -r --arg id "$ISSUE_ID" \
-              '.[] | select(.title | contains($id)) | .number' | head -1)
+            echo "$PROGRESS_ISSUES" | jq -r '.data.issues.nodes[] | "\(.id) \(.identifier)"' | while read -r UUID IDENT; do
+              PR=$(find_pr "$IDENT")
+              if [ -n "$PR" ] && [ "$PR" != "null" ]; then
+                echo "$IDENT: Has open PR #$PR → moving to In Review"
+                transition "$UUID" "$IN_REVIEW_ID"
+                comment "$UUID" "**[PIPELINE]** Open PR #$PR detected. Auto-moving to In Review for QA."
+              fi
+            done
+          fi
 
-            if [ -z "$PR_NUMBER" ] || [ "$PR_NUMBER" = "null" ]; then
-              echo "$ISSUE_ID: No open PR found, skipping."
-              continue
-            fi
+          # ============================================================
+          # STAGE 2: In Review + agent responded → move to Done
+          # ============================================================
+          if [ -n "$IN_REVIEW_ID" ] && [ -n "$DONE_ID" ]; then
+            REVIEW_ISSUES=$(gql "{ issues(filter: { team: { id: { eq: \\\"$TEAM_ID\\\" } }, state: { id: { eq: \\\"$IN_REVIEW_ID\\\" } } }) { nodes { id identifier } } }")
+            REVIEW_COUNT=$(echo "$REVIEW_ISSUES" | jq '.data.issues.nodes | length')
+            echo ""
+            echo "--- In Review: $REVIEW_COUNT issues ---"
 
-            echo "$ISSUE_ID: Found PR #$PR_NUMBER — merging..."
+            echo "$REVIEW_ISSUES" | jq -r '.data.issues.nodes[] | "\(.id) \(.identifier)"' | while read -r UUID IDENT; do
+              # Check comments for agent summary (QA complete)
+              COMMENTS=$(gql "{ issue(id: \\\"$IDENT\\\") { comments { nodes { body createdAt } } } }")
 
-            # Merge the PR (squash + delete branch)
-            if gh pr merge "$PR_NUMBER" --repo "$REPO" --squash --delete-branch; then
-              echo "$ISSUE_ID: PR #$PR_NUMBER merged successfully."
-              # linear-deploy.yml will handle moving to Deployed
-            else
-              echo "$ISSUE_ID: Failed to merge PR #$PR_NUMBER."
-            fi
-          done
+              # Look for QA trigger and agent response after it
+              HAS_QA=$(echo "$COMMENTS" | jq '[.data.issue.comments.nodes[] | select(.body | contains("[QA REVIEW]"))] | length')
+              HAS_SUMMARY=$(echo "$COMMENTS" | jq '[.data.issue.comments.nodes[] | select(.body | (contains("## Summary") or contains("**Summary**") or contains("PR #") or contains("All checks pass") or contains("LGTM")))] | length')
+
+              if [ "$HAS_QA" -gt 0 ] && [ "$HAS_SUMMARY" -gt 0 ]; then
+                # Check if QA failed
+                FAILED=$(echo "$COMMENTS" | jq '[.data.issue.comments.nodes[] | select(.body | (contains("back to **Todo**") or contains("needs fixing")))] | length')
+                if [ "$FAILED" -gt 0 ]; then
+                  echo "$IDENT: QA failed → skipping (agent should handle bounce)"
+                else
+                  echo "$IDENT: QA complete with summary → moving to Done"
+                  transition "$UUID" "$DONE_ID"
+                  comment "$UUID" "**[PIPELINE]** QA review complete. Auto-moving to Done."
+                fi
+              elif [ "$HAS_QA" -eq 0 ]; then
+                # No QA comment yet — check if there's a PR (Cyrus finished but middleware missed it)
+                PR=$(find_pr "$IDENT")
+                if [ -n "$PR" ] && [ "$PR" != "null" ]; then
+                  echo "$IDENT: In Review but no QA comment, has PR #$PR — posting QA trigger"
+                  comment "$UUID" "@Claude **[QA REVIEW]** Review this implementation. Check acceptance criteria, code quality, no regressions. If everything passes, move to **Done**. If anything fails, move back to **Todo**."
+                fi
+              else
+                echo "$IDENT: QA triggered, waiting for agent response"
+              fi
+            done
+          fi
+
+          # ============================================================
+          # STAGE 3: Done + has open PR → merge it
+          # ============================================================
+          if [ -n "$DONE_ID" ]; then
+            DONE_ISSUES=$(gql "{ issues(filter: { team: { id: { eq: \\\"$TEAM_ID\\\" } }, state: { id: { eq: \\\"$DONE_ID\\\" } } }) { nodes { id identifier } } }")
+            DONE_COUNT=$(echo "$DONE_ISSUES" | jq '.data.issues.nodes | length')
+            echo ""
+            echo "--- Done: $DONE_COUNT issues ---"
+
+            echo "$DONE_ISSUES" | jq -r '.data.issues.nodes[] | "\(.id) \(.identifier)"' | while read -r UUID IDENT; do
+              PR=$(find_pr "$IDENT")
+              if [ -n "$PR" ] && [ "$PR" != "null" ]; then
+                echo "$IDENT: Merging PR #$PR..."
+                if gh pr merge "$PR" --repo "$REPO" --squash --delete-branch; then
+                  echo "$IDENT: PR #$PR merged. linear-deploy.yml will move to Deployed."
+                else
+                  echo "$IDENT: Merge failed for PR #$PR"
+                fi
+              else
+                # No open PR — check if already merged, move to Deployed
+                if [ -n "$DEPLOYED_ID" ]; then
+                  MERGED_PR=$(gh pr list --repo "$REPO" --state merged --json number,title --limit 20 | \
+                    jq -r --arg id "$IDENT" '.[] | select(.title | contains($id)) | .number' | head -1)
+                  if [ -n "$MERGED_PR" ] && [ "$MERGED_PR" != "null" ]; then
+                    echo "$IDENT: PR #$MERGED_PR already merged → moving to Deployed"
+                    transition "$UUID" "$DEPLOYED_ID"
+                    comment "$UUID" "**[PIPELINE]** PR #$MERGED_PR already merged. Auto-moving to Deployed."
+                  fi
+                fi
+              fi
+            done
+          fi
 
           echo ""
           echo "=== Poller complete ==="
