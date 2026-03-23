@@ -8,6 +8,7 @@ const CYRUS_PORT = 3456;
 const LINEAR_API = "https://api.linear.app/graphql";
 const LINEAR_TOKEN = process.env.LINEAR_TOKEN;
 const GITHUB_REPO = "Marwans-lab/fifa-fan-zone";
+const CYRUS_API_KEY = process.env.CYRUS_API_KEY || "";
 
 if (!LINEAR_TOKEN) {
   console.error("ERROR: LINEAR_TOKEN env var is required");
@@ -76,7 +77,11 @@ function forwardToCyrus(method, url, headers, body) {
         port: CYRUS_PORT,
         path: url,
         method,
-        headers: { ...headers, host: `127.0.0.1:${CYRUS_PORT}` },
+        headers: {
+          ...headers,
+          host: `127.0.0.1:${CYRUS_PORT}`,
+          authorization: `Bearer ${CYRUS_API_KEY}`,
+        },
       },
       (res) => {
         let data = "";

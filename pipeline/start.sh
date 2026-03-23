@@ -19,6 +19,9 @@ LOG_PREFIX="[Pipeline]"
 # Linear token — reads from Cyrus config automatically
 export LINEAR_TOKEN=$(python3 -c "import json; print(json.load(open('$HOME/.cyrus/config.json'))['linearWorkspaces'][list(json.load(open('$HOME/.cyrus/config.json'))['linearWorkspaces'].keys())[0]]['linearToken'])")
 
+# Cyrus API key for webhook proxy auth
+export CYRUS_API_KEY="e9922e5b09069695d8a859b7c607ac7f"
+
 # --- PIDs ---
 CYRUS_PID=""
 MIDDLEWARE_PID=""
