@@ -19,6 +19,26 @@
   --c-error:    #D95757;
   --c-warn:     #ffb800;
 
+  /* correct / error alpha variants */
+  --c-correct-bg:     rgba(52,219,128,0.10);
+  --c-correct-border: rgba(52,219,128,0.15);
+  --c-correct-glow:   rgba(52,219,128,0.40);
+  --c-error-bg:       rgba(217,87,87,0.10);
+  --c-error-border:   rgba(217,87,87,0.15);
+  --c-error-glow:     rgba(217,87,87,0.40);
+
+  /* ─── Light-theme roles ──────────────────────────────────────────────────── */
+  --c-lt-bg:           #f2f3fa;
+  --c-lt-surface:      #ffffff;
+  --c-lt-border:       #dbdee8;
+  --c-lt-text-1:       #1f212b;
+  --c-lt-text-2:       #6e7780;
+  --c-lt-text-3:       #4a525d;
+  --c-lt-brand:        #8e2157;
+  --c-lt-correct-dark: #1C7544;
+  --c-lt-shadow:       rgba(31,33,43,0.08);
+  --c-lt-overlay:      rgba(0,0,0,0.20);
+
   /* ─── Glass / elevation ───────────────────────────────────────────────────── */
   --glass-bg:     rgba(255,255,255,0.10);
   --glass-border: rgba(255,255,255,0.18);

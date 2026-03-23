@@ -61,13 +61,49 @@ When an issue contains a Figma frame link, **the Figma design is the source of t
 **Step 3 — Implement exactly**:
 - **Replicate the design pixel-for-pixel** — layout, spacing, sizing, colors, typography, element order
 - Do NOT improvise or deviate from the design
+- **CRITICAL: NEVER use raw hex/rgba values in components. ALWAYS use CSS token variables.**
 - Convert Figma node properties → React + TypeScript + inline `React.CSSProperties`:
-  - Figma fills/colors → closest CSS token (`--c-*`), preserve design intent if no token matches
-  - Figma padding/spacing → token spacing (`--sp-*`)
+  - Figma fills/colors → use the **Figma Color → Token Mapping** below. If no token matches, add a new token to `tokens.css` first, then reference it.
+  - Figma padding/spacing → token spacing (`--sp-*`). Common: 4=`--sp-1`, 8=`--sp-2`, 12=`--sp-3`, 16=`--sp-4`, 20=`--sp-5`, 24=`--sp-6`, 32=`--sp-8`, 40=`--sp-10`, 48=`--sp-12`, 64=`--sp-16`, 80=`--sp-20`
   - Figma fonts → token fonts (`--font-display` for headings, `--font-body` for text)
   - Figma corner radius → token radii (`--r-*`)
 - If NO Figma link is provided, fall back to the Guidelines above
 - If a frame updates an existing component, modify it in place — don't create duplicates
+
+**Figma Color → Token Mapping (look up BEFORE writing any color)**:
+
+Dark-theme:
+| Figma hex/rgba | Token |
+|---|---|
+| `#05050a` | `var(--c-bg)` |
+| `rgba(255,255,255,0.09)` | `var(--c-surface)` |
+| `rgba(255,255,255,0.14)` | `var(--c-surface-raise)` |
+| `rgba(255,255,255,0.94)` | `var(--c-text-1)` |
+| `rgba(255,255,255,0.48)` | `var(--c-text-2)` |
+| `#00d4aa` | `var(--c-accent)` |
+| `#c8102e` | `var(--c-brand)` |
+| `#34DB80` / `rgb(52,219,128)` | `var(--c-correct)` |
+| `#D95757` / `rgb(217,87,87)` | `var(--c-error)` |
+| `rgba(52,219,128,0.10)` | `var(--c-correct-bg)` |
+| `rgba(52,219,128,0.15)` | `var(--c-correct-border)` |
+| `rgba(52,219,128,0.40)` | `var(--c-correct-glow)` |
+| `rgba(217,87,87,0.10)` | `var(--c-error-bg)` |
+| `rgba(217,87,87,0.15)` | `var(--c-error-border)` |
+| `rgba(217,87,87,0.40)` | `var(--c-error-glow)` |
+
+Light-theme (for light-bg screens like Landing, TeamSelection):
+| Figma hex | Token |
+|---|---|
+| `#f2f3fa` | `var(--c-lt-bg)` |
+| `#ffffff` | `var(--c-lt-surface)` |
+| `#dbdee8` | `var(--c-lt-border)` |
+| `#1f212b` | `var(--c-lt-text-1)` |
+| `#6e7780` | `var(--c-lt-text-2)` |
+| `#4a525d` | `var(--c-lt-text-3)` |
+| `#8e2157` | `var(--c-lt-brand)` |
+| `#1C7544` | `var(--c-lt-correct-dark)` |
+
+If a Figma color is NOT in this table → add a new token to `tokens.css` with the `--c-lt-*` prefix (light) or `--c-*` prefix (dark), then use the token in your component. NEVER skip this step.
 
 **Issue format**: Include the Figma frame URL in the issue description.
 Example: `Figma: https://www.figma.com/design/abc123/FIFA-Fan-Zone?node-id=1%3A234`
