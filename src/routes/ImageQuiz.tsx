@@ -14,7 +14,7 @@ function TickIcon() {
     <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
       <path
         d="M10 20L17 27L30 13"
-        stroke="#ffffff"
+        stroke="currentColor"
         strokeWidth="3.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -29,7 +29,7 @@ function CloseIcon() {
     <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
       <path
         d="M12 12L28 28M28 12L12 28"
-        stroke="#ffffff"
+        stroke="currentColor"
         strokeWidth="3.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -47,11 +47,11 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
   return (
     <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
       <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={cx} cy={cx} r={R} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={3} />
+        <circle cx={cx} cy={cx} r={R} fill="none" stroke="var(--c-surface-raise)" strokeWidth={3} />
         <circle
           cx={cx} cy={cx} r={R}
           fill="none"
-          stroke="#ffffff"
+          stroke="var(--c-text-1)"
           strokeWidth={3}
           strokeDasharray={circumference}
           strokeDashoffset={offset}
@@ -59,7 +59,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
           style={{ transition: 'stroke-dashoffset 1s linear' }}
         />
       </svg>
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 500, fontFamily: 'var(--font-body)', color: '#ffffff' }}>
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', fontFamily: 'var(--font-body)', color: 'var(--c-text-1)' }}>
         {timeLeft}
       </div>
     </div>
@@ -83,8 +83,8 @@ function ImageOptionCard({
   const [imgLoaded, setImgLoaded] = useState(false)
   const showOverlay = revealed && (isChosen || isCorrect)
   const overlayColor = isCorrect
-    ? 'rgba(52, 219, 128, 0.30)'
-    : 'rgba(217, 87, 87, 0.30)'
+    ? 'var(--c-correct-overlay)'
+    : 'var(--c-error-overlay)'
 
   // Border styling
   let borderColor = 'var(--c-border)'
@@ -149,7 +149,7 @@ function ImageOptionCard({
               width: 24,
               height: 24,
               borderRadius: '50%',
-              border: '2.5px solid rgba(255,255,255,0.15)',
+              border: '2.5px solid var(--c-surface-raise)',
               borderTopColor: 'var(--c-accent)',
               animation: 'quiz-spin 0.6s linear infinite',
             }}
@@ -183,7 +183,7 @@ function ImageOptionCard({
           left: 0,
           right: 0,
           padding: 'var(--sp-5) var(--sp-2) var(--sp-2)',
-          background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
+          background: 'linear-gradient(transparent, var(--c-image-scrim))',
           zIndex: 1,
         }}
       >
@@ -191,7 +191,7 @@ function ImageOptionCard({
           style={{
             fontSize: 'var(--text-sm)',
             fontWeight: 'var(--weight-med)',
-            color: '#ffffff',
+            color: 'var(--c-text-1)',
             fontFamily: 'var(--font-body)',
           }}
         >
@@ -249,13 +249,13 @@ function ImageQuestionScreen({
             <button onClick={onBack} className="btn-icon">
               <img src={chevLeft} width={24} height={24} alt="Back" />
             </button>
-            <div style={{ flex: 1, height: 4, background: 'var(--c-surface-raise)', borderRadius: 2, overflow: 'hidden' }}>
+            <div style={{ flex: 1, height: 'var(--sp-1)', background: 'var(--c-surface-raise)', borderRadius: 'var(--r-xs)', overflow: 'hidden' }}>
               <div
                 style={{
                   height: '100%',
                   width: `${((qIndex + (revealed ? 1 : 0)) / total) * 100}%`,
                   background: 'var(--c-accent)',
-                  borderRadius: 2,
+                  borderRadius: 'var(--r-xs)',
                   transition: 'width 300ms ease',
                 }}
               />
@@ -340,10 +340,10 @@ function ImageQuestionScreen({
             className="btn"
             style={{
               width: '100%',
-              padding: '16px 0',
-              borderRadius: 50,
+              padding: 'var(--sp-4) 0',
+              borderRadius: 'var(--r-full)',
               border: 'none',
-              background: revealed ? '#ffffff' : 'var(--c-surface-raise)',
+              background: revealed ? 'var(--c-text-1)' : 'var(--c-surface-raise)',
               color: revealed ? 'var(--c-brand)' : 'var(--c-text-3)',
               fontSize: 'var(--text-md)',
               fontWeight: 'var(--weight-med)',
