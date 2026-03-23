@@ -25,7 +25,7 @@ function SwipeLabel({
         position: 'absolute',
         top: 'var(--sp-6)',
         ...(isTrue ? { right: 'var(--sp-6)' } : { left: 'var(--sp-6)' }),
-        padding: '6px 16px',
+        padding: 'var(--sp-2) var(--sp-4)',
         borderRadius: 'var(--r-sm)',
         border: `2px solid ${isTrue ? 'var(--c-correct)' : 'var(--c-error)'}`,
         color: isTrue ? 'var(--c-correct)' : 'var(--c-error)',
@@ -85,7 +85,7 @@ function FeedbackOverlay({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: 32,
+          fontSize: 'var(--text-2xl)',
           boxShadow: `0 0 40px ${correct ? 'var(--c-correct-glow)' : 'var(--c-error-glow)'}`,
         }}
       >
@@ -678,7 +678,7 @@ export default function SwipeQuizRoute() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 padding: '0 var(--sp-2)',
-                gap: 4,
+                gap: 'var(--sp-1)',
               }}
             >
               <span
