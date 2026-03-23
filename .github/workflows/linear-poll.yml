@@ -1,0 +1,95 @@
+name: Linear Poller — Auto-merge Done issues
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # Every 10 minutes
+  workflow_dispatch:  # Manual trigger for testing
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  poll-and-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Poll Linear for Done issues and merge PRs
+        env:
+          LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          echo "=== Linear Poller: checking for Done issues ==="
+
+          # Get the MAR team ID
+          TEAM_DATA=$(curl -s -X POST https://api.linear.app/graphql \
+            -H "Authorization: $LINEAR_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{"query": "{ teams(filter: { key: { eq: \"MAR\" } }) { nodes { id } } }"}')
+
+          TEAM_ID=$(echo "$TEAM_DATA" | jq -r '.data.teams.nodes[0].id // empty')
+          if [ -z "$TEAM_ID" ]; then
+            echo "MAR team not found. Exiting."
+            exit 0
+          fi
+          echo "Team ID: $TEAM_ID"
+
+          # Get the "Done" state ID
+          DONE_STATE_ID=$(curl -s -X POST https://api.linear.app/graphql \
+            -H "Authorization: $LINEAR_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"query\": \"{ workflowStates(filter: { team: { id: { eq: \\\"$TEAM_ID\\\" } }, name: { eq: \\\"Done\\\" } }) { nodes { id } } }\"}" \
+            | jq -r '.data.workflowStates.nodes[0].id // empty')
+
+          if [ -z "$DONE_STATE_ID" ]; then
+            echo "No 'Done' state found. Exiting."
+            exit 0
+          fi
+          echo "Done state ID: $DONE_STATE_ID"
+
+          # Get all issues in "Done" state
+          ISSUES=$(curl -s -X POST https://api.linear.app/graphql \
+            -H "Authorization: $LINEAR_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"query\": \"{ issues(filter: { team: { id: { eq: \\\"$TEAM_ID\\\" } }, state: { id: { eq: \\\"$DONE_STATE_ID\\\" } } }) { nodes { id identifier } } }\"}")
+
+          ISSUE_COUNT=$(echo "$ISSUES" | jq '.data.issues.nodes | length')
+          echo "Found $ISSUE_COUNT issues in Done state"
+
+          if [ "$ISSUE_COUNT" -eq 0 ]; then
+            echo "No Done issues to process."
+            exit 0
+          fi
+
+          # Get list of open PRs from GitHub
+          OPEN_PRS=$(gh pr list --repo "$REPO" --state open --json number,title,headRefName --limit 50)
+
+          # Process each Done issue
+          echo "$ISSUES" | jq -r '.data.issues.nodes[] | "\(.id) \(.identifier)"' | while read -r ISSUE_UUID ISSUE_ID; do
+            echo ""
+            echo "--- Processing $ISSUE_ID ---"
+
+            # Find matching open PR
+            PR_NUMBER=$(echo "$OPEN_PRS" | jq -r --arg id "$ISSUE_ID" \
+              '.[] | select(.title | contains($id)) | .number' | head -1)
+
+            if [ -z "$PR_NUMBER" ] || [ "$PR_NUMBER" = "null" ]; then
+              echo "$ISSUE_ID: No open PR found, skipping."
+              continue
+            fi
+
+            echo "$ISSUE_ID: Found PR #$PR_NUMBER — merging..."
+
+            # Merge the PR (squash + delete branch)
+            if gh pr merge "$PR_NUMBER" --repo "$REPO" --squash --delete-branch; then
+              echo "$ISSUE_ID: PR #$PR_NUMBER merged successfully."
+              # linear-deploy.yml will handle moving to Deployed
+            else
+              echo "$ISSUE_ID: Failed to merge PR #$PR_NUMBER."
+            fi
+          done
+
+          echo ""
+          echo "=== Poller complete ==="
