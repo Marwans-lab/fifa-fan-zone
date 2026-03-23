@@ -9,6 +9,9 @@ const LINEAR_API = "https://api.linear.app/graphql";
 const LINEAR_TOKEN = process.env.LINEAR_TOKEN;
 const GITHUB_REPO = "Marwans-lab/fifa-fan-zone";
 const CYRUS_API_KEY = process.env.CYRUS_API_KEY || "";
+// Personal API key for posting comments — uses a different identity than Claude agent
+// so Cyrus won't ignore them as self-comments
+const LINEAR_PERSONAL_KEY = process.env.LINEAR_PERSONAL_KEY || "";
 
 if (!LINEAR_TOKEN) {
   console.error("ERROR: LINEAR_TOKEN env var is required");
@@ -16,7 +19,8 @@ if (!LINEAR_TOKEN) {
 }
 
 // --- Helpers ---
-function linearGQL(query, variables) {
+function linearGQL(query, variables, token) {
+  token = token || LINEAR_TOKEN;
   const body = JSON.stringify({ query, variables });
   return new Promise((resolve, reject) => {
     const req = https.request(
@@ -25,7 +29,7 @@ function linearGQL(query, variables) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: LINEAR_TOKEN,
+          Authorization: token,
         },
       },
       (res) => {
@@ -46,15 +50,20 @@ function linearGQL(query, variables) {
 }
 
 async function postComment(issueId, body) {
+  // Use personal API key so comments come from the user, not the Claude agent.
+  // Cyrus ignores self-comments (self-loop protection), so @Claude mentions
+  // must come from a different identity to trigger agent sessions.
+  const token = LINEAR_PERSONAL_KEY || LINEAR_TOKEN;
   const result = await linearGQL(
     `mutation($issueId: String!, $body: String!) {
       commentCreate(input: { issueId: $issueId, body: $body }) {
         success
       }
     }`,
-    { issueId, body }
+    { issueId, body },
+    token
   );
-  console.log(`[Pipeline] Comment posted on issue ${issueId}`);
+  console.log(`[Pipeline] Comment posted on issue ${issueId} (as ${LINEAR_PERSONAL_KEY ? "user" : "agent"})`);
   return result;
 }
 
@@ -147,6 +156,9 @@ async function handleWebhook(payload) {
   );
 
   // Stage 2: In Review → trigger QA
+  // Comments are posted using LINEAR_PERSONAL_KEY (user identity) so Cyrus
+  // won't ignore them as self-comments. GitHub Action also triggers QA on PR
+  // open as a fallback.
   if (newState === "In Review") {
     if (recentComments.has(issueId)) return;
     markOurComment(issueId);

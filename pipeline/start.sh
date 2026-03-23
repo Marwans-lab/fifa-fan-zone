@@ -19,8 +19,19 @@ LOG_PREFIX="[Pipeline]"
 # Linear token — reads from Cyrus config automatically
 export LINEAR_TOKEN=$(python3 -c "import json; print(json.load(open('$HOME/.cyrus/config.json'))['linearWorkspaces'][list(json.load(open('$HOME/.cyrus/config.json'))['linearWorkspaces'].keys())[0]]['linearToken'])")
 
+# Load secrets from env file (not committed to git)
+if [ -f "$SCRIPT_DIR/.env" ]; then
+  set -a
+  source "$SCRIPT_DIR/.env"
+  set +a
+fi
+
 # Cyrus API key for webhook proxy auth
-export CYRUS_API_KEY="e9922e5b09069695d8a859b7c607ac7f"
+export CYRUS_API_KEY="${CYRUS_API_KEY:?CYRUS_API_KEY must be set in pipeline/.env}"
+
+# Personal API key for posting comments as user (not as Claude agent)
+# Cyrus ignores self-comments, so @Claude mentions must come from a different identity
+export LINEAR_PERSONAL_KEY="${LINEAR_PERSONAL_KEY:?LINEAR_PERSONAL_KEY must be set in pipeline/.env}"
 
 # --- PIDs ---
 CYRUS_PID=""
