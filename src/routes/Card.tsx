@@ -459,24 +459,24 @@ function DragDropQuizCard({
             {done ? (
               <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
             ) : (
-              <span style={{ fontSize: 30 }}>{ddQuiz.emoji}</span>
+              <span style={{ fontSize: 'var(--text-2xl)' }}>{ddQuiz.emoji}</span>
             )}
           </div>
         </div>
         <div>
           <h3 style={{
             fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 'var(--text-lg)', color: '#ffffff',
+            fontSize: 'var(--text-lg)', color: 'var(--c-text-1)',
           }}>
             {ddQuiz.title}
           </h3>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>
+          <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)', marginTop: 'var(--sp-2)' }}>
             {done ? (
-              <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 'var(--weight-med)' }}>
+              <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
                 Completed · {result.score}/{result.total} correct
               </span>
             ) : (
-              <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 'var(--weight-med)' }}>
+              <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
                 {totalPairs} matches · Drag & Drop
               </span>
             )}

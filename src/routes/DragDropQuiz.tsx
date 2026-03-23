@@ -513,6 +513,7 @@ function QuestionView({
           <div
             key={pair.id}
             ref={el => { dropZoneRefs.current[pair.id] = el }}
+            aria-label={`Drop zone for ${pair.prompt}`}
           >
             <DropZone
               prompt={pair.prompt}
@@ -561,6 +562,9 @@ function QuestionView({
               <div
                 key={answer}
                 ref={el => { chipRefs.current[answer] = el }}
+                role="button"
+                tabIndex={0}
+                aria-label={`Drag answer: ${answer}`}
                 onTouchStart={onTouchStart(answer)}
                 onMouseDown={onMouseDown(answer)}
                 style={{
