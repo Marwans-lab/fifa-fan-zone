@@ -21,7 +21,7 @@ function ProgressBar({ progress }: { progress: number }) {
           height: '100%',
           borderRadius: 'var(--r-full)',
           background: 'linear-gradient(-90deg, var(--c-correct) 61.5%, var(--c-lt-correct-dark) 100%)',
-          boxShadow: '1px 0px 6px rgba(0,0,0,0.25)',
+          boxShadow: '1px 0px 6px var(--c-lt-shadow-strong)',
           transition: `width var(--dur-slow) var(--ease-out)`,
         }}
       />
@@ -225,13 +225,7 @@ export default function TeamSelection() {
         flexShrink: 0,
       }}>
         Already have a card?{' '}
-        <span style={{
-          fontWeight: 'var(--weight-med)',
-          textDecoration: 'underline',
-          cursor: 'pointer',
-        }}>
-          Log in
-        </span>
+        <span style={{ fontWeight: 'var(--weight-med)' }}>Log in</span>
       </p>
 
       {/* ── Continue button ─────────────────────────────────────── */}
