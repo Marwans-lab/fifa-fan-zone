@@ -40,7 +40,7 @@ function Chip({ answer, isDragging, isPlaced, isCorrect, style }: ChipProps) {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '10px 18px',
+    padding: 'var(--sp-3) var(--sp-5)',
     borderRadius: 'var(--r-full)',
     fontSize: 'var(--text-sm)',
     fontWeight: 'var(--weight-med)',
@@ -102,7 +102,7 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
     padding: 'var(--sp-3) var(--sp-4)',
     borderRadius: 'var(--r-lg)',
     background: isHovered
-      ? 'rgba(0,212,170,0.08)'
+      ? 'var(--c-accent-bg)'
       : isCorrect === true
       ? 'var(--c-correct-bg)'
       : isCorrect === false
@@ -120,10 +120,10 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
     boxShadow: isCorrect === true
       ? '0 0 20px var(--c-correct-glow)'
       : isHovered
-      ? '0 0 16px rgba(0,212,170,0.15)'
+      ? '0 0 16px var(--c-accent-glow)'
       : 'none',
     animation: shaking ? 'shake 400ms ease' : `dropZoneIn 400ms cubic-bezier(0.16, 1, 0.3, 1) ${index * 60}ms both`,
-    minHeight: 52,
+    minHeight: 'var(--sp-12)',
   }
 
   const promptStyle: React.CSSProperties = {
@@ -140,19 +140,19 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '8px 14px',
+    padding: 'var(--sp-2) var(--sp-3)',
     borderRadius: 'var(--r-full)',
     fontSize: 'var(--text-sm)',
     fontWeight: 'var(--weight-med)',
     fontFamily: 'var(--font-body)',
-    minHeight: 36,
+    minHeight: 'var(--sp-9)',
     background: placedAnswer
       ? isCorrect === true
         ? 'var(--c-correct-bg)'
         : isCorrect === false
         ? 'var(--c-error-bg)'
         : 'var(--c-surface-raise)'
-      : 'rgba(255,255,255,0.04)',
+      : 'var(--c-surface-faint)',
     border: placedAnswer
       ? 'none'
       : '1px dashed var(--c-text-3)',
@@ -193,10 +193,10 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: 12,
+            fontSize: 'var(--text-2xs)',
             fontWeight: 'var(--weight-bold)',
             background: isCorrect ? 'var(--c-correct)' : 'var(--c-error)',
-            color: '#fff',
+            color: 'var(--c-white)',
             flexShrink: 0,
             animation: 'popIn 300ms cubic-bezier(0.16, 1, 0.3, 1)',
           }}
@@ -477,7 +477,7 @@ function QuestionView({
           boxShadow: `0 8px 32px ${question.accentColor}55, inset 0 1px 0 rgba(255,255,255,0.15)`,
         }}
       >
-        <span style={{ fontSize: 40, marginBottom: 'var(--sp-2)' }}>{quiz.emoji}</span>
+        <span style={{ fontSize: 'var(--text-4xl)', marginBottom: 'var(--sp-2)' }}>{quiz.emoji}</span>
         <div
           style={{
             fontFamily: 'var(--font-display)',
@@ -552,7 +552,7 @@ function QuestionView({
             flexWrap: 'wrap',
             gap: 'var(--sp-2)',
             justifyContent: 'center',
-            minHeight: 48,
+            minHeight: 'var(--sp-12)',
           }}
         >
           {availableAnswers.map((answer, i) => {
@@ -625,10 +625,10 @@ function QuestionView({
           className="btn"
           style={{
             width: '100%',
-            padding: '16px 0',
+            padding: 'var(--sp-4) 0',
             borderRadius: 'var(--r-full)',
             border: 'none',
-            background: allCorrect ? '#ffffff' : 'var(--c-surface-raise)',
+            background: allCorrect ? 'var(--c-white)' : 'var(--c-surface-raise)',
             color: allCorrect ? 'var(--c-brand)' : 'var(--c-text-3)',
             fontSize: 'var(--text-md)',
             fontWeight: 'var(--weight-med)',
