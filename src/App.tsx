@@ -13,6 +13,7 @@ const Picture = lazy(() => import('./routes/Picture'))
 const Leaderboard = lazy(() => import('./routes/Leaderboard'))
 const SwipeQuiz = lazy(() => import('./routes/SwipeQuiz'))
 const ImageQuiz = lazy(() => import('./routes/ImageQuiz'))
+const TeamSelection = lazy(() => import('./routes/TeamSelection'))
 
 export default function App() {
   return (
@@ -23,6 +24,10 @@ export default function App() {
           <Route path="/" element={<Landing />} />
 
           {/* All identity/card/quiz/results routes require a valid session */}
+          <Route
+            path="/team-selection"
+            element={<AuthGuard><TeamSelection /></AuthGuard>}
+          />
           <Route
             path="/identity"
             element={<AuthGuard><Identity /></AuthGuard>}
