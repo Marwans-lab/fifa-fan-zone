@@ -6,6 +6,7 @@ import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import { renderCardToBlob, buildShareText } from '../lib/cardExport'
 import { QUIZZES } from '../data/quizzes'
+import { SWIPE_QUIZZES } from '../data/swipeQuizzes'
 import lockIcon    from '../assets/icons/Lock-white.svg'
 import chevRight   from '../assets/icons/Chevron-right-white.svg'
 import tickBlack   from '../assets/icons/Tick-black.svg'
@@ -459,6 +460,11 @@ export default function Card() {
     navigate('/quiz', { state: { quizId } })
   }
 
+  function handleStartSwipeQuiz(quizId: string) {
+    track('swipe_quiz_card_tapped', { quizId })
+    navigate('/swipe-quiz', { state: { quizId } })
+  }
+
   return (
     <Screen>
       {/* ── Content ────────────────────────────────────────── */}
@@ -518,6 +524,93 @@ export default function Card() {
                   onStart={() => handleStartQuiz(quiz.id)}
                 />
               ))}
+            </div>
+          </section>
+
+          {/* ── Swipe Quizzes ─────────────────────────────────── */}
+          <section style={{ paddingBottom: 48 }}>
+            <div style={{ marginBottom: 16 }}>
+              <h2 style={{
+                fontFamily: 'var(--font-display)', fontWeight: 'var(--weight-thin)',
+                fontSize: 28, letterSpacing: '-0.04em', color: '#ffffff',
+              }}>
+                Swipe Challenge
+              </h2>
+              <p style={{
+                fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-reg)',
+                color: 'rgba(255,255,255,0.5)', fontSize: 14, marginTop: 4,
+              }}>
+                Swipe right for TRUE, left for FALSE
+              </p>
+            </div>
+
+            <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {SWIPE_QUIZZES.map(sq => {
+                const result = state.quizResults[sq.id]
+                const isDone = !!result
+                return (
+                  <button
+                    key={sq.id}
+                    onClick={() => handleStartSwipeQuiz(sq.id)}
+                    style={{
+                      width: '100%',
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      padding: '18px 14px', borderRadius: 22,
+                      minHeight: 100,
+                      border: `1px solid ${isDone ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
+                      background: isDone ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
+                      cursor: 'pointer',
+                      textAlign: 'left', fontFamily: 'inherit', color: 'var(--c-text-1)',
+                      transition: 'all 400ms ease',
+                      WebkitTapHighlightColor: 'transparent',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                      <div style={{
+                        width: 56, height: 56, borderRadius: '50%',
+                        background: isDone
+                          ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
+                          : 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 28,
+                        border: `1px solid ${isDone ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.1)'}`,
+                        boxShadow: '0 6px 20px rgba(0,0,0,0.25)',
+                      }}>
+                        {sq.emoji}
+                      </div>
+                      <div>
+                        <h3 style={{
+                          fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
+                          fontSize: 'var(--text-lg)', color: '#ffffff',
+                        }}>
+                          {sq.title}
+                        </h3>
+                        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>
+                          {isDone ? (
+                            <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 'var(--weight-med)' }}>
+                              Completed · {result.score}/{result.total} correct
+                            </span>
+                          ) : (
+                            <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 'var(--weight-med)' }}>
+                              {sq.statements.length} statements · Swipe to answer
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                    {!isDone && (
+                      <div style={{
+                        width: 36, height: 36, borderRadius: '50%',
+                        background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        marginRight: 4,
+                      }}>
+                        <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
+                      </div>
+                    )}
+                  </button>
+                )
+              })}
             </div>
           </section>
         </div>
