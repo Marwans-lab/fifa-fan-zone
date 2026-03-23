@@ -46,39 +46,39 @@ function FanCardStack() {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '24px 20px 20px',
-              border: '1px solid rgba(255,255,255,0.12)',
+              padding: 'var(--sp-6) var(--sp-5) var(--sp-5)',
+              border: '1px solid var(--c-card-border)',
               position: 'relative',
             }}
           >
             {/* Dot-grid halftone texture */}
             <div style={{
               position: 'absolute', inset: 0, borderRadius: 'var(--r-lg)', pointerEvents: 'none',
-              backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.28) 1.5px, transparent 1.5px)',
+              backgroundImage: 'radial-gradient(circle, var(--c-card-dot) 1.5px, transparent 1.5px)',
               backgroundSize: '16px 16px',
               mixBlendMode: 'overlay',
             }} />
             {/* Diagonal shimmer stripes */}
             <div style={{
               position: 'absolute', inset: 0, borderRadius: 'var(--r-lg)', pointerEvents: 'none',
-              backgroundImage: 'repeating-linear-gradient(-55deg, transparent, transparent 18px, rgba(255,255,255,0.10) 18px, rgba(255,255,255,0.10) 19px)',
+              backgroundImage: 'repeating-linear-gradient(-55deg, transparent, transparent 18px, var(--c-card-stripe) 18px, var(--c-card-stripe) 19px)',
               mixBlendMode: 'overlay',
             }} />
             {/* Holographic top stripe */}
             <div style={{
               position: 'absolute', top: 0, left: 0, right: 0, height: 4,
-              background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent)',
+              background: 'linear-gradient(90deg, transparent, var(--c-card-shimmer), transparent)',
             }} />
 
             {/* Card header */}
             <div style={{ textAlign: 'left', width: '100%', position: 'relative', zIndex: 1 }}>
               <div style={{
-                fontSize: 'var(--text-sm)', letterSpacing: 2, color: 'var(--c-lt-surface)',
+                fontSize: 'var(--text-sm)', letterSpacing: 'var(--tracking-card-label)', color: 'var(--c-lt-surface)',
                 textTransform: 'uppercase',
               }}>
                 Your Fan Card
               </div>
-              <div style={{ fontSize: 'var(--text-2xs)', color: 'rgba(255,255,255,0.65)', letterSpacing: 1 }}>
+              <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--c-card-text-2)', letterSpacing: 'var(--tracking-card-sub)' }}>
                 Collector Edition
               </div>
             </div>
@@ -89,7 +89,7 @@ function FanCardStack() {
               height: card.width * 0.45,
               borderRadius: '50%',
               background: 'var(--c-lt-overlay)',
-              border: '3px solid rgba(255,255,255,0.45)',
+              border: '3px solid var(--c-card-ring)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -102,8 +102,8 @@ function FanCardStack() {
             {/* Team name */}
             <div style={{
               fontSize: 'var(--text-lg)', fontWeight: 'var(--weight-med)',
-              color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic',
-              display: 'flex', alignItems: 'center', gap: 8,
+              color: 'var(--c-card-text-1)', letterSpacing: 'var(--tracking-card-name)', fontStyle: 'italic',
+              display: 'flex', alignItems: 'center', gap: 'var(--sp-2)',
               position: 'relative', zIndex: 1,
             }}>
               <span style={{ fontStyle: 'normal', fontSize: 'var(--text-xl)' }}>{team.flag}</span>

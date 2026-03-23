@@ -39,6 +39,18 @@
   --c-lt-shadow:       rgba(31,33,43,0.08);
   --c-lt-overlay:      rgba(0,0,0,0.20);
 
+  /* ─── Card overlay tokens (white-on-gradient cards) ─────────────────────── */
+  --c-card-border:     rgba(255,255,255,0.12);
+  --c-card-text-1:     rgba(255,255,255,0.88);
+  --c-card-text-2:     rgba(255,255,255,0.65);
+  --c-card-ring:       rgba(255,255,255,0.45);
+  --c-card-dot:        rgba(255,255,255,0.28);
+  --c-card-stripe:     rgba(255,255,255,0.10);
+  --c-card-shimmer:    rgba(255,255,255,0.45);
+  --tracking-card-label: 2px;
+  --tracking-card-sub:   1px;
+  --tracking-card-name:     0.5px;
+
   /* ─── Glass / elevation ───────────────────────────────────────────────────── */
   --glass-bg:     rgba(255,255,255,0.10);
   --glass-border: rgba(255,255,255,0.18);
