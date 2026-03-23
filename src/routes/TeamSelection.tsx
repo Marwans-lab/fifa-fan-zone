@@ -20,7 +20,7 @@ function ProgressBar({ progress }: { progress: number }) {
           width: `${progress}%`,
           height: '100%',
           borderRadius: 'var(--r-full)',
-          background: 'linear-gradient(-90deg, #34DB80 61.5%, #1C7544 100%)',
+          background: 'linear-gradient(-90deg, var(--c-correct) 61.5%, var(--c-lt-correct-dark) 100%)',
           boxShadow: '1px 0px 6px rgba(0,0,0,0.25)',
           transition: `width var(--dur-slow) var(--ease-out)`,
         }}
@@ -244,7 +244,7 @@ export default function TeamSelection() {
           borderRadius: 32,
           border: 'none',
           background: 'var(--c-lt-brand)',
-          color: '#ffffff',
+          color: 'var(--c-lt-surface)',
           fontSize: 16,
           fontWeight: 'var(--weight-med)',
           fontFamily: 'inherit',
