@@ -1,15 +1,55 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { track } from '../lib/analytics'
 import { WORLD_CUP_TEAMS } from '../data/teams'
 
+/* ── Progress bar (reused from Picture flow) ──────────────────────────────── */
+function ProgressBar({ progress }: { progress: number }) {
+  return (
+    <div
+      style={{
+        flex: 1,
+        height: 8,
+        borderRadius: 'var(--r-full)',
+        background: 'var(--c-lt-border)',
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        style={{
+          width: `${progress}%`,
+          height: '100%',
+          borderRadius: 'var(--r-full)',
+          background: 'linear-gradient(-90deg, #34DB80 61.5%, #1C7544 100%)',
+          boxShadow: '1px 0px 6px rgba(0,0,0,0.25)',
+          transition: `width var(--dur-slow) var(--ease-out)`,
+        }}
+      />
+    </div>
+  )
+}
+
+/* ── TeamSelection ────────────────────────────────────────────────────────── */
 export default function TeamSelection() {
   const navigate = useNavigate()
-  const [query, setQuery] = useState('')
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [open, setOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
-  const filtered = WORLD_CUP_TEAMS.filter(t =>
-    t.name.toLowerCase().includes(query.toLowerCase())
-  )
+  const selectedTeam = selectedId
+    ? WORLD_CUP_TEAMS.find(t => t.id === selectedId)
+    : null
+
+  /* close dropdown on outside click */
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
 
   function handleBack() {
     track('team_selection_back_tapped')
@@ -18,181 +58,205 @@ export default function TeamSelection() {
 
   function handleTeamSelect(id: string) {
     track('team_selection_team_selected', { teamId: id })
-    navigate('/picture', { state: { teamId: id } })
+    setSelectedId(id)
+    setOpen(false)
+  }
+
+  function handleContinue() {
+    if (!selectedId) return
+    navigate('/picture', { state: { teamId: selectedId } })
   }
 
   return (
-    <div style={{
-      height: '100%',
-      width: '100%',
-      background: 'var(--c-lt-bg)',
-      display: 'flex',
-      flexDirection: 'column',
-      overflow: 'hidden',
-    }}>
-      {/* ── Header ─────────────────────────────────────────────── */}
-      <div className="page-in" style={{
+    <div
+      className="page-in"
+      style={{
+        height: '100%',
+        width: '100%',
+        background: 'var(--c-lt-bg)',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: 'var(--sp-5)',
+        boxSizing: 'border-box',
+        overflow: 'hidden',
+      }}
+    >
+      {/* ── Row: Back button + Progress bar ─────────────────────── */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 'var(--sp-4)',
         flexShrink: 0,
-        padding: 'var(--sp-5) var(--sp-5) 0',
       }}>
-        {/* Back button */}
         <button
           onClick={handleBack}
           aria-label="Go back"
           style={{
-            width: 40,
-            height: 40,
+            width: 48,
+            height: 48,
             borderRadius: 'var(--r-full)',
-            border: '1px solid var(--c-lt-border)',
+            border: 'none',
             background: 'var(--c-lt-surface)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            marginBottom: 'var(--sp-5)',
+            flexShrink: 0,
             WebkitTapHighlightColor: 'transparent',
           }}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path d="M15 19l-7-7 7-7" stroke="var(--c-lt-text-1)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
+        <ProgressBar progress={50} />
+      </div>
 
-        {/* Title & subtitle */}
-        <h2 style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: 'var(--text-2xl)',
-          fontWeight: 'var(--weight-light)',
-          letterSpacing: 'var(--tracking-tight)',
-          lineHeight: 'var(--leading-tight)',
-          color: 'var(--c-lt-text-1)',
-          marginBottom: 'var(--sp-1)',
-        }}>
-          Choose your team
-        </h2>
-        <p style={{
-          fontSize: 'var(--text-sm)',
-          color: 'var(--c-lt-text-2)',
-          marginBottom: 'var(--sp-5)',
-        }}>
-          Select the country you're supporting
-        </p>
+      {/* ── Title ───────────────────────────────────────────────── */}
+      <h2 style={{
+        fontFamily: 'var(--font-display)',
+        fontSize: 28,
+        lineHeight: '36px',
+        fontWeight: 'var(--weight-light)',
+        color: 'var(--c-lt-text-1)',
+        textAlign: 'center',
+        marginTop: 'var(--sp-8)',
+        marginBottom: 'var(--sp-8)',
+      }}>
+        Select your team
+      </h2>
 
-        {/* Search bar */}
-        <div style={{ position: 'relative', marginBottom: 'var(--sp-4)' }}>
+      {/* ── Dropdown ────────────────────────────────────────────── */}
+      <div ref={dropdownRef} style={{ position: 'relative', flexShrink: 0 }}>
+        {/* Trigger input */}
+        <button
+          onClick={() => setOpen(prev => !prev)}
+          aria-haspopup="listbox"
+          aria-expanded={open}
+          style={{
+            width: '100%',
+            height: 48,
+            background: 'var(--c-lt-surface)',
+            border: '1px solid var(--c-lt-border)',
+            borderRadius: 'var(--r-sm)',
+            padding: '0 var(--sp-4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            cursor: 'pointer',
+            fontFamily: 'inherit',
+            fontSize: 16,
+            color: selectedTeam ? 'var(--c-lt-text-1)' : 'var(--c-lt-text-2)',
+            WebkitTapHighlightColor: 'transparent',
+          }}
+        >
+          <span>{selectedTeam ? selectedTeam.name : 'Select a team'}</span>
           <svg
             width="16"
             height="16"
             viewBox="0 0 24 24"
             fill="none"
             style={{
-              position: 'absolute',
-              left: 'var(--sp-4)',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              pointerEvents: 'none',
+              flexShrink: 0,
+              transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: `transform var(--dur-base) var(--ease-out)`,
             }}
           >
-            <circle cx="11" cy="11" r="7" stroke="var(--c-lt-text-2)" strokeWidth="2" />
-            <path d="M20 20l-4-4" stroke="var(--c-lt-text-2)" strokeWidth="2" strokeLinecap="round" />
+            <path d="M6 9l6 6 6-6" stroke="var(--c-lt-text-2)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <input
-            type="text"
-            placeholder="Search teams..."
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            style={{
-              width: '100%',
-              padding: 'var(--sp-3) var(--sp-4) var(--sp-3) var(--sp-10)',
-              background: 'var(--c-lt-surface)',
-              border: '1px solid var(--c-lt-border)',
-              borderRadius: 'var(--r-full)',
-              color: 'var(--c-lt-text-1)',
-              fontSize: 'var(--text-md)',
-              fontFamily: 'inherit',
-              outline: 'none',
-            }}
-          />
-        </div>
-      </div>
+        </button>
 
-      {/* ── Team list ──────────────────────────────────────────── */}
-      <div
-        className="scroll-y stagger"
-        style={{
-          flex: 1,
-          padding: '0 var(--sp-5) var(--sp-5)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--sp-2)',
-        }}
-      >
-        {filtered.map(team => (
-          <button
-            key={team.id}
-            onClick={() => handleTeamSelect(team.id)}
+        {/* Listbox */}
+        {open && (
+          <ul
+            role="listbox"
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--sp-3)',
-              padding: 'var(--sp-3) var(--sp-4)',
+              position: 'absolute',
+              top: 'calc(100% + var(--sp-2))',
+              left: 0,
+              right: 0,
               background: 'var(--c-lt-surface)',
-              border: '1px solid var(--c-lt-border)',
-              borderRadius: 'var(--r-md)',
-              cursor: 'pointer',
-              fontFamily: 'inherit',
-              color: 'var(--c-lt-text-1)',
-              textAlign: 'left',
-              flexShrink: 0,
-              width: '100%',
-              WebkitTapHighlightColor: 'transparent',
-              transition: 'background var(--dur-base) var(--ease-out), transform var(--dur-fast) var(--ease-out)',
+              borderRadius: 'var(--r-sm)',
+              boxShadow: '0px 2px 4px 2px var(--c-lt-shadow)',
+              padding: '0 var(--sp-4)',
+              maxHeight: 280,
+              overflowY: 'auto',
+              zIndex: 10,
+              listStyle: 'none',
+              margin: 0,
+              scrollbarWidth: 'thin',
+              scrollbarColor: 'var(--c-lt-text-3) transparent',
             }}
           >
-            {/* Flag circle with team colours */}
-            <div style={{
-              width: 36,
-              height: 36,
-              borderRadius: 'var(--r-full)',
-              flexShrink: 0,
-              background: `linear-gradient(135deg, ${team.colors[0]}, ${team.colors[1]})`,
-              border: '1px solid var(--c-lt-border)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 18,
-            }}>
-              {team.flag}
-            </div>
-
-            {/* Team name */}
-            <span style={{
-              fontSize: 'var(--text-md)',
-              fontWeight: 'var(--weight-reg)',
-              flex: 1,
-              color: 'var(--c-lt-text-1)',
-            }}>
-              {team.name}
-            </span>
-
-            {/* Chevron */}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
-              <path d="M9 5l7 7-7 7" stroke="var(--c-lt-text-2)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-        ))}
-
-        {filtered.length === 0 && (
-          <p style={{
-            textAlign: 'center',
-            color: 'var(--c-lt-text-2)',
-            fontSize: 'var(--text-sm)',
-            padding: 'var(--sp-8) 0',
-          }}>
-            No teams found
-          </p>
+            {WORLD_CUP_TEAMS.map((team, i) => (
+              <li
+                key={team.id}
+                role="option"
+                aria-selected={team.id === selectedId}
+                onClick={() => handleTeamSelect(team.id)}
+                style={{
+                  padding: 'var(--sp-4) 0',
+                  borderBottom: i < WORLD_CUP_TEAMS.length - 1
+                    ? '1px solid var(--c-lt-bg)'
+                    : 'none',
+                  fontSize: 16,
+                  color: 'var(--c-lt-text-1)',
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  WebkitTapHighlightColor: 'transparent',
+                }}
+              >
+                {team.name}
+              </li>
+            ))}
+          </ul>
         )}
       </div>
+
+      {/* ── Spacer ──────────────────────────────────────────────── */}
+      <div style={{ flex: 1 }} />
+
+      {/* ── "Already have a card? Log in" ───────────────────────── */}
+      <p style={{
+        textAlign: 'center',
+        fontSize: 18,
+        color: 'var(--c-lt-text-1)',
+        marginBottom: 'var(--sp-4)',
+        flexShrink: 0,
+      }}>
+        Already have a card?{' '}
+        <span style={{
+          fontWeight: 'var(--weight-med)',
+          textDecoration: 'underline',
+          cursor: 'pointer',
+        }}>
+          Log in
+        </span>
+      </p>
+
+      {/* ── Continue button ─────────────────────────────────────── */}
+      <button
+        onClick={handleContinue}
+        disabled={!selectedId}
+        style={{
+          width: '100%',
+          height: 56,
+          borderRadius: 32,
+          border: 'none',
+          background: 'var(--c-lt-brand)',
+          color: '#ffffff',
+          fontSize: 16,
+          fontWeight: 'var(--weight-med)',
+          fontFamily: 'inherit',
+          cursor: selectedId ? 'pointer' : 'default',
+          opacity: selectedId ? 1 : 0.5,
+          transition: `opacity var(--dur-base) var(--ease-out)`,
+          flexShrink: 0,
+          WebkitTapHighlightColor: 'transparent',
+        }}
+      >
+        Continue
+      </button>
     </div>
   )
 }
