@@ -11,6 +11,7 @@ const Quiz = lazy(() => import('./routes/Quiz'))
 const Results = lazy(() => import('./routes/Results'))
 const Picture = lazy(() => import('./routes/Picture'))
 const Leaderboard = lazy(() => import('./routes/Leaderboard'))
+const CardMatch = lazy(() => import('./routes/CardMatch'))
 
 export default function App() {
   return (
@@ -40,6 +41,10 @@ export default function App() {
           <Route
             path="/results"
             element={<AuthGuard><Results /></AuthGuard>}
+          />
+          <Route
+            path="/card-match"
+            element={<AuthGuard><CardMatch /></AuthGuard>}
           />
           <Route
             path="/leaderboard"
