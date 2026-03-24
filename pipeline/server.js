@@ -18,6 +18,28 @@ if (!LINEAR_TOKEN) {
   process.exit(1);
 }
 
+// --- Trigger GitHub Actions poller on demand ---
+let lastPollerTrigger = 0;
+const POLLER_COOLDOWN = 30_000; // min 30s between triggers
+
+function triggerPoller(reason) {
+  const now = Date.now();
+  if (now - lastPollerTrigger < POLLER_COOLDOWN) {
+    console.log(`[Pipeline] Poller trigger skipped (cooldown) — ${reason}`);
+    return;
+  }
+  lastPollerTrigger = now;
+  try {
+    execSync(
+      `gh workflow run linear-poll.yml -R ${GITHUB_REPO} 2>&1`,
+      { encoding: "utf-8", timeout: 10_000 }
+    );
+    console.log(`[Pipeline] Poller triggered — ${reason}`);
+  } catch (e) {
+    console.error(`[Pipeline] Poller trigger failed: ${e.message}`);
+  }
+}
+
 // --- Helpers ---
 function linearGQL(query, variables, token) {
   token = token || LINEAR_TOKEN;
@@ -321,6 +343,7 @@ async function handleCommentWebhook(payload) {
       markOurComment(issueId);
       await transitionIssue(issueId, todoState.id);
       console.log(`[Pipeline] ${issueIdentifier}: QA failed (comment webhook), moved to Todo`);
+      triggerPoller(`${issueIdentifier} QA failed → Todo`);
     }
   } else {
     const doneState = findState(states, "Done");
@@ -329,6 +352,7 @@ async function handleCommentWebhook(payload) {
       await transitionIssue(issueId, doneState.id);
       console.log(`[Pipeline] ${issueIdentifier}: QA passed (comment webhook), moved to Done`);
       await postComment(issueId, `**[PIPELINE]** QA review complete — auto-transitioning to Done.`);
+      triggerPoller(`${issueIdentifier} QA passed → Done`);
     }
   }
 }
@@ -353,6 +377,9 @@ async function handleWebhook(payload) {
   console.log(
     `[Pipeline] ${issueIdentifier} → ${newState} (labels: ${labels.join(", ") || "none"})`
   );
+
+  // Trigger cloud poller on every state change — catches anything we miss
+  triggerPoller(`${issueIdentifier} → ${newState}`);
 
   // Stage 2: In Review → trigger QA
   // Comments are posted using LINEAR_PERSONAL_KEY (user identity) so Cyrus
