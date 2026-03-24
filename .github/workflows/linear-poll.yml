@@ -160,6 +160,18 @@ jobs:
                     echo "$IDENT: PR #$MERGED_PR already merged → moving to Deployed"
                     transition "$UUID" "$DEPLOYED_ID"
                     comment "$UUID" "**[PIPELINE]** PR #$MERGED_PR already merged. Auto-moving to Deployed."
+                  else
+                    # No PR at all — might be a sub-issue whose parent PR was merged,
+                    # or work was done in a parent issue's PR. Check if parent is Deployed.
+                    PARENT_STATE=$(gql "{ issue(id: \\\"$IDENT\\\") { parent { state { name } } } }" | \
+                      jq -r '.data.issue.parent.state.name // empty')
+                    if [ "$PARENT_STATE" = "Deployed" ] || [ "$PARENT_STATE" = "Done" ]; then
+                      echo "$IDENT: Sub-issue, parent is $PARENT_STATE → moving to Deployed"
+                      transition "$UUID" "$DEPLOYED_ID"
+                      comment "$UUID" "**[PIPELINE]** Sub-issue — parent already $PARENT_STATE. Auto-moving to Deployed."
+                    else
+                      echo "$IDENT: No PR found and no deployed parent. Skipping."
+                    fi
                   fi
                 fi
               fi
