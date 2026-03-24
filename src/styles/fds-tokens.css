@@ -1,0 +1,321 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Flow Design System — Brand Tokens
+   Source: FDS V1.2.5.7 · 273 brand tokens
+   Architecture: base (primitives) → brand (semantic) → component (specific)
+   Rule: NEVER use base tokens in components. Always use --f-brand-* tokens.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ─── Base: Font Families ──────────────────────────────────────────────── */
+  --f-base-type-family-primary:   Jotia, Verdana, Geneva, sans-serif;
+  --f-base-type-family-secondary: Graphik, Graphik Web, Arial, sans-serif;
+
+  /* ─── Base: Type Scale ─────────────────────────────────────────────────── */
+  --f-base-type-scale-1:  12px;
+  --f-base-type-scale-2:  14px;
+  --f-base-type-scale-3:  16px;
+  --f-base-type-scale-4:  18px;
+  --f-base-type-scale-5:  24px;
+  --f-base-type-scale-6:  28px;
+  --f-base-type-scale-7:  32px;
+  --f-base-type-scale-8:  36px;
+  --f-base-type-scale-9:  48px;
+  --f-base-type-scale-10: 56px;
+  --f-base-type-scale-11: 64px;
+
+  /* ─── Base: Line Heights ───────────────────────────────────────────────── */
+  --f-base-type-line-height-1: 1.33;   /* caption */
+  --f-base-type-line-height-2: 1.43;   /* subheading */
+  --f-base-type-line-height-3: 1.5;    /* body */
+  --f-base-type-line-height-4: 1.33;   /* headline */
+  --f-base-type-line-height-5: 1.33;   /* title-4/5 */
+  --f-base-type-line-height-6: 1.29;   /* title-1/2/3 */
+  --f-base-type-line-height-7: 1.22;   /* title-1 large */
+  --f-base-type-line-height-8: 1.17;   /* page-title */
+
+  /* ─── Base: Type Weights ───────────────────────────────────────────────── */
+  --f-base-type-weight-thin:    100;
+  --f-base-type-weight-light:   300;
+  --f-base-type-weight-regular: 400;
+  --f-base-type-weight-medium:  500;
+
+  /* ─── Base: Spacing ────────────────────────────────────────────────────── */
+  --f-base-space-0:  0px;
+  --f-base-space-1:  4px;
+  --f-base-space-2:  8px;
+  --f-base-space-3:  12px;
+  --f-base-space-4:  16px;
+  --f-base-space-5:  20px;
+  --f-base-space-6:  24px;
+  --f-base-space-8:  32px;
+  --f-base-space-10: 40px;
+  --f-base-space-12: 48px;
+  --f-base-space-14: 56px;
+  --f-base-space-16: 64px;
+  --f-base-space-18: 72px;
+  --f-base-space-20: 80px;
+  /* Negative spacing */
+  --f-base-space-1n:  -4px;
+  --f-base-space-2n:  -8px;
+  --f-base-space-3n:  -12px;
+  --f-base-space-4n:  -16px;
+  --f-base-space-6n:  -24px;
+  --f-base-space-8n:  -32px;
+
+  /* ─── Base: Border Sizes ───────────────────────────────────────────────── */
+  --f-base-border-size-0: 0px;
+  --f-base-border-size-1: 1px;
+  --f-base-border-size-2: 2px;
+
+  /* ─── Base: Radii ──────────────────────────────────────────────────────── */
+  --f-base-radius-none: 0px;
+  --f-base-radius-xs:   4px;
+  --f-base-radius-sm:   8px;
+  --f-base-radius-md:   12px;
+  --f-base-radius-lg:   16px;
+  --f-base-radius-xl:   20px;
+  --f-base-radius-full: 64px;
+
+  /* ─── Base: Shadows ────────────────────────────────────────────────────── */
+  --f-base-shadow-0:  0 0 0 0 transparent;
+  --f-base-shadow-1:  0 2px 8px var(--f-brand-color-shadow-default, #1F212B14);
+  --f-base-shadow-1n: 0 -2px 8px var(--f-brand-color-shadow-default, #1F212B14);
+  --f-base-shadow-2:  0 8px 20px var(--f-brand-color-shadow-default, #1F212B14);
+
+  /* ─── Base: Blur ───────────────────────────────────────────────────────── */
+  --f-base-blur-1: 8px;
+  --f-base-blur-2: 20px;
+
+  /* ─── Base: Motion Durations ───────────────────────────────────────────── */
+  --f-base-motion-duration-240:  240ms;
+  --f-base-motion-duration-480:  480ms;
+  --f-base-motion-duration-960:  960ms;
+  --f-base-motion-duration-1200: 1200ms;
+
+  /* ─── Base: Motion Easings ─────────────────────────────────────────────── */
+  --f-base-motion-easing-ease-in:     cubic-bezier(0.4, 0, 0, 1);
+  --f-base-motion-easing-ease-out:    cubic-bezier(0, 0, 0.08, 1);
+  --f-base-motion-easing-ease-in-out: cubic-bezier(0.4, 0, 0.08, 1);
+
+  /* ─── Base: Opacity ────────────────────────────────────────────────────── */
+  --f-base-opacity-60: 0.6;
+  --f-base-opacity-70: 0.7;
+
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     BRAND TOKENS — semantic layer (always use these in components)
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  /* ─── Brand: Core Colors ───────────────────────────────────────────────── */
+  --f-brand-color-primary:       #8E2157;
+  --f-brand-color-primary-hover: #5C0931;
+  --f-brand-color-accent:        #3A35AF;
+  --f-brand-color-accent-muted:  #7F6CAF;
+  --f-brand-color-overlay:       #1F212BB2;
+
+  /* ─── Brand: Background Colors (26 tokens) ─────────────────────────────── */
+  --f-brand-color-background-default:          #F2F3FA;
+  --f-brand-color-background-light:            #FFFFFF;
+  --f-brand-color-background-disabled:         #DBDEE8;
+  --f-brand-color-background-overlay:          #1F212B;
+  --f-brand-color-background-transparent:      #1F212B00;
+  --f-brand-color-background-dark:             #1F212B;
+  --f-brand-color-background-dark-0a:          #1F212B00;
+  --f-brand-color-background-dark-40a:         #1F212B66;
+  --f-brand-color-background-dark-50a:         #1F212B80;
+  --f-brand-color-background-dark-70a:         #1F212BB2;
+  --f-brand-color-background-none:             #1F212B00;
+  --f-brand-color-background-primary:          #8E2157;
+  --f-brand-color-background-primary-hover:    #5C0931;
+  --f-brand-color-background-blur:             #4A525D80;
+  --f-brand-color-background-muted:            #4A525D;
+  --f-brand-color-background-loyalty-burgundy: #780044;
+  --f-brand-color-background-loyalty-silver:   #787878;
+  --f-brand-color-background-loyalty-gold:     #8C5617;
+  --f-brand-color-background-loyalty-platinum: #1A1A1A;
+  --f-brand-color-background-accent:           #3A35AF;
+  --f-brand-color-background-accent-muted:     #7F6CAF;
+  --f-brand-color-background-accent-disabled:  #9099A2;
+  --f-brand-color-background-success:          #328256;
+  --f-brand-color-background-success-accent:   #ECFFF5;
+  --f-brand-color-background-error:            #CC4726;
+  --f-brand-color-background-warning:          #FCC500;
+
+  /* ─── Brand: Text Colors (15 tokens) ───────────────────────────────────── */
+  --f-brand-color-text-default:           #1F212B;
+  --f-brand-color-text-primary:           #8E2157;
+  --f-brand-color-text-muted:             #4A525D;
+  --f-brand-color-text-subtle:            #6E7780;
+  --f-brand-color-text-disabled:          #9099A2;
+  --f-brand-color-text-error:             #CC4726;
+  --f-brand-color-text-light:             #FFFFFF;
+  --f-brand-color-text-link:              #1F212B;
+  --f-brand-color-text-heading:           #1F212B;
+  --f-brand-color-text-success:           #328256;
+  --f-brand-color-text-warning:           #7A5E00;
+  --f-brand-color-text-loyalty-burgundy:  #780044;
+  --f-brand-color-text-loyalty-silver:    #787878;
+  --f-brand-color-text-loyalty-gold:      #644316;
+  --f-brand-color-text-loyalty-platinum:  #1A1A1A;
+
+  /* ─── Brand: Border Colors (15 tokens) ─────────────────────────────────── */
+  --f-brand-color-border-inner:         #F2F3FA;
+  --f-brand-color-border-default:       #DBDEE8;
+  --f-brand-color-border-muted:         #4A525D;
+  --f-brand-color-border-subtle:        #9DACBC99;
+  --f-brand-color-border-light:         #FFFFFF;
+  --f-brand-color-border-disabled:      #9099A2;
+  --f-brand-color-border-primary:       #8E2157;
+  --f-brand-color-border-primary-hover: #5C0931;
+  --f-brand-color-border-selected:      #1F212B;
+  --f-brand-color-border-success:       #34DB80;
+  --f-brand-color-border-error:         #CC4726;
+  --f-brand-color-border-warning:       #FCC500;
+  --f-brand-color-border-accent:        #3A35AF;
+  --f-brand-color-border-focused:       #1F212B;
+  --f-brand-color-border-hover:         #1F212B;
+
+  /* ─── Brand: Icon Colors (12 tokens) ───────────────────────────────────── */
+  --f-brand-color-icon-default:           #1F212B;
+  --f-brand-color-icon-primary:           #8E2157;
+  --f-brand-color-icon-muted:             #4A525D;
+  --f-brand-color-icon-disabled:          #9099A2;
+  --f-brand-color-icon-error:             #CC4726;
+  --f-brand-color-icon-light:             #FFFFFF;
+  --f-brand-color-icon-success:           #328256;
+  --f-brand-color-icon-warning:           #7A5E00;
+  --f-brand-color-icon-loyalty-burgundy:  #8E2157;
+  --f-brand-color-icon-loyalty-silver:    #787878;
+  --f-brand-color-icon-loyalty-gold:      #8C5617;
+  --f-brand-color-icon-loyalty-platinum:  #1A1A1A;
+
+  /* ─── Brand: Status Colors (3 tokens) ──────────────────────────────────── */
+  --f-brand-color-status-error:   #CC4726;
+  --f-brand-color-status-success: #328256;
+  --f-brand-color-status-warning: #7A5E00;
+
+  /* ─── Brand: Divider Colors (2 tokens) ─────────────────────────────────── */
+  --f-brand-color-divider-default: #DBDEE8;
+  --f-brand-color-divider-inner:   #F2F3FA;
+
+  /* ─── Brand: Flight Status Colors (4 tokens) ───────────────────────────── */
+  --f-brand-color-flight-status-confirmed:   #34DB80;
+  --f-brand-color-flight-status-cancelled:   #D95757;
+  --f-brand-color-flight-status-delayed:     #FCC500;
+  --f-brand-color-flight-status-rescheduled: #F0F0F0;
+
+  /* ─── Brand: Tag Colors (4 tokens) ─────────────────────────────────────── */
+  --f-brand-color-tags-qsuite:         #8E2157;
+  --f-brand-color-tags-lowest-fare:    #328256;
+  --f-brand-color-tags-business-class: #8C5617;
+  --f-brand-color-tags-recommended:    #1F212B;
+
+  /* ─── Brand: Shadow Color (1 token) ────────────────────────────────────── */
+  --f-brand-color-shadow-default: #1F212B14;
+
+  /* ─── Brand: Surface Colors ────────────────────────────────────────────── */
+  --f-brand-color-surface-default: #FFFFFF;
+  --f-brand-color-surface-neutral: #F2F3FA;
+  --f-brand-color-surface-page:    #FAFAFA;
+
+  /* ─── Brand: Spacing ───────────────────────────────────────────────────── */
+  --f-brand-space-none: var(--f-base-space-0);
+  --f-brand-space-2xs:  var(--f-base-space-1);
+  --f-brand-space-xs:   var(--f-base-space-2);
+  --f-brand-space-sm:   var(--f-base-space-3);
+  --f-brand-space-md:   var(--f-base-space-4);
+  --f-brand-space-lg:   var(--f-base-space-6);
+  --f-brand-space-xl:   var(--f-base-space-8);
+  --f-brand-space-2xl:  var(--f-base-space-10);
+  --f-brand-space-3xl:  var(--f-base-space-12);
+  --f-brand-space-4xl:  var(--f-base-space-16);
+  --f-brand-space-5xl:  var(--f-base-space-18);
+  --f-brand-space-6xl:  var(--f-base-space-20);
+  /* Negative spacing */
+  --f-brand-space-2xs-n: var(--f-base-space-1n);
+  --f-brand-space-xs-n:  var(--f-base-space-2n);
+  --f-brand-space-sm-n:  var(--f-base-space-3n);
+  --f-brand-space-md-n:  var(--f-base-space-4n);
+  --f-brand-space-lg-n:  var(--f-base-space-6n);
+  --f-brand-space-xl-n:  var(--f-base-space-8n);
+
+  /* ─── Brand: Border Size ───────────────────────────────────────────────── */
+  --f-brand-border-size-none:    var(--f-base-border-size-0);
+  --f-brand-border-size-default: var(--f-base-border-size-1);
+  --f-brand-border-size-focused: var(--f-base-border-size-2);
+
+  /* ─── Brand: Border Radius ─────────────────────────────────────────────── */
+  --f-brand-radius-none:    var(--f-base-radius-none);
+  --f-brand-radius-base:    var(--f-base-radius-sm);
+  --f-brand-radius-small:   var(--f-base-radius-md);
+  --f-brand-radius-inner:   var(--f-base-radius-lg);
+  --f-brand-radius-outer:   var(--f-base-radius-xl);
+  --f-brand-radius-rounded: var(--f-base-radius-full);
+  /* Aliases used in some token references */
+  --f-brand-border-radius-none:    var(--f-brand-radius-none);
+  --f-brand-border-radius-base:    var(--f-brand-radius-base);
+  --f-brand-border-radius-small:   var(--f-brand-radius-small);
+  --f-brand-border-radius-inner:   var(--f-brand-radius-inner);
+  --f-brand-border-radius-outer:   var(--f-brand-radius-outer);
+  --f-brand-border-radius-rounded: var(--f-brand-radius-rounded);
+
+  /* ─── Brand: Shadows ───────────────────────────────────────────────────── */
+  --f-brand-shadow-none:     var(--f-base-shadow-0);
+  --f-brand-shadow-medium:   var(--f-base-shadow-1);
+  --f-brand-shadow-medium-n: var(--f-base-shadow-1n);
+  --f-brand-shadow-large:    var(--f-base-shadow-2);
+
+  /* ─── Brand: Blur ──────────────────────────────────────────────────────── */
+  --f-brand-blur-subtle: var(--f-base-blur-1);
+  --f-brand-blur-medium: var(--f-base-blur-2);
+
+  /* ─── Brand: Motion Durations ──────────────────────────────────────────── */
+  --f-brand-motion-duration-instant:  var(--f-base-motion-duration-240);
+  --f-brand-motion-duration-quick:    var(--f-base-motion-duration-480);
+  --f-brand-motion-duration-gentle:   var(--f-base-motion-duration-960);
+  --f-brand-motion-duration-generous: var(--f-base-motion-duration-1200);
+
+  /* ─── Brand: Motion Easings ────────────────────────────────────────────── */
+  --f-brand-motion-easing-entry:   var(--f-base-motion-easing-ease-in);
+  --f-brand-motion-easing-exit:    var(--f-base-motion-easing-ease-out);
+  --f-brand-motion-easing-default: var(--f-base-motion-easing-ease-in-out);
+
+  /* ─── Brand: Opacity ───────────────────────────────────────────────────── */
+  --f-brand-opacity-disabled: var(--f-base-opacity-60);
+  --f-brand-opacity-overlay:  var(--f-base-opacity-70);
+
+  /* ─── Brand: Composite Typography ──────────────────────────────────────── */
+  /* font: weight size/line-height family */
+  --f-brand-type-page-title:      300 48px/1.17 var(--f-base-type-family-primary);
+  --f-brand-type-page-title-thin: 100 48px/1.17 var(--f-base-type-family-primary);
+  --f-brand-type-title-1:         100 36px/1.22 var(--f-base-type-family-primary);
+  --f-brand-type-title-2:         100 28px/1.29 var(--f-base-type-family-primary);
+  --f-brand-type-title-3:         300 28px/1.29 var(--f-base-type-family-primary);
+  --f-brand-type-title-4:         100 24px/1.33 var(--f-base-type-family-primary);
+  --f-brand-type-title-5:         300 24px/1.33 var(--f-base-type-family-primary);
+  --f-brand-type-headline:        400 18px/1.33 var(--f-base-type-family-secondary);
+  --f-brand-type-headline-medium: 500 18px/1.33 var(--f-base-type-family-secondary);
+  --f-brand-type-body:            400 16px/1.5  var(--f-base-type-family-secondary);
+  --f-brand-type-body-medium:     500 16px/1.5  var(--f-base-type-family-secondary);
+  --f-brand-type-subheading:      400 14px/1.43 var(--f-base-type-family-secondary);
+  --f-brand-type-subheading-medium: 500 14px/1.43 var(--f-base-type-family-secondary);
+  --f-brand-type-caption:         400 12px/1.33 var(--f-base-type-family-secondary);
+  --f-brand-type-caption-medium:  500 12px/1.33 var(--f-base-type-family-secondary);
+  --f-brand-type-link:            500 16px/1.5  var(--f-base-type-family-secondary);
+  --f-brand-type-link-underline:  500 16px/1.5  var(--f-base-type-family-secondary);
+  --f-brand-type-link-underline-small: 500 14px/1.43 var(--f-base-type-family-secondary);
+  --f-brand-type-link-no-underline:    500 16px/1.5  var(--f-base-type-family-secondary);
+  --f-brand-type-link-no-underline-small: 500 14px/1.43 var(--f-base-type-family-secondary);
+  --f-brand-type-numeral-1:       300 32px/1.29 var(--f-base-type-family-secondary);
+  --f-brand-type-numeral-2:       300 24px/1.29 var(--f-base-type-family-secondary);
+  --f-brand-type-numeral-3:       300 18px/1.33 var(--f-base-type-family-secondary);
+  --f-brand-type-numeral-4:       400 16px/1.33 var(--f-base-type-family-secondary);
+  --f-brand-type-numeral-5:       400 14px/1.43 var(--f-base-type-family-secondary);
+  --f-brand-type-numeral-6:       400 12px/1.33 var(--f-base-type-family-secondary);
+  --f-brand-type-numerals:        100 24px/1.33 var(--f-base-type-family-secondary);
+
+  /* ─── Brand: Gradients ─────────────────────────────────────────────────── */
+  --f-brand-fill-gradient-white:   linear-gradient(180deg, #FFFFFF 0%, #F2F3FA 100%);
+  --f-brand-fill-gradient-overlay-vertical:   linear-gradient(180deg, rgba(31,33,43,0) 0%, rgba(31,33,43,0.7) 100%);
+  --f-brand-fill-gradient-overlay-horizontal: linear-gradient(90deg, rgba(31,33,43,0) 0%, rgba(31,33,43,0.7) 100%);
+}

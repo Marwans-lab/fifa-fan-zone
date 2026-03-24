@@ -1,5 +1,12 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   App Token Layer
+   Imports FDS brand tokens, then defines app-specific tokens and
+   backward-compat aliases so existing components keep working.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@import './fds-tokens.css';
+
 :root {
-  /* ─── Color roles ─────────────────────────────────────────────────────────── */
+  /* ─── Dark-theme color roles (app-specific, no FDS equivalent) ─────────── */
   --c-bg:            #05050a;
   --c-surface:       rgba(255,255,255,0.09);
   --c-surface-raise: rgba(255,255,255,0.14);
@@ -31,27 +38,27 @@
   --c-surface-faint:  rgba(255,255,255,0.04);
   --c-white:          #ffffff;
 
-  /* ─── Light-theme roles ──────────────────────────────────────────────────── */
-  --c-lt-bg:           #f2f3fa;
-  --c-lt-surface:      #ffffff;
-  --c-lt-border:       #dbdee8;
-  --c-lt-text-1:       #1f212b;
-  --c-lt-text-2:       #6e7780;
-  --c-lt-text-3:       #4a525d;
-  --c-lt-brand:        #8e2157;
-  --c-lt-correct-dark: #1C7544;
-  --c-lt-correct-bg:   rgba(28,117,68,0.08);
-  --c-lt-correct-glow: rgba(28,117,68,0.20);
-  --c-lt-error-glow:   rgba(217,87,87,0.20);
-  --c-lt-shimmer:      rgba(255,255,255,0.10);
-  --c-lt-star-glow:    rgba(255,184,0,0.60);
-  --c-lt-white:        #ffffff;
-  --c-lt-shadow:       rgba(31,33,43,0.08);
+  /* ─── Light-theme roles → aliased to FDS brand tokens ──────────────────── */
+  --c-lt-bg:            var(--f-brand-color-background-default);    /* #f2f3fa */
+  --c-lt-surface:       var(--f-brand-color-background-light);      /* #ffffff */
+  --c-lt-border:        var(--f-brand-color-border-default);        /* #dbdee8 */
+  --c-lt-text-1:        var(--f-brand-color-text-default);          /* #1f212b */
+  --c-lt-text-2:        var(--f-brand-color-text-subtle);           /* #6e7780 */
+  --c-lt-text-3:        var(--f-brand-color-text-muted);            /* #4a525d */
+  --c-lt-brand:         var(--f-brand-color-primary);               /* #8e2157 */
+  --c-lt-correct-dark:  #1C7544;
+  --c-lt-correct-bg:    rgba(28,117,68,0.08);
+  --c-lt-correct-glow:  rgba(28,117,68,0.20);
+  --c-lt-error-glow:    rgba(217,87,87,0.20);
+  --c-lt-shimmer:       rgba(255,255,255,0.10);
+  --c-lt-star-glow:     rgba(255,184,0,0.60);
+  --c-lt-white:         var(--f-brand-color-text-light);            /* #ffffff */
+  --c-lt-shadow:        var(--f-brand-color-shadow-default);        /* rgba(31,33,43,0.08) */
   --c-lt-shadow-strong: rgba(0,0,0,0.25);
-  --c-lt-overlay:      rgba(0,0,0,0.20);
+  --c-lt-overlay:       rgba(0,0,0,0.20);
   --c-lt-overlay-heavy: rgba(0,0,0,0.50);
 
-  /* ─── Glass / elevation ───────────────────────────────────────────────────── */
+  /* ─── Glass / elevation (app-specific dark-theme) ──────────────────────── */
   --glass-bg:     rgba(255,255,255,0.10);
   --glass-border: rgba(255,255,255,0.18);
   --glass-blur:   blur(16px);
@@ -61,9 +68,9 @@
   --shadow-md: 0 4px 20px rgba(0,0,0,0.55), var(--glass-shine);
   --shadow-lg: 0 8px 48px rgba(0,0,0,0.70), var(--glass-shine);
 
-  /* ─── Typography ──────────────────────────────────────────────────────────── */
-  --font-display: 'Jotia', 'SF Pro Display', ui-rounded, -apple-system, system-ui, sans-serif;
-  --font-body:    'Graphik', 'SF Pro Text', ui-rounded, -apple-system, system-ui, sans-serif;
+  /* ─── Typography ─────────────────────────────────────────────────────────── */
+  --font-display: var(--f-base-type-family-primary);
+  --font-body:    var(--f-base-type-family-secondary);
 
   --text-2xs: 10px;
   --text-xs:  11px;
@@ -91,31 +98,31 @@
   --tracking-wide:   0.05em;
   --tracking-wider:  0.09em;
 
-  /* ─── Spacing (8pt grid) ──────────────────────────────────────────────────── */
-  --sp-1:  4px;
-  --sp-2:  8px;
-  --sp-3:  12px;
-  --sp-4:  16px;
+  /* ─── Spacing (8pt grid) ─────────────────────────────────────────────────── */
+  --sp-1:  var(--f-brand-space-2xs);   /* 4px */
+  --sp-2:  var(--f-brand-space-xs);    /* 8px */
+  --sp-3:  var(--f-brand-space-sm);    /* 12px */
+  --sp-4:  var(--f-brand-space-md);    /* 16px */
   --sp-5:  20px;
-  --sp-6:  24px;
+  --sp-6:  var(--f-brand-space-lg);    /* 24px */
   --sp-7:  28px;
-  --sp-8:  32px;
+  --sp-8:  var(--f-brand-space-xl);    /* 32px */
   --sp-9:  36px;
-  --sp-10: 40px;
-  --sp-12: 48px;
-  --sp-16: 64px;
-  --sp-20: 80px;
+  --sp-10: var(--f-brand-space-2xl);   /* 40px */
+  --sp-12: var(--f-brand-space-3xl);   /* 48px */
+  --sp-16: var(--f-brand-space-4xl);   /* 64px */
+  --sp-20: var(--f-brand-space-6xl);   /* 80px */
 
-  /* ─── Radii ───────────────────────────────────────────────────────────────── */
+  /* ─── Radii ──────────────────────────────────────────────────────────────── */
   --r-xs:   4px;
-  --r-sm:   8px;
-  --r-md:   12px;
-  --r-lg:   16px;
-  --r-xl:   20px;
+  --r-sm:   var(--f-brand-radius-base);    /* 8px */
+  --r-md:   var(--f-brand-radius-small);   /* 12px */
+  --r-lg:   var(--f-brand-radius-inner);   /* 16px */
+  --r-xl:   var(--f-brand-radius-outer);   /* 20px */
   --r-2xl:  28px;
   --r-full: 9999px;
 
-  /* ─── Motion ──────────────────────────────────────────────────────────────── */
+  /* ─── Motion ─────────────────────────────────────────────────────────────── */
   --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
   --ease-inout: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-sharp: cubic-bezier(0.2, 0, 0, 1);
@@ -176,14 +183,14 @@
   --z-overlay: 100;
   --z-modal:   200;
 
-  /* ─── Glass variants ─────────────────────────────────────────────────────── */
+  /* ─── Glass variants ────────────────────────────────────────────────────── */
   --glass-bg-strong: rgba(255,255,255,0.14);
   --glass-bg-subtle: rgba(255,255,255,0.05);
 
-  /* ─── Focus ring ─────────────────────────────────────────────────────────── */
+  /* ─── Focus ring ────────────────────────────────────────────────────────── */
   --focus-ring: 0 0 0 2px var(--c-bg), 0 0 0 4px var(--c-accent);
 
-  /* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+  /* ─── Scrollbar ─────────────────────────────────────────────────────────── */
   --scrollbar-track: transparent;
   --scrollbar-thumb: rgba(255,255,255,0.12);
   --scrollbar-thumb-hover: rgba(255,255,255,0.22);
