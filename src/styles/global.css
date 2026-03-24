@@ -49,11 +49,11 @@ html, body, #root {
 }
 
 body {
-  background-color: var(--c-bg);
-  color: var(--c-text-1);
-  font-family: var(--font-body);
-  font-size: var(--text-md);
-  font-weight: var(--weight-reg);
+  background-color: var(--f-brand-color-background-default, #F2F3FA);
+  color: var(--f-brand-color-text-default, #1F212B);
+  font-family: var(--f-brand-font-family-body, 'Graphik', sans-serif);
+  font-size: var(--f-brand-font-size-md, 15px);
+  font-weight: var(--f-brand-font-weight-regular, 400);
   letter-spacing: var(--tracking-normal);
   line-height: var(--leading-normal);
   -webkit-font-smoothing: antialiased;
@@ -64,7 +64,7 @@ body {
 }
 
 button, input, select, textarea {
-  font-family: var(--font-body);
+  font-family: var(--f-brand-font-family-body, 'Graphik', sans-serif);
   letter-spacing: var(--tracking-normal);
 }
 
@@ -74,30 +74,158 @@ img {
 }
 
 h1, h2, h3, h4 {
-  font-family: var(--font-display);
+  font-family: var(--f-brand-font-family-display, 'Jotia', sans-serif);
   letter-spacing: var(--tracking-tight);
   font-weight: var(--weight-light);
   line-height: var(--leading-tight);
 }
 
-/* ─── Interactive states ──────────────────────────────────────────────────── */
-.btn {
+/* ─── Button (FDS 4-step component pattern) ──────────────────────────────── */
+.f-button {
+  /* Component tokens — alias FDS brand tokens */
+  --f-button-bg: var(--f-brand-color-primary, #8E2157);
+  --f-button-text: var(--f-brand-color-text-inverse, #FFFFFF);
+  --f-button-radius: var(--f-brand-radius-rounded, 64px);
+  --f-button-height: 44px;
+  --f-button-padding-x: var(--f-brand-space-6, 24px);
+  --f-button-padding-y: var(--f-brand-space-4, 16px);
+  --f-button-font-size: var(--f-brand-font-size-md, 15px);
+  --f-button-font-weight: var(--f-brand-font-weight-medium, 500);
+  --f-button-border: none;
+
+  /* Rules consume only component tokens */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--sp-4) var(--sp-6);
-  border-radius: var(--r-full);
-  font-family: var(--font-body);
-  font-size: var(--text-md);
-  font-weight: var(--weight-med);
+  min-height: var(--f-button-height);
+  padding: var(--f-button-padding-y) var(--f-button-padding-x);
+  border-radius: var(--f-button-radius);
+  background: var(--f-button-bg);
+  color: var(--f-button-text);
+  font-family: var(--f-brand-font-family-body, 'Graphik', sans-serif);
+  font-size: var(--f-button-font-size);
+  font-weight: var(--f-button-font-weight);
   letter-spacing: var(--tracking-wide);
-  border: none;
+  border: var(--f-button-border);
   cursor: pointer;
   transition:
-    opacity var(--dur-base) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out),
-    background var(--dur-base) var(--ease-out),
-    box-shadow var(--dur-base) var(--ease-out);
+    background var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
+    box-shadow var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
+    transform var(--f-brand-motion-duration-fast, 100ms) var(--f-brand-motion-easing-standard);
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.f-button:focus-visible {
+  outline: none;
+  box-shadow: var(--f-brand-focus-ring);
+}
+
+.f-button:active:not(:disabled) {
+  transform: scale(0.975);
+}
+
+.f-button:disabled {
+  background: var(--f-brand-color-background-disabled, #E5E7F0);
+  color: var(--f-brand-color-text-disabled, #A0A4B0);
+  cursor: not-allowed;
+}
+
+/* ── Modifiers (reassign component tokens only) ──────────────────────────── */
+.f-button--primary {
+  --f-button-bg: var(--f-brand-color-primary, #8E2157);
+  --f-button-text: var(--f-brand-color-text-inverse, #FFFFFF);
+}
+
+.f-button--primary:hover:not(:disabled) {
+  --f-button-bg: var(--f-brand-color-primary-hover, #7A1C4B);
+}
+
+.f-button--secondary {
+  --f-button-bg: transparent;
+  --f-button-text: var(--f-brand-color-primary, #8E2157);
+  --f-button-border: 1px solid var(--f-brand-color-primary, #8E2157);
+}
+
+.f-button--secondary:hover:not(:disabled) {
+  --f-button-bg: rgba(142, 33, 87, 0.06);
+}
+
+.f-button--ghost {
+  --f-button-bg: transparent;
+  --f-button-text: var(--f-brand-color-text-default, #1F212B);
+  --f-button-border: none;
+}
+
+.f-button--ghost:hover:not(:disabled) {
+  --f-button-bg: rgba(31, 33, 43, 0.06);
+}
+
+.f-button--white-outlined {
+  --f-button-bg: transparent;
+  --f-button-text: var(--f-brand-color-text-inverse, #FFFFFF);
+  --f-button-border: 1px solid var(--f-brand-color-text-inverse, #FFFFFF);
+}
+
+.f-button--white-outlined:hover:not(:disabled) {
+  --f-button-bg: rgba(255, 255, 255, 0.12);
+}
+
+.f-button--white-filled {
+  --f-button-bg: var(--f-brand-color-text-inverse, #FFFFFF);
+  --f-button-text: var(--f-brand-color-primary, #8E2157);
+}
+
+.f-button--white-filled:hover:not(:disabled) {
+  --f-button-bg: rgba(255, 255, 255, 0.92);
+}
+
+/* ── Size modifiers ──────────────────────────────────────────────────────── */
+.f-button--sm {
+  --f-button-height: 36px;
+  --f-button-padding-x: var(--f-brand-space-4, 16px);
+  --f-button-padding-y: var(--f-brand-space-2, 8px);
+  --f-button-font-size: var(--f-brand-font-size-sm, 13px);
+}
+
+.f-button--lg {
+  --f-button-height: 52px;
+  --f-button-padding-x: var(--f-brand-space-6, 24px);
+  --f-button-padding-y: var(--f-brand-space-5, 20px);
+  --f-button-font-size: var(--f-brand-font-size-lg, 18px);
+}
+
+/* ── Legacy aliases (backward compat during migration) ───────────────────── */
+.btn {
+  --f-button-bg: var(--f-brand-color-primary, #8E2157);
+  --f-button-text: var(--f-brand-color-text-inverse, #FFFFFF);
+  --f-button-radius: var(--f-brand-radius-rounded, 64px);
+  --f-button-height: 44px;
+  --f-button-padding-x: var(--f-brand-space-6, 24px);
+  --f-button-padding-y: var(--f-brand-space-4, 16px);
+  --f-button-font-size: var(--f-brand-font-size-md, 15px);
+  --f-button-font-weight: var(--f-brand-font-weight-medium, 500);
+  --f-button-border: none;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--f-button-height);
+  padding: var(--f-button-padding-y) var(--f-button-padding-x);
+  border-radius: var(--f-button-radius);
+  background: var(--f-button-bg);
+  color: var(--f-button-text);
+  font-family: var(--f-brand-font-family-body, 'Graphik', sans-serif);
+  font-size: var(--f-button-font-size);
+  font-weight: var(--f-button-font-weight);
+  letter-spacing: var(--tracking-wide);
+  border: var(--f-button-border);
+  cursor: pointer;
+  transition:
+    background var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
+    box-shadow var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
+    transform var(--f-brand-motion-duration-fast, 100ms) var(--f-brand-motion-easing-standard);
   -webkit-tap-highlight-color: transparent;
   position: relative;
   overflow: hidden;
@@ -105,7 +233,7 @@ h1, h2, h3, h4 {
 
 .btn:focus-visible {
   outline: none;
-  box-shadow: var(--focus-ring);
+  box-shadow: var(--f-brand-focus-ring);
 }
 
 .btn:active:not(:disabled) {
@@ -113,102 +241,44 @@ h1, h2, h3, h4 {
 }
 
 .btn:disabled {
-  opacity: 0.38;
+  background: var(--f-brand-color-background-disabled, #E5E7F0);
+  color: var(--f-brand-color-text-disabled, #A0A4B0);
   cursor: not-allowed;
 }
 
 .btn-primary {
-  background: #ffffff;
-  color: #111;
+  --f-button-bg: var(--f-brand-color-primary, #8E2157);
+  --f-button-text: var(--f-brand-color-text-inverse, #FFFFFF);
 }
-
 .btn-primary:hover:not(:disabled) {
-  background: rgba(255,255,255,0.92);
-  box-shadow: var(--shadow-md);
+  --f-button-bg: var(--f-brand-color-primary-hover, #7A1C4B);
 }
-
 .btn-secondary {
-  background: var(--glass-bg);
-  color: var(--c-text-1);
-  border: 1px solid var(--c-border);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  --f-button-bg: transparent;
+  --f-button-text: var(--f-brand-color-primary, #8E2157);
+  --f-button-border: 1px solid var(--f-brand-color-primary, #8E2157);
 }
-
 .btn-secondary:hover:not(:disabled) {
-  background: var(--c-surface-raise);
-  border-color: var(--c-border-raise);
+  --f-button-bg: rgba(142, 33, 87, 0.06);
 }
-
 .btn-ghost {
-  background: transparent;
-  color: var(--c-text-2);
-  border: none;
+  --f-button-bg: transparent;
+  --f-button-text: var(--f-brand-color-text-default, #1F212B);
+  --f-button-border: none;
 }
-
 .btn-ghost:hover:not(:disabled) {
-  color: var(--c-text-1);
-  background: var(--c-surface);
+  --f-button-bg: rgba(31, 33, 43, 0.06);
 }
 
-/* ─── Glass surface utility ───────────────────────────────────────────────── */
-.glass {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  box-shadow: var(--glass-shine), var(--shadow-sm);
-}
-
-/* ─── Global focus ring (all buttons, not just .btn) ─────────────────────── */
-button:focus-visible,
-a:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-
-/* ─── Interactive glass row (team list, quiz cards, etc.) ─────────────────── */
-.glass-row {
-  background: var(--glass-bg);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-md);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  box-shadow: var(--glass-shine);
-  transition:
-    background var(--dur-base) var(--ease-out),
-    border-color var(--dur-base) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
-  -webkit-tap-highlight-color: transparent;
-}
-
-.glass-row:hover:not(:disabled) {
-  background: var(--c-surface-raise);
-  border-color: var(--c-border-raise);
-}
-
-.glass-row:active:not(:disabled) {
-  transform: scale(0.99);
-}
-
-/* ─── Page entrance animation ─────────────────────────────────────────────── */
-@keyframes page-in {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.page-in {
-  animation: page-in 380ms var(--ease-out) both;
-}
-
-/* ─── Circular icon button (back, refresh, etc.) ──────────────────────────── */
+/* ─── Icon button ────────────────────────────────────────────────────────── */
 .btn-icon {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
   border-radius: 50%;
-  border: 1px solid var(--c-border);
-  background: var(--glass-bg);
-  color: var(--c-text-1);
+  border: 1px solid var(--f-brand-color-border-default, #DBDEE8);
+  background: var(--f-brand-color-surface-default, #FFFFFF);
+  color: var(--f-brand-color-text-default, #1F212B);
   cursor: pointer;
   flex-shrink: 0;
   display: flex;
@@ -216,18 +286,15 @@ a:focus-visible {
   justify-content: center;
   font-size: 16px;
   font-family: inherit;
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
   transition:
-    background var(--dur-base) var(--ease-out),
-    border-color var(--dur-base) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
+    background var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
+    border-color var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
+    transform var(--f-brand-motion-duration-fast, 100ms) var(--f-brand-motion-easing-standard);
   -webkit-tap-highlight-color: transparent;
 }
 
 .btn-icon:hover {
-  background: var(--c-surface-raise);
-  border-color: var(--c-border-raise);
+  background: var(--f-brand-color-surface-neutral, #F2F3FA);
 }
 
 .btn-icon:active {
@@ -236,32 +303,138 @@ a:focus-visible {
 
 .btn-icon:focus-visible {
   outline: none;
-  box-shadow: var(--focus-ring);
+  box-shadow: var(--f-brand-focus-ring);
 }
 
-/* ─── Text input field ────────────────────────────────────────────────────── */
-.input-field {
+/* ─── Surface (FDS card pattern) ─────────────────────────────────────────── */
+.f-surface {
+  background: var(--f-brand-color-surface-default, #FFFFFF);
+  border-radius: var(--f-brand-radius-inner, 16px);
+  box-shadow: var(--f-brand-shadow-medium);
+}
+
+.f-surface--neutral {
+  background: var(--f-brand-color-surface-neutral, #F2F3FA);
+}
+
+.f-surface--elevated {
+  box-shadow: var(--f-brand-shadow-large);
+}
+
+/* ─── Input (FDS text input) ─────────────────────────────────────────────── */
+.f-input {
   width: 100%;
-  padding: var(--sp-3) var(--sp-4);
-  background: var(--glass-bg);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-full);
-  color: var(--c-text-1);
-  font-size: var(--text-md);
+  padding: var(--f-brand-space-3, 12px) var(--f-brand-space-4, 16px);
+  background: var(--f-brand-color-surface-default, #FFFFFF);
+  border: 1px solid var(--f-brand-color-border-default, #DBDEE8);
+  border-radius: var(--f-brand-radius-base, 8px);
+  color: var(--f-brand-color-text-default, #1F212B);
+  font-size: var(--f-brand-font-size-md, 15px);
   font-family: inherit;
   outline: none;
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  transition: border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+  transition:
+    border-color var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
+    box-shadow var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard);
+}
+
+.f-input:focus {
+  border-color: var(--f-brand-color-border-focused, #8E2157);
+  box-shadow: 0 0 0 var(--f-brand-border-size-focused, 2px) rgba(142, 33, 87, 0.16);
+}
+
+.f-input::placeholder {
+  color: var(--f-brand-color-text-disabled, #A0A4B0);
+}
+
+/* Legacy alias */
+.input-field {
+  width: 100%;
+  padding: var(--f-brand-space-3, 12px) var(--f-brand-space-4, 16px);
+  background: var(--f-brand-color-surface-default, #FFFFFF);
+  border: 1px solid var(--f-brand-color-border-default, #DBDEE8);
+  border-radius: var(--f-brand-radius-base, 8px);
+  color: var(--f-brand-color-text-default, #1F212B);
+  font-size: var(--f-brand-font-size-md, 15px);
+  font-family: inherit;
+  outline: none;
+  transition:
+    border-color var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
+    box-shadow var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard);
 }
 
 .input-field:focus {
-  border-color: var(--c-border-accent);
-  box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.08);
+  border-color: var(--f-brand-color-border-focused, #8E2157);
+  box-shadow: 0 0 0 var(--f-brand-border-size-focused, 2px) rgba(142, 33, 87, 0.16);
 }
 
 .input-field::placeholder {
-  color: var(--c-text-3);
+  color: var(--f-brand-color-text-disabled, #A0A4B0);
+}
+
+/* ─── Global focus ring ──────────────────────────────────────────────────── */
+button:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: var(--f-brand-focus-ring);
+}
+
+/* ─── Page entrance animation (FDS motion) ───────────────────────────────── */
+@keyframes f-page-enter-kf {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.f-page-enter {
+  animation: f-page-enter-kf var(--f-brand-motion-duration-generous, 1200ms) var(--f-brand-motion-easing-entry) both;
+}
+
+/* Legacy alias */
+.page-in {
+  animation: f-page-enter-kf var(--f-brand-motion-duration-generous, 1200ms) var(--f-brand-motion-easing-entry) both;
+}
+
+/* ─── Stagger entrance utility (FDS 60ms per item) ───────────────────────── */
+.f-stagger > * {
+  animation: f-page-enter-kf var(--f-brand-motion-duration-generous, 1200ms) var(--f-brand-motion-easing-entry) both;
+}
+.f-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.f-stagger > *:nth-child(2) { animation-delay: 60ms; }
+.f-stagger > *:nth-child(3) { animation-delay: 120ms; }
+.f-stagger > *:nth-child(4) { animation-delay: 180ms; }
+.f-stagger > *:nth-child(5) { animation-delay: 240ms; }
+.f-stagger > *:nth-child(6) { animation-delay: 300ms; }
+.f-stagger > *:nth-child(n+7) { animation-delay: 360ms; }
+
+/* Legacy alias */
+.stagger > * {
+  animation: f-page-enter-kf var(--f-brand-motion-duration-generous, 1200ms) var(--f-brand-motion-easing-entry) both;
+}
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 60ms; }
+.stagger > *:nth-child(3) { animation-delay: 120ms; }
+.stagger > *:nth-child(4) { animation-delay: 180ms; }
+.stagger > *:nth-child(5) { animation-delay: 240ms; }
+.stagger > *:nth-child(6) { animation-delay: 300ms; }
+.stagger > *:nth-child(n+7) { animation-delay: 360ms; }
+
+/* ─── Reduced motion ────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .f-page-enter,
+  .page-in {
+    animation-duration: 0.01ms !important;
+  }
+
+  .f-stagger > *,
+  .stagger > * {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+  }
+
+  .f-button,
+  .btn,
+  .btn-icon {
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ─── Premium scrollbar ──────────────────────────────────────────────────── */
@@ -287,8 +460,8 @@ a:focus-visible {
 
 /* ─── Selection ──────────────────────────────────────────────────────────── */
 ::selection {
-  background: rgba(0,212,170,0.25);
-  color: var(--c-text-1);
+  background: rgba(142, 33, 87, 0.20);
+  color: var(--f-brand-color-text-default, #1F212B);
 }
 
 /* ─── Smooth scroll containers ───────────────────────────────────────────── */
@@ -297,18 +470,6 @@ a:focus-visible {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
 }
-
-/* ─── Stagger entrance utility ───────────────────────────────────────────── */
-.stagger > * {
-  animation: page-in 380ms var(--ease-out) both;
-}
-.stagger > *:nth-child(1) { animation-delay: 0ms; }
-.stagger > *:nth-child(2) { animation-delay: 40ms; }
-.stagger > *:nth-child(3) { animation-delay: 80ms; }
-.stagger > *:nth-child(4) { animation-delay: 120ms; }
-.stagger > *:nth-child(5) { animation-delay: 160ms; }
-.stagger > *:nth-child(6) { animation-delay: 200ms; }
-.stagger > *:nth-child(n+7) { animation-delay: 240ms; }
 
 /* ─── Ambient blob animations ────────────────────────────────────────────── */
 @keyframes blob-slow {
@@ -392,3 +553,35 @@ a:focus-visible {
 
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ─── Legacy glass surface (kept for components not yet migrated) ────────── */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shine), var(--shadow-sm);
+}
+
+.glass-row {
+  background: var(--glass-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shine);
+  transition:
+    background var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
+    border-color var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
+    transform var(--f-brand-motion-duration-fast, 100ms) var(--f-brand-motion-easing-standard);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.glass-row:hover:not(:disabled) {
+  background: var(--c-surface-raise);
+  border-color: var(--c-border-raise);
+}
+
+.glass-row:active:not(:disabled) {
+  transform: scale(0.99);
+}
