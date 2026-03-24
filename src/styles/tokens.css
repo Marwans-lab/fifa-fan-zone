@@ -37,6 +37,7 @@
   --c-lt-brand:        #8e2157;
   --c-lt-correct-dark: #1C7544;
   --c-lt-shadow:       rgba(31,33,43,0.08);
+  --c-lt-shadow-strong: rgba(0,0,0,0.25);
   --c-lt-overlay:      rgba(0,0,0,0.20);
 
   /* ─── Glass / elevation ───────────────────────────────────────────────────── */
