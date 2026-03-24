@@ -1,11 +1,10 @@
 import { useNavigate } from 'react-router-dom'
-import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import { useLeaderboard, LEADERBOARD_REFRESH_MS } from '../lib/leaderboard'
 import { useStore } from '../store/useStore'
-import chevLeft   from '../assets/icons/Chevron-left-white.svg'
-import flipIcon   from '../assets/icons/flip-white.svg'
-import trophyIcon from '../assets/icons/Trophy-white.svg'
+import chevLeft   from '../assets/icons/Chevron-left-dark.svg'
+import flipIcon   from '../assets/icons/flip-dark.svg'
+import trophyIcon from '../assets/icons/Trophy-dark.svg'
 
 function pad2(n: number) { return String(n).padStart(2, '0') }
 function formatRefresh(d: Date) { return `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}` }
@@ -15,111 +14,212 @@ export default function Leaderboard() {
   const { state } = useStore()
   const { entries, myRank, lastRefresh, refresh } = useLeaderboard()
   const homeRoute = state.fanCard.teamId ? '/card' : '/'
+  const isTop5 = myRank !== null && myRank <= 5
 
   return (
-    <Screen>
-      <div className="page-in scroll-y" style={{ display: 'flex', flexDirection: 'column', padding: 'var(--sp-6) var(--sp-5) 100px', width: '100%', maxWidth: 420, margin: '0 auto' }}>
+    <div style={{
+      minHeight: '100%',
+      background: 'var(--f-brand-color-background-default)',
+      display: 'flex',
+      flexDirection: 'column',
+    }}>
+      <div className="page-in scroll-y" style={{
+        display: 'flex',
+        flexDirection: 'column',
+        padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) 120px',
+        width: '100%',
+        maxWidth: 420,
+        margin: '0 auto',
+      }}>
 
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 'var(--sp-2)' }}>
-          <button onClick={() => navigate(-1)} className="btn-icon"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 'var(--f-brand-space-xs)' }}>
+          <button onClick={() => navigate(-1)} className="f-button--ghost" aria-label="Go back">
+            <img src={chevLeft} width={24} height={24} alt="" />
+          </button>
           <div style={{ flex: 1, textAlign: 'center' }}>
-            <h2 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'var(--text-lg)',
-              fontWeight: 'var(--weight-light)',
-              letterSpacing: 'var(--tracking-tight)',
-              color: 'var(--c-text-1)',
-            }}>
+            <h2 style={{ font: 'var(--f-brand-type-title-4)', color: 'var(--f-brand-color-text-heading)' }}>
               Leaderboard
             </h2>
           </div>
           <button
             onClick={() => { track('leaderboard_refresh_tapped'); refresh() }}
-            className="btn-icon"
+            className="f-button--ghost"
             aria-label="Refresh leaderboard"
-          ><img src={flipIcon} width={24} height={24} alt="Refresh" /></button>
+          >
+            <img src={flipIcon} width={24} height={24} alt="" />
+          </button>
         </div>
 
         {/* Subtitle */}
-        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-3)', textAlign: 'center', marginBottom: 'var(--sp-5)', lineHeight: 'var(--leading-normal)', letterSpacing: 'var(--tracking-wide)' }}>
-          Cumulative score · Updated {formatRefresh(lastRefresh)} · auto-refreshes every {LEADERBOARD_REFRESH_MS / 60_000} min
+        <div style={{
+          font: 'var(--f-brand-type-caption)',
+          color: 'var(--f-brand-color-text-subtle)',
+          textAlign: 'center',
+          marginBottom: 'var(--f-brand-space-md)',
+        }}>
+          Cumulative score &middot; Updated {formatRefresh(lastRefresh)} &middot; auto-refreshes every {LEADERBOARD_REFRESH_MS / 60_000} min
         </div>
 
-        {/* Your rank */}
+        {/* Your rank highlight card */}
         {myRank !== null && (
-          <div style={{
-            textAlign: 'center', marginBottom: 'var(--sp-5)',
-            padding: 'var(--sp-3) var(--sp-4)',
-            borderRadius: 'var(--r-md)',
-            background: 'rgba(200,16,46,0.07)',
-            border: '1px solid var(--c-border-brand)',
-            backdropFilter: 'var(--glass-blur)',
-            WebkitBackdropFilter: 'var(--glass-blur)',
+          <div className="f-leaderboard-rank" style={{
+            textAlign: 'center',
+            marginBottom: 'var(--f-brand-space-md)',
+            padding: 'var(--f-brand-space-md)',
+            borderRadius: 'var(--f-brand-radius-inner)',
+            ...(isTop5 ? {
+              background: 'var(--f-brand-color-background-primary)',
+              color: 'var(--f-brand-color-text-light)',
+            } : {
+              background: 'var(--f-brand-color-background-light)',
+              border: '1px solid var(--f-brand-color-border-default)',
+              color: 'var(--f-brand-color-text-default)',
+            }),
           }}>
-            <span style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)' }}>Your rank: </span>
-            <span style={{ fontSize: 'var(--text-md)', fontWeight: 'var(--weight-med)', color: 'var(--c-accent)' }}>#{myRank}</span>
-            {myRank <= 5 && (
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--c-accent)', marginLeft: 8, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                <img src={trophyIcon} width={24} height={24} alt="" /> Top 5 — Avios eligible!
-              </span>
+            <div style={{
+              font: 'var(--f-brand-type-title-2)',
+              marginBottom: 'var(--f-brand-space-2xs)',
+            }}>
+              #{myRank}
+            </div>
+            <div style={{
+              font: 'var(--f-brand-type-headline-medium)',
+              opacity: isTop5 ? 0.85 : 1,
+              color: isTop5 ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-text-muted)',
+            }}>
+              {entries.find(e => e.isMe)?.pts ?? 0} Pts
+            </div>
+            {isTop5 && (
+              <div style={{
+                font: 'var(--f-brand-type-caption)',
+                marginTop: 'var(--f-brand-space-xs)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 'var(--f-brand-space-2xs)',
+                color: 'var(--f-brand-color-text-light)',
+              }}>
+                <img src={trophyIcon} width={20} height={20} alt="" style={{ filter: 'brightness(0) invert(1)' }} />
+                Top 5 — Avios eligible!
+              </div>
             )}
           </div>
         )}
 
-        {/* Rows */}
-        <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-2)' }}>
+        {/* Top 5 Avios eligibility banner */}
+        {!isTop5 && (
+          <div style={{
+            background: 'var(--f-brand-color-background-primary)',
+            color: 'var(--f-brand-color-text-light)',
+            borderRadius: 'var(--f-brand-radius-inner)',
+            padding: 'var(--f-brand-space-md)',
+            marginBottom: 'var(--f-brand-space-md)',
+            textAlign: 'center',
+            font: 'var(--f-brand-type-subheading-medium)',
+          }}>
+            Top 5 fans win Avios — keep playing to climb!
+          </div>
+        )}
+
+        {/* Leaderboard rows */}
+        <div className="f-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-xs)' }}>
           {entries.map(row => (
             <div
               key={row.rank}
+              className={`f-leaderboard-row${row.isMe ? ' f-leaderboard-row--highlighted' : ''}`}
               style={{
-                display: 'flex', alignItems: 'center',
-                padding: 'var(--sp-4) var(--sp-4)',
-                borderRadius: 'var(--r-md)',
-                background: row.isMe ? 'rgba(200,16,46,0.07)' : 'var(--glass-bg)',
-                border: `1px solid ${row.isMe ? 'var(--c-border-brand)' : 'var(--c-border)'}`,
-                backdropFilter: 'var(--glass-blur)',
-                WebkitBackdropFilter: 'var(--glass-blur)',
-                boxShadow: 'var(--glass-shine)',
-                transition: 'background var(--dur-base) var(--ease-out)',
+                display: 'flex',
+                alignItems: 'center',
+                padding: 'var(--f-brand-space-sm) var(--f-brand-space-md)',
+                borderRadius: 'var(--f-brand-radius-base)',
+                background: 'var(--f-brand-color-background-light)',
+                boxShadow: 'var(--f-brand-shadow-medium)',
+                ...(row.isMe ? { borderLeft: '3px solid var(--f-brand-color-border-primary)' } : {}),
               }}
             >
-              <div style={{ width: 28, fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: row.rank <= 3 ? 'var(--c-accent)' : 'var(--c-text-3)', flexShrink: 0, lineHeight: 1, display: 'flex', alignItems: 'center' }}>
-                {row.rank === 1 ? <img src={trophyIcon} width={24} height={24} alt="1" /> : row.rank}
+              {/* Rank */}
+              <div style={{
+                width: 32,
+                flexShrink: 0,
+                font: 'var(--f-brand-type-body-medium)',
+                color: row.rank <= 3 ? 'var(--f-brand-color-text-primary)' : 'var(--f-brand-color-text-subtle)',
+                display: 'flex',
+                alignItems: 'center',
+              }}>
+                {row.rank === 1
+                  ? <img src={trophyIcon} width={20} height={20} alt="1st" />
+                  : row.rank}
               </div>
-              <div style={{ flex: 1, fontSize: 'var(--text-md)', color: 'var(--c-text-1)', fontWeight: row.isMe ? 'var(--weight-med)' : 'var(--weight-reg)' }}>
+
+              {/* Name */}
+              <div style={{
+                flex: 1,
+                font: row.isMe ? 'var(--f-brand-type-body-medium)' : 'var(--f-brand-type-body)',
+                color: 'var(--f-brand-color-text-default)',
+              }}>
                 {row.name}
-                {row.isMe && <span style={{ fontSize: 'var(--text-xs)', color: 'var(--c-accent)', marginLeft: 8, letterSpacing: 'var(--tracking-wide)' }}>you</span>}
+                {row.isMe && (
+                  <span style={{
+                    font: 'var(--f-brand-type-caption)',
+                    color: 'var(--f-brand-color-text-primary)',
+                    marginLeft: 'var(--f-brand-space-xs)',
+                  }}>
+                    you
+                  </span>
+                )}
               </div>
-              {[
-                { label: 'SCORE',    value: `${row.pts} Pts` },
-                { label: 'DURATION', value: `${row.durationMins} Mins` },
-              ].map(col => (
-                <div key={col.label} style={{ textAlign: 'right', marginLeft: 'var(--sp-3)', minWidth: 54 }}>
-                  <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--c-text-3)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginBottom: 2 }}>{col.label}</div>
-                  <div style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>{col.value}</div>
+
+              {/* Score */}
+              <div style={{ textAlign: 'right', marginLeft: 'var(--f-brand-space-sm)', minWidth: 54 }}>
+                <div style={{
+                  font: 'var(--f-brand-type-subheading-medium)',
+                  color: 'var(--f-brand-color-text-primary)',
+                }}>
+                  {row.pts} Pts
                 </div>
-              ))}
+              </div>
+
+              {/* Duration */}
+              <div style={{ textAlign: 'right', marginLeft: 'var(--f-brand-space-sm)', minWidth: 54 }}>
+                <div style={{
+                  font: 'var(--f-brand-type-caption)',
+                  color: 'var(--f-brand-color-text-subtle)',
+                }}>
+                  {row.durationMins} Mins
+                </div>
+              </div>
             </div>
           ))}
         </div>
 
         {/* Disclaimer */}
-        <p style={{ marginTop: 'var(--sp-6)', fontSize: 'var(--text-xs)', color: 'var(--c-text-3)', textAlign: 'center', lineHeight: 'var(--leading-normal)', letterSpacing: 'var(--tracking-wide)' }}>
+        <p style={{
+          marginTop: 'var(--f-brand-space-lg)',
+          font: 'var(--f-brand-type-caption)',
+          color: 'var(--f-brand-color-text-subtle)',
+          textAlign: 'center',
+        }}>
           Top 5 fans win Avios. Rankings are provisional until end-of-event.
         </p>
       </div>
 
       {/* Sticky CTA */}
-      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: 'var(--sp-4) var(--sp-6) var(--sp-8)', background: 'linear-gradient(transparent, var(--c-bg) 40%)' }}>
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        padding: 'var(--f-brand-space-md) var(--f-brand-space-lg) var(--f-brand-space-xl)',
+        background: 'linear-gradient(transparent, var(--f-brand-color-background-default) 40%)',
+      }}>
         <button
           onClick={() => { track('leaderboard_home_tapped'); navigate(homeRoute) }}
-          className="btn btn-primary"
+          className="f-button--primary"
           style={{ width: '100%', maxWidth: 420, display: 'block', margin: '0 auto' }}
         >
           Back home
         </button>
       </div>
-    </Screen>
+    </div>
   )
 }
