@@ -331,5 +331,57 @@ a:focus-visible {
   to { transform: rotate(360deg); }
 }
 
+/* ─── FDS Screen ─────────────────────────────────────────────────────────── */
+.f-screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--c-lt-bg);
+}
+
+.f-screen--centered {
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── FDS Spinner ────────────────────────────────────────────────────────── */
+@keyframes f-spinner-spin {
+  to { transform: rotate(360deg); }
+}
+
+.f-spinner {
+  animation: f-spinner-spin var(--dur-gentle) linear infinite;
+}
+
+.f-spinner--fullscreen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-5);
+  background: var(--c-lt-bg);
+}
+
+.f-spinner__label {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-light);
+  color: var(--c-lt-text-2);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .f-spinner {
+    animation-duration: 0s;
+  }
+}
+
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

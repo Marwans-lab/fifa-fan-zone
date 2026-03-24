@@ -120,11 +120,12 @@
   --ease-inout: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-sharp: cubic-bezier(0.2, 0, 0, 1);
 
-  --dur-fast:  100ms;
-  --dur-base:  180ms;
-  --dur-slow:  320ms;
-  --dur-enter: 260ms;
-  --dur-exit:  160ms;
+  --dur-fast:   100ms;
+  --dur-base:   180ms;
+  --dur-slow:   320ms;
+  --dur-enter:  260ms;
+  --dur-exit:   160ms;
+  --dur-gentle: 960ms;
 
   /* ─── Backward-compat aliases (keep existing vars working) ───────────────── */
   --color-bg:             var(--c-bg);
