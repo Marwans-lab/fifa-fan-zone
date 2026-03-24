@@ -354,7 +354,7 @@ function QuizCard({
           <h3 style={{
             fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
             fontSize: 'var(--text-lg)',
-            color: locked ? 'rgba(255,255,255,0.5)' : '#ffffff',
+            color: locked ? 'var(--c-text-2)' : '#ffffff',
           }}>
             {quiz.title}
           </h3>
@@ -478,7 +478,7 @@ function DragDropQuizCard({
           <h3 style={{
             fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
             fontSize: 'var(--text-lg)',
-            color: locked ? 'rgba(255,255,255,0.5)' : 'var(--c-text-1)',
+            color: locked ? 'var(--c-text-2)' : 'var(--c-text-1)',
           }}>
             {ddQuiz.title}
           </h3>
@@ -604,7 +604,7 @@ function ExtraQuizCard({
           <h3 style={{
             fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
             fontSize: 'var(--text-lg)',
-            color: locked ? 'rgba(255,255,255,0.5)' : 'var(--c-text-1)',
+            color: locked ? 'var(--c-text-2)' : 'var(--c-text-1)',
           }}>
             {title}
           </h3>
