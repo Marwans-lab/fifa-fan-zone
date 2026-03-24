@@ -14,6 +14,7 @@ const Leaderboard = lazy(() => import('./routes/Leaderboard'))
 const SwipeQuiz = lazy(() => import('./routes/SwipeQuiz'))
 const ImageQuiz = lazy(() => import('./routes/ImageQuiz'))
 const TeamSelection = lazy(() => import('./routes/TeamSelection'))
+const CardMatch = lazy(() => import('./routes/CardMatch'))
 
 export default function App() {
   return (
@@ -55,6 +56,10 @@ export default function App() {
           <Route
             path="/image-quiz"
             element={<AuthGuard><ImageQuiz /></AuthGuard>}
+          />
+          <Route
+            path="/card-match"
+            element={<AuthGuard><CardMatch /></AuthGuard>}
           />
           <Route
             path="/leaderboard"

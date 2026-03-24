@@ -36,9 +36,16 @@
   --c-lt-text-3:       #4a525d;
   --c-lt-brand:        #8e2157;
   --c-lt-correct-dark: #1C7544;
+  --c-lt-correct-bg:   rgba(28,117,68,0.08);
+  --c-lt-correct-glow: rgba(28,117,68,0.20);
+  --c-lt-error-glow:   rgba(217,87,87,0.20);
+  --c-lt-shimmer:      rgba(255,255,255,0.10);
+  --c-lt-star-glow:    rgba(255,184,0,0.60);
+  --c-lt-white:        #ffffff;
   --c-lt-shadow:       rgba(31,33,43,0.08);
   --c-lt-shadow-strong: rgba(0,0,0,0.25);
   --c-lt-overlay:      rgba(0,0,0,0.20);
+  --c-lt-overlay-heavy: rgba(0,0,0,0.50);
 
   /* ─── Glass / elevation ───────────────────────────────────────────────────── */
   --glass-bg:     rgba(255,255,255,0.10);
