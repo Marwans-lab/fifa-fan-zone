@@ -15,6 +15,7 @@ const SwipeQuiz = lazy(() => import('./routes/SwipeQuiz'))
 const ImageQuiz = lazy(() => import('./routes/ImageQuiz'))
 const TeamSelection = lazy(() => import('./routes/TeamSelection'))
 const CardMatch = lazy(() => import('./routes/CardMatch'))
+const DragDropQuiz = lazy(() => import('./routes/DragDropQuiz'))
 
 export default function App() {
   return (
@@ -60,6 +61,10 @@ export default function App() {
           <Route
             path="/card-match"
             element={<AuthGuard><CardMatch /></AuthGuard>}
+          />
+          <Route
+            path="/drag-drop-quiz"
+            element={<AuthGuard><DragDropQuiz /></AuthGuard>}
           />
           <Route
             path="/leaderboard"

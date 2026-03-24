@@ -6,6 +6,7 @@ import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import { renderCardToBlob, buildShareText } from '../lib/cardExport'
 import { QUIZZES } from '../data/quizzes'
+import { DRAG_DROP_QUIZZES } from '../data/dragDropQuizzes'
 import lockIcon    from '../assets/icons/Lock-white.svg'
 import chevRight   from '../assets/icons/Chevron-right-white.svg'
 import tickBlack   from '../assets/icons/Tick-black.svg'
@@ -395,6 +396,119 @@ function QuizCard({
   )
 }
 
+// ─── Drag-drop quiz card ─────────────────────────────────────────────────────
+function DragDropQuizCard({
+  quiz: ddQuiz,
+  result,
+  onStart,
+}: {
+  quiz: (typeof DRAG_DROP_QUIZZES)[number]
+  result: { score: number; total: number } | undefined
+  onStart: () => void
+}) {
+  const done = !!result
+  const totalPairs = ddQuiz.questions.reduce((sum, q) => sum + q.pairs.length, 0)
+  const [loading, setLoading] = useState(false)
+
+  function handleClick() {
+    if (loading) return
+    setLoading(true)
+    setTimeout(() => onStart(), 300)
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={loading}
+      style={{
+        width: '100%',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '18px 14px', borderRadius: 22,
+        minHeight: 120,
+        border: `1px solid ${done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
+        background: done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
+        cursor: 'pointer',
+        textAlign: 'left', fontFamily: 'inherit', color: 'var(--c-text-1)',
+        transition: 'all 400ms ease',
+        WebkitTapHighlightColor: 'transparent',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{
+          width: RING_RADIUS * 2, height: RING_RADIUS * 2,
+          position: 'relative', flexShrink: 0,
+        }}>
+          <ProgressRing
+            radius={RING_RADIUS}
+            stroke={RING_STROKE}
+            progress={done ? 1 : 0}
+            color={done ? 'var(--c-accent)' : 'rgba(255,255,255,0.3)'}
+          />
+          <div style={{
+            position: 'absolute',
+            top: RING_STROKE + 2, left: RING_STROKE + 2,
+            width: (RING_RADIUS - RING_STROKE - 2) * 2,
+            height: (RING_RADIUS - RING_STROKE - 2) * 2,
+            borderRadius: '50%',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: done
+              ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
+              : 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
+            boxShadow: '0 6px 20px rgba(0,0,0,0.25)',
+          }}>
+            {done ? (
+              <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
+            ) : (
+              <span style={{ fontSize: 'var(--text-2xl)' }}>{ddQuiz.emoji}</span>
+            )}
+          </div>
+        </div>
+        <div>
+          <h3 style={{
+            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
+            fontSize: 'var(--text-lg)', color: 'var(--c-text-1)',
+          }}>
+            {ddQuiz.title}
+          </h3>
+          <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)', marginTop: 'var(--sp-2)' }}>
+            {done ? (
+              <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
+                Completed · {result.score}/{result.total} correct
+              </span>
+            ) : (
+              <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
+                {totalPairs} matches · Drag & Drop
+              </span>
+            )}
+          </p>
+        </div>
+      </div>
+      {!done && (
+        <div style={{
+          width: 36, height: 36, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          marginRight: 4,
+        }}>
+          {loading ? (
+            <div
+              aria-label="Loading"
+              style={{
+                width: 20, height: 20, borderRadius: '50%',
+                border: '2.5px solid rgba(255,255,255,0.15)',
+                borderTopColor: 'var(--c-accent)',
+                animation: 'quiz-spin 0.6s linear infinite',
+              }}
+            />
+          ) : (
+            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
+          )}
+        </div>
+      )}
+    </button>
+  )
+}
+
 // ─── Main Card route ──────────────────────────────────────────────────────────
 export default function Card() {
   const navigate = useNavigate()
@@ -459,6 +573,11 @@ export default function Card() {
     navigate('/quiz', { state: { quizId } })
   }
 
+  function handleStartDragDropQuiz(quizId: string) {
+    track('quiz_card_tapped', { quizId, type: 'drag_drop' })
+    navigate('/drag-drop-quiz', { state: { quizId } })
+  }
+
   return (
     <Screen>
       {/* ── Content ────────────────────────────────────────── */}
@@ -516,6 +635,14 @@ export default function Card() {
                   cardState={getCardState(i)}
                   progress={getProgress(i)}
                   onStart={() => handleStartQuiz(quiz.id)}
+                />
+              ))}
+              {DRAG_DROP_QUIZZES.map(ddQuiz => (
+                <DragDropQuizCard
+                  key={ddQuiz.id}
+                  quiz={ddQuiz}
+                  result={state.quizResults[ddQuiz.id]}
+                  onStart={() => handleStartDragDropQuiz(ddQuiz.id)}
                 />
               ))}
             </div>

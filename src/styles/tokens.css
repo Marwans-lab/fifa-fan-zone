@@ -13,8 +13,10 @@
   --c-text-2: rgba(255,255,255,0.48);
   --c-text-3: rgba(255,255,255,0.24);
 
-  --c-accent:   #00d4aa;
-  --c-brand:    #c8102e;
+  --c-accent:      #00d4aa;
+  --c-accent-bg:   rgba(0,212,170,0.08);
+  --c-accent-glow: rgba(0,212,170,0.15);
+  --c-brand:       #c8102e;
   --c-correct:  #34DB80;
   --c-error:    #D95757;
   --c-warn:     #ffb800;
@@ -26,6 +28,8 @@
   --c-error-bg:       rgba(217,87,87,0.10);
   --c-error-border:   rgba(217,87,87,0.15);
   --c-error-glow:     rgba(217,87,87,0.40);
+  --c-surface-faint:  rgba(255,255,255,0.04);
+  --c-white:          #ffffff;
 
   /* ─── Light-theme roles ──────────────────────────────────────────────────── */
   --c-lt-bg:           #f2f3fa;
@@ -69,6 +73,7 @@
   --text-xl:  22px;
   --text-2xl: 28px;
   --text-3xl: 36px;
+  --text-4xl: 40px;
 
   --weight-thin:  100;
   --weight-light: 300;
@@ -95,6 +100,7 @@
   --sp-6:  24px;
   --sp-7:  28px;
   --sp-8:  32px;
+  --sp-9:  36px;
   --sp-10: 40px;
   --sp-12: 48px;
   --sp-16: 64px;
