@@ -1,0 +1,54 @@
+name: Auto-update PR branches on merge to main
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update all open PR branches
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          echo "=== Auto-rebase: updating open PR branches ==="
+
+          # Get all open PRs
+          PRS=$(gh pr list --repo "$REPO" --state open --json number,title,headRefName --limit 50)
+          COUNT=$(echo "$PRS" | jq length)
+
+          if [ "$COUNT" -eq 0 ]; then
+            echo "No open PRs to update."
+            exit 0
+          fi
+
+          echo "Found $COUNT open PRs to update"
+
+          echo "$PRS" | jq -r '.[] | "\(.number) \(.title)"' | while read -r PR_NUM PR_TITLE; do
+            echo ""
+            echo "--- PR #$PR_NUM: $PR_TITLE ---"
+
+            # Try to update the branch (merge main into it)
+            if gh api -X PUT "repos/$REPO/pulls/$PR_NUM/update-branch" \
+              -f update_method=merge 2>/dev/null; then
+              echo "PR #$PR_NUM: Branch updated successfully"
+            else
+              echo "PR #$PR_NUM: Update failed (likely has conflicts)"
+              # Post a comment if there's a conflict
+              EXISTING=$(gh pr view "$PR_NUM" --repo "$REPO" --json comments --jq '.comments[].body' 2>/dev/null | grep -c "REBASE NEEDED" || true)
+              if [ "$EXISTING" -eq 0 ]; then
+                gh pr comment "$PR_NUM" --repo "$REPO" --body "**[REBASE NEEDED]** This PR has merge conflicts with main. The branch needs to be rebased before it can be merged."
+              fi
+            fi
+          done
+
+          echo ""
+          echo "=== Auto-rebase complete ==="

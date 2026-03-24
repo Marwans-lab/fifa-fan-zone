@@ -143,7 +143,13 @@ jobs:
                 if gh pr merge "$PR" --repo "$REPO" --squash --delete-branch; then
                   echo "$IDENT: PR #$PR merged. linear-deploy.yml will move to Deployed."
                 else
-                  echo "$IDENT: Merge failed for PR #$PR"
+                  echo "$IDENT: Merge failed, trying to update branch first..."
+                  if gh api -X PUT "repos/$REPO/pulls/$PR/update-branch" -f update_method=merge 2>/dev/null; then
+                    echo "$IDENT: Branch updated, will retry merge on next poll cycle"
+                  else
+                    echo "$IDENT: Branch update failed (conflicts). Needs manual rebase."
+                    comment "$UUID" "**[PIPELINE]** PR #$PR has merge conflicts with main. Needs rebase before it can be merged."
+                  fi
                 fi
               else
                 # No open PR — check if already merged, move to Deployed
