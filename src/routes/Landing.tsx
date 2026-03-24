@@ -36,31 +36,31 @@ function FanCardStack() {
               gridArea: '1 / 1',
               width: card.width,
               height: card.height,
-              borderRadius: 'var(--r-lg)',
+              borderRadius: 'var(--f-brand-radius-inner)',
               transform: `rotate(${card.rotate}deg)`,
               background: `linear-gradient(160deg, ${team.colors[0]}, ${team.colors[1]})`,
-              boxShadow: '0 8px 32px var(--c-lt-shadow)',
+              boxShadow: 'var(--f-brand-shadow-large)',
               zIndex: card.zIndex,
               overflow: 'hidden',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '24px 20px 20px',
+              padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) var(--f-brand-space-md)',
               border: '1px solid rgba(255,255,255,0.12)',
               position: 'relative',
             }}
           >
             {/* Dot-grid halftone texture */}
             <div style={{
-              position: 'absolute', inset: 0, borderRadius: 'var(--r-lg)', pointerEvents: 'none',
+              position: 'absolute', inset: 0, borderRadius: 'var(--f-brand-radius-inner)', pointerEvents: 'none',
               backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.28) 1.5px, transparent 1.5px)',
               backgroundSize: '16px 16px',
               mixBlendMode: 'overlay',
             }} />
             {/* Diagonal shimmer stripes */}
             <div style={{
-              position: 'absolute', inset: 0, borderRadius: 'var(--r-lg)', pointerEvents: 'none',
+              position: 'absolute', inset: 0, borderRadius: 'var(--f-brand-radius-inner)', pointerEvents: 'none',
               backgroundImage: 'repeating-linear-gradient(-55deg, transparent, transparent 18px, rgba(255,255,255,0.10) 18px, rgba(255,255,255,0.10) 19px)',
               mixBlendMode: 'overlay',
             }} />
@@ -73,12 +73,18 @@ function FanCardStack() {
             {/* Card header */}
             <div style={{ textAlign: 'left', width: '100%', position: 'relative', zIndex: 1 }}>
               <div style={{
-                fontSize: 'var(--text-sm)', letterSpacing: 2, color: 'var(--c-lt-surface)',
+                font: 'var(--f-brand-type-caption)',
+                letterSpacing: 2,
+                color: 'var(--f-brand-color-text-light)',
                 textTransform: 'uppercase',
               }}>
                 Your Fan Card
               </div>
-              <div style={{ fontSize: 'var(--text-2xs)', color: 'rgba(255,255,255,0.65)', letterSpacing: 1 }}>
+              <div style={{
+                font: 'var(--f-brand-type-caption)',
+                color: 'rgba(255,255,255,0.65)',
+                letterSpacing: 1,
+              }}>
                 Collector Edition
               </div>
             </div>
@@ -88,7 +94,7 @@ function FanCardStack() {
               width: card.width * 0.45,
               height: card.width * 0.45,
               borderRadius: '50%',
-              background: 'var(--c-lt-overlay)',
+              background: 'rgba(0,0,0,0.20)',
               border: '3px solid rgba(255,255,255,0.45)',
               display: 'flex',
               alignItems: 'center',
@@ -101,12 +107,17 @@ function FanCardStack() {
 
             {/* Team name */}
             <div style={{
-              fontSize: 'var(--text-lg)', fontWeight: 'var(--weight-med)',
-              color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic',
-              display: 'flex', alignItems: 'center', gap: 8,
-              position: 'relative', zIndex: 1,
+              font: 'var(--f-brand-type-headline-medium)',
+              color: 'rgba(255,255,255,0.88)',
+              letterSpacing: 0.5,
+              fontStyle: 'italic',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--f-brand-space-xs)',
+              position: 'relative',
+              zIndex: 1,
             }}>
-              <span style={{ fontStyle: 'normal', fontSize: 'var(--text-xl)' }}>{team.flag}</span>
+              <span style={{ fontStyle: 'normal', fontSize: 22 }}>{team.flag}</span>
               {team.name}
             </div>
           </div>
@@ -137,25 +148,22 @@ export default function Landing() {
 
   return (
     <div
-      className="page-in"
+      className="f-page-entry"
       style={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         minHeight: '100%',
-        background: 'var(--c-lt-bg)',
-        padding: '86px var(--sp-4) var(--sp-10)',
+        background: 'var(--f-brand-color-background-default)',
+        padding: '86px var(--f-brand-space-md) var(--f-brand-space-2xl)',
         boxSizing: 'border-box',
       }}
     >
       {/* Title */}
       <h1
         style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: 'var(--text-2xl)',
-          fontWeight: 'var(--weight-thin)',
-          lineHeight: '36px',
-          color: 'var(--c-lt-text-1)',
+          font: 'var(--f-brand-type-page-title-thin)',
+          color: 'var(--f-brand-color-text-heading)',
           textAlign: 'center',
           margin: 0,
           maxWidth: 361,
@@ -165,30 +173,19 @@ export default function Landing() {
       </h1>
 
       {/* Fan Card Stack */}
-      <div style={{ marginTop: 'var(--sp-6)', width: '100%' }}>
+      <div style={{ marginTop: 'var(--f-brand-space-lg)', width: '100%' }}>
         <FanCardStack />
       </div>
 
       {/* CTA Button */}
       <button
+        className="f-button f-button--primary"
         onClick={handlePrimary}
         style={{
-          marginTop: 'var(--sp-10)',
+          marginTop: 'var(--f-brand-space-2xl)',
           width: '100%',
           maxWidth: 361,
-          height: 56,
-          borderRadius: 'var(--r-full)',
-          background: 'var(--c-lt-brand)',
-          color: 'var(--c-lt-surface)',
-          fontFamily: 'var(--font-body)',
-          fontSize: 'var(--text-md)',
-          fontWeight: 'var(--weight-med)',
-          lineHeight: '24px',
-          border: 'none',
-          cursor: 'pointer',
-          padding: 'var(--sp-4) var(--sp-8)',
-          WebkitTapHighlightColor: 'transparent',
-          boxShadow: '0 8px 16px var(--c-lt-shadow)',
+          boxShadow: 'var(--f-brand-shadow-medium)',
         }}
       >
         {hasCard ? 'Continue' : 'Create your fan card'}
