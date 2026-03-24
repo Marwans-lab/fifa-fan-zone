@@ -7,6 +7,8 @@ import { useStore } from '../store/useStore'
 import { renderCardToBlob, buildShareText } from '../lib/cardExport'
 import { QUIZZES } from '../data/quizzes'
 import { DRAG_DROP_QUIZZES } from '../data/dragDropQuizzes'
+import { IMAGE_QUIZZES } from '../data/imageQuizzes'
+import { SWIPE_QUIZZES } from '../data/swipeQuizzes'
 import lockIcon    from '../assets/icons/Lock-white.svg'
 import chevRight   from '../assets/icons/Chevron-right-white.svg'
 import tickBlack   from '../assets/icons/Tick-black.svg'
@@ -509,6 +511,122 @@ function DragDropQuizCard({
   )
 }
 
+// ─── Generic quiz card (image, swipe, card-match) ───────────────────────────
+function ExtraQuizCard({
+  emoji,
+  title,
+  subtitle,
+  result,
+  onStart,
+}: {
+  emoji: string
+  title: string
+  subtitle: string
+  result: { score: number; total: number } | undefined
+  onStart: () => void
+}) {
+  const done = !!result
+  const [loading, setLoading] = useState(false)
+
+  function handleClick() {
+    if (loading) return
+    setLoading(true)
+    setTimeout(() => onStart(), 300)
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={loading}
+      style={{
+        width: '100%',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '18px 14px', borderRadius: 22,
+        minHeight: 120,
+        border: `1px solid ${done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
+        background: done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
+        cursor: 'pointer',
+        textAlign: 'left', fontFamily: 'inherit', color: 'var(--c-text-1)',
+        transition: 'all 400ms ease',
+        WebkitTapHighlightColor: 'transparent',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{
+          width: RING_RADIUS * 2, height: RING_RADIUS * 2,
+          position: 'relative', flexShrink: 0,
+        }}>
+          <ProgressRing
+            radius={RING_RADIUS}
+            stroke={RING_STROKE}
+            progress={done ? 1 : 0}
+            color={done ? 'var(--c-accent)' : 'rgba(255,255,255,0.3)'}
+          />
+          <div style={{
+            position: 'absolute',
+            top: RING_STROKE + 2, left: RING_STROKE + 2,
+            width: (RING_RADIUS - RING_STROKE - 2) * 2,
+            height: (RING_RADIUS - RING_STROKE - 2) * 2,
+            borderRadius: '50%',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: done
+              ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
+              : 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
+            boxShadow: '0 6px 20px rgba(0,0,0,0.25)',
+          }}>
+            {done ? (
+              <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
+            ) : (
+              <span style={{ fontSize: 'var(--text-2xl)' }}>{emoji}</span>
+            )}
+          </div>
+        </div>
+        <div>
+          <h3 style={{
+            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
+            fontSize: 'var(--text-lg)', color: 'var(--c-text-1)',
+          }}>
+            {title}
+          </h3>
+          <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)', marginTop: 'var(--sp-2)' }}>
+            {done ? (
+              <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
+                Completed · {result.score}/{result.total} correct
+              </span>
+            ) : (
+              <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
+                {subtitle}
+              </span>
+            )}
+          </p>
+        </div>
+      </div>
+      {!done && (
+        <div style={{
+          width: 36, height: 36, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          marginRight: 4,
+        }}>
+          {loading ? (
+            <div
+              aria-label="Loading"
+              style={{
+                width: 20, height: 20, borderRadius: '50%',
+                border: '2.5px solid rgba(255,255,255,0.15)',
+                borderTopColor: 'var(--c-accent)',
+                animation: 'quiz-spin 0.6s linear infinite',
+              }}
+            />
+          ) : (
+            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
+          )}
+        </div>
+      )}
+    </button>
+  )
+}
+
 // ─── Main Card route ──────────────────────────────────────────────────────────
 export default function Card() {
   const navigate = useNavigate()
@@ -578,6 +696,21 @@ export default function Card() {
     navigate('/drag-drop-quiz', { state: { quizId } })
   }
 
+  function handleStartImageQuiz(quizId: string) {
+    track('quiz_card_tapped', { quizId, type: 'image' })
+    navigate('/image-quiz', { state: { quizId } })
+  }
+
+  function handleStartSwipeQuiz(quizId: string) {
+    track('quiz_card_tapped', { quizId, type: 'swipe' })
+    navigate('/swipe-quiz', { state: { quizId } })
+  }
+
+  function handleStartCardMatch() {
+    track('quiz_card_tapped', { quizId: 'card-match', type: 'card_match' })
+    navigate('/card-match')
+  }
+
   return (
     <Screen>
       {/* ── Content ────────────────────────────────────────── */}
@@ -645,6 +778,33 @@ export default function Card() {
                   onStart={() => handleStartDragDropQuiz(ddQuiz.id)}
                 />
               ))}
+              {IMAGE_QUIZZES.map(iq => (
+                <ExtraQuizCard
+                  key={iq.id}
+                  emoji={iq.emoji}
+                  title={iq.title}
+                  subtitle={`${iq.questions.length} questions · Image Quiz`}
+                  result={state.quizResults[iq.id]}
+                  onStart={() => handleStartImageQuiz(iq.id)}
+                />
+              ))}
+              {SWIPE_QUIZZES.map(sq => (
+                <ExtraQuizCard
+                  key={sq.id}
+                  emoji={sq.emoji}
+                  title={sq.title}
+                  subtitle={`${sq.statements.length} statements · Swipe`}
+                  result={state.quizResults[sq.id]}
+                  onStart={() => handleStartSwipeQuiz(sq.id)}
+                />
+              ))}
+              <ExtraQuizCard
+                emoji="🃏"
+                title="Card Match"
+                subtitle="Match the pairs · Memory Game"
+                result={state.quizResults['card-match']}
+                onStart={handleStartCardMatch}
+              />
             </div>
           </section>
         </div>
