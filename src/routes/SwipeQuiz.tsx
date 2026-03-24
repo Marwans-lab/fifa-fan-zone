@@ -4,19 +4,11 @@ import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import { SWIPE_QUIZZES, type SwipeStatement } from '../data/swipeQuizzes'
+import chevLeft from '../assets/icons/Chevron-left-white.svg'
 
 const SWIPE_THRESHOLD = 80
 const ROTATION_FACTOR = 0.12
 const FEEDBACK_DURATION = 1200
-
-// ─── Back chevron (dark, for light bg) ───────────────────────────────────────
-function ChevronLeftDark() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <path d="M15 18l-6-6 6-6" stroke="var(--f-brand-color-text-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
 
 // ─── Swipe direction indicator ──────────────────────────────────────────────
 function SwipeLabel({
@@ -31,21 +23,21 @@ function SwipeLabel({
     <div
       style={{
         position: 'absolute',
-        top: 'var(--f-brand-space-sm)',
-        ...(isTrue ? { right: 'var(--f-brand-space-sm)' } : { left: 'var(--f-brand-space-sm)' }),
-        padding: 'var(--sp-2) var(--sp-4)',
-        borderRadius: 'var(--r-sm)',
-        border: `2px solid ${isTrue ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-border-error)'}`,
-        color: isTrue ? 'var(--f-brand-color-text-success)' : 'var(--f-brand-color-text-error)',
-        fontFamily: 'var(--f-brand-type-headline-medium-family)',
-        fontSize: 'var(--f-brand-type-headline-medium-size)',
-        fontWeight: 'var(--f-brand-type-headline-medium-weight)',
-        letterSpacing: 'var(--tracking-wide)',
-        textTransform: 'uppercase' as const,
+        top: 'var(--f-brand-space-lg)',
+        ...(isTrue ? { right: 'var(--f-brand-space-lg)' } : { left: 'var(--f-brand-space-lg)' }),
+        padding: 'var(--f-brand-space-xs) var(--f-brand-space-md)',
+        borderRadius: 'var(--f-brand-radius-base)',
+        border: `2px solid ${isTrue ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)'}`,
+        color: isTrue ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)',
+        fontSize: '18',
+        fontWeight: '600',
+        fontFamily: 'var(--f-base-type-family-secondary)',
+        letterSpacing: '0.05em',
+        textTransform: 'uppercase',
         opacity,
         transform: `rotate(${isTrue ? -12 : 12}deg)`,
-        transition: 'opacity 80ms ease',
-        pointerEvents: 'none' as const,
+        transition: 'opacity var(--f-brand-motion-duration-fast) var(--f-brand-motion-easing-default)',
+        pointerEvents: 'none',
         zIndex: 10,
       }}
     >
@@ -64,13 +56,6 @@ function FeedbackOverlay({
   explanation: string
   visible: boolean
 }) {
-  const bgColor = correct
-    ? 'var(--f-brand-color-background-success-accent)'
-    : 'var(--f-brand-color-background-error)'
-  const borderColor = correct
-    ? 'var(--f-brand-color-border-success)'
-    : 'var(--f-brand-color-border-error)'
-
   return (
     <div
       style={{
@@ -80,15 +65,12 @@ function FeedbackOverlay({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 'var(--sp-4)',
-        padding: 'var(--sp-8)',
-        background: bgColor,
-        border: `2px solid ${borderColor}`,
-        borderRadius: 'var(--f-brand-radius-outer)',
+        gap: 'var(--f-brand-space-md)',
+        padding: 'var(--f-brand-space-xl)',
         opacity: visible ? 1 : 0,
         transform: visible ? 'scale(1)' : 'scale(0.85)',
-        transition: `opacity 320ms var(--ease-out), transform 320ms var(--ease-out)`,
-        pointerEvents: 'none' as const,
+        transition: 'opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
+        pointerEvents: 'none',
         zIndex: 20,
       }}
     >
@@ -98,22 +80,22 @@ function FeedbackOverlay({
           width: 72,
           height: 72,
           borderRadius: '50%',
-          background: correct
-            ? 'var(--f-brand-color-background-success-accent)'
-            : 'var(--f-brand-color-background-error)',
-          border: `2px solid ${borderColor}`,
+          background: correct ? 'var(--f-brand-color-background-success-accent)' : 'var(--f-brand-color-background-error)',
+          border: `2px solid ${correct ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-border-error)'}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          fontSize: '28',
+          boxShadow: `0 0 40px ${correct ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-border-error)'}`,
         }}
       >
         {correct ? (
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-            <path d="M5 13l4 4L19 7" stroke="var(--f-brand-color-text-success)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 13l4 4L19 7" stroke="var(--f-brand-color-border-success)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         ) : (
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-            <path d="M18 6L6 18M6 6l12 12" stroke="var(--f-brand-color-text-error)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M18 6L6 18M6 6l12 12" stroke="var(--f-brand-color-status-error)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         )}
       </div>
@@ -121,11 +103,11 @@ function FeedbackOverlay({
       {/* Label */}
       <span
         style={{
-          fontFamily: 'var(--f-brand-type-headline-medium-family)',
-          fontSize: 'var(--text-xl)',
-          fontWeight: 'var(--f-brand-type-headline-medium-weight)',
-          color: correct ? 'var(--f-brand-color-text-success)' : 'var(--f-brand-color-text-error)',
-          letterSpacing: 'var(--tracking-wide)',
+          fontFamily: 'var(--f-base-type-family-primary)',
+          fontSize: '22',
+          fontWeight: '600',
+          color: correct ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)',
+          letterSpacing: '0.05em',
         }}
       >
         {correct ? 'Correct!' : 'Wrong!'}
@@ -134,11 +116,11 @@ function FeedbackOverlay({
       {/* Explanation */}
       <span
         style={{
-          fontFamily: 'var(--f-brand-type-body-medium-family)',
-          fontSize: 'var(--text-sm)',
-          color: 'var(--f-brand-color-text-secondary)',
+          fontFamily: 'var(--f-base-type-family-secondary)',
+          fontSize: '13',
+          color: 'var(--f-brand-color-text-subtle)',
           textAlign: 'center',
-          lineHeight: 'var(--leading-snug)',
+          lineHeight: '1.28',
           maxWidth: 260,
         }}
       >
@@ -183,18 +165,6 @@ function StatementCard({
     scale = 0.98
   }
 
-  // Dynamic border color
-  let borderColor = 'var(--f-brand-color-border-default)'
-  if (feedbackState === 'correct') {
-    borderColor = 'var(--f-brand-color-border-success)'
-  } else if (feedbackState === 'incorrect') {
-    borderColor = 'var(--f-brand-color-border-error)'
-  } else if (trueOpacity > 0.3) {
-    borderColor = 'var(--f-brand-color-border-success)'
-  } else if (falseOpacity > 0.3) {
-    borderColor = 'var(--f-brand-color-border-error)'
-  }
-
   return (
     <div
       style={{
@@ -204,14 +174,14 @@ function StatementCard({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 'var(--sp-4)',
+        padding: 'var(--f-brand-space-md)',
         transform: `translateX(${translateX}px) translateY(${translateY}px) rotate(${exitDirection ? (exitDirection === 'right' ? 20 : -20) : rotation}deg) scale(${scale})`,
         opacity,
         transition: isDragging
           ? 'none'
           : exitDirection
-          ? `transform var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit), opacity var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit)`
-          : `transform var(--dur-slow) var(--ease-out), opacity var(--dur-slow) var(--ease-out)`,
+          ? 'transform var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit), opacity var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit)'
+          : 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
         willChange: 'transform',
         zIndex: 5,
       }}
@@ -224,19 +194,52 @@ function StatementCard({
           aspectRatio: '3 / 4',
           borderRadius: 'var(--f-brand-radius-outer)',
           background: 'var(--f-brand-color-background-light)',
-          border: `1.5px solid ${borderColor}`,
-          boxShadow: 'var(--f-brand-shadow-large)',
+          border: `1.5px solid ${
+            feedbackState === 'correct'
+              ? 'var(--f-brand-color-border-success)'
+              : feedbackState === 'incorrect'
+              ? 'var(--f-brand-color-border-error)'
+              : trueOpacity > 0.3
+              ? 'var(--f-brand-color-border-success)'
+              : falseOpacity > 0.3
+              ? 'var(--f-brand-color-border-error)'
+              : 'var(--f-brand-color-border-default)'
+          }`,
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          boxShadow: feedbackState === 'correct'
+            ? '0 0 60px var(--f-brand-color-border-success), var(--f-brand-shadow-large)'
+            : feedbackState === 'incorrect'
+            ? '0 0 60px var(--f-brand-color-border-error), var(--f-brand-shadow-large)'
+            : 'var(--f-brand-shadow-large)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: 'var(--sp-8)',
+          padding: 'var(--f-brand-space-xl)',
           overflow: 'hidden',
           transition: isDragging
-            ? 'border-color 120ms ease, box-shadow 120ms ease'
-            : 'border-color 320ms ease, box-shadow 320ms ease',
+            ? 'border-color var(--f-brand-motion-duration-fast) var(--f-brand-motion-easing-default), box-shadow var(--f-brand-motion-duration-fast) var(--f-brand-motion-easing-default)'
+            : 'border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
         }}
       >
+        {/* Accent glow at top */}
+        <div
+          style={{
+            position: 'absolute',
+            top: -60,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 200,
+            height: 200,
+            borderRadius: '50%',
+            background: statement.accentColor,
+            filter: 'blur(80px)',
+            opacity: 0.4,
+            pointerEvents: 'none',
+          }}
+        />
+
         {/* Swipe labels */}
         <SwipeLabel direction="true" opacity={trueOpacity} />
         <SwipeLabel direction="false" opacity={falseOpacity} />
@@ -251,14 +254,15 @@ function StatementCard({
         {/* Statement text */}
         <div
           style={{
-            fontFamily: 'var(--f-brand-type-body-medium-family)',
-            fontSize: 'var(--f-brand-type-body-medium-size)',
-            fontWeight: 'var(--f-brand-type-body-medium-weight)',
-            color: 'var(--f-brand-color-text-primary)',
-            lineHeight: 'var(--leading-snug)',
+            fontFamily: 'var(--f-base-type-family-primary)',
+            fontSize: '28',
+            fontWeight: '300',
+            color: 'var(--f-brand-color-text-default)',
+            lineHeight: '1.12',
+            letterSpacing: '-0.03em',
             textAlign: 'center',
             opacity: feedbackState ? 0 : 1,
-            transition: 'opacity 200ms ease',
+            transition: 'opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
             zIndex: 1,
           }}
         >
@@ -269,14 +273,14 @@ function StatementCard({
         <div
           style={{
             position: 'absolute',
-            bottom: 'var(--sp-6)',
-            fontFamily: 'var(--f-brand-type-body-medium-family)',
-            fontSize: 'var(--text-xs)',
-            color: 'var(--f-brand-color-text-secondary)',
-            letterSpacing: 'var(--tracking-wide)',
+            bottom: 'var(--f-brand-space-lg)',
+            fontFamily: 'var(--f-base-type-family-secondary)',
+            fontSize: '11',
+            color: 'var(--f-brand-color-text-muted)',
+            letterSpacing: '0.05em',
             textTransform: 'uppercase',
             opacity: feedbackState ? 0 : 0.6,
-            transition: 'opacity 200ms ease',
+            transition: 'opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
           }}
         >
           Swipe to answer
@@ -296,7 +300,7 @@ function BackgroundCard({ visible }: { visible: boolean }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 'var(--sp-4)',
+        padding: 'var(--f-brand-space-md)',
         zIndex: 1,
       }}
     >
@@ -308,37 +312,65 @@ function BackgroundCard({ visible }: { visible: boolean }) {
           borderRadius: 'var(--f-brand-radius-outer)',
           background: 'var(--f-brand-color-background-light)',
           border: '1.5px solid var(--f-brand-color-border-default)',
-          boxShadow: 'var(--f-brand-shadow-medium)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
           opacity: visible ? 0.5 : 0,
           transform: visible ? 'scale(0.92)' : 'scale(0.85)',
-          transition: `opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out)`,
+          transition: 'opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
         }}
       />
     </div>
   )
 }
 
-// ─── Progress bar (FDS pattern from Quiz page) ──────────────────────────────
-function ProgressBar({
-  current,
+// ─── Progress dots ──────────────────────────────────────────────────────────
+function ProgressDots({
   total,
-  revealed,
+  current,
+  results,
 }: {
-  current: number
   total: number
-  revealed: boolean
+  current: number
+  results: (boolean | null)[]
 }) {
   return (
-    <div style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-disabled)', borderRadius: 2, overflow: 'hidden' }}>
-      <div
-        style={{
-          height: '100%',
-          width: `${((current + (revealed ? 1 : 0)) / total) * 100}%`,
-          background: 'var(--f-brand-color-background-primary)',
-          borderRadius: 2,
-          transition: 'width 300ms ease',
-        }}
-      />
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 'var(--f-brand-space-xs)',
+        flexWrap: 'wrap',
+      }}
+    >
+      {Array.from({ length: total }).map((_, i) => {
+        const result = results[i]
+        const isCurrent = i === current
+        return (
+          <div
+            key={i}
+            style={{
+              width: isCurrent ? 24 : 8,
+              height: 8,
+              borderRadius: 'var(--f-brand-radius-rounded)',
+              background:
+                result === true
+                  ? 'var(--f-brand-color-border-success)'
+                  : result === false
+                  ? 'var(--f-brand-color-status-error)'
+                  : isCurrent
+                  ? 'var(--f-brand-color-text-default)'
+                  : 'var(--f-brand-color-background-light)',
+              transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
+              boxShadow: result === true
+                ? '0 0 8px var(--f-brand-color-border-success)'
+                : result === false
+                ? '0 0 8px var(--f-brand-color-border-error)'
+                : 'none',
+            }}
+          />
+        )
+      })}
     </div>
   )
 }
@@ -357,7 +389,7 @@ function SwipeActions({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 'var(--sp-10)',
+        gap: 'var(--f-brand-space-2xl)',
       }}
     >
       {/* False button */}
@@ -369,19 +401,20 @@ function SwipeActions({
           width: 60,
           height: 60,
           borderRadius: '50%',
-          border: `2px solid var(--f-brand-color-border-error)`,
+          border: '2px solid var(--f-brand-color-border-error)',
           background: 'var(--f-brand-color-background-error)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           cursor: disabled ? 'default' : 'pointer',
           opacity: disabled ? 0.4 : 1,
-          transition: `transform var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out)`,
-          boxShadow: 'var(--f-brand-shadow-medium)',
+          transition: 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
+          boxShadow: 'none',
         }}
         onPointerDown={(e) => {
           if (!disabled) {
-            e.currentTarget.style.transform = 'scale(0.9)'
+            const el = e.currentTarget
+            el.style.transform = 'scale(0.9)'
           }
         }}
         onPointerUp={(e) => {
@@ -391,8 +424,8 @@ function SwipeActions({
           e.currentTarget.style.transform = 'scale(1)'
         }}
       >
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-          <path d="M18 6L6 18M6 6l12 12" stroke="var(--f-brand-color-text-error)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12" stroke="var(--f-brand-color-status-error)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
 
@@ -405,19 +438,20 @@ function SwipeActions({
           width: 60,
           height: 60,
           borderRadius: '50%',
-          border: `2px solid var(--f-brand-color-border-success)`,
+          border: '2px solid var(--f-brand-color-border-success)',
           background: 'var(--f-brand-color-background-success-accent)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           cursor: disabled ? 'default' : 'pointer',
           opacity: disabled ? 0.4 : 1,
-          transition: `transform var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out)`,
-          boxShadow: 'var(--f-brand-shadow-medium)',
+          transition: 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
+          boxShadow: 'none',
         }}
         onPointerDown={(e) => {
           if (!disabled) {
-            e.currentTarget.style.transform = 'scale(0.9)'
+            const el = e.currentTarget
+            el.style.transform = 'scale(0.9)'
           }
         }}
         onPointerUp={(e) => {
@@ -427,8 +461,8 @@ function SwipeActions({
           e.currentTarget.style.transform = 'scale(1)'
         }}
       >
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-          <path d="M5 13l4 4L19 7" stroke="var(--f-brand-color-text-success)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 13l4 4L19 7" stroke="var(--f-brand-color-border-success)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
     </div>
@@ -595,7 +629,7 @@ export default function SwipeQuizRoute() {
   return (
     <Screen>
       <div
-        className="page-in"
+        className="f-page-enter"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -603,39 +637,76 @@ export default function SwipeQuizRoute() {
           maxWidth: 420,
           margin: '0 auto',
           width: '100%',
-          background: 'var(--f-brand-color-background-default)',
         }}
       >
         {/* ── Top bar ────────────────────────────────────────────── */}
-        <div style={{ padding: 'var(--sp-4)', flexShrink: 0 }}>
+        <div style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 'var(--sp-3)',
+              gap: 'var(--f-brand-space-sm)',
             }}
           >
-            <button onClick={handleBack} className="f-btn-icon" aria-label="Back">
-              <ChevronLeftDark />
+            <button onClick={handleBack} className="f-button f-button--ghost">
+              <img src={chevLeft} width={24} height={24} alt="Back" />
             </button>
 
-            <ProgressBar
-              current={currentIdx}
-              total={total}
-              revealed={feedbackState !== null}
-            />
+            <div style={{ flex: 1, textAlign: 'center' }}>
+              <span
+                style={{
+                  fontFamily: 'var(--f-base-type-family-primary)',
+                  fontSize: '15',
+                  fontWeight: '500',
+                  color: 'var(--f-brand-color-text-default)',
+                  letterSpacing: '-0.015em',
+                }}
+              >
+                {quiz.title}
+              </span>
+            </div>
 
-            <span
+            {/* Score badge */}
+            <div
               style={{
-                fontSize: 'var(--text-xs)',
-                color: 'var(--f-brand-color-text-secondary)',
-                flexShrink: 0,
-                fontFamily: 'var(--f-brand-type-body-medium-family)',
+                minWidth: 40,
+                height: 28,
+                borderRadius: 'var(--f-brand-radius-rounded)',
+                background: 'var(--f-brand-color-background-light)',
+                border: '1px solid var(--f-brand-color-border-default)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '0 var(--f-brand-space-xs)',
+                gap: 'var(--f-brand-space-2xs)',
               }}
             >
-              {currentIdx + 1}/{total}
-            </span>
+              <span
+                style={{
+                  fontSize: '11',
+                  fontWeight: '600',
+                  color: 'var(--f-brand-color-accent)',
+                  fontFamily: 'var(--f-base-type-family-secondary)',
+                }}
+              >
+                {score}
+              </span>
+              <span
+                style={{
+                  fontSize: '10',
+                  color: 'var(--f-brand-color-text-muted)',
+                  fontFamily: 'var(--f-base-type-family-secondary)',
+                }}
+              >
+                /{total}
+              </span>
+            </div>
           </div>
+        </div>
+
+        {/* ── Progress dots ─────────────────────────────────────── */}
+        <div style={{ padding: '0 var(--f-brand-space-md) var(--f-brand-space-md)', flexShrink: 0 }}>
+          <ProgressDots total={total} current={currentIdx} results={results} />
         </div>
 
         {/* ── Card area ─────────────────────────────────────────── */}
@@ -665,7 +736,7 @@ export default function SwipeQuizRoute() {
               inset: 0,
               opacity: enterAnim ? 0 : 1,
               transform: enterAnim ? 'scale(0.9)' : 'scale(1)',
-              transition: enterAnim ? 'none' : `opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out)`,
+              transition: enterAnim ? 'none' : 'opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
             }}
           >
             <StatementCard
@@ -683,18 +754,18 @@ export default function SwipeQuizRoute() {
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            padding: `0 var(--sp-8)`,
+            padding: '0 var(--f-brand-space-xl)',
             flexShrink: 0,
           }}
         >
           <span
             style={{
-              fontFamily: 'var(--f-brand-type-headline-medium-family)',
-              fontSize: 'var(--text-xs)',
-              color: 'var(--f-brand-color-text-error)',
-              letterSpacing: 'var(--tracking-wide)',
+              fontFamily: 'var(--f-base-type-family-secondary)',
+              fontSize: '11',
+              color: 'var(--f-brand-color-status-error)',
+              letterSpacing: '0.05em',
               textTransform: 'uppercase',
-              fontWeight: 'var(--f-brand-type-headline-medium-weight)',
+              fontWeight: '500',
               opacity: 0.6,
             }}
           >
@@ -702,12 +773,12 @@ export default function SwipeQuizRoute() {
           </span>
           <span
             style={{
-              fontFamily: 'var(--f-brand-type-headline-medium-family)',
-              fontSize: 'var(--text-xs)',
-              color: 'var(--f-brand-color-text-success)',
-              letterSpacing: 'var(--tracking-wide)',
+              fontFamily: 'var(--f-base-type-family-secondary)',
+              fontSize: '11',
+              color: 'var(--f-brand-color-border-success)',
+              letterSpacing: '0.05em',
               textTransform: 'uppercase',
-              fontWeight: 'var(--f-brand-type-headline-medium-weight)',
+              fontWeight: '500',
               opacity: 0.6,
             }}
           >
@@ -718,7 +789,7 @@ export default function SwipeQuizRoute() {
         {/* ── Swipe action buttons ─────────────────────────────── */}
         <div
           style={{
-            padding: 'var(--sp-4) var(--sp-4) var(--sp-8)',
+            padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)',
             flexShrink: 0,
           }}
         >

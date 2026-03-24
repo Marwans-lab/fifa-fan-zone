@@ -7,8 +7,6 @@ export function ensureAuth(): Promise<void> {
       try {
         if (!user) await signInAnonymously(auth);
 
-        console.log("Firebase UID:", auth.currentUser?.uid);
-
         unsub();
         resolve();
       } catch (err) {

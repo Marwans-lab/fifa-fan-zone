@@ -40,14 +40,14 @@ function Chip({ answer, isDragging, isPlaced, isCorrect, style }: ChipProps) {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 'var(--sp-3) var(--sp-5)',
-    borderRadius: 'var(--r-full)',
-    fontSize: 'var(--text-sm)',
-    fontWeight: 'var(--weight-med)',
-    fontFamily: 'var(--font-body)',
-    color: 'var(--c-text-1)',
-    background: 'var(--c-surface)',
-    border: '1.5px solid var(--c-border)',
+    padding: 'var(--f-brand-space-sm) var(--f-brand-space-md)',
+    borderRadius: 'var(--f-brand-radius-rounded)',
+    fontSize: '13',
+    fontWeight: '500',
+    fontFamily: 'var(--f-base-type-family-secondary)',
+    color: 'var(--f-brand-color-text-default)',
+    background: 'var(--f-brand-color-background-light)',
+    border: '1.5px solid var(--f-brand-color-border-default)',
     cursor: isDragging ? 'grabbing' : 'grab',
     userSelect: 'none',
     WebkitUserSelect: 'none',
@@ -55,7 +55,7 @@ function Chip({ answer, isDragging, isPlaced, isCorrect, style }: ChipProps) {
     whiteSpace: 'nowrap',
     transition: isDragging
       ? 'none'
-      : 'transform 320ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 320ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease, background 200ms ease, border-color 200ms ease',
+      : 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-entry), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-entry), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
     transform: isDragging ? 'scale(1.08)' : 'scale(1)',
     boxShadow: isDragging
       ? '0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1)'
@@ -66,14 +66,14 @@ function Chip({ answer, isDragging, isPlaced, isCorrect, style }: ChipProps) {
   }
 
   if (isCorrect === true) {
-    baseStyle.background = 'var(--c-correct-bg)'
-    baseStyle.borderColor = 'var(--c-correct)'
-    baseStyle.color = 'var(--c-correct)'
-    baseStyle.boxShadow = '0 0 16px var(--c-correct-glow)'
+    baseStyle.background = 'var(--f-brand-color-background-success-accent)'
+    baseStyle.borderColor = 'var(--f-brand-color-border-success)'
+    baseStyle.color = 'var(--f-brand-color-border-success)'
+    baseStyle.boxShadow = '0 0 16px var(--f-brand-color-border-success)'
   } else if (isCorrect === false) {
-    baseStyle.background = 'var(--c-error-bg)'
-    baseStyle.borderColor = 'var(--c-error)'
-    baseStyle.color = 'var(--c-error)'
+    baseStyle.background = 'var(--f-brand-color-background-error)'
+    baseStyle.borderColor = 'var(--f-brand-color-status-error)'
+    baseStyle.color = 'var(--f-brand-color-status-error)'
   }
 
   return (
@@ -98,39 +98,39 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
   const zoneStyle: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
-    gap: 'var(--sp-3)',
-    padding: 'var(--sp-3) var(--sp-4)',
-    borderRadius: 'var(--r-lg)',
+    gap: 'var(--f-brand-space-sm)',
+    padding: 'var(--f-brand-space-sm) var(--f-brand-space-md)',
+    borderRadius: 'var(--f-brand-radius-inner)',
     background: isHovered
-      ? 'var(--c-accent-bg)'
+      ? 'var(--f-brand-color-background-accent)'
       : isCorrect === true
-      ? 'var(--c-correct-bg)'
+      ? 'var(--f-brand-color-background-success-accent)'
       : isCorrect === false
-      ? 'var(--c-error-bg)'
-      : 'var(--c-surface)',
+      ? 'var(--f-brand-color-background-error)'
+      : 'var(--f-brand-color-background-light)',
     border: isHovered
-      ? '1.5px dashed var(--c-accent)'
+      ? '1.5px dashed var(--f-brand-color-accent)'
       : isCorrect === true
-      ? '1.5px solid var(--c-correct-border)'
+      ? '1.5px solid var(--f-brand-color-border-success)'
       : isCorrect === false
-      ? '1.5px solid var(--c-error-border)'
-      : '1.5px dashed var(--c-border)',
-    transition: 'background 200ms ease, border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease',
+      ? '1.5px solid var(--f-brand-color-border-error)'
+      : '1.5px dashed var(--f-brand-color-border-default)',
+    transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
     transform: shaking ? '' : isHovered ? 'scale(1.02)' : 'scale(1)',
     boxShadow: isCorrect === true
-      ? '0 0 20px var(--c-correct-glow)'
+      ? '0 0 20px var(--f-brand-color-border-success)'
       : isHovered
-      ? '0 0 16px var(--c-accent-glow)'
+      ? '0 0 16px var(--f-brand-color-border-accent)'
       : 'none',
-    animation: shaking ? 'shake 400ms ease' : `dropZoneIn 400ms cubic-bezier(0.16, 1, 0.3, 1) ${index * 60}ms both`,
-    minHeight: 'var(--sp-12)',
+    animation: shaking ? 'shake var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)' : `dropZoneIn var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-entry) ${index * 60}ms both`,
+    minHeight: 'var(--f-brand-space-3xl)',
   }
 
   const promptStyle: React.CSSProperties = {
-    fontSize: 'var(--text-md)',
-    fontWeight: 'var(--weight-med)',
-    color: 'var(--c-text-1)',
-    fontFamily: 'var(--font-body)',
+    fontSize: '15',
+    fontWeight: '500',
+    color: 'var(--f-brand-color-text-default)',
+    fontFamily: 'var(--f-base-type-family-secondary)',
     minWidth: 90,
     flexShrink: 0,
   }
@@ -140,30 +140,30 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 'var(--sp-2) var(--sp-3)',
-    borderRadius: 'var(--r-full)',
-    fontSize: 'var(--text-sm)',
-    fontWeight: 'var(--weight-med)',
-    fontFamily: 'var(--font-body)',
-    minHeight: 'var(--sp-9)',
+    padding: 'var(--f-brand-space-xs) var(--f-brand-space-sm)',
+    borderRadius: 'var(--f-brand-radius-rounded)',
+    fontSize: '13',
+    fontWeight: '500',
+    fontFamily: 'var(--f-base-type-family-secondary)',
+    minHeight: '36px',
     background: placedAnswer
       ? isCorrect === true
-        ? 'var(--c-correct-bg)'
+        ? 'var(--f-brand-color-background-success-accent)'
         : isCorrect === false
-        ? 'var(--c-error-bg)'
-        : 'var(--c-surface-raise)'
-      : 'var(--c-surface-faint)',
+        ? 'var(--f-brand-color-background-error)'
+        : 'var(--f-brand-color-background-light)'
+      : 'rgba(255,255,255,0.04)',
     border: placedAnswer
       ? 'none'
-      : '1px dashed var(--c-text-3)',
+      : '1px dashed var(--f-brand-color-text-muted)',
     color: placedAnswer
       ? isCorrect === true
-        ? 'var(--c-correct)'
+        ? 'var(--f-brand-color-border-success)'
         : isCorrect === false
-        ? 'var(--c-error)'
-        : 'var(--c-text-1)'
-      : 'var(--c-text-3)',
-    transition: 'background 200ms ease, color 200ms ease, border-color 200ms ease',
+        ? 'var(--f-brand-color-status-error)'
+        : 'var(--f-brand-color-text-default)'
+      : 'var(--f-brand-color-text-muted)',
+    transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -173,9 +173,9 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
     <div style={zoneStyle}>
       <span style={promptStyle}>{prompt}</span>
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-2)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-xs)' }}>
           {/* Arrow indicator */}
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ opacity: 0.3, flexShrink: 0 }}>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style={{ opacity: 0.3, flexShrink: 0 }}>
             <path d="M3 8h10M10 5l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           <div style={slotStyle}>
@@ -193,12 +193,12 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: 'var(--text-2xs)',
-            fontWeight: 'var(--weight-bold)',
-            background: isCorrect ? 'var(--c-correct)' : 'var(--c-error)',
-            color: 'var(--c-white)',
+            fontSize: '10',
+            fontWeight: '600',
+            background: isCorrect ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)',
+            color: 'var(--f-brand-color-text-light)',
             flexShrink: 0,
-            animation: 'popIn 300ms cubic-bezier(0.16, 1, 0.3, 1)',
+            animation: 'popIn var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-entry)',
           }}
         >
           {isCorrect ? '✓' : '✗'}
@@ -246,8 +246,8 @@ function ensureKeyframes() {
       to { opacity: 1; transform: translateX(0); }
     }
     @keyframes pulseGlow {
-      0%, 100% { box-shadow: 0 0 8px var(--c-correct-glow); }
-      50% { box-shadow: 0 0 24px var(--c-correct-glow); }
+      0%, 100% { box-shadow: 0 0 8px var(--f-brand-color-border-success); }
+      50% { box-shadow: 0 0 24px var(--f-brand-color-border-success); }
     }
     @keyframes successBounce {
       0% { transform: scale(1); }
@@ -257,8 +257,15 @@ function ensureKeyframes() {
     }
     @keyframes scoreCountUp {
       0% { transform: scale(1); }
-      50% { transform: scale(1.3); color: var(--c-correct); }
+      50% { transform: scale(1.3); color: var(--f-brand-color-border-success); }
       100% { transform: scale(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
   `
   document.head.appendChild(style)
@@ -463,30 +470,30 @@ function QuestionView({
       <div
         style={{
           position: 'relative',
-          margin: '0 var(--sp-4)',
-          padding: 'var(--sp-6) var(--sp-5)',
-          borderRadius: 'var(--r-lg)',
+          margin: '0 var(--f-brand-space-md)',
+          padding: 'var(--f-brand-space-lg) var(--f-brand-space-md)',
+          borderRadius: 'var(--f-brand-radius-inner)',
           background: question.accentColor,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          marginBottom: 'var(--sp-5)',
+          marginBottom: 'var(--f-brand-space-md)',
           flexShrink: 0,
           overflow: 'hidden',
           boxShadow: `0 8px 32px ${question.accentColor}55, inset 0 1px 0 rgba(255,255,255,0.15)`,
         }}
       >
-        <span style={{ fontSize: 'var(--text-4xl)', marginBottom: 'var(--sp-2)' }}>{quiz.emoji}</span>
+        <span style={{ fontSize: '40', marginBottom: 'var(--f-brand-space-xs)' }}>{quiz.emoji}</span>
         <div
           style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'var(--text-lg)',
-            fontWeight: 'var(--weight-light)',
-            color: 'var(--c-text-1)',
+            fontFamily: 'var(--f-base-type-family-primary)',
+            fontSize: '18',
+            fontWeight: '300',
+            color: 'var(--f-brand-color-text-default)',
             textAlign: 'center',
-            lineHeight: 'var(--leading-snug)',
-            letterSpacing: 'var(--tracking-tight)',
+            lineHeight: '1.28',
+            letterSpacing: '-0.03em',
           }}
         >
           {question.title}
@@ -503,10 +510,10 @@ function QuestionView({
       <div
         style={{
           flex: 1,
-          padding: '0 var(--sp-4)',
+          padding: '0 var(--f-brand-space-md)',
           display: 'flex',
           flexDirection: 'column',
-          gap: 'var(--sp-3)',
+          gap: 'var(--f-brand-space-sm)',
         }}
       >
         {question.pairs.map((pair, i) => (
@@ -530,18 +537,18 @@ function QuestionView({
       {/* Draggable chips tray */}
       <div
         style={{
-          padding: 'var(--sp-5) var(--sp-4) var(--sp-4)',
+          padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-md)',
           flexShrink: 0,
         }}
       >
         <div
           style={{
-            fontSize: 'var(--text-2xs)',
-            fontWeight: 'var(--weight-med)',
-            color: 'var(--c-text-3)',
+            fontSize: '10',
+            fontWeight: '500',
+            color: 'var(--f-brand-color-text-muted)',
             textTransform: 'uppercase',
-            letterSpacing: 'var(--tracking-wider)',
-            marginBottom: 'var(--sp-3)',
+            letterSpacing: '0.09em',
+            marginBottom: 'var(--f-brand-space-sm)',
             textAlign: 'center',
           }}
         >
@@ -551,9 +558,9 @@ function QuestionView({
           style={{
             display: 'flex',
             flexWrap: 'wrap',
-            gap: 'var(--sp-2)',
+            gap: 'var(--f-brand-space-xs)',
             justifyContent: 'center',
-            minHeight: 'var(--sp-12)',
+            minHeight: 'var(--f-brand-space-3xl)',
           }}
         >
           {availableAnswers.map((answer, i) => {
@@ -568,9 +575,9 @@ function QuestionView({
                 onTouchStart={onTouchStart(answer)}
                 onMouseDown={onMouseDown(answer)}
                 style={{
-                  animation: `chipIn 400ms cubic-bezier(0.16, 1, 0.3, 1) ${i * 50}ms both`,
+                  animation: `chipIn var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-entry) ${i * 50}ms both`,
                   opacity: isBeingDragged ? 0.3 : 1,
-                  transition: 'opacity 150ms ease',
+                  transition: 'opacity var(--f-brand-motion-duration-fast) var(--f-brand-motion-easing-default)',
                 }}
               >
                 <Chip
@@ -607,17 +614,17 @@ function QuestionView({
       )}
 
       {/* All correct overlay & next button */}
-      <div style={{ padding: '0 var(--sp-4) var(--sp-8)', flexShrink: 0 }}>
+      <div style={{ padding: '0 var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
         {allCorrect && (
           <div
             style={{
               textAlign: 'center',
-              fontSize: 'var(--text-sm)',
-              color: 'var(--c-correct)',
-              marginBottom: 'var(--sp-3)',
-              fontWeight: 'var(--weight-med)',
-              letterSpacing: 'var(--tracking-wide)',
-              animation: 'popIn 300ms cubic-bezier(0.16, 1, 0.3, 1)',
+              fontSize: '13',
+              color: 'var(--f-brand-color-border-success)',
+              marginBottom: 'var(--f-brand-space-sm)',
+              fontWeight: '500',
+              letterSpacing: '0.05em',
+              animation: 'popIn var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-entry)',
             }}
           >
             ✓ Perfect match!
@@ -626,20 +633,20 @@ function QuestionView({
         <button
           onClick={() => onComplete(correctCount)}
           disabled={!allCorrect}
-          className="btn"
+          className="f-button"
           style={{
             width: '100%',
-            padding: 'var(--sp-4) 0',
-            borderRadius: 'var(--r-full)',
+            padding: 'var(--f-brand-space-md) 0',
+            borderRadius: 'var(--f-brand-radius-rounded)',
             border: 'none',
-            background: allCorrect ? 'var(--c-white)' : 'var(--c-surface-raise)',
-            color: allCorrect ? 'var(--c-brand)' : 'var(--c-text-3)',
-            fontSize: 'var(--text-md)',
-            fontWeight: 'var(--weight-med)',
+            background: allCorrect ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-background-light)',
+            color: allCorrect ? 'var(--f-brand-color-primary)' : 'var(--f-brand-color-text-muted)',
+            fontSize: '15',
+            fontWeight: '500',
             cursor: allCorrect ? 'pointer' : 'default',
             fontFamily: 'inherit',
-            transition: 'background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out)',
-            animation: allCorrect ? 'successBounce 400ms cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+            transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
+            animation: allCorrect ? 'successBounce var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-entry)' : 'none',
           }}
         >
           {qIndex === total - 1 && allCorrect
@@ -721,17 +728,17 @@ export default function DragDropQuizRoute() {
     '': {},
     'page-in': {},
     'slide-out-left': {
-      animation: 'slideOutLeft 280ms ease forwards',
+      animation: 'slideOutLeft var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default) forwards',
     },
     'slide-in-right': {
-      animation: 'slideInRight 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
+      animation: 'slideInRight var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-entry) forwards',
     },
   }
 
   return (
     <Screen>
       <div
-        className={slideClass === 'page-in' ? 'page-in' : ''}
+        className={slideClass === 'page-in' ? 'f-page-enter' : ''}
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -742,23 +749,23 @@ export default function DragDropQuizRoute() {
         }}
       >
         {/* Top bar */}
-        <div style={{ padding: 'var(--sp-4)', flexShrink: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
-            <button onClick={handleBack} className="btn-icon" aria-label="Go back">
+        <div style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
+            <button onClick={handleBack} className="f-button f-button--ghost" aria-label="Go back">
               <img src={chevLeft} width={24} height={24} alt="" />
             </button>
-            <div style={{ flex: 1, height: 4, background: 'var(--c-surface-raise)', borderRadius: 2, overflow: 'hidden' }}>
+            <div style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
               <div
                 style={{
                   height: '100%',
                   width: `${((qIdx + 1) / total) * 100}%`,
-                  background: 'var(--c-accent)',
-                  borderRadius: 2,
-                  transition: 'width 300ms ease',
+                  background: 'var(--f-brand-color-accent)',
+                  borderRadius: 'var(--f-brand-radius-rounded)',
+                  transition: 'width var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
                 }}
               />
             </div>
-            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', flexShrink: 0 }}>
+            <span style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
               {qIdx + 1}/{total}
             </span>
           </div>

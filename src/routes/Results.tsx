@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import Screen from '../components/Screen'
+import Button from '../components/Button'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
+import trophyIcon from '../assets/icons/Trophy-white.svg'
+import tickWhite  from '../assets/icons/Tick-white.svg'
+import targetIcon from '../assets/icons/Target-white.svg'
 
 interface QuizResult {
   score: number
@@ -9,45 +14,16 @@ interface QuizResult {
   quizTitle: string
 }
 
-function statusLabel(score: number, total: number): { label: string; iconType: 'trophy' | 'tick' | 'target' } {
+function statusLabel(score: number, total: number): { label: string; color: string } {
   const pct = score / total
-  if (pct === 1)  return { label: 'Perfect Score', iconType: 'trophy' }
-  if (pct >= 0.6) return { label: 'Good Try',       iconType: 'tick' }
-  return               { label: 'Keep Going',      iconType: 'target' }
+  if (pct === 1)  return { label: 'Perfect Score', color: 'var(--f-brand-color-accent)' }
+  if (pct >= 0.8) return { label: 'Top Fan',        color: 'var(--f-brand-color-accent)' }
+  if (pct >= 0.6) return { label: 'Good Try',       color: 'var(--f-brand-color-status-warning)' }
+  if (pct >= 0.4) return { label: 'Keep Learning',  color: 'var(--f-brand-color-status-warning)' }
+  return               { label: 'Better luck next time', color: 'var(--f-brand-color-status-warning)' }
 }
 
-// Status icon SVGs using FDS icon tokens
-function StatusIcon({ type }: { type: 'trophy' | 'tick' | 'target' }) {
-  const color = type === 'trophy' || type === 'tick'
-    ? 'var(--f-brand-color-icon-success)'
-    : 'var(--f-brand-color-icon-primary)'
-
-  if (type === 'trophy') {
-    return (
-      <svg width={40} height={40} viewBox="0 0 24 24" fill="none">
-        <path d="M8 21h8m-4-4v4m-4.5-8.25c-2.032-.895-3.5-2.67-3.5-4.75h2m12 0h2c0 2.08-1.468 3.855-3.5 4.75M7 4h10v7a5 5 0 01-10 0V4z"
-          stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    )
-  }
-  if (type === 'tick') {
-    return (
-      <svg width={40} height={40} viewBox="0 0 24 24" fill="none">
-        <circle cx={12} cy={12} r={9} stroke={color} strokeWidth={1.5} />
-        <path d="M8 12l3 3 5-5" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    )
-  }
-  return (
-    <svg width={40} height={40} viewBox="0 0 24 24" fill="none">
-      <circle cx={12} cy={12} r={9} stroke={color} strokeWidth={1.5} />
-      <circle cx={12} cy={12} r={4} stroke={color} strokeWidth={1.5} />
-      <circle cx={12} cy={12} r={1} fill={color} />
-    </svg>
-  )
-}
-
-// SVG ring constants
+// SVG ring size constants — 1.5× the original 136px
 const RING_SIZE = 204
 const RING_STROKE = 6
 const RING_R = (RING_SIZE - RING_STROKE * 2) / 2
@@ -62,6 +38,7 @@ export default function Results() {
   const result = location.state as QuizResult | undefined
   const homeRoute = appState.fanCard.teamId ? '/card' : '/'
 
+  // Hooks before early return
   const rawPct = result ? result.score / result.total : 0
   const [ringProgress, setRingProgress] = useState(0)
   const [displayPoints, setDisplayPoints] = useState(0)
@@ -91,216 +68,116 @@ export default function Results() {
     return () => { clearTimeout(delay); cancelAnimationFrame(rafId) }
   }, [appState.points, result])
 
-  // No-result fallback
   if (!result) {
     return (
-      <div
-        style={{
-          background: 'var(--f-brand-color-background-default)',
-          minHeight: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <div className="page-in" style={{ padding: 'var(--sp-10) var(--sp-6)', textAlign: 'center', maxWidth: 360, width: '100%' }}>
-          <div style={{ marginBottom: 'var(--sp-5)' }}>
-            <StatusIcon type="trophy" />
-          </div>
-          <h2
-            style={{
-              fontFamily: 'var(--f-brand-type-title-4-family)',
-              fontSize: 'var(--f-brand-type-title-4-size)',
-              fontWeight: 'var(--f-brand-type-title-4-weight)',
-              lineHeight: 'var(--f-brand-type-title-4-line)',
-              color: 'var(--f-brand-color-text-heading)',
-              marginBottom: 'var(--sp-2)',
-              letterSpacing: 'var(--tracking-tight)',
-            }}
-          >
+      <Screen centered>
+        <div className="f-page-enter" style={{ padding: 'var(--f-brand-space-2xl) var(--f-brand-space-lg)', textAlign: 'center', maxWidth: 360, width: '100%' }}>
+          <div style={{ marginBottom: 'var(--f-brand-space-md)' }}><img src={trophyIcon} width={24} height={24} alt="" /></div>
+          <h2 style={{ fontSize: '28', fontWeight: '300', marginBottom: 'var(--f-brand-space-xs)', letterSpacing: '-0.03em' }}>
             Your Score
           </h2>
-          <p
-            style={{
-              fontFamily: 'var(--f-brand-type-title-1-family)',
-              fontSize: 'var(--f-brand-type-title-1-size)',
-              fontWeight: 'var(--f-brand-type-headline-medium-weight)',
-              color: 'var(--f-brand-color-text-primary)',
-              marginBottom: 'var(--sp-8)',
-              letterSpacing: 'var(--tracking-tight)',
-            }}
-          >
-            {appState.points} <span style={{ fontSize: 'var(--f-brand-type-body-medium-size)', color: 'var(--f-brand-color-text-secondary)', fontWeight: 'var(--weight-reg)' }}>pts</span>
+          <p style={{ fontSize: '36', fontWeight: '500', color: 'var(--f-brand-color-accent)', marginBottom: 'var(--f-brand-space-xl)', letterSpacing: '-0.03em' }}>
+            {appState.points} <span style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)', fontWeight: '400' }}>pts</span>
           </p>
-          <button
-            onClick={() => { track('results_play_again'); navigate('/quiz') }}
-            className="f-button f-button--primary"
-          >
+          <Button fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
             Play a Quiz
-          </button>
-          <button
-            onClick={() => navigate(homeRoute)}
-            className="f-button f-button--ghost"
-            style={{ marginTop: 'var(--sp-3)' }}
-          >
+          </Button>
+          <Button variant="ghost" fullWidth style={{ marginTop: 'var(--f-brand-space-sm)' }} onClick={() => navigate(homeRoute)}>
             Back to Home
-          </button>
+          </Button>
         </div>
-      </div>
+      </Screen>
     )
   }
 
   const { score, total, quizTitle } = result
-  const { label, iconType } = statusLabel(score, total)
-  const ringColor = iconType === 'trophy' || iconType === 'tick'
-    ? 'var(--f-brand-color-icon-success)'
-    : 'var(--f-brand-color-icon-primary)'
+  const { label, color } = statusLabel(score, total)
+  const resultIcon = score === total ? trophyIcon : score >= total * 0.6 ? tickWhite : targetIcon
 
   return (
-    <div
-      style={{
-        background: 'var(--f-brand-color-background-default)',
-        minHeight: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <div className="page-in" style={{ padding: 'var(--sp-10) var(--sp-6)', textAlign: 'center', maxWidth: 380, width: '100%' }}>
-
-        {/* Status icon */}
-        <div style={{ marginBottom: 'var(--sp-3)' }}>
-          <StatusIcon type={iconType} />
-        </div>
+    <Screen centered>
+      <div className="f-page-enter" style={{ padding: 'var(--f-brand-space-2xl) var(--f-brand-space-lg)', textAlign: 'center', maxWidth: 380, width: '100%' }}>
 
         {/* Status label */}
-        <div
-          style={{
-            fontFamily: 'var(--f-brand-type-title-4-family)',
-            fontSize: 'var(--f-brand-type-title-4-size)',
-            fontWeight: 'var(--f-brand-type-title-4-weight)',
-            lineHeight: 'var(--f-brand-type-title-4-line)',
-            letterSpacing: 'var(--tracking-tight)',
-            color: 'var(--f-brand-color-text-heading)',
-            marginBottom: 'var(--sp-2)',
-          }}
-        >
+        <div style={{
+          fontFamily: 'var(--f-base-type-family-primary)',
+          fontSize: '28',
+          fontWeight: '300',
+          letterSpacing: '-0.03em',
+          color,
+          marginBottom: 'var(--f-brand-space-xs)',
+        }}>
           {label}
         </div>
 
         {/* Quiz title */}
-        <div
-          style={{
-            fontFamily: 'var(--f-brand-type-body-medium-family)',
-            fontSize: 'var(--f-brand-type-body-medium-size)',
-            color: 'var(--f-brand-color-text-secondary)',
-            marginBottom: 'var(--sp-8)',
-            letterSpacing: 'var(--tracking-wide)',
-            textTransform: 'uppercase',
-          }}
-        >
+        <div style={{
+          fontSize: '13',
+          color: 'var(--f-brand-color-text-subtle)',
+          marginBottom: 'var(--f-brand-space-xl)',
+          letterSpacing: '0.05em',
+          textTransform: 'uppercase',
+        }}>
           {quizTitle}
         </div>
 
         {/* Score ring — animated SVG progress, count-up points inside */}
-        <div style={{ position: 'relative', width: RING_SIZE, height: RING_SIZE, margin: '0 auto var(--sp-8)' }}>
+        <div style={{ position: 'relative', width: RING_SIZE, height: RING_SIZE, margin: '0 auto var(--f-brand-space-xl)' }}>
           <svg
             width={RING_SIZE}
             height={RING_SIZE}
             style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }}
           >
             {/* Track */}
-            <circle
-              cx={RING_CX} cy={RING_CX} r={RING_R}
-              fill="none"
-              stroke="var(--f-brand-color-background-disabled)"
-              strokeWidth={RING_STROKE}
-            />
+            <circle cx={RING_CX} cy={RING_CX} r={RING_R} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={RING_STROKE} />
             {/* Progress arc */}
             <circle
               cx={RING_CX} cy={RING_CX} r={RING_R}
               fill="none"
-              stroke="var(--f-brand-color-background-primary)"
+              stroke={color}
               strokeWidth={RING_STROKE}
               strokeLinecap="round"
               strokeDasharray={RING_CIRC}
               strokeDashoffset={RING_CIRC * (1 - ringProgress)}
-              style={{
-                transition: `stroke-dashoffset var(--f-brand-motion-duration-gentle) var(--f-brand-motion-easing-gentle)`,
-              }}
+              style={{ transition: 'stroke-dashoffset var(--f-brand-motion-duration-gentle) var(--f-brand-motion-easing-standard)', filter: `drop-shadow(0 0 8px ${color}88)` }}
             />
           </svg>
           {/* Inner content */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: RING_STROKE * 2,
-              borderRadius: '50%',
-              background: 'var(--f-brand-color-background-surface)',
-              boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <span
-              style={{
-                fontFamily: 'var(--f-brand-type-title-1-family)',
-                fontSize: 'var(--f-brand-type-title-1-size)',
-                fontWeight: 'var(--f-brand-type-title-1-weight)',
-                lineHeight: 'var(--f-brand-type-title-1-line)',
-                letterSpacing: 'var(--tracking-tight)',
-                color: 'var(--f-brand-color-text-heading)',
-              }}
-            >
+          <div style={{
+            position: 'absolute',
+            inset: RING_STROKE * 2,
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.10)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            boxShadow: `0 0 40px ${color}22, inset 0 1px 0 rgba(255,255,255,0.14)`,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <span style={{ fontFamily: 'var(--f-base-type-family-primary)', fontSize: '36', fontWeight: '300', letterSpacing: '-0.03em', color, lineHeight: 1 }}>
               {displayPoints}
             </span>
-            <span
-              style={{
-                fontFamily: 'var(--f-brand-type-body-medium-family)',
-                fontSize: 'var(--text-2sm)',
-                color: 'var(--f-brand-color-text-secondary)',
-                letterSpacing: 'var(--tracking-wider)',
-                textTransform: 'uppercase',
-                marginTop: 'var(--sp-1)',
-              }}
-            >
+            <span style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', letterSpacing: '0.09em', textTransform: 'uppercase', marginTop: 4 }}>
               Points
             </span>
           </div>
         </div>
 
-        {/* Points earned */}
-        <div
-          style={{
-            fontFamily: 'var(--f-brand-type-headline-medium-family)',
-            fontSize: 'var(--f-brand-type-headline-medium-size)',
-            fontWeight: 'var(--f-brand-type-headline-medium-weight)',
-            lineHeight: 'var(--f-brand-type-headline-medium-line)',
-            color: 'var(--f-brand-color-text-primary)',
-            marginBottom: 'var(--sp-8)',
-          }}
-        >
-          +{score} {score === 1 ? 'point' : 'points'} earned
-        </div>
-
         {/* Actions */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)', width: '100%' }}>
-          <button
-            onClick={() => { track('results_play_again'); navigate('/quiz') }}
-            className="f-button f-button--secondary"
-          >
-            Play Again
-          </button>
-          <button
-            onClick={() => { track('results_home_tapped'); navigate(homeRoute) }}
-            className="f-button f-button--primary"
-          >
-            Back Home
-          </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-sm)', width: '100%' }}>
+          <Button fullWidth onClick={() => { track('results_leaderboard_tapped'); navigate('/leaderboard') }}>
+            View Leaderboard
+          </Button>
+          <Button variant="secondary" fullWidth onClick={() => { track('results_home_tapped'); navigate(homeRoute) }}>
+            Back to Home
+          </Button>
+          <Button variant="ghost" fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
+            Play Another Quiz
+          </Button>
         </div>
       </div>
-    </div>
+    </Screen>
   )
 }
