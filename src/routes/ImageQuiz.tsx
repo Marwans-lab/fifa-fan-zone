@@ -4,17 +4,25 @@ import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import { IMAGE_QUIZZES, type ImageQuestion } from '../data/imageQuizzes'
-import chevLeft from '../assets/icons/Chevron-left-white.svg'
 
 const QUESTION_TIME = 15 // seconds
 
-// ─── Tick icon (white, centered) ──────────────────────────────────────────────
+// ─── Back chevron (dark, for light bg) ───────────────────────────────────────
+function ChevronLeftDark() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M15 18l-6-6 6-6" stroke="var(--f-brand-color-text-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+// ─── Tick icon ────────────────────────────────────────────────────────────────
 function TickIcon() {
   return (
     <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
       <path
         d="M10 20L17 27L30 13"
-        stroke="#ffffff"
+        stroke="var(--f-brand-color-text-success)"
         strokeWidth="3.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -23,13 +31,13 @@ function TickIcon() {
   )
 }
 
-// ─── Close icon (white, centered) ─────────────────────────────────────────────
+// ─── Close icon ───────────────────────────────────────────────────────────────
 function CloseIcon() {
   return (
     <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
       <path
         d="M12 12L28 28M28 12L12 28"
-        stroke="#ffffff"
+        stroke="var(--f-brand-color-text-error)"
         strokeWidth="3.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -47,11 +55,11 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
   return (
     <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
       <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={cx} cy={cx} r={R} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={3} />
+        <circle cx={cx} cy={cx} r={R} fill="none" stroke="var(--f-brand-color-background-disabled)" strokeWidth={3} />
         <circle
           cx={cx} cy={cx} r={R}
           fill="none"
-          stroke="#ffffff"
+          stroke="var(--f-brand-color-background-primary)"
           strokeWidth={3}
           strokeDasharray={circumference}
           strokeDashoffset={offset}
@@ -59,14 +67,14 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
           style={{ transition: 'stroke-dashoffset 1s linear' }}
         />
       </svg>
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 500, fontFamily: 'var(--font-body)', color: '#ffffff' }}>
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 500, fontFamily: 'var(--f-brand-type-body-medium-family)', color: 'var(--f-brand-color-text-primary)' }}>
         {timeLeft}
       </div>
     </div>
   )
 }
 
-// ─── Image option card ────────────────────────────────────────────────────────
+// ─── Image option card (BEM: .f-image-option) ────────────────────────────────
 function ImageOptionCard({
   option,
   revealed,
@@ -82,18 +90,17 @@ function ImageOptionCard({
 }) {
   const [imgLoaded, setImgLoaded] = useState(false)
   const showOverlay = revealed && (isChosen || isCorrect)
-  const overlayColor = isCorrect
-    ? 'rgba(52, 219, 128, 0.30)'
-    : 'rgba(217, 87, 87, 0.30)'
 
-  // Border styling
-  let borderColor = 'var(--c-border)'
+  // Build BEM class list
+  const classes = ['f-image-option']
+  if (!revealed && isChosen) {
+    classes.push('f-image-option--selected')
+  }
   if (revealed && isCorrect) {
-    borderColor = 'var(--c-correct)'
-  } else if (revealed && isChosen && !isCorrect) {
-    borderColor = 'var(--c-error)'
-  } else if (!revealed && isChosen) {
-    borderColor = 'var(--c-accent)'
+    classes.push('f-image-option--correct')
+  }
+  if (revealed && isChosen && !isCorrect) {
+    classes.push('f-image-option--wrong')
   }
 
   return (
@@ -101,20 +108,7 @@ function ImageOptionCard({
       onClick={revealed ? undefined : onSelect}
       disabled={revealed}
       aria-label={option.label}
-      style={{
-        position: 'relative',
-        width: '100%',
-        aspectRatio: '1',
-        borderRadius: 'var(--r-lg)',
-        border: `2px solid ${borderColor}`,
-        background: 'var(--c-surface)',
-        overflow: 'hidden',
-        cursor: revealed ? 'default' : 'pointer',
-        padding: 0,
-        fontFamily: 'inherit',
-        transition: 'border-color 200ms ease, transform 150ms ease',
-        WebkitTapHighlightColor: 'transparent',
-      }}
+      className={classes.join(' ')}
     >
       {/* Image */}
       <img
@@ -132,38 +126,21 @@ function ImageOptionCard({
         }}
       />
 
-      {/* Loading placeholder */}
+      {/* Shimmer skeleton while loading */}
       {!imgLoaded && (
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'var(--c-surface-raise)',
-          }}
-        >
-          <div
-            style={{
-              width: 24,
-              height: 24,
-              borderRadius: '50%',
-              border: '2.5px solid rgba(255,255,255,0.15)',
-              borderTopColor: 'var(--c-accent)',
-              animation: 'quiz-spin 0.6s linear infinite',
-            }}
-          />
-        </div>
+        <div className="f-image-option__skeleton" />
       )}
 
-      {/* Feedback overlay — green for correct, red for wrong */}
+      {/* Feedback overlay */}
       {showOverlay && (
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: overlayColor,
+            background: isCorrect
+              ? 'var(--f-brand-color-background-success-accent)'
+              : 'var(--f-brand-color-background-error)',
+            opacity: 0.7,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -190,15 +167,40 @@ function ImageOptionCard({
         <span
           style={{
             fontSize: 'var(--text-sm)',
-            fontWeight: 'var(--weight-med)',
-            color: '#ffffff',
-            fontFamily: 'var(--font-body)',
+            fontWeight: 'var(--f-brand-type-body-medium-weight)',
+            color: 'var(--f-brand-color-background-light)',
+            fontFamily: 'var(--f-brand-type-body-medium-family)',
           }}
         >
           {option.label}
         </span>
       </div>
     </button>
+  )
+}
+
+// ─── Progress bar (FDS pattern) ──────────────────────────────────────────────
+function ProgressBar({
+  current,
+  total,
+  revealed,
+}: {
+  current: number
+  total: number
+  revealed: boolean
+}) {
+  return (
+    <div style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-disabled)', borderRadius: 2, overflow: 'hidden' }}>
+      <div
+        style={{
+          height: '100%',
+          width: `${((current + (revealed ? 1 : 0)) / total) * 100}%`,
+          background: 'var(--f-brand-color-background-primary)',
+          borderRadius: 2,
+          transition: 'width 300ms ease',
+        }}
+      />
+    </div>
   )
 }
 
@@ -241,26 +243,30 @@ function ImageQuestionScreen({
           maxWidth: 420,
           margin: '0 auto',
           width: '100%',
+          background: 'var(--f-brand-color-background-default)',
         }}
       >
         {/* ── Top bar ─────────────────────────────────── */}
         <div style={{ padding: 'var(--sp-4)', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
-            <button onClick={onBack} className="btn-icon">
-              <img src={chevLeft} width={24} height={24} alt="Back" />
+            <button onClick={onBack} className="f-btn-icon" aria-label="Back">
+              <ChevronLeftDark />
             </button>
-            <div style={{ flex: 1, height: 4, background: 'var(--c-surface-raise)', borderRadius: 2, overflow: 'hidden' }}>
-              <div
-                style={{
-                  height: '100%',
-                  width: `${((qIndex + (revealed ? 1 : 0)) / total) * 100}%`,
-                  background: 'var(--c-accent)',
-                  borderRadius: 2,
-                  transition: 'width 300ms ease',
-                }}
-              />
-            </div>
-            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', flexShrink: 0 }}>
+
+            <ProgressBar
+              current={qIndex}
+              total={total}
+              revealed={revealed}
+            />
+
+            <span
+              style={{
+                fontSize: 'var(--text-xs)',
+                color: 'var(--f-brand-color-text-secondary)',
+                flexShrink: 0,
+                fontFamily: 'var(--f-brand-type-body-medium-family)',
+              }}
+            >
               {qIndex + 1}/{total}
             </span>
           </div>
@@ -277,10 +283,10 @@ function ImageQuestionScreen({
           <div
             style={{
               padding: '0 var(--sp-6)',
-              fontFamily: 'var(--font-display)',
-              fontSize: 'var(--text-xl)',
-              fontWeight: 'var(--weight-light)',
-              color: 'var(--c-text-1)',
+              fontFamily: 'var(--f-brand-type-headline-medium-family)',
+              fontSize: 'var(--f-brand-type-headline-medium-size)',
+              fontWeight: 'var(--f-brand-type-headline-medium-weight)',
+              color: 'var(--f-brand-color-text-primary)',
               lineHeight: 'var(--leading-tight)',
               letterSpacing: 'var(--tracking-tight)',
               textAlign: 'center',
@@ -297,7 +303,7 @@ function ImageQuestionScreen({
               padding: '0 var(--sp-4)',
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
-              gap: 'var(--sp-3)',
+              gap: 'var(--f-brand-space-sm)',
               flex: 1,
             }}
           >
@@ -320,10 +326,11 @@ function ImageQuestionScreen({
             <div
               style={{
                 textAlign: 'center',
-                fontSize: 'var(--text-sm)',
-                color: chosenId === question.correctId ? 'var(--c-correct)' : 'var(--c-error)',
+                fontFamily: 'var(--f-brand-type-body-medium-family)',
+                fontSize: 'var(--f-brand-type-body-medium-size)',
+                color: chosenId === question.correctId ? 'var(--f-brand-color-text-success)' : 'var(--f-brand-color-text-error)',
                 marginBottom: 'var(--sp-3)',
-                fontWeight: 'var(--weight-med)',
+                fontWeight: 'var(--f-brand-type-headline-medium-weight)',
                 letterSpacing: 'var(--tracking-wide)',
               }}
             >
@@ -343,10 +350,10 @@ function ImageQuestionScreen({
               padding: '16px 0',
               borderRadius: 50,
               border: 'none',
-              background: revealed ? '#ffffff' : 'var(--c-surface-raise)',
-              color: revealed ? 'var(--c-brand)' : 'var(--c-text-3)',
-              fontSize: 'var(--text-md)',
-              fontWeight: 'var(--weight-med)',
+              background: revealed ? 'var(--f-brand-color-background-primary)' : 'var(--f-brand-color-background-disabled)',
+              color: revealed ? 'var(--f-brand-color-background-light)' : 'var(--f-brand-color-text-secondary)',
+              fontSize: 'var(--f-brand-type-body-medium-size)',
+              fontWeight: 'var(--f-brand-type-headline-medium-weight)',
               cursor: revealed ? 'pointer' : 'default',
               fontFamily: 'inherit',
               transition: 'background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out)',
