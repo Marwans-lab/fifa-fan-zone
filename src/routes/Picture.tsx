@@ -179,7 +179,7 @@ export default function Picture() {
 
   const handleBack = useCallback(() => {
     stopCamera()
-    navigate('/identity', { replace: true })
+    navigate('/team-selection')
   }, [navigate, stopCamera])
 
   const hasPhoto = !!photoDataUrl
