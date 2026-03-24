@@ -275,11 +275,13 @@ function QuizCard({
   quiz,
   cardState,
   progress,
+  lockMessage,
   onStart,
 }: {
   quiz: (typeof QUIZZES)[number]
   cardState: QuizCardState
   progress: number
+  lockMessage?: string
   onStart: () => void
 }) {
   const locked = cardState === 'locked'
@@ -362,7 +364,7 @@ function QuizCard({
                 Completed · {Math.round(progress * quiz.questions.length)}/{quiz.questions.length} correct
               </span>
             ) : locked ? (
-              'Complete previous quiz to unlock'
+              lockMessage ?? 'Complete previous quiz to unlock'
             ) : (
               <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 'var(--weight-med)' }}>
                 {quiz.questions.length} questions · {quiz.questions.length * 15}s
@@ -402,10 +404,12 @@ function QuizCard({
 function DragDropQuizCard({
   quiz: ddQuiz,
   result,
+  locked,
   onStart,
 }: {
   quiz: (typeof DRAG_DROP_QUIZZES)[number]
   result: { score: number; total: number } | undefined
+  locked: boolean
   onStart: () => void
 }) {
   const done = !!result
@@ -420,16 +424,17 @@ function DragDropQuizCard({
 
   return (
     <button
-      onClick={handleClick}
-      disabled={loading}
+      onClick={locked ? undefined : handleClick}
+      disabled={locked || loading}
       style={{
         width: '100%',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '18px 14px', borderRadius: 22,
         minHeight: 120,
-        border: `1px solid ${done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
-        background: done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
-        cursor: 'pointer',
+        border: `1px solid ${locked ? 'rgba(255,255,255,0.06)' : done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
+        background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
+        opacity: locked ? 0.55 : 1,
+        cursor: locked ? 'not-allowed' : 'pointer',
         textAlign: 'left', fontFamily: 'inherit', color: 'var(--c-text-1)',
         transition: 'all 400ms ease',
         WebkitTapHighlightColor: 'transparent',
@@ -453,12 +458,16 @@ function DragDropQuizCard({
             height: (RING_RADIUS - RING_STROKE - 2) * 2,
             borderRadius: '50%',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: done
+            background: locked
+              ? 'rgba(255,255,255,0.04)'
+              : done
               ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
               : 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
-            boxShadow: '0 6px 20px rgba(0,0,0,0.25)',
+            boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.25)',
           }}>
-            {done ? (
+            {locked ? (
+              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4 }} />
+            ) : done ? (
               <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
             ) : (
               <span style={{ fontSize: 'var(--text-2xl)' }}>{ddQuiz.emoji}</span>
@@ -468,7 +477,8 @@ function DragDropQuizCard({
         <div>
           <h3 style={{
             fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 'var(--text-lg)', color: 'var(--c-text-1)',
+            fontSize: 'var(--text-lg)',
+            color: locked ? 'rgba(255,255,255,0.5)' : 'var(--c-text-1)',
           }}>
             {ddQuiz.title}
           </h3>
@@ -477,6 +487,8 @@ function DragDropQuizCard({
               <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
                 Completed · {result.score}/{result.total} correct
               </span>
+            ) : locked ? (
+              'Complete your fan card to unlock'
             ) : (
               <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
                 {totalPairs} matches · Drag & Drop
@@ -485,7 +497,7 @@ function DragDropQuizCard({
           </p>
         </div>
       </div>
-      {!done && (
+      {!locked && !done && (
         <div style={{
           width: 36, height: 36, borderRadius: '50%',
           background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
@@ -517,12 +529,14 @@ function ExtraQuizCard({
   title,
   subtitle,
   result,
+  locked,
   onStart,
 }: {
   emoji: string
   title: string
   subtitle: string
   result: { score: number; total: number } | undefined
+  locked: boolean
   onStart: () => void
 }) {
   const done = !!result
@@ -536,16 +550,17 @@ function ExtraQuizCard({
 
   return (
     <button
-      onClick={handleClick}
-      disabled={loading}
+      onClick={locked ? undefined : handleClick}
+      disabled={locked || loading}
       style={{
         width: '100%',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '18px 14px', borderRadius: 22,
         minHeight: 120,
-        border: `1px solid ${done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
-        background: done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
-        cursor: 'pointer',
+        border: `1px solid ${locked ? 'rgba(255,255,255,0.06)' : done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
+        background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
+        opacity: locked ? 0.55 : 1,
+        cursor: locked ? 'not-allowed' : 'pointer',
         textAlign: 'left', fontFamily: 'inherit', color: 'var(--c-text-1)',
         transition: 'all 400ms ease',
         WebkitTapHighlightColor: 'transparent',
@@ -569,12 +584,16 @@ function ExtraQuizCard({
             height: (RING_RADIUS - RING_STROKE - 2) * 2,
             borderRadius: '50%',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: done
+            background: locked
+              ? 'rgba(255,255,255,0.04)'
+              : done
               ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
               : 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
-            boxShadow: '0 6px 20px rgba(0,0,0,0.25)',
+            boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.25)',
           }}>
-            {done ? (
+            {locked ? (
+              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4 }} />
+            ) : done ? (
               <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
             ) : (
               <span style={{ fontSize: 'var(--text-2xl)' }}>{emoji}</span>
@@ -584,7 +603,8 @@ function ExtraQuizCard({
         <div>
           <h3 style={{
             fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 'var(--text-lg)', color: 'var(--c-text-1)',
+            fontSize: 'var(--text-lg)',
+            color: locked ? 'rgba(255,255,255,0.5)' : 'var(--c-text-1)',
           }}>
             {title}
           </h3>
@@ -593,6 +613,8 @@ function ExtraQuizCard({
               <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
                 Completed · {result.score}/{result.total} correct
               </span>
+            ) : locked ? (
+              'Complete your fan card to unlock'
             ) : (
               <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
                 {subtitle}
@@ -601,7 +623,7 @@ function ExtraQuizCard({
           </p>
         </div>
       </div>
-      {!done && (
+      {!locked && !done && (
         <div style={{
           width: 36, height: 36, borderRadius: '50%',
           background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
@@ -672,7 +694,10 @@ export default function Card() {
     }
   }, [state.fanCard])
 
+  const cardComplete = state.fanCard.completedAt !== null
+
   function getCardState(i: number): QuizCardState {
+    if (!cardComplete) return 'locked'
     const quizId = QUIZZES[i].id
     if (state.quizResults[quizId]) return 'done'
     if (i === 0) return 'active'
@@ -767,6 +792,7 @@ export default function Card() {
                   quiz={quiz}
                   cardState={getCardState(i)}
                   progress={getProgress(i)}
+                  lockMessage={!cardComplete ? 'Complete your fan card to unlock' : undefined}
                   onStart={() => handleStartQuiz(quiz.id)}
                 />
               ))}
@@ -775,6 +801,7 @@ export default function Card() {
                   key={ddQuiz.id}
                   quiz={ddQuiz}
                   result={state.quizResults[ddQuiz.id]}
+                  locked={!cardComplete}
                   onStart={() => handleStartDragDropQuiz(ddQuiz.id)}
                 />
               ))}
@@ -785,6 +812,7 @@ export default function Card() {
                   title={iq.title}
                   subtitle={`${iq.questions.length} questions · Image Quiz`}
                   result={state.quizResults[iq.id]}
+                  locked={!cardComplete}
                   onStart={() => handleStartImageQuiz(iq.id)}
                 />
               ))}
@@ -795,6 +823,7 @@ export default function Card() {
                   title={sq.title}
                   subtitle={`${sq.statements.length} statements · Swipe`}
                   result={state.quizResults[sq.id]}
+                  locked={!cardComplete}
                   onStart={() => handleStartSwipeQuiz(sq.id)}
                 />
               ))}
@@ -803,6 +832,7 @@ export default function Card() {
                 title="Card Match"
                 subtitle="Match the pairs · Memory Game"
                 result={state.quizResults['card-match']}
+                locked={!cardComplete}
                 onStart={handleStartCardMatch}
               />
             </div>
