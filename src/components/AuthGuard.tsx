@@ -27,11 +27,12 @@ export default function AuthGuard({ children }: AuthGuardProps) {
             fontWeight: 'var(--weight-light)',
             letterSpacing: 'var(--tracking-tight)',
             marginBottom: 'var(--sp-3)',
+            color: 'var(--c-lt-text-1)',
           }}>
             Session unavailable
           </h2>
           <p style={{
-            color: 'var(--c-text-2)',
+            color: 'var(--c-lt-text-2)',
             fontSize: 'var(--text-sm)',
             lineHeight: 'var(--leading-normal)',
             marginBottom: 'var(--sp-6)',
