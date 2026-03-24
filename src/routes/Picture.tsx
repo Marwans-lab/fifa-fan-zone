@@ -37,7 +37,7 @@ function SilhouettePlaceholder() {
         cx="90"
         cy="70"
         r="42"
-        stroke="#9099a2"
+        stroke="var(--c-lt-text-2)"
         strokeWidth="2"
         strokeDasharray="8 6"
         fill="none"
@@ -45,7 +45,7 @@ function SilhouettePlaceholder() {
       {/* Shoulders */}
       <path
         d="M20 210 C20 170, 45 145, 90 140 C135 145, 160 170, 160 210"
-        stroke="#9099a2"
+        stroke="var(--c-lt-text-2)"
         strokeWidth="2"
         strokeDasharray="8 6"
         fill="none"
@@ -54,15 +54,15 @@ function SilhouettePlaceholder() {
   )
 }
 
-// ─── Progress bar ─────────────────────────────────────────────────────────────
+// ─── Progress bar (FDS burgundy brand fill) ──────────────────────────────────
 function ProgressBar({ progress }: { progress: number }) {
   return (
     <div
       style={{
         flex: 1,
         height: 8,
-        borderRadius: 64,
-        background: '#dbdee8',
+        borderRadius: 'var(--r-full)',
+        background: 'var(--c-lt-border)',
         overflow: 'hidden',
       }}
     >
@@ -70,9 +70,8 @@ function ProgressBar({ progress }: { progress: number }) {
         style={{
           width: `${progress}%`,
           height: '100%',
-          borderRadius: 64,
-          background: 'linear-gradient(-90deg, #34DB80 61.5%, #1C7544 100%)',
-          boxShadow: '1px 0px 6px rgba(0,0,0,0.25)',
+          borderRadius: 'var(--r-full)',
+          background: 'var(--c-lt-brand)',
           transition: `width var(--dur-slow) var(--ease-out)`,
         }}
       />
@@ -193,7 +192,7 @@ export default function Picture() {
         flexDirection: 'column',
         height: '100%',
         width: '100%',
-        background: '#f2f3fa',
+        background: 'var(--c-lt-bg)',
         overflowY: 'auto',
         WebkitOverflowScrolling: 'touch',
       }}
@@ -212,15 +211,18 @@ export default function Picture() {
           style={{
             width: 48,
             height: 48,
+            minWidth: 44,
+            minHeight: 44,
             borderRadius: 'var(--r-full)',
-            background: '#ffffff',
+            background: 'var(--c-lt-surface)',
             border: 'none',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
-            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+            boxShadow: '0 2px 8px var(--c-lt-shadow)',
+            WebkitTapHighlightColor: 'transparent',
           }}
         >
           <img
@@ -241,7 +243,7 @@ export default function Picture() {
         fontSize: 'var(--text-2xl)',
         fontWeight: 'var(--weight-thin)',
         lineHeight: '36px',
-        color: '#1f212b',
+        color: 'var(--c-lt-text-1)',
         textAlign: 'center',
         marginTop: 'var(--sp-6)',
         flexShrink: 0,
@@ -249,11 +251,11 @@ export default function Picture() {
         Add your picture
       </h2>
 
-      {/* ── Photo card ───────────────────────────────────────── */}
+      {/* ── Photo card — FDS surface with dashed border ──────── */}
       <div style={{
         margin: 'var(--sp-6) var(--sp-4) 0',
-        background: '#ffffff',
-        borderRadius: 'var(--r-md)',
+        background: 'var(--c-lt-surface)',
+        borderRadius: 'var(--r-xl)',
         height: 515,
         display: 'flex',
         flexDirection: 'column',
@@ -262,6 +264,9 @@ export default function Picture() {
         position: 'relative',
         overflow: 'hidden',
         flexShrink: 0,
+        border: !cameraActive && !hasPhoto
+          ? '2px dashed var(--c-lt-border)'
+          : 'none',
       }}>
         {cameraActive && !hasPhoto ? (
           /* Live camera feed */
@@ -294,9 +299,11 @@ export default function Picture() {
                 transform: 'translateX(-50%)',
                 width: 72,
                 height: 72,
+                minWidth: 44,
+                minHeight: 44,
                 borderRadius: 'var(--r-full)',
                 background: 'none',
-                border: '3px solid #ffffff',
+                border: '3px solid var(--c-lt-surface)',
                 padding: 4,
                 cursor: 'pointer',
                 display: 'flex',
@@ -308,7 +315,7 @@ export default function Picture() {
                 width: '100%',
                 height: '100%',
                 borderRadius: 'var(--r-full)',
-                background: '#ffffff',
+                background: 'var(--c-lt-surface)',
               }} />
             </button>
           </div>
@@ -339,17 +346,19 @@ export default function Picture() {
                 left: '50%',
                 transform: 'translateX(-50%)',
                 padding: 'var(--sp-2) var(--sp-5)',
+                minHeight: 44,
                 borderRadius: 'var(--r-full)',
-                background: 'rgba(0,0,0,0.5)',
+                background: 'var(--c-lt-overlay-heavy)',
                 backdropFilter: 'blur(8px)',
                 WebkitBackdropFilter: 'blur(8px)',
-                border: '1px solid rgba(255,255,255,0.2)',
-                color: '#ffffff',
+                border: '1px solid var(--c-lt-overlay-border)',
+                color: 'var(--c-lt-surface)',
                 fontFamily: 'var(--font-body)',
                 fontSize: 'var(--text-sm)',
                 fontWeight: 'var(--weight-med)',
                 cursor: 'pointer',
                 letterSpacing: 'var(--tracking-wide)',
+                WebkitTapHighlightColor: 'transparent',
               }}
             >
               Retake
@@ -367,20 +376,22 @@ export default function Picture() {
                 top: 209,
                 width: 197,
                 height: 56,
-                borderRadius: 32,
-                background: '#8e2157',
+                minHeight: 44,
+                borderRadius: 'var(--r-full)',
+                background: 'var(--c-lt-brand)',
                 border: 'none',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 'var(--sp-3)',
-                boxShadow: '0px 8px 16px rgba(31,33,43,0.08)',
-                color: '#ffffff',
+                boxShadow: '0 8px 16px var(--c-lt-shadow)',
+                color: 'var(--c-lt-surface)',
                 fontFamily: 'var(--font-body)',
-                fontSize: 16,
+                fontSize: 'var(--text-md)',
                 fontWeight: 'var(--weight-med)',
                 lineHeight: '24px',
+                WebkitTapHighlightColor: 'transparent',
               }}
             >
               <span>Take a photo</span>
@@ -394,10 +405,11 @@ export default function Picture() {
       {cameraError && (
         <p style={{
           fontSize: 'var(--text-xs)',
-          color: '#d95757',
+          color: 'var(--c-error)',
           marginTop: 'var(--sp-2)',
           textAlign: 'center',
           padding: '0 var(--sp-4)',
+          fontFamily: 'var(--font-body)',
         }}>
           {cameraError}
         </p>
@@ -413,7 +425,7 @@ export default function Picture() {
         onChange={handleFileChange}
       />
 
-      {/* ── Next button ──────────────────────────────────────── */}
+      {/* ── Next button — FDS primary ────────────────────────── */}
       <div style={{
         padding: 'var(--sp-6) var(--sp-4) var(--sp-8)',
         flexShrink: 0,
@@ -424,16 +436,18 @@ export default function Picture() {
           style={{
             width: '100%',
             height: 56,
-            borderRadius: 32,
-            background: hasPhoto ? '#8e2157' : '#dbdee8',
+            minHeight: 44,
+            borderRadius: 'var(--r-full)',
+            background: hasPhoto ? 'var(--c-lt-brand)' : 'var(--c-lt-border)',
             border: 'none',
             cursor: hasPhoto ? 'pointer' : 'default',
-            color: hasPhoto ? '#ffffff' : '#9099a2',
+            color: hasPhoto ? 'var(--c-lt-surface)' : 'var(--c-lt-text-2)',
             fontFamily: 'var(--font-body)',
-            fontSize: 16,
+            fontSize: 'var(--text-md)',
             fontWeight: 'var(--weight-med)',
             lineHeight: '24px',
             transition: `background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out)`,
+            WebkitTapHighlightColor: 'transparent',
           }}
         >
           Next
