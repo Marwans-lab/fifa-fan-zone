@@ -1,0 +1,345 @@
+/* ─── FDS Card Hub Page ──────────────────────────────────────────────────────
+   BEM components: f-card-hub, f-journey-card, f-quiz-card
+   All values reference --f-brand-* tokens with cssFallback
+───────────────────────────────────────────────────────────────────────────── */
+
+/* ── Page container ─────────────────────────────────────────────────────── */
+.f-card-hub {
+  --f-card-hub-bg: var(--f-brand-color-background-default, #F2F3FA);
+  --f-card-hub-padding-h: var(--f-brand-space-lg, 24px);
+  --f-card-hub-padding-v: var(--f-brand-space-md, 16px);
+
+  background: var(--f-card-hub-bg);
+  min-height: 100%;
+}
+
+/* ── Journey Card ───────────────────────────────────────────────────────── */
+.f-journey-card {
+  --f-journey-card-bg: var(--f-brand-color-background-light, #FFFFFF);
+  --f-journey-card-shadow: var(--f-brand-shadow-medium, 0 2px 8px #1F212B14);
+  --f-journey-card-radius: var(--f-brand-radius-outer, 20px);
+  --f-journey-card-padding: var(--f-brand-space-md, 16px);
+  --f-journey-card-text: var(--f-brand-color-text-default, #1F212B);
+  --f-journey-card-text-muted: var(--f-brand-color-text-subtle, #6E7780);
+  --f-journey-card-accent: var(--f-brand-color-background-primary, #8E2157);
+  --f-journey-card-disabled: var(--f-brand-color-background-disabled, #DBDEE8);
+  --f-journey-card-duration: var(--f-brand-motion-duration-quick, 480ms);
+  --f-journey-card-easing: var(--f-brand-motion-easing-default, ease-in-out);
+
+  width: 100%;
+  background: var(--f-journey-card-bg);
+  border-radius: var(--f-journey-card-radius);
+  padding: var(--f-journey-card-padding);
+  box-shadow: var(--f-journey-card-shadow);
+  margin-bottom: var(--f-brand-space-md, 16px);
+  overflow: hidden;
+}
+
+.f-journey-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--f-brand-space-lg, 24px);
+}
+
+.f-journey-card__label {
+  font: 500 12px/1.33 var(--font-body, Graphik, sans-serif);
+  letter-spacing: 0.05em;
+  color: var(--f-journey-card-text-muted);
+  margin-bottom: var(--f-brand-space-2xs, 4px);
+  text-transform: uppercase;
+}
+
+.f-journey-card__status {
+  font: 500 18px/1.33 var(--font-body, Graphik, sans-serif);
+  letter-spacing: -0.02em;
+  color: var(--f-journey-card-text);
+}
+
+.f-journey-card__step-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px var(--f-brand-space-md, 16px);
+  background: var(--f-brand-color-background-default, #F2F3FA);
+  border-radius: var(--f-brand-radius-rounded, 64px);
+  font: 400 12px/1 var(--font-body, Graphik, sans-serif);
+  color: var(--f-journey-card-text-muted);
+}
+
+.f-journey-card__track {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  position: relative;
+  list-style: none;
+}
+
+/* ── Milestone ─────────────────────────────────────────────────────────── */
+.f-journey-card__milestone {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--f-brand-space-sm, 12px);
+  width: 56px;
+  flex-shrink: 0;
+}
+
+.f-journey-card__milestone-node {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  transition: all var(--f-journey-card-duration) var(--f-journey-card-easing);
+}
+
+.f-journey-card__milestone-node--completed {
+  background: var(--f-journey-card-accent);
+  box-shadow: 0 0 25px rgba(142, 33, 87, 0.3);
+  transform: scale(1.1);
+  z-index: 20;
+}
+
+.f-journey-card__milestone-node--current {
+  background: rgba(142, 33, 87, 0.12);
+  border: var(--f-brand-border-size-default, 1px) solid rgba(142, 33, 87, 0.3);
+  transform: scale(1.05);
+  z-index: 20;
+}
+
+.f-journey-card__milestone-node--pending {
+  background: var(--f-brand-color-background-default, #F2F3FA);
+  border: var(--f-brand-border-size-default, 1px) solid var(--f-brand-color-border-default, #DBDEE8);
+  z-index: 10;
+}
+
+.f-journey-card__milestone-ping {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(142, 33, 87, 0.2);
+  pointer-events: none;
+  animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.f-journey-card__milestone-label {
+  font: 400 12px/1.33 var(--font-body, Graphik, sans-serif);
+  letter-spacing: -0.02em;
+  text-align: center;
+  white-space: nowrap;
+  transition: color 500ms ease;
+}
+
+.f-journey-card__milestone-label--active {
+  color: var(--f-journey-card-text);
+}
+
+.f-journey-card__milestone-label--inactive {
+  color: var(--f-brand-color-text-disabled, #9099A2);
+}
+
+/* ── Progress connector ────────────────────────────────────────────────── */
+.f-journey-card__progress {
+  flex: 1;
+  height: 2px;
+  margin-top: 27px;
+  transition: background var(--f-journey-card-duration) var(--f-journey-card-easing);
+}
+
+.f-journey-card__progress--full {
+  background: var(--f-journey-card-accent);
+}
+
+.f-journey-card__progress--half {
+  background: linear-gradient(90deg, var(--f-journey-card-accent), var(--f-journey-card-disabled));
+}
+
+.f-journey-card__progress--empty {
+  background: var(--f-journey-card-disabled);
+}
+
+/* ── CTA button ────────────────────────────────────────────────────────── */
+.f-journey-card__cta {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--f-journey-card-accent);
+  color: var(--f-brand-color-text-light, #FFFFFF);
+  font: 600 15px/1 var(--font-body, Graphik, sans-serif);
+  border-radius: var(--f-brand-radius-rounded, 64px);
+  border: none;
+  margin-top: var(--f-brand-space-xl, 32px);
+  cursor: pointer;
+  transition: background var(--f-brand-motion-duration-instant, 240ms) var(--f-brand-motion-easing-default, ease-in-out);
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px;
+}
+
+.f-journey-card__cta:hover {
+  background: var(--f-brand-color-background-primary-hover, #5C0931);
+}
+
+.f-journey-card__cta:active {
+  transform: scale(0.975);
+}
+
+/* ── Quiz Card ──────────────────────────────────────────────────────────── */
+.f-quiz-card {
+  --f-quiz-card-bg: var(--f-brand-color-background-light, #FFFFFF);
+  --f-quiz-card-shadow: var(--f-brand-shadow-medium, 0 2px 8px #1F212B14);
+  --f-quiz-card-radius: var(--f-brand-radius-inner, 16px);
+  --f-quiz-card-text: var(--f-brand-color-text-default, #1F212B);
+  --f-quiz-card-text-muted: var(--f-brand-color-text-subtle, #6E7780);
+  --f-quiz-card-accent: var(--f-brand-color-background-primary, #8E2157);
+  --f-quiz-card-duration: var(--f-brand-motion-duration-instant, 240ms);
+  --f-quiz-card-easing: var(--f-brand-motion-easing-default, ease-in-out);
+
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 14px;
+  border-radius: var(--f-quiz-card-radius);
+  min-height: 120px;
+  background: var(--f-quiz-card-bg);
+  box-shadow: var(--f-quiz-card-shadow);
+  border: var(--f-brand-border-size-default, 1px) solid transparent;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  color: var(--f-quiz-card-text);
+  transition: all var(--f-quiz-card-duration) var(--f-quiz-card-easing);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.f-quiz-card:hover:not(:disabled) {
+  box-shadow: var(--f-brand-shadow-large, 0 8px 20px #1F212B14);
+}
+
+.f-quiz-card:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.f-quiz-card--done {
+  --f-quiz-card-bg: var(--f-brand-color-background-success-accent, #ECFFF5);
+  border-color: rgba(50, 130, 86, 0.2);
+}
+
+.f-quiz-card--locked {
+  --f-quiz-card-bg: var(--f-brand-color-background-light, #FFFFFF);
+  --f-quiz-card-text: var(--f-brand-color-text-disabled, #9099A2);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.f-quiz-card__content {
+  display: flex;
+  align-items: center;
+  gap: var(--f-brand-space-md, 16px);
+}
+
+.f-quiz-card__icon {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.f-quiz-card__icon-inner {
+  position: absolute;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.f-quiz-card__title {
+  font: 500 18px/1.33 var(--font-body, Graphik, sans-serif);
+  letter-spacing: -0.02em;
+  color: var(--f-quiz-card-text);
+}
+
+.f-quiz-card--locked .f-quiz-card__title {
+  color: var(--f-brand-color-text-disabled, #9099A2);
+}
+
+.f-quiz-card__progress {
+  font: 400 13px/1.5 var(--font-body, Graphik, sans-serif);
+  color: var(--f-quiz-card-text-muted);
+  margin-top: var(--f-brand-space-xs, 8px);
+}
+
+.f-quiz-card__progress--done {
+  color: var(--f-brand-color-text-success, #328256);
+  font-weight: 500;
+}
+
+.f-quiz-card__arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--f-brand-color-background-default, #F2F3FA);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--f-brand-space-2xs, 4px);
+  flex-shrink: 0;
+}
+
+.f-quiz-card__spinner {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2.5px solid var(--f-brand-color-background-disabled, #DBDEE8);
+  border-top-color: var(--f-brand-color-background-primary, #8E2157);
+  animation: quiz-spin 0.6s linear infinite;
+}
+
+/* ── Section header ────────────────────────────────────────────────────── */
+.f-card-hub__section-title {
+  font: 100 28px/1.12 var(--font-display, Jotia, sans-serif);
+  letter-spacing: -0.04em;
+  color: var(--f-brand-color-text-heading, #1F212B);
+}
+
+.f-card-hub__section-subtitle {
+  font: 400 14px/1.5 var(--font-body, Graphik, sans-serif);
+  color: var(--f-brand-color-text-subtle, #6E7780);
+  margin-top: var(--f-brand-space-2xs, 4px);
+}
+
+/* ── FDS Stagger animation (60ms intervals per FDS spec) ────────────── */
+.f-stagger > * {
+  animation: page-in 380ms var(--f-brand-motion-easing-entry, ease-in) both;
+}
+.f-stagger > *:nth-child(1)  { animation-delay: 0ms; }
+.f-stagger > *:nth-child(2)  { animation-delay: 60ms; }
+.f-stagger > *:nth-child(3)  { animation-delay: 120ms; }
+.f-stagger > *:nth-child(4)  { animation-delay: 180ms; }
+.f-stagger > *:nth-child(5)  { animation-delay: 240ms; }
+.f-stagger > *:nth-child(6)  { animation-delay: 300ms; }
+.f-stagger > *:nth-child(7)  { animation-delay: 360ms; }
+.f-stagger > *:nth-child(8)  { animation-delay: 420ms; }
+.f-stagger > *:nth-child(9)  { animation-delay: 480ms; }
+.f-stagger > *:nth-child(10) { animation-delay: 540ms; }
+.f-stagger > *:nth-child(n+11) { animation-delay: 600ms; }
+
+/* ── Reduced motion ────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .f-stagger > *,
+  .f-journey-card__milestone-node,
+  .f-journey-card__progress,
+  .f-quiz-card,
+  .f-journey-card__cta {
+    animation: none !important;
+    transition: none !important;
+  }
+}

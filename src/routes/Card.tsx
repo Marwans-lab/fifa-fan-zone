@@ -12,10 +12,12 @@ import { SWIPE_QUIZZES } from '../data/swipeQuizzes'
 import lockIcon    from '../assets/icons/Lock-white.svg'
 import chevRight   from '../assets/icons/Chevron-right-white.svg'
 import tickBlack   from '../assets/icons/Tick-black.svg'
+import tickWhite   from '../assets/icons/Tick-white.svg'
 import targetIcon  from '../assets/icons/Target-white.svg'
 import fireIcon    from '../assets/icons/Fire-white.svg'
 import trophyIcon  from '../assets/icons/Trophy-white.svg'
 import qrIcon      from '../assets/icons/qr-logo.svg'
+import '../styles/fds-card-hub.css'
 
 // ─── Milestone config ─────────────────────────────────────────────────────────
 const MILESTONES = [
@@ -45,54 +47,36 @@ function JourneyStep({
   isCompleted?: boolean
   isCurrent?: boolean
 }) {
-  const nodeStyle: React.CSSProperties = {
-    width: 56, height: 56, borderRadius: '50%',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-    transition: 'all 700ms ease',
-    flexShrink: 0, position: 'relative',
-    ...(isCompleted ? {
-      background: '#ffffff', border: '1px solid #ffffff',
-      boxShadow: '0 0 25px rgba(255,255,255,0.4)',
-      transform: 'scale(1.1)', zIndex: 20,
-    } : isCurrent ? {
-      background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.4)',
-      transform: 'scale(1.05)', zIndex: 20,
-      boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
-    } : {
-      background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)',
-      zIndex: 10,
-    }),
-  }
+  const nodeModifier = isCompleted
+    ? 'f-journey-card__milestone-node--completed'
+    : isCurrent
+    ? 'f-journey-card__milestone-node--current'
+    : 'f-journey-card__milestone-node--pending'
+
+  const labelModifier = isCompleted || isCurrent
+    ? 'f-journey-card__milestone-label--active'
+    : 'f-journey-card__milestone-label--inactive'
 
   return (
-    <li style={{
-      position: 'relative', zIndex: 10,
-      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
-      width: 56, flexShrink: 0,
-    }}>
-      <div style={nodeStyle}>
-        {isCurrent && (
-          <div
-            className="animate-ping-slow"
+    <li className="f-journey-card__milestone">
+      <div className={`f-journey-card__milestone-node ${nodeModifier}`}>
+        {isCurrent && <div className="f-journey-card__milestone-ping" />}
+        {isCompleted ? (
+          <img src={tickWhite} width={24} height={24} alt="" style={{ position: 'relative', zIndex: 10 }} />
+        ) : (
+          <img
+            src={iconSrc}
+            width={24}
+            height={24}
+            alt=""
             style={{
-              position: 'absolute', inset: 0, borderRadius: '50%',
-              background: 'rgba(255,255,255,0.3)', pointerEvents: 'none',
+              opacity: isCurrent ? 1 : 0.5,
+              filter: 'brightness(0)',
             }}
           />
         )}
-        {isCompleted ? (
-          <img src={tickBlack} width={24} height={24} alt="" style={{ position: 'relative', zIndex: 10 }} />
-        ) : (
-          <img src={iconSrc} width={24} height={24} alt="" style={{ opacity: isCurrent ? 1 : 0.3 }} />
-        )}
       </div>
-      <span style={{
-        fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-reg)',
-        fontSize: 12, letterSpacing: '-0.02em', textAlign: 'center',
-        whiteSpace: 'nowrap', transition: 'color 500ms ease',
-        color: isCompleted || isCurrent ? '#ffffff' : 'rgba(255,255,255,0.3)',
-      }}>
+      <span className={`f-journey-card__milestone-label ${labelModifier}`}>
         {label}
       </span>
     </li>
@@ -117,60 +101,24 @@ function JourneyCard({
   ]
   const doneCount = achieved.filter(Boolean).length
   const status = statusLabel(doneCount)
-
-  // Find first incomplete milestone for "current" indicator
   const currentIdx = achieved.findIndex(v => !v)
 
   return (
-    <section
-      aria-label="Your Journey Progress"
-      style={{
-        width: '100%',
-        background: 'rgba(255,255,255,0.08)',
-        borderRadius: 20,
-        padding: 16,
-        border: '1px solid rgba(255,255,255,0.15)',
-        marginBottom: 16,
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
-        overflow: 'hidden',
-      }}
-    >
+    <section className="f-journey-card" aria-label="Your Journey Progress">
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+      <div className="f-journey-card__header">
         <div>
-          <h2 style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 12, letterSpacing: '0.05em',
-            color: 'rgba(255,255,255,0.7)', marginBottom: 4,
-          }}>
-            Your journey
-          </h2>
-          <p style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 18, letterSpacing: '-0.02em', color: '#ffffff',
-          }}>
-            {status}
-          </p>
+          <h2 className="f-journey-card__label">Your journey</h2>
+          <p className="f-journey-card__status">{status}</p>
         </div>
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: '10px 16px',
-          background: 'rgba(255,255,255,0.2)',
-          borderRadius: 9999,
-          border: '1px solid rgba(255,255,255,0.2)',
-        }}>
-          <span style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-reg)',
-            fontSize: 12, color: '#ffffff', lineHeight: 1,
-          }}>
-            Step {Math.min(doneCount + 1, 4)}/4
-          </span>
+        <div className="f-journey-card__step-badge">
+          Step {Math.min(doneCount + 1, 4)}/4
         </div>
       </div>
 
       {/* Steps track */}
       <nav aria-label="Journey Steps">
-        <ol style={{ display: 'flex', alignItems: 'flex-start', width: '100%', position: 'relative', listStyle: 'none' }}>
+        <ol className="f-journey-card__track">
           {MILESTONES.map((m, i) => {
             const done = achieved[i]
             const isCurrent = currentIdx === i
@@ -185,18 +133,12 @@ function JourneyCard({
                 />
                 {!isLast && (() => {
                   const nextDone = achieved[i + 1]
-                  const lineBg = done && nextDone
-                    ? '#ffffff'                                                       // fully active
+                  const lineModifier = done && nextDone
+                    ? 'f-journey-card__progress--full'
                     : done && !nextDone
-                    ? 'linear-gradient(90deg, #ffffff, rgba(255,255,255,0.2))'        // half active
-                    : 'rgba(255,255,255,0.08)'                                        // inactive
-                  return (
-                    <div style={{
-                      flex: 1, height: 2, marginTop: 27,
-                      background: lineBg,
-                      transition: 'background 700ms ease',
-                    }} />
-                  )
+                    ? 'f-journey-card__progress--half'
+                    : 'f-journey-card__progress--empty'
+                  return <div className={`f-journey-card__progress ${lineModifier}`} />
                 })()}
               </div>
             )
@@ -205,20 +147,7 @@ function JourneyCard({
       </nav>
 
       {/* Start Quiz CTA */}
-      <button
-        onClick={onStartQuiz}
-        style={{
-          width: '100%', height: 48,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: '#ffffff', color: '#8E2157',
-          fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-bold)',
-          fontSize: 15, borderRadius: 9999, border: 'none',
-          marginTop: 28, cursor: 'pointer',
-          boxShadow: '0 10px 30px rgba(255,255,255,0.12)',
-          transition: 'all 150ms ease',
-          WebkitTapHighlightColor: 'transparent',
-        }}
-      >
+      <button className="f-journey-card__cta" onClick={onStartQuiz}>
         Start quiz
       </button>
     </section>
@@ -230,11 +159,13 @@ function ProgressRing({
   radius,
   stroke,
   progress,
+  trackColor,
   color,
 }: {
   radius: number
   stroke: number
-  progress: number // 0–1
+  progress: number
+  trackColor: string
   color: string
 }) {
   const norm = radius - stroke / 2
@@ -246,12 +177,10 @@ function ProgressRing({
       height={radius * 2}
       style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }}
     >
-      {/* background track */}
       <circle
         cx={radius} cy={radius} r={norm}
-        fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={stroke}
+        fill="none" stroke={trackColor} strokeWidth={stroke}
       />
-      {/* progress arc */}
       {progress > 0 && (
         <circle
           cx={radius} cy={radius} r={norm}
@@ -294,105 +223,72 @@ function QuizCard({
     setTimeout(() => onStart(), 300)
   }
 
+  const stateClass = done
+    ? 'f-quiz-card--done'
+    : locked
+    ? 'f-quiz-card--locked'
+    : ''
+
+  const innerBg = locked
+    ? 'var(--f-brand-color-background-default)'
+    : done
+    ? 'var(--f-brand-color-background-success-accent)'
+    : 'var(--f-brand-color-background-default)'
+
   return (
     <button
+      className={`f-quiz-card ${stateClass}`}
       onClick={locked ? undefined : handleClick}
       disabled={locked || loading}
-      style={{
-        width: '100%',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '18px 14px', borderRadius: 22,
-        minHeight: 120,
-        border: `1px solid ${locked ? 'rgba(255,255,255,0.06)' : done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
-        background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
-        opacity: locked ? 0.55 : 1,
-        cursor: locked ? 'not-allowed' : 'pointer',
-        textAlign: 'left', fontFamily: 'inherit', color: 'var(--c-text-1)',
-        transition: 'all 400ms ease',
-        WebkitTapHighlightColor: 'transparent',
-      }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        {/* Circular thumbnail with progress ring */}
-        <div style={{
-          width: RING_RADIUS * 2, height: RING_RADIUS * 2,
-          position: 'relative', flexShrink: 0,
-        }}>
+      <div className="f-quiz-card__content">
+        <div className="f-quiz-card__icon">
           <ProgressRing
             radius={RING_RADIUS}
             stroke={RING_STROKE}
             progress={done ? 1 : 0}
-            color={done ? 'var(--c-accent)' : 'rgba(255,255,255,0.3)'}
+            trackColor="var(--f-brand-color-background-disabled)"
+            color="var(--f-brand-color-background-primary)"
           />
-          {/* Inner circle */}
-          <div style={{
-            position: 'absolute',
-            top: RING_STROKE + 2, left: RING_STROKE + 2,
-            width: (RING_RADIUS - RING_STROKE - 2) * 2,
-            height: (RING_RADIUS - RING_STROKE - 2) * 2,
-            borderRadius: '50%',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: locked
-              ? 'rgba(255,255,255,0.04)'
-              : done
-              ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
-              : 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
-            boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.25)',
-          }}>
+          <div
+            className="f-quiz-card__icon-inner"
+            style={{
+              top: RING_STROKE + 2, left: RING_STROKE + 2,
+              width: (RING_RADIUS - RING_STROKE - 2) * 2,
+              height: (RING_RADIUS - RING_STROKE - 2) * 2,
+              background: innerBg,
+            }}
+          >
             {locked ? (
-              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4 }} />
+              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4, filter: 'brightness(0)' }} />
             ) : done ? (
-              <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
+              <img src={tickBlack} width={24} height={24} alt="" />
             ) : (
-              <span style={{ fontSize: 30 }}>{quiz.emoji}</span>
+              <span style={{ fontSize: 'var(--text-2xl)' }}>{quiz.emoji}</span>
             )}
           </div>
         </div>
 
-        {/* Text */}
         <div>
-          <h3 style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 'var(--text-lg)',
-            color: locked ? 'var(--c-text-2)' : '#ffffff',
-          }}>
-            {quiz.title}
-          </h3>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>
+          <h3 className="f-quiz-card__title">{quiz.title}</h3>
+          <p className={`f-quiz-card__progress ${done ? 'f-quiz-card__progress--done' : ''}`}>
             {done ? (
-              <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 'var(--weight-med)' }}>
-                Completed · {Math.round(progress * quiz.questions.length)}/{quiz.questions.length} correct
-              </span>
+              <>Completed · {Math.round(progress * quiz.questions.length)}/{quiz.questions.length} correct</>
             ) : locked ? (
               lockMessage ?? 'Complete previous quiz to unlock'
             ) : (
-              <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 'var(--weight-med)' }}>
-                {quiz.questions.length} questions · {quiz.questions.length * 15}s
-              </span>
+              <>{quiz.questions.length} questions · {quiz.questions.length * 15}s</>
             )}
           </p>
         </div>
       </div>
 
       {!locked && !done && (
-        <div style={{
-          width: 36, height: 36, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginRight: 4,
-        }}>
+        <div className="f-quiz-card__arrow">
           {loading ? (
-            <div
-              aria-label="Loading"
-              style={{
-                width: 20, height: 20, borderRadius: '50%',
-                border: '2.5px solid rgba(255,255,255,0.15)',
-                borderTopColor: 'var(--c-accent)',
-                animation: 'quiz-spin 0.6s linear infinite',
-              }}
-            />
+            <div className="f-quiz-card__spinner" aria-label="Loading" />
           ) : (
-            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
+            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5, filter: 'brightness(0)' }} />
           )}
         </div>
       )}
@@ -422,100 +318,72 @@ function DragDropQuizCard({
     setTimeout(() => onStart(), 300)
   }
 
+  const stateClass = done
+    ? 'f-quiz-card--done'
+    : locked
+    ? 'f-quiz-card--locked'
+    : ''
+
+  const innerBg = locked
+    ? 'var(--f-brand-color-background-default)'
+    : done
+    ? 'var(--f-brand-color-background-success-accent)'
+    : 'var(--f-brand-color-background-default)'
+
   return (
     <button
+      className={`f-quiz-card ${stateClass}`}
       onClick={locked ? undefined : handleClick}
       disabled={locked || loading}
-      style={{
-        width: '100%',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '18px 14px', borderRadius: 22,
-        minHeight: 120,
-        border: `1px solid ${locked ? 'rgba(255,255,255,0.06)' : done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
-        background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
-        opacity: locked ? 0.55 : 1,
-        cursor: locked ? 'not-allowed' : 'pointer',
-        textAlign: 'left', fontFamily: 'inherit', color: 'var(--c-text-1)',
-        transition: 'all 400ms ease',
-        WebkitTapHighlightColor: 'transparent',
-      }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        <div style={{
-          width: RING_RADIUS * 2, height: RING_RADIUS * 2,
-          position: 'relative', flexShrink: 0,
-        }}>
+      <div className="f-quiz-card__content">
+        <div className="f-quiz-card__icon">
           <ProgressRing
             radius={RING_RADIUS}
             stroke={RING_STROKE}
             progress={done ? 1 : 0}
-            color={done ? 'var(--c-accent)' : 'rgba(255,255,255,0.3)'}
+            trackColor="var(--f-brand-color-background-disabled)"
+            color="var(--f-brand-color-background-primary)"
           />
-          <div style={{
-            position: 'absolute',
-            top: RING_STROKE + 2, left: RING_STROKE + 2,
-            width: (RING_RADIUS - RING_STROKE - 2) * 2,
-            height: (RING_RADIUS - RING_STROKE - 2) * 2,
-            borderRadius: '50%',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: locked
-              ? 'rgba(255,255,255,0.04)'
-              : done
-              ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
-              : 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
-            boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.25)',
-          }}>
+          <div
+            className="f-quiz-card__icon-inner"
+            style={{
+              top: RING_STROKE + 2, left: RING_STROKE + 2,
+              width: (RING_RADIUS - RING_STROKE - 2) * 2,
+              height: (RING_RADIUS - RING_STROKE - 2) * 2,
+              background: innerBg,
+            }}
+          >
             {locked ? (
-              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4 }} />
+              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4, filter: 'brightness(0)' }} />
             ) : done ? (
-              <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
+              <img src={tickBlack} width={24} height={24} alt="" />
             ) : (
               <span style={{ fontSize: 'var(--text-2xl)' }}>{ddQuiz.emoji}</span>
             )}
           </div>
         </div>
+
         <div>
-          <h3 style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 'var(--text-lg)',
-            color: locked ? 'var(--c-text-2)' : 'var(--c-text-1)',
-          }}>
-            {ddQuiz.title}
-          </h3>
-          <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)', marginTop: 'var(--sp-2)' }}>
+          <h3 className="f-quiz-card__title">{ddQuiz.title}</h3>
+          <p className={`f-quiz-card__progress ${done ? 'f-quiz-card__progress--done' : ''}`}>
             {done ? (
-              <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
-                Completed · {result.score}/{result.total} correct
-              </span>
+              <>Completed · {result.score}/{result.total} correct</>
             ) : locked ? (
               'Complete your fan card to unlock'
             ) : (
-              <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
-                {totalPairs} matches · Drag & Drop
-              </span>
+              <>{totalPairs} matches · Drag & Drop</>
             )}
           </p>
         </div>
       </div>
+
       {!locked && !done && (
-        <div style={{
-          width: 36, height: 36, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginRight: 4,
-        }}>
+        <div className="f-quiz-card__arrow">
           {loading ? (
-            <div
-              aria-label="Loading"
-              style={{
-                width: 20, height: 20, borderRadius: '50%',
-                border: '2.5px solid rgba(255,255,255,0.15)',
-                borderTopColor: 'var(--c-accent)',
-                animation: 'quiz-spin 0.6s linear infinite',
-              }}
-            />
+            <div className="f-quiz-card__spinner" aria-label="Loading" />
           ) : (
-            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
+            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5, filter: 'brightness(0)' }} />
           )}
         </div>
       )}
@@ -548,100 +416,72 @@ function ExtraQuizCard({
     setTimeout(() => onStart(), 300)
   }
 
+  const stateClass = done
+    ? 'f-quiz-card--done'
+    : locked
+    ? 'f-quiz-card--locked'
+    : ''
+
+  const innerBg = locked
+    ? 'var(--f-brand-color-background-default)'
+    : done
+    ? 'var(--f-brand-color-background-success-accent)'
+    : 'var(--f-brand-color-background-default)'
+
   return (
     <button
+      className={`f-quiz-card ${stateClass}`}
       onClick={locked ? undefined : handleClick}
       disabled={locked || loading}
-      style={{
-        width: '100%',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '18px 14px', borderRadius: 22,
-        minHeight: 120,
-        border: `1px solid ${locked ? 'rgba(255,255,255,0.06)' : done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
-        background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
-        opacity: locked ? 0.55 : 1,
-        cursor: locked ? 'not-allowed' : 'pointer',
-        textAlign: 'left', fontFamily: 'inherit', color: 'var(--c-text-1)',
-        transition: 'all 400ms ease',
-        WebkitTapHighlightColor: 'transparent',
-      }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        <div style={{
-          width: RING_RADIUS * 2, height: RING_RADIUS * 2,
-          position: 'relative', flexShrink: 0,
-        }}>
+      <div className="f-quiz-card__content">
+        <div className="f-quiz-card__icon">
           <ProgressRing
             radius={RING_RADIUS}
             stroke={RING_STROKE}
             progress={done ? 1 : 0}
-            color={done ? 'var(--c-accent)' : 'rgba(255,255,255,0.3)'}
+            trackColor="var(--f-brand-color-background-disabled)"
+            color="var(--f-brand-color-background-primary)"
           />
-          <div style={{
-            position: 'absolute',
-            top: RING_STROKE + 2, left: RING_STROKE + 2,
-            width: (RING_RADIUS - RING_STROKE - 2) * 2,
-            height: (RING_RADIUS - RING_STROKE - 2) * 2,
-            borderRadius: '50%',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: locked
-              ? 'rgba(255,255,255,0.04)'
-              : done
-              ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
-              : 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
-            boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.25)',
-          }}>
+          <div
+            className="f-quiz-card__icon-inner"
+            style={{
+              top: RING_STROKE + 2, left: RING_STROKE + 2,
+              width: (RING_RADIUS - RING_STROKE - 2) * 2,
+              height: (RING_RADIUS - RING_STROKE - 2) * 2,
+              background: innerBg,
+            }}
+          >
             {locked ? (
-              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4 }} />
+              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4, filter: 'brightness(0)' }} />
             ) : done ? (
-              <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
+              <img src={tickBlack} width={24} height={24} alt="" />
             ) : (
               <span style={{ fontSize: 'var(--text-2xl)' }}>{emoji}</span>
             )}
           </div>
         </div>
+
         <div>
-          <h3 style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 'var(--text-lg)',
-            color: locked ? 'var(--c-text-2)' : 'var(--c-text-1)',
-          }}>
-            {title}
-          </h3>
-          <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)', marginTop: 'var(--sp-2)' }}>
+          <h3 className="f-quiz-card__title">{title}</h3>
+          <p className={`f-quiz-card__progress ${done ? 'f-quiz-card__progress--done' : ''}`}>
             {done ? (
-              <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
-                Completed · {result.score}/{result.total} correct
-              </span>
+              <>Completed · {result.score}/{result.total} correct</>
             ) : locked ? (
               'Complete your fan card to unlock'
             ) : (
-              <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
-                {subtitle}
-              </span>
+              <>{subtitle}</>
             )}
           </p>
         </div>
       </div>
+
       {!locked && !done && (
-        <div style={{
-          width: 36, height: 36, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginRight: 4,
-        }}>
+        <div className="f-quiz-card__arrow">
           {loading ? (
-            <div
-              aria-label="Loading"
-              style={{
-                width: 20, height: 20, borderRadius: '50%',
-                border: '2.5px solid rgba(255,255,255,0.15)',
-                borderTopColor: 'var(--c-accent)',
-                animation: 'quiz-spin 0.6s linear infinite',
-              }}
-            />
+            <div className="f-quiz-card__spinner" aria-label="Loading" />
           ) : (
-            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
+            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5, filter: 'brightness(0)' }} />
           )}
         </div>
       )}
@@ -738,18 +578,17 @@ export default function Card() {
 
   return (
     <Screen>
-      {/* ── Content ────────────────────────────────────────── */}
       <div
-        className="page-in hide-scrollbar"
+        className="f-card-hub page-in hide-scrollbar"
         style={{
           flex: 1, position: 'relative',
-          padding: '16px 24px',
+          padding: 'var(--f-brand-space-md) var(--f-brand-space-lg)',
           overflowY: 'auto', WebkitOverflowScrolling: 'touch',
         }}
       >
 
           {/* ── Fan Card ──────────────────────────────────────── */}
-          <section aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 16 }}>
+          <section aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 'var(--f-brand-space-md)' }}>
             <FanCard
               fanCard={state.fanCard}
               onSave={handleSave}
@@ -769,23 +608,15 @@ export default function Card() {
           />
 
           {/* ── Quizzes ───────────────────────────────────────── */}
-          <section ref={quizRef} style={{ paddingBottom: 48 }}>
-            <div style={{ marginBottom: 16 }}>
-              <h2 style={{
-                fontFamily: 'var(--font-display)', fontWeight: 'var(--weight-thin)',
-                fontSize: 28, letterSpacing: '-0.04em', color: '#ffffff',
-              }}>
-                Earn Avios
-              </h2>
-              <p style={{
-                fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-reg)',
-                color: 'rgba(255,255,255,0.5)', fontSize: 14, marginTop: 4,
-              }}>
+          <section ref={quizRef} style={{ paddingBottom: 'var(--f-brand-space-3xl)' }}>
+            <div style={{ marginBottom: 'var(--f-brand-space-md)' }}>
+              <h2 className="f-card-hub__section-title">Earn Avios</h2>
+              <p className="f-card-hub__section-subtitle">
                 Complete quizzes to climb the leaderboard
               </p>
             </div>
 
-            <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="f-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-md)' }}>
               {QUIZZES.map((quiz, i) => (
                 <QuizCard
                   key={quiz.id}
