@@ -1,5 +1,5 @@
-import { useRef, useCallback, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useRef, useCallback, useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import Screen from '../components/Screen'
 import FanCard from '../components/FanCard'
 import { track } from '../lib/analytics'
@@ -655,8 +655,20 @@ function ExtraQuizCard({
 // ─── Main Card route ──────────────────────────────────────────────────────────
 export default function Card() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { state, updateFanCard, isFlowUnlocked } = useStore()
   const quizRef = useRef<HTMLDivElement>(null)
+
+  // Handle returning from Picture route with a new photo
+  useEffect(() => {
+    const navState = location.state as { photoDataUrl?: string } | null
+    if (navState?.photoDataUrl) {
+      updateFanCard({ photoDataUrl: navState.photoDataUrl })
+      track('card_photo_updated')
+      // Clear location state so it doesn't re-apply on re-render
+      navigate(location.pathname, { replace: true, state: null })
+    }
+  }, [location.state, updateFanCard, navigate, location.pathname])
 
   function handleSave(answers: Record<string, string>) {
     updateFanCard({ answers, completedAt: new Date().toISOString() })
@@ -696,6 +708,11 @@ export default function Card() {
       // silently fail
     }
   }, [state.fanCard])
+
+  const handlePhotoTap = useCallback(() => {
+    track('card_photo_tapped')
+    navigate('/picture', { state: { returnTo: '/card' } })
+  }, [navigate])
 
   const cardComplete = state.fanCard.completedAt !== null
 
@@ -763,6 +780,7 @@ export default function Card() {
               onSave={handleSave}
               onShare={handleShare}
               onSaveToDevice={handleSaveToDevice}
+              onPhotoTap={handlePhotoTap}
             />
           </section>
 

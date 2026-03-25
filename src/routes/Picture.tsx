@@ -84,7 +84,8 @@ function ProgressBar({ progress }: { progress: number }) {
 export default function Picture() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { teamId } = (location.state as { teamId: string } | null) ?? { teamId: '' }
+  const { teamId, returnTo } = (location.state as { teamId?: string; returnTo?: string } | null) ?? {}
+  const resolvedTeamId = teamId ?? ''
 
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null)
   const [cameraError, setCameraError] = useState<string | null>(null)
@@ -175,13 +176,21 @@ export default function Picture() {
 
   const handleNext = useCallback(() => {
     track('picture_confirmed')
-    navigate('/identity', { state: { teamId, photoDataUrl }, replace: true })
-  }, [navigate, teamId, photoDataUrl])
+    if (returnTo) {
+      navigate(returnTo, { state: { photoDataUrl }, replace: true })
+    } else {
+      navigate('/identity', { state: { teamId: resolvedTeamId, photoDataUrl }, replace: true })
+    }
+  }, [navigate, resolvedTeamId, photoDataUrl, returnTo])
 
   const handleBack = useCallback(() => {
     stopCamera()
-    navigate('/identity', { replace: true })
-  }, [navigate, stopCamera])
+    if (returnTo) {
+      navigate(returnTo, { replace: true })
+    } else {
+      navigate('/identity', { replace: true })
+    }
+  }, [navigate, stopCamera, returnTo])
 
   const hasPhoto = !!photoDataUrl
 

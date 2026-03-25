@@ -60,6 +60,7 @@ interface Props {
   onSave: (answers: Record<string, string>) => void
   onShare?: () => void
   onSaveToDevice?: () => void
+  onPhotoTap?: () => void
 }
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
@@ -187,32 +188,52 @@ function HolographicStripe() {
   )
 }
 
-function FanPhoto({ photoDataUrl }: { photoDataUrl: string | null }) {
+function FanPhoto({ photoDataUrl, onTap }: { photoDataUrl: string | null; onTap?: () => void }) {
+  const interactive = !!onTap
+  const handleClick = interactive ? (e: React.MouseEvent) => { e.stopPropagation(); onTap() } : undefined
+
   if (photoDataUrl) {
     return (
-      <img
-        src={photoDataUrl}
-        alt="Fan photo"
-        style={{ width: 180, height: 180, borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', border: '3px solid rgba(255,255,255,0.55)', boxShadow: '0 4px 20px rgba(0,0,0,0.5)', position: 'relative', zIndex: 2 }}
-      />
+      <button
+        onClick={handleClick}
+        aria-label="Change profile picture"
+        style={{
+          width: 180, height: 180, borderRadius: '50%', padding: 0,
+          background: 'none', cursor: interactive ? 'pointer' : 'default',
+          border: '3px solid rgba(255,255,255,0.55)',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+          position: 'relative', zIndex: 2, overflow: 'hidden',
+          WebkitTapHighlightColor: 'transparent',
+        }}
+      >
+        <img
+          src={photoDataUrl}
+          alt="Fan photo"
+          style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
+        />
+      </button>
     )
   }
   return (
-    <div
+    <button
+      onClick={handleClick}
+      aria-label="Add profile picture"
       style={{
-        width: 180, height: 180, borderRadius: '50%',
+        width: 180, height: 180, borderRadius: '50%', padding: 0,
         background: 'rgba(0,0,0,0.28)', border: '2px dashed rgba(255,255,255,0.35)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         position: 'relative', zIndex: 2,
+        cursor: interactive ? 'pointer' : 'default',
+        WebkitTapHighlightColor: 'transparent',
       }}
     >
       <img src={stadiumIcon} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
-    </div>
+    </button>
   )
 }
 
 // ─── Main component ───────────────────────────────────────────────────────────
-const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onSave, onShare, onSaveToDevice }, ref) {
+const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onSave, onShare, onSaveToDevice, onPhotoTap }, ref) {
   const [isFlipped, setIsFlipped]       = useState(false)
   const [wizardActive, setWizardActive] = useState(false)
   const [step, setStep]                 = useState(0)
@@ -341,7 +362,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
 
           {/* Photo + motto */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--f-brand-space-md)' }}>
-            <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
+            <FanPhoto photoDataUrl={fanCard.photoDataUrl} onTap={onPhotoTap} />
             <div style={{ textAlign: 'center' }}>
               {fanCard.teamId ? (() => {
                 const team = getTeam(fanCard.teamId)
