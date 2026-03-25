@@ -13,10 +13,23 @@ export interface QuizResult {
   completedAt: string
 }
 
+// ─── Flow system ──────────────────────────────────────────────────────────────
+// Flow IDs in sequential order. Completing one unlocks the next.
+export const FLOW_IDS = [
+  'the-connector',
+  'the-architect',
+  'the-historian',
+  'the-referee',
+  'the-retrospective',
+] as const
+
+export type FlowId = (typeof FLOW_IDS)[number]
+
 export interface AppState {
   fanCard: FanCard
   points: number
   quizResults: Record<string, QuizResult>
+  completedFlows: FlowId[]
 }
 
 const STORAGE_KEY = 'fanzone_state'
@@ -36,6 +49,7 @@ const defaultState: AppState = {
   },
   points: 0,
   quizResults: {},
+  completedFlows: [],
 }
 
 function loadState(): AppState {
@@ -105,10 +119,31 @@ export function useStore() {
     }))
   }, [])
 
+  const completeFlow = useCallback((flowId: FlowId) => {
+    _setState(prev => {
+      if (prev.completedFlows.includes(flowId)) return prev
+      return { ...prev, completedFlows: [...prev.completedFlows, flowId] }
+    })
+  }, [])
+
+  const isFlowUnlocked = useCallback((flowId: FlowId): boolean => {
+    const idx = FLOW_IDS.indexOf(flowId)
+    if (idx === 0) return true // First flow always unlocked
+    const prevFlow = FLOW_IDS[idx - 1]
+    return _state.completedFlows.includes(prevFlow)
+  }, [])
+
+  const isFlowCompleted = useCallback((flowId: FlowId): boolean => {
+    return _state.completedFlows.includes(flowId)
+  }, [])
+
   const resetState = useCallback(() => {
     _setState(() => defaultState)
     localStorage.removeItem(STORAGE_KEY)
   }, [])
 
-  return { state: _state, updateFanCard, addPoints, recordQuizResult, resetState }
+  return {
+    state: _state, updateFanCard, addPoints, recordQuizResult,
+    completeFlow, isFlowUnlocked, isFlowCompleted, resetState,
+  }
 }
