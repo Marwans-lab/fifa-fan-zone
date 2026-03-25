@@ -467,26 +467,22 @@ function Confetti() {
 // ─── Completion overlay ─────────────────────────────────────────────────────────
 
 interface CompletionProps {
-  moves: number
-  timeLeft: number
+  totalMoves: number
+  totalTimeUsed: number
   stars: number
   pairCount: number
   totalRounds: number
-  roundTime: number
   onResults: () => void
   onPlayAgain: () => void
 }
 
-function CompletionOverlay({ moves, timeLeft, stars, pairCount, totalRounds, roundTime, onResults, onPlayAgain }: CompletionProps) {
+function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalRounds, onResults, onPlayAgain }: CompletionProps) {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 100)
     return () => clearTimeout(t)
   }, [])
-
-  const label = stars === 3 ? 'Perfect!' : stars === 2 ? 'Great Job!' : 'Well Done!'
-  const timeUsed = roundTime - timeLeft
 
   return (
     <div
@@ -644,6 +640,8 @@ export default function CardMatch() {
 
   const [currentRound, setCurrentRound] = useState(0)
   const [accumulatedScore, setAccumulatedScore] = useState(0)
+  const [accumulatedMoves, setAccumulatedMoves] = useState(0)
+  const [accumulatedTimeUsed, setAccumulatedTimeUsed] = useState(0)
 
   const [deck, setDeck] = useState<MatchCard[]>(() =>
     quiz ? buildFlowDeck(quiz.rounds[0].pairs) : buildDeck()
@@ -680,10 +678,14 @@ export default function CardMatch() {
 
   const finishGame = useCallback((roundScore: number, matched: number) => {
     const newAccumulated = accumulatedScore + roundScore
+    const newTotalMoves = accumulatedMoves + moves
+    const newTotalTimeUsed = accumulatedTimeUsed + (roundTime - timeLeft)
     if (quiz && currentRound < totalRounds - 1) {
       // Advance to next round
       setGameComplete(true)
       setAccumulatedScore(newAccumulated)
+      setAccumulatedMoves(newTotalMoves)
+      setAccumulatedTimeUsed(newTotalTimeUsed)
       const nextRound = currentRound + 1
       setTimeout(() => {
         const newDeck = buildFlowDeck(quiz.rounds[nextRound].pairs)
@@ -699,15 +701,17 @@ export default function CardMatch() {
         lockRef.current = false
       }, 800)
     } else {
-      const quizId = flowId ?? 'card-match'
+      const quizId = quiz ? quiz.id : 'card-match'
       setGameComplete(true)
       setShowCompletion(true)
+      setAccumulatedMoves(newTotalMoves)
+      setAccumulatedTimeUsed(newTotalTimeUsed)
       addPoints(newAccumulated)
       recordQuizResult(quizId, newAccumulated, pairCount * totalRounds)
-      if (flowId) completeFlow(flowId as FlowId)
-      track('card_match_completed', { flowId, moves, timeLeft, score: newAccumulated, pairs: pairCount, matchedPairs: matched })
+      if (quiz) completeFlow(quiz.id)
+      track('card_match_completed', { flowId, moves: newTotalMoves, timeUsed: newTotalTimeUsed, score: newAccumulated, pairs: pairCount, matchedPairs: matched })
     }
-  }, [accumulatedScore, quiz, currentRound, totalRounds, roundTime, flowId, pairCount, moves, timeLeft, addPoints, recordQuizResult, completeFlow])
+  }, [accumulatedScore, accumulatedMoves, accumulatedTimeUsed, quiz, currentRound, totalRounds, roundTime, flowId, pairCount, moves, timeLeft, addPoints, recordQuizResult, completeFlow])
 
   // Time-up auto-complete
   useEffect(() => {

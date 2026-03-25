@@ -10,8 +10,10 @@ export interface CardMatchRound {
   pairs: CardMatchPair[]
 }
 
+import type { FlowId } from '../store/useStore'
+
 export interface CardMatchQuiz {
-  id: string
+  id: FlowId
   title: string
   description: string
   emoji: string
