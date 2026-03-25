@@ -1,15 +1,16 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import { WORLD_CUP_TEAMS } from '../data/teams'
+import { CARD_MATCH_QUIZZES, type CardMatchRound } from '../data/cardMatchQuizzes'
 
 // ─── Types ──────────────────────────────────────────────────────────────────────
 
 interface MatchCard {
   id: string
   pairId: string
-  type: 'flag' | 'name'
+  type: 'flag' | 'name' | 'prompt' | 'answer'
   display: string
   teamColors: [string, string]
 }
@@ -92,6 +93,28 @@ function buildDeck(): MatchCard[] {
       type: 'name',
       display: team.name,
       teamColors: team.colors,
+    })
+  })
+  return shuffle(cards)
+}
+
+function buildQuizDeck(round: CardMatchRound): MatchCard[] {
+  const cards: MatchCard[] = []
+  const quizColors: [string, string] = ['#8e2157', '#5a1438']
+  round.pairs.forEach(pair => {
+    cards.push({
+      id: `${pair.id}-prompt`,
+      pairId: pair.id,
+      type: 'prompt',
+      display: pair.prompt,
+      teamColors: quizColors,
+    })
+    cards.push({
+      id: `${pair.id}-answer`,
+      pairId: pair.id,
+      type: 'answer',
+      display: pair.answer,
+      teamColors: quizColors,
     })
   })
   return shuffle(cards)
@@ -266,6 +289,19 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
         >
           {card.type === 'flag' ? (
             <span style={{ fontSize: 'var(--text-3xl)', lineHeight: 1 }}>{card.display}</span>
+          ) : card.type === 'prompt' ? (
+            <span
+              style={{
+                fontSize: 'var(--text-2xs)',
+                fontWeight: 'var(--weight-reg)',
+                color: 'var(--c-lt-text-2)',
+                textAlign: 'center',
+                lineHeight: 'var(--leading-normal)',
+                fontFamily: 'var(--font-body)',
+              }}
+            >
+              {card.display}
+            </span>
           ) : (
             <span
               style={{
@@ -438,11 +474,12 @@ interface CompletionProps {
   moves: number
   timeLeft: number
   stars: number
+  pairCount: number
   onResults: () => void
   onPlayAgain: () => void
 }
 
-function CompletionOverlay({ moves, timeLeft, stars, onResults, onPlayAgain }: CompletionProps) {
+function CompletionOverlay({ moves, timeLeft, stars, pairCount, onResults, onPlayAgain }: CompletionProps) {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -526,7 +563,7 @@ function CompletionOverlay({ moves, timeLeft, stars, onResults, onPlayAgain }: C
             lineHeight: 'var(--leading-normal)',
           }}
         >
-          You matched all {PAIR_COUNT} pairs
+          You matched all {pairCount} pairs
         </p>
 
         {/* Stats row */}
@@ -598,9 +635,24 @@ function CompletionOverlay({ moves, timeLeft, stars, onResults, onPlayAgain }: C
 
 export default function CardMatch() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { addPoints, recordQuizResult } = useStore()
 
-  const [deck, setDeck] = useState<MatchCard[]>(() => buildDeck())
+  // Quiz mode via location.state
+  const quizId = (location.state as { quizId?: string } | null)?.quizId
+  const quiz = quizId ? CARD_MATCH_QUIZZES.find(q => q.id === quizId) : null
+  const totalRounds = quiz ? quiz.rounds.length : 1
+  const pairCount = quiz ? quiz.rounds[0].pairs.length : PAIR_COUNT
+
+  const [currentRound, setCurrentRound] = useState(0)
+  const [cumulativeScore, setCumulativeScore] = useState(0)
+  const [cumulativeMoves, setCumulativeMoves] = useState(0)
+
+  const activePairCount = quiz ? quiz.rounds[currentRound].pairs.length : PAIR_COUNT
+
+  const [deck, setDeck] = useState<MatchCard[]>(() =>
+    quiz ? buildQuizDeck(quiz.rounds[0]) : buildDeck()
+  )
   const [statuses, setStatuses] = useState<Record<string, CardStatus>>(() => {
     const s: Record<string, CardStatus> = {}
     deck.forEach(c => { s[c.id] = 'hidden' })
@@ -612,13 +664,15 @@ export default function CardMatch() {
   const [timeLeft, setTimeLeft] = useState(ROUND_TIME)
   const [gameComplete, setGameComplete] = useState(false)
   const [started, setStarted] = useState(false)
+  const [roundComplete, setRoundComplete] = useState(false)
 
   const lockRef = useRef(false)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const completedRef = useRef(false)
 
   // Countdown timer
   useEffect(() => {
-    if (started && !gameComplete) {
+    if (started && !gameComplete && !roundComplete) {
       timerRef.current = setInterval(() => {
         setTimeLeft(t => {
           if (t <= 1) {
@@ -632,49 +686,95 @@ export default function CardMatch() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current)
     }
-  }, [started, gameComplete])
-
-  // Time-up auto-complete
-  useEffect(() => {
-    if (timeLeft === 0 && started && !gameComplete) {
-      setGameComplete(true)
-      const score = calculateScore(moves, matchedPairs)
-      addPoints(score)
-      recordQuizResult('card-match', score, PAIR_COUNT)
-      track('card_match_completed', { moves, timeLeft: 0, score, pairs: PAIR_COUNT, matchedPairs })
-    }
-  }, [timeLeft, started, gameComplete, moves, matchedPairs, addPoints, recordQuizResult])
-
-  // Check completion (all matched)
-  useEffect(() => {
-    if (matchedPairs === PAIR_COUNT && matchedPairs > 0) {
-      setGameComplete(true)
-      const score = calculateScore(moves, matchedPairs)
-      addPoints(score)
-      recordQuizResult('card-match', score, PAIR_COUNT)
-      track('card_match_completed', { moves, timeLeft, score, pairs: PAIR_COUNT })
-    }
-  }, [matchedPairs, moves, timeLeft, addPoints, recordQuizResult])
+  }, [started, gameComplete, roundComplete])
 
   const calculateScore = (m: number, matched: number): number => {
     if (matched === 0) return 0
     const matchBonus = matched * 2
-    const moveScore = Math.max(0, PAIR_COUNT - Math.max(0, m - PAIR_COUNT))
+    const moveScore = Math.max(0, activePairCount - Math.max(0, m - activePairCount))
     const timeBonus = timeLeft >= 20 ? 2 : timeLeft >= 10 ? 1 : 0
     return matchBonus + moveScore + timeBonus
   }
 
+  // Handle round/game completion
+  const handleRoundEnd = useCallback((matched: number, m: number, tLeft: number) => {
+    if (completedRef.current) return
+    completedRef.current = true
+
+    const roundScore = (() => {
+      if (matched === 0) return 0
+      const matchBonus = matched * 2
+      const moveScore = Math.max(0, activePairCount - Math.max(0, m - activePairCount))
+      const timeBonus = tLeft >= 20 ? 2 : tLeft >= 10 ? 1 : 0
+      return matchBonus + moveScore + timeBonus
+    })()
+
+    const newCumulativeScore = cumulativeScore + roundScore
+    const newCumulativeMoves = cumulativeMoves + m
+    setCumulativeScore(newCumulativeScore)
+    setCumulativeMoves(newCumulativeMoves)
+
+    if (!quiz || currentRound >= totalRounds - 1) {
+      // Final round or non-quiz mode — game is done
+      setGameComplete(true)
+      const finalScore = quiz ? newCumulativeScore : roundScore
+      const finalTotal = quiz ? totalRounds * activePairCount : activePairCount
+      addPoints(finalScore)
+      recordQuizResult(quiz ? quiz.id : 'card-match', finalScore, finalTotal)
+      track('card_match_completed', {
+        quizId: quiz?.id ?? 'card-match',
+        moves: quiz ? newCumulativeMoves : m,
+        timeLeft: tLeft,
+        score: finalScore,
+        round: currentRound + 1,
+        totalRounds,
+      })
+    } else {
+      // More rounds to go
+      setRoundComplete(true)
+      track('card_match_round_completed', {
+        quizId: quiz.id,
+        round: currentRound + 1,
+        score: roundScore,
+        moves: m,
+      })
+    }
+  }, [quiz, currentRound, totalRounds, activePairCount, cumulativeScore, cumulativeMoves, addPoints, recordQuizResult])
+
+  // Time-up auto-complete
+  useEffect(() => {
+    if (timeLeft === 0 && started && !gameComplete && !roundComplete) {
+      handleRoundEnd(matchedPairs, moves, 0)
+    }
+  }, [timeLeft, started, gameComplete, roundComplete, matchedPairs, moves, handleRoundEnd])
+
+  // Check completion (all matched)
+  useEffect(() => {
+    if (matchedPairs === activePairCount && matchedPairs > 0 && !roundComplete && !gameComplete) {
+      handleRoundEnd(matchedPairs, moves, timeLeft)
+    }
+  }, [matchedPairs, activePairCount, moves, timeLeft, roundComplete, gameComplete, handleRoundEnd])
+
   const getStars = (): number => {
-    if (matchedPairs < PAIR_COUNT) return 1
-    if (moves <= PAIR_COUNT + 2) return 3
-    if (moves <= PAIR_COUNT + 6) return 2
+    const totalPairs = quiz ? totalRounds * activePairCount : activePairCount
+    const totalM = quiz ? cumulativeMoves : moves
+    if (quiz) {
+      // Stars based on overall performance across all rounds
+      const ratio = cumulativeScore / (totalPairs * 2)
+      if (ratio >= 0.8) return 3
+      if (ratio >= 0.5) return 2
+      return 1
+    }
+    if (matchedPairs < activePairCount) return 1
+    if (totalM <= activePairCount + 2) return 3
+    if (totalM <= activePairCount + 6) return 2
     return 1
   }
 
   const handleFlip = useCallback((cardId: string) => {
     if (lockRef.current) return
     if (statuses[cardId] !== 'hidden') return
-    if (gameComplete) return
+    if (gameComplete || roundComplete) return
 
     if (!started) setStarted(true)
 
@@ -726,10 +826,34 @@ export default function CardMatch() {
         }, MISMATCH_DELAY)
       }
     }
-  }, [deck, statuses, flippedIds, started, gameComplete])
+  }, [deck, statuses, flippedIds, started, gameComplete, roundComplete])
+
+  const handleNextRound = useCallback(() => {
+    if (!quiz) return
+    const nextRound = currentRound + 1
+    if (nextRound >= totalRounds) return
+    const newDeck = buildQuizDeck(quiz.rounds[nextRound])
+    setCurrentRound(nextRound)
+    setDeck(newDeck)
+    const s: Record<string, CardStatus> = {}
+    newDeck.forEach(c => { s[c.id] = 'hidden' })
+    setStatuses(s)
+    setFlippedIds([])
+    setMoves(0)
+    setMatchedPairs(0)
+    setTimeLeft(ROUND_TIME)
+    setRoundComplete(false)
+    setStarted(false)
+    lockRef.current = false
+    completedRef.current = false
+    track('card_match_next_round', { quizId: quiz.id, round: nextRound + 1 })
+  }, [quiz, currentRound, totalRounds])
 
   const handlePlayAgain = useCallback(() => {
-    const newDeck = buildDeck()
+    const newDeck = quiz ? buildQuizDeck(quiz.rounds[0]) : buildDeck()
+    setCurrentRound(0)
+    setCumulativeScore(0)
+    setCumulativeMoves(0)
     setDeck(newDeck)
     const s: Record<string, CardStatus> = {}
     newDeck.forEach(c => { s[c.id] = 'hidden' })
@@ -739,31 +863,37 @@ export default function CardMatch() {
     setMatchedPairs(0)
     setTimeLeft(ROUND_TIME)
     setGameComplete(false)
+    setRoundComplete(false)
     setStarted(false)
     lockRef.current = false
-    track('card_match_play_again')
-  }, [])
+    completedRef.current = false
+    track('card_match_play_again', { quizId: quiz?.id ?? 'card-match' })
+  }, [quiz])
 
   const handleResults = useCallback(() => {
-    const score = calculateScore(moves, matchedPairs)
+    const finalScore = quiz ? cumulativeScore : calculateScore(moves, matchedPairs)
+    const finalTotal = quiz ? totalRounds * activePairCount : activePairCount
     navigate('/results', {
-      state: { score, total: PAIR_COUNT, quizTitle: 'Card Match' },
+      state: { score: finalScore, total: finalTotal, quizTitle: quiz?.title ?? 'Card Match' },
     })
-  }, [moves, matchedPairs, navigate])
+  }, [quiz, cumulativeScore, moves, matchedPairs, navigate, totalRounds, activePairCount])
 
   const handleBack = useCallback(() => {
-    track('card_match_abandoned', { moves, timeLeft, matchedPairs })
+    track('card_match_abandoned', { quizId: quiz?.id ?? 'card-match', moves, timeLeft, matchedPairs })
     navigate(-1)
-  }, [moves, timeLeft, matchedPairs, navigate])
+  }, [quiz, moves, timeLeft, matchedPairs, navigate])
 
   const handleNext = useCallback(() => {
-    const score = calculateScore(moves, matchedPairs)
-    navigate('/results', {
-      state: { score, total: PAIR_COUNT, quizTitle: 'Card Match' },
-    })
-  }, [moves, matchedPairs, navigate])
+    if (roundComplete && !gameComplete) {
+      handleNextRound()
+      return
+    }
+    handleResults()
+  }, [roundComplete, gameComplete, handleNextRound, handleResults])
 
-  const progressPercent = (matchedPairs / PAIR_COUNT) * 100
+  const progressPercent = quiz
+    ? ((currentRound * activePairCount + matchedPairs) / (totalRounds * activePairCount)) * 100
+    : (matchedPairs / activePairCount) * 100
 
   return (
     <div
@@ -849,18 +979,31 @@ export default function CardMatch() {
             color: 'var(--c-lt-text-1)',
             letterSpacing: 'var(--tracking-tight)',
             textAlign: 'center',
-            marginBottom: 'var(--sp-6)',
+            marginBottom: quiz ? 'var(--sp-2)' : 'var(--sp-6)',
           }}
         >
-          Match the cards
+          {quiz ? quiz.rounds[currentRound].title : 'Match the cards'}
         </h1>
+        {quiz && (
+          <p
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 'var(--text-sm)',
+              color: 'var(--c-lt-text-2)',
+              textAlign: 'center',
+              marginBottom: 'var(--sp-6)',
+            }}
+          >
+            Round {currentRound + 1} of {totalRounds}
+          </p>
+        )}
 
-        {/* ── Card Grid (2 columns x 3 rows) ── */}
+        {/* ── Card Grid ── */}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
-            gridTemplateRows: 'repeat(3, auto)',
+            gridTemplateRows: `repeat(${Math.ceil(deck.length / 2)}, auto)`,
             gap: 'var(--sp-3)',
             marginBottom: 'var(--sp-6)',
           }}
@@ -904,12 +1047,86 @@ export default function CardMatch() {
         </div>
       </div>
 
+      {/* ── Round-complete overlay (quiz mode, between rounds) ── */}
+      {roundComplete && !gameComplete && quiz && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 'var(--z-overlay)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'var(--c-lt-overlay-heavy)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            padding: 'var(--sp-6)',
+          }}
+        >
+          <div
+            className="page-in"
+            style={{
+              width: '100%',
+              maxWidth: 320,
+              background: 'var(--c-lt-surface)',
+              border: '1px solid var(--c-lt-border)',
+              borderRadius: 'var(--r-xl)',
+              padding: 'var(--sp-8) var(--sp-6)',
+              textAlign: 'center',
+            }}
+          >
+            <div style={{ fontSize: 'var(--text-3xl)', marginBottom: 'var(--sp-4)' }}>
+              {matchedPairs === activePairCount ? '✅' : '⏱'}
+            </div>
+            <h2
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'var(--text-2xl)',
+                fontWeight: 'var(--weight-light)',
+                color: 'var(--c-lt-text-1)',
+                marginBottom: 'var(--sp-2)',
+                letterSpacing: 'var(--tracking-tight)',
+              }}
+            >
+              {matchedPairs === activePairCount ? 'Round Complete!' : 'Time\'s Up!'}
+            </h2>
+            <p
+              style={{
+                fontSize: 'var(--text-sm)',
+                color: 'var(--c-lt-text-2)',
+                marginBottom: 'var(--sp-6)',
+              }}
+            >
+              {matchedPairs}/{activePairCount} pairs matched in {moves} moves
+            </p>
+            <button
+              onClick={handleNextRound}
+              style={{
+                width: '100%',
+                height: 56,
+                borderRadius: 32,
+                border: 'none',
+                background: 'var(--c-lt-brand)',
+                color: 'var(--c-lt-white)',
+                fontSize: 16,
+                fontWeight: 'var(--weight-med)',
+                fontFamily: 'inherit',
+                cursor: 'pointer',
+              }}
+            >
+              Next Round
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ── Completion overlay ── */}
       {gameComplete && (
         <CompletionOverlay
-          moves={moves}
+          moves={quiz ? cumulativeMoves : moves}
           timeLeft={timeLeft}
           stars={getStars()}
+          pairCount={quiz ? totalRounds * activePairCount : activePairCount}
           onResults={handleResults}
           onPlayAgain={handlePlayAgain}
         />

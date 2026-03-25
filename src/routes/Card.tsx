@@ -9,6 +9,7 @@ import { QUIZZES } from '../data/quizzes'
 import { DRAG_DROP_QUIZZES } from '../data/dragDropQuizzes'
 import { IMAGE_QUIZZES } from '../data/imageQuizzes'
 import { SWIPE_QUIZZES } from '../data/swipeQuizzes'
+import { CARD_MATCH_QUIZZES } from '../data/cardMatchQuizzes'
 import lockIcon    from '../assets/icons/Lock-white.svg'
 import chevRight   from '../assets/icons/Chevron-right-white.svg'
 import tickBlack   from '../assets/icons/Tick-black.svg'
@@ -736,6 +737,11 @@ export default function Card() {
     navigate('/card-match')
   }
 
+  function handleStartCardMatchQuiz(quizId: string) {
+    track('quiz_card_tapped', { quizId, type: 'card_match_quiz' })
+    navigate('/card-match', { state: { quizId } })
+  }
+
   return (
     <Screen>
       {/* ── Content ────────────────────────────────────────── */}
@@ -835,6 +841,17 @@ export default function Card() {
                 locked={!cardComplete}
                 onStart={handleStartCardMatch}
               />
+              {CARD_MATCH_QUIZZES.map(cmq => (
+                <ExtraQuizCard
+                  key={cmq.id}
+                  emoji={cmq.emoji}
+                  title={cmq.title}
+                  subtitle={`${cmq.rounds.length} rounds · Card Match`}
+                  result={state.quizResults[cmq.id]}
+                  locked={!cardComplete || !state.quizResults['card-match']}
+                  onStart={() => handleStartCardMatchQuiz(cmq.id)}
+                />
+              ))}
             </div>
           </section>
         </div>
