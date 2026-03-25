@@ -104,10 +104,14 @@ function JourneyStep({
 function JourneyCard({
   completedAt,
   quizCount,
+  totalQuizzes,
+  allComplete,
   onStartQuiz,
 }: {
   completedAt: string | null
   quizCount: number
+  totalQuizzes: number
+  allComplete: boolean
   onStartQuiz: () => void
 }) {
   const achieved = [
@@ -156,15 +160,15 @@ function JourneyCard({
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: '10px 16px',
-          background: 'rgba(255,255,255,0.2)',
+          background: allComplete ? 'rgba(0,212,170,0.2)' : 'rgba(255,255,255,0.2)',
           borderRadius: 9999,
-          border: '1px solid rgba(255,255,255,0.2)',
+          border: `1px solid ${allComplete ? 'rgba(0,212,170,0.3)' : 'rgba(255,255,255,0.2)'}`,
         }}>
           <span style={{
             fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '400',
             fontSize: 12, color: 'var(--f-brand-color-text-light)', lineHeight: 1,
           }}>
-            Step {Math.min(doneCount + 1, 4)}/4
+            {allComplete ? '✓ Complete' : `Step ${Math.min(doneCount + 1, 4)}/4`}
           </span>
         </div>
       </div>
@@ -205,22 +209,51 @@ function JourneyCard({
         </ol>
       </nav>
 
+      {/* Quiz progress */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)',
+        marginTop: 'var(--f-brand-space-lg)',
+      }}>
+        <div style={{
+          flex: 1, height: 4, borderRadius: 2,
+          background: 'rgba(255,255,255,0.08)', overflow: 'hidden',
+        }}>
+          <div style={{
+            width: totalQuizzes > 0 ? `${(quizCount / totalQuizzes) * 100}%` : '0%',
+            height: '100%', borderRadius: 2,
+            background: allComplete
+              ? 'var(--f-brand-color-accent)'
+              : 'var(--f-brand-color-text-light)',
+            transition: 'width var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
+          }} />
+        </div>
+        <span style={{
+          fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '400',
+          fontSize: 11, color: 'rgba(255,255,255,0.5)', whiteSpace: 'nowrap',
+        }}>
+          {quizCount}/{totalQuizzes} quizzes
+        </span>
+      </div>
+
       {/* Start Quiz CTA */}
       <button
         onClick={onStartQuiz}
+        disabled={allComplete}
         style={{
           width: '100%', height: 48,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: 'var(--f-brand-color-text-light)', color: 'var(--f-brand-color-primary)',
+          background: allComplete ? 'rgba(0,212,170,0.15)' : 'var(--f-brand-color-text-light)',
+          color: allComplete ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-primary)',
           fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '600',
-          fontSize: 15, borderRadius: 9999, border: 'none',
-          marginTop: 28, cursor: 'pointer',
-          boxShadow: '0 10px 30px rgba(255,255,255,0.12)',
+          fontSize: 15, borderRadius: 9999,
+          border: allComplete ? '1px solid rgba(0,212,170,0.25)' : 'none',
+          marginTop: 'var(--f-brand-space-lg)', cursor: allComplete ? 'default' : 'pointer',
+          boxShadow: allComplete ? 'none' : '0 10px 30px rgba(255,255,255,0.12)',
           transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
           WebkitTapHighlightColor: 'transparent',
         }}
       >
-        Start quiz
+        {allComplete ? 'All quizzes completed!' : 'Start quiz'}
       </button>
     </section>
   )
@@ -699,6 +732,80 @@ export default function Card() {
 
   const cardComplete = state.fanCard.completedAt !== null
 
+  // ── Journey card logic: compute total quizzes and find next available quiz ──
+  const totalQuizzes = QUIZZES.length + DRAG_DROP_QUIZZES.length
+    + IMAGE_QUIZZES.length + SWIPE_QUIZZES.length + RANKING_QUIZZES.length + 1 // +1 for card-match
+  const quizCount = Object.keys(state.quizResults).length
+  const allQuizzesDone = quizCount >= totalQuizzes
+
+  /** Navigate to the first unlocked, uncompleted quiz. Falls back to scrolling to quiz section. */
+  const handleJourneyStart = useCallback(() => {
+    track('card_start_quiz_tapped')
+
+    if (!cardComplete) {
+      // Fan card not done yet — scroll to quiz section (all locked)
+      quizRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
+    }
+
+    // Standard quizzes — sequential unlock
+    for (let i = 0; i < QUIZZES.length; i++) {
+      const q = QUIZZES[i]
+      if (state.quizResults[q.id]) continue
+      // Check if unlocked: first always unlocked, rest require previous done
+      if (i === 0 || state.quizResults[QUIZZES[i - 1].id]) {
+        navigate('/quiz', { state: { quizId: q.id } })
+        return
+      }
+      break // locked — don't check further
+    }
+
+    // Drag-drop quizzes — unlocked after fan card
+    for (const ddq of DRAG_DROP_QUIZZES) {
+      if (!state.quizResults[ddq.id]) {
+        navigate('/drag-drop-quiz', { state: { quizId: ddq.id } })
+        return
+      }
+    }
+
+    // Image quizzes — unlocked after fan card
+    for (const iq of IMAGE_QUIZZES) {
+      if (!state.quizResults[iq.id]) {
+        navigate('/image-quiz', { state: { quizId: iq.id } })
+        return
+      }
+    }
+
+    // Swipe quizzes — may have unlockedBy dependency
+    for (const sq of SWIPE_QUIZZES) {
+      if (state.quizResults[sq.id]) continue
+      const depMet = !sq.unlockedBy || !!state.quizResults[sq.unlockedBy]
+      if (depMet) {
+        navigate('/swipe-quiz', { state: { quizId: sq.id } })
+        return
+      }
+    }
+
+    // Card match — unlocked after fan card
+    if (!state.quizResults['card-match']) {
+      navigate('/card-match')
+      return
+    }
+
+    // Ranking quizzes — require flow unlock
+    for (const rq of RANKING_QUIZZES) {
+      if (state.quizResults[rq.id]) continue
+      if (isFlowUnlocked(rq.id as FlowId)) {
+        navigate('/ranking-quiz', { state: { quizId: rq.id } })
+        return
+      }
+      break // sequential — don't check further
+    }
+
+    // Fallback: scroll to quiz section
+    quizRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [cardComplete, state.quizResults, isFlowUnlocked, navigate])
+
   function getCardState(i: number): QuizCardState {
     if (!cardComplete) return 'locked'
     const quizId = QUIZZES[i].id
@@ -769,11 +876,10 @@ export default function Card() {
           {/* ── Journey ───────────────────────────────────────── */}
           <JourneyCard
             completedAt={state.fanCard.completedAt}
-            quizCount={Object.keys(state.quizResults).length}
-            onStartQuiz={() => {
-              track('card_start_quiz_tapped')
-              quizRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            }}
+            quizCount={quizCount}
+            totalQuizzes={totalQuizzes}
+            allComplete={allQuizzesDone}
+            onStartQuiz={handleJourneyStart}
           />
 
           {/* ── Quizzes ───────────────────────────────────────── */}
