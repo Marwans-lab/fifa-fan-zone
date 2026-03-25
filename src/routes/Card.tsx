@@ -9,6 +9,7 @@ import { QUIZZES } from '../data/quizzes'
 import { DRAG_DROP_QUIZZES } from '../data/dragDropQuizzes'
 import { IMAGE_QUIZZES } from '../data/imageQuizzes'
 import { SWIPE_QUIZZES } from '../data/swipeQuizzes'
+import { CARD_MATCH_QUIZZES } from '../data/cardMatchQuizzes'
 import lockIcon    from '../assets/icons/Lock-white.svg'
 import chevRight   from '../assets/icons/Chevron-right-white.svg'
 import tickBlack   from '../assets/icons/Tick-black.svg'
@@ -731,9 +732,9 @@ export default function Card() {
     navigate('/swipe-quiz', { state: { quizId } })
   }
 
-  function handleStartCardMatch() {
-    track('quiz_card_tapped', { quizId: 'card-match', type: 'card_match' })
-    navigate('/card-match')
+  function handleStartCardMatch(quizId?: string) {
+    track('quiz_card_tapped', { quizId: quizId ?? 'card-match', type: 'card_match' })
+    navigate('/card-match', { state: quizId ? { quizId } : undefined })
   }
 
   return (
@@ -827,14 +828,20 @@ export default function Card() {
                   onStart={() => handleStartSwipeQuiz(sq.id)}
                 />
               ))}
-              <ExtraQuizCard
-                emoji="🃏"
-                title="Card Match"
-                subtitle="Match the pairs · Memory Game"
-                result={state.quizResults['card-match']}
-                locked={!cardComplete}
-                onStart={handleStartCardMatch}
-              />
+              {CARD_MATCH_QUIZZES.map(cmq => {
+                const totalPairs = cmq.rounds.reduce((sum, r) => sum + r.pairs.length, 0)
+                return (
+                  <ExtraQuizCard
+                    key={cmq.id}
+                    emoji={cmq.emoji}
+                    title={cmq.title}
+                    subtitle={`${cmq.rounds.length} rounds · ${totalPairs} pairs · Card Match`}
+                    result={state.quizResults[cmq.id]}
+                    locked={!cardComplete}
+                    onStart={() => handleStartCardMatch(cmq.id)}
+                  />
+                )
+              })}
             </div>
           </section>
         </div>

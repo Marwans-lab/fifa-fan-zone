@@ -1,30 +1,27 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
-import { WORLD_CUP_TEAMS } from '../data/teams'
+import { CARD_MATCH_QUIZZES, CardMatchPair } from '../data/cardMatchQuizzes'
 
 // ─── Types ──────────────────────────────────────────────────────────────────────
 
 interface MatchCard {
   id: string
   pairId: string
-  type: 'flag' | 'name'
+  type: 'clue' | 'answer'
   display: string
-  teamColors: [string, string]
 }
 
 type CardStatus = 'hidden' | 'flipped' | 'matched' | 'mismatched'
 
 // ─── Constants ──────────────────────────────────────────────────────────────────
 
-const PAIR_COUNT = 3
-const CARD_COUNT = PAIR_COUNT * 2
 const FLIP_DURATION = 400
 const MISMATCH_DELAY = 800
 const MATCH_DELAY = 500
 const DEAL_STAGGER = 60
-const ROUND_TIME = 30
+const ROUND_TIME = 45
 
 // ─── Keyframe styles (injected once) ────────────────────────────────────────────
 
@@ -75,26 +72,29 @@ function shuffle<T>(arr: T[]): T[] {
   return a
 }
 
-function buildDeck(): MatchCard[] {
-  const teams = shuffle(WORLD_CUP_TEAMS).slice(0, PAIR_COUNT)
+function buildDeckFromPairs(pairs: CardMatchPair[]): MatchCard[] {
   const cards: MatchCard[] = []
-  teams.forEach(team => {
+  pairs.forEach(pair => {
     cards.push({
-      id: `${team.id}-flag`,
-      pairId: team.id,
-      type: 'flag',
-      display: team.flag,
-      teamColors: team.colors,
+      id: `${pair.id}-clue`,
+      pairId: pair.id,
+      type: 'clue',
+      display: pair.clue,
     })
     cards.push({
-      id: `${team.id}-name`,
-      pairId: team.id,
-      type: 'name',
-      display: team.name,
-      teamColors: team.colors,
+      id: `${pair.id}-answer`,
+      pairId: pair.id,
+      type: 'answer',
+      display: pair.answer,
     })
   })
   return shuffle(cards)
+}
+
+function initStatuses(deck: MatchCard[]): Record<string, CardStatus> {
+  const s: Record<string, CardStatus> = {}
+  deck.forEach(c => { s[c.id] = 'hidden' })
+  return s
 }
 
 // ─── Card back with brand pattern ───────────────────────────────────────────────
@@ -193,6 +193,8 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
     }
   }, [isMatched])
 
+  const isClue = card.type === 'clue'
+
   return (
     <button
       onClick={onFlip}
@@ -201,7 +203,7 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
       style={{
         position: 'relative',
         width: '100%',
-        aspectRatio: '170 / 160',
+        aspectRatio: '170 / 130',
         perspective: 600,
         background: 'none',
         border: 'none',
@@ -239,7 +241,9 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
             borderRadius: 'var(--r-md)',
             background: isMatched
               ? 'var(--c-lt-correct-bg)'
-              : 'var(--c-lt-surface)',
+              : isClue
+              ? 'var(--c-lt-surface)'
+              : 'var(--c-lt-bg)',
             border: `1.5px solid ${
               isMatched
                 ? 'var(--c-lt-correct-dark)'
@@ -264,23 +268,37 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
             overflow: 'hidden',
           }}
         >
-          {card.type === 'flag' ? (
-            <span style={{ fontSize: 'var(--text-3xl)', lineHeight: 1 }}>{card.display}</span>
-          ) : (
-            <span
-              style={{
-                fontSize: 'var(--text-xs)',
-                fontWeight: 'var(--weight-med)',
-                color: 'var(--c-lt-text-1)',
-                textAlign: 'center',
-                lineHeight: 'var(--leading-snug)',
-                letterSpacing: 'var(--tracking-snug)',
-                fontFamily: 'var(--font-body)',
-              }}
-            >
-              {card.display}
-            </span>
-          )}
+          {/* Type label */}
+          <span
+            style={{
+              position: 'absolute',
+              top: 'var(--sp-1)',
+              left: 'var(--sp-2)',
+              fontSize: 9,
+              fontWeight: 'var(--weight-med)',
+              fontFamily: 'var(--font-body)',
+              color: isClue ? 'var(--c-lt-brand)' : 'var(--c-lt-text-2)',
+              letterSpacing: 'var(--tracking-wider)',
+              textTransform: 'uppercase',
+            }}
+          >
+            {isClue ? 'Route' : 'City'}
+          </span>
+
+          <span
+            style={{
+              fontSize: isClue ? 'var(--text-2xs)' : 'var(--text-sm)',
+              fontWeight: isClue ? 'var(--weight-reg)' : 'var(--weight-med)',
+              color: 'var(--c-lt-text-1)',
+              textAlign: 'center',
+              lineHeight: 'var(--leading-snug)',
+              letterSpacing: 'var(--tracking-snug)',
+              fontFamily: isClue ? 'var(--font-body)' : 'var(--font-display)',
+              padding: '0 var(--sp-1)',
+            }}
+          >
+            {card.display}
+          </span>
 
           {/* Match checkmark */}
           {isMatched && (
@@ -432,25 +450,44 @@ function Confetti() {
   )
 }
 
-// ─── Completion overlay ─────────────────────────────────────────────────────────
+// ─── Round completion overlay ─────────────────────────────────────────────────
 
-interface CompletionProps {
+interface RoundCompleteProps {
+  roundIndex: number
+  totalRounds: number
+  roundTitle: string
+  matchedPairs: number
+  pairCount: number
   moves: number
   timeLeft: number
   stars: number
+  onNextRound: () => void
   onResults: () => void
-  onPlayAgain: () => void
 }
 
-function CompletionOverlay({ moves, timeLeft, stars, onResults, onPlayAgain }: CompletionProps) {
+function RoundCompleteOverlay({
+  roundIndex,
+  totalRounds,
+  roundTitle,
+  matchedPairs,
+  pairCount,
+  moves,
+  timeLeft,
+  stars,
+  onNextRound,
+  onResults,
+}: RoundCompleteProps) {
   const [visible, setVisible] = useState(false)
+  const isFinalRound = roundIndex === totalRounds - 1
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 100)
     return () => clearTimeout(t)
   }, [])
 
-  const label = stars === 3 ? 'Perfect!' : stars === 2 ? 'Great Job!' : 'Well Done!'
+  const label = isFinalRound
+    ? (stars === 3 ? 'Perfect!' : stars === 2 ? 'Great Job!' : 'Well Done!')
+    : (matchedPairs === pairCount ? 'Round Clear!' : 'Time\'s Up!')
   const timeUsed = ROUND_TIME - timeLeft
 
   return (
@@ -485,26 +522,43 @@ function CompletionOverlay({ moves, timeLeft, stars, onResults, onPlayAgain }: C
           overflow: 'hidden',
         }}
       >
-        {/* Confetti burst */}
-        {visible && stars >= 2 && <Confetti />}
+        {/* Confetti burst on final round with good performance */}
+        {visible && isFinalRound && stars >= 2 && <Confetti />}
 
-        {/* Stars */}
-        <div style={{ fontSize: 'var(--text-3xl)', marginBottom: 'var(--sp-4)', letterSpacing: 8 }}>
-          {[1, 2, 3].map(i => (
-            <span
-              key={i}
-              style={{
-                opacity: i <= stars ? 1 : 0.2,
-                filter: i <= stars ? 'drop-shadow(0 0 8px var(--c-lt-star-glow))' : 'none',
-                display: 'inline-block',
-                transform: visible && i <= stars ? 'scale(1) rotate(0deg)' : 'scale(0) rotate(-30deg)',
-                transition: `transform 500ms var(--ease-out) ${300 + i * 180}ms, opacity 300ms ease ${300 + i * 180}ms`,
-              }}
-            >
-              ⭐
-            </span>
-          ))}
-        </div>
+        {/* Stars (only on final round) */}
+        {isFinalRound && (
+          <div style={{ fontSize: 'var(--text-3xl)', marginBottom: 'var(--sp-4)', letterSpacing: 8 }}>
+            {[1, 2, 3].map(i => (
+              <span
+                key={i}
+                style={{
+                  opacity: i <= stars ? 1 : 0.2,
+                  filter: i <= stars ? 'drop-shadow(0 0 8px var(--c-lt-star-glow))' : 'none',
+                  display: 'inline-block',
+                  transform: visible && i <= stars ? 'scale(1) rotate(0deg)' : 'scale(0) rotate(-30deg)',
+                  transition: `transform 500ms var(--ease-out) ${300 + i * 180}ms, opacity 300ms ease ${300 + i * 180}ms`,
+                }}
+              >
+                ⭐
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Round indicator (non-final) */}
+        {!isFinalRound && (
+          <div
+            style={{
+              fontSize: 'var(--text-sm)',
+              color: 'var(--c-lt-text-2)',
+              marginBottom: 'var(--sp-2)',
+              letterSpacing: 'var(--tracking-wider)',
+              textTransform: 'uppercase',
+            }}
+          >
+            {roundTitle}
+          </div>
+        )}
 
         <h2
           style={{
@@ -526,7 +580,9 @@ function CompletionOverlay({ moves, timeLeft, stars, onResults, onPlayAgain }: C
             lineHeight: 'var(--leading-normal)',
           }}
         >
-          You matched all {PAIR_COUNT} pairs
+          {matchedPairs === pairCount
+            ? `You matched all ${pairCount} pairs`
+            : `You matched ${matchedPairs} of ${pairCount} pairs`}
         </p>
 
         {/* Stats row */}
@@ -555,7 +611,7 @@ function CompletionOverlay({ moves, timeLeft, stars, onResults, onPlayAgain }: C
 
         {/* Action buttons */}
         <button
-          onClick={onResults}
+          onClick={isFinalRound ? onResults : onNextRound}
           style={{
             width: '100%',
             height: 56,
@@ -570,24 +626,7 @@ function CompletionOverlay({ moves, timeLeft, stars, onResults, onPlayAgain }: C
             marginBottom: 'var(--sp-3)',
           }}
         >
-          View Results
-        </button>
-        <button
-          onClick={onPlayAgain}
-          style={{
-            width: '100%',
-            height: 56,
-            borderRadius: 32,
-            border: '1.5px solid var(--c-lt-border)',
-            background: 'var(--c-lt-surface)',
-            color: 'var(--c-lt-text-1)',
-            fontSize: 16,
-            fontWeight: 'var(--weight-med)',
-            fontFamily: 'inherit',
-            cursor: 'pointer',
-          }}
-        >
-          Play Again
+          {isFinalRound ? 'View Results' : `Next Round (${roundIndex + 2}/${totalRounds})`}
         </button>
       </div>
     </div>
@@ -598,27 +637,46 @@ function CompletionOverlay({ moves, timeLeft, stars, onResults, onPlayAgain }: C
 
 export default function CardMatch() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { addPoints, recordQuizResult } = useStore()
 
-  const [deck, setDeck] = useState<MatchCard[]>(() => buildDeck())
-  const [statuses, setStatuses] = useState<Record<string, CardStatus>>(() => {
-    const s: Record<string, CardStatus> = {}
-    deck.forEach(c => { s[c.id] = 'hidden' })
-    return s
-  })
+  // Resolve quiz from location state or default to first quiz
+  const quizId = (location.state as { quizId?: string } | null)?.quizId ?? CARD_MATCH_QUIZZES[0]?.id
+  const quiz = CARD_MATCH_QUIZZES.find(q => q.id === quizId)
+
+  // Multi-round state
+  const [roundIndex, setRoundIndex] = useState(0)
+  const [totalScore, setTotalScore] = useState(0)
+  const [totalMoves, setTotalMoves] = useState(0)
+  const [roundComplete, setRoundComplete] = useState(false)
+
+  const rounds = quiz?.rounds ?? []
+  const totalRounds = rounds.length
+  const currentRound = rounds[roundIndex]
+  const pairCount = currentRound?.pairs.length ?? 0
+
+  const [deck, setDeck] = useState<MatchCard[]>(() =>
+    currentRound ? buildDeckFromPairs(currentRound.pairs) : []
+  )
+  const [statuses, setStatuses] = useState<Record<string, CardStatus>>(() => initStatuses(deck))
   const [flippedIds, setFlippedIds] = useState<string[]>([])
   const [moves, setMoves] = useState(0)
   const [matchedPairs, setMatchedPairs] = useState(0)
   const [timeLeft, setTimeLeft] = useState(ROUND_TIME)
-  const [gameComplete, setGameComplete] = useState(false)
   const [started, setStarted] = useState(false)
 
   const lockRef = useRef(false)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const completedRef = useRef(false)
+
+  // Reset completedRef when round changes
+  useEffect(() => {
+    completedRef.current = false
+  }, [roundIndex])
 
   // Countdown timer
   useEffect(() => {
-    if (started && !gameComplete) {
+    if (started && !roundComplete) {
       timerRef.current = setInterval(() => {
         setTimeLeft(t => {
           if (t <= 1) {
@@ -632,56 +690,66 @@ export default function CardMatch() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current)
     }
-  }, [started, gameComplete])
+  }, [started, roundComplete])
+
+  const calculateRoundScore = useCallback((m: number, matched: number, tLeft: number): number => {
+    if (matched === 0) return 0
+    const matchBonus = matched * 2
+    const moveScore = Math.max(0, pairCount - Math.max(0, m - pairCount))
+    const timeBonus = tLeft >= 30 ? 3 : tLeft >= 20 ? 2 : tLeft >= 10 ? 1 : 0
+    return matchBonus + moveScore + timeBonus
+  }, [pairCount])
+
+  const finishRound = useCallback((m: number, matched: number, tLeft: number) => {
+    if (completedRef.current) return
+    completedRef.current = true
+    setRoundComplete(true)
+    const roundScore = calculateRoundScore(m, matched, tLeft)
+    setTotalScore(prev => prev + roundScore)
+    setTotalMoves(prev => prev + m)
+    track('card_match_round_completed', {
+      quizId,
+      round: roundIndex + 1,
+      moves: m,
+      timeLeft: tLeft,
+      score: roundScore,
+      matchedPairs: matched,
+      pairCount,
+    })
+  }, [calculateRoundScore, quizId, roundIndex, pairCount])
 
   // Time-up auto-complete
   useEffect(() => {
-    if (timeLeft === 0 && started && !gameComplete) {
-      setGameComplete(true)
-      const score = calculateScore(moves, matchedPairs)
-      addPoints(score)
-      recordQuizResult('card-match', score, PAIR_COUNT)
-      track('card_match_completed', { moves, timeLeft: 0, score, pairs: PAIR_COUNT, matchedPairs })
+    if (timeLeft === 0 && started && !roundComplete) {
+      finishRound(moves, matchedPairs, 0)
     }
-  }, [timeLeft, started, gameComplete, moves, matchedPairs, addPoints, recordQuizResult])
+  }, [timeLeft, started, roundComplete, moves, matchedPairs, finishRound])
 
   // Check completion (all matched)
   useEffect(() => {
-    if (matchedPairs === PAIR_COUNT && matchedPairs > 0) {
-      setGameComplete(true)
-      const score = calculateScore(moves, matchedPairs)
-      addPoints(score)
-      recordQuizResult('card-match', score, PAIR_COUNT)
-      track('card_match_completed', { moves, timeLeft, score, pairs: PAIR_COUNT })
+    if (matchedPairs === pairCount && matchedPairs > 0 && !roundComplete) {
+      finishRound(moves, matchedPairs, timeLeft)
     }
-  }, [matchedPairs, moves, timeLeft, addPoints, recordQuizResult])
-
-  const calculateScore = (m: number, matched: number): number => {
-    if (matched === 0) return 0
-    const matchBonus = matched * 2
-    const moveScore = Math.max(0, PAIR_COUNT - Math.max(0, m - PAIR_COUNT))
-    const timeBonus = timeLeft >= 20 ? 2 : timeLeft >= 10 ? 1 : 0
-    return matchBonus + moveScore + timeBonus
-  }
+  }, [matchedPairs, pairCount, moves, timeLeft, roundComplete, finishRound])
 
   const getStars = (): number => {
-    if (matchedPairs < PAIR_COUNT) return 1
-    if (moves <= PAIR_COUNT + 2) return 3
-    if (moves <= PAIR_COUNT + 6) return 2
+    const avgMovesPerRound = totalMoves / Math.max(roundIndex + 1, 1)
+    if (avgMovesPerRound <= pairCount + 1) return 3
+    if (avgMovesPerRound <= pairCount + 4) return 2
     return 1
   }
 
   const handleFlip = useCallback((cardId: string) => {
     if (lockRef.current) return
     if (statuses[cardId] !== 'hidden') return
-    if (gameComplete) return
+    if (roundComplete) return
 
     if (!started) setStarted(true)
 
     const card = deck.find(c => c.id === cardId)
     if (!card) return
 
-    track('card_match_flip', { cardId: card.id, pairId: card.pairId })
+    track('card_match_flip', { cardId: card.id, pairId: card.pairId, round: roundIndex + 1 })
 
     const newFlipped = [...flippedIds, cardId]
     setStatuses(prev => ({ ...prev, [cardId]: 'flipped' }))
@@ -705,7 +773,7 @@ export default function CardMatch() {
           setMatchedPairs(p => p + 1)
           setFlippedIds([])
           lockRef.current = false
-          track('card_match_pair_found', { pairId: first.pairId })
+          track('card_match_pair_found', { pairId: first.pairId, round: roundIndex + 1 })
         }, MATCH_DELAY)
       } else {
         setTimeout(() => {
@@ -726,44 +794,67 @@ export default function CardMatch() {
         }, MISMATCH_DELAY)
       }
     }
-  }, [deck, statuses, flippedIds, started, gameComplete])
+  }, [deck, statuses, flippedIds, started, roundComplete, roundIndex])
 
-  const handlePlayAgain = useCallback(() => {
-    const newDeck = buildDeck()
+  const handleNextRound = useCallback(() => {
+    const nextIdx = roundIndex + 1
+    if (nextIdx >= totalRounds) return
+    const nextRound = rounds[nextIdx]
+    const newDeck = buildDeckFromPairs(nextRound.pairs)
+    setRoundIndex(nextIdx)
     setDeck(newDeck)
-    const s: Record<string, CardStatus> = {}
-    newDeck.forEach(c => { s[c.id] = 'hidden' })
-    setStatuses(s)
+    setStatuses(initStatuses(newDeck))
     setFlippedIds([])
     setMoves(0)
     setMatchedPairs(0)
     setTimeLeft(ROUND_TIME)
-    setGameComplete(false)
+    setRoundComplete(false)
     setStarted(false)
     lockRef.current = false
-    track('card_match_play_again')
-  }, [])
+  }, [roundIndex, totalRounds, rounds])
 
   const handleResults = useCallback(() => {
-    const score = calculateScore(moves, matchedPairs)
+    const finalScore = totalScore
+    addPoints(finalScore)
+    recordQuizResult(quizId ?? 'card-match', finalScore, totalRounds * pairCount)
+    track('card_match_completed', { quizId, totalScore: finalScore, totalMoves, totalRounds })
     navigate('/results', {
-      state: { score, total: PAIR_COUNT, quizTitle: 'Card Match' },
+      state: {
+        score: finalScore,
+        total: totalRounds * pairCount,
+        quizTitle: quiz?.title ?? 'Card Match',
+      },
     })
-  }, [moves, matchedPairs, navigate])
+  }, [totalScore, totalMoves, totalRounds, pairCount, quizId, quiz, addPoints, recordQuizResult, navigate])
 
   const handleBack = useCallback(() => {
-    track('card_match_abandoned', { moves, timeLeft, matchedPairs })
+    track('card_match_abandoned', { quizId, round: roundIndex + 1, moves, timeLeft, matchedPairs })
     navigate(-1)
-  }, [moves, timeLeft, matchedPairs, navigate])
+  }, [quizId, roundIndex, moves, timeLeft, matchedPairs, navigate])
 
-  const handleNext = useCallback(() => {
-    const score = calculateScore(moves, matchedPairs)
-    navigate('/results', {
-      state: { score, total: PAIR_COUNT, quizTitle: 'Card Match' },
-    })
-  }, [moves, matchedPairs, navigate])
+  // Overall progress: completed rounds + current round progress
+  const overallProgress = totalRounds > 0
+    ? ((roundIndex * pairCount + matchedPairs) / (totalRounds * pairCount)) * 100
+    : 0
 
-  const progressPercent = (matchedPairs / PAIR_COUNT) * 100
+  if (!quiz || !currentRound) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'var(--c-lt-bg)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <p style={{ color: 'var(--c-lt-text-2)', fontFamily: 'var(--font-body)' }}>
+          Quiz not found
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div
@@ -791,7 +882,7 @@ export default function CardMatch() {
         }}
       >
         {/* ── Back button + Progress bar ── */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)', marginBottom: 'var(--sp-6)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)', marginBottom: 'var(--sp-4)' }}>
           <button
             onClick={handleBack}
             aria-label="Go back"
@@ -830,7 +921,7 @@ export default function CardMatch() {
               <div
                 style={{
                   height: '100%',
-                  width: `${progressPercent}%`,
+                  width: `${overallProgress}%`,
                   background: 'linear-gradient(90deg, var(--c-accent), var(--c-lt-correct-dark))',
                   borderRadius: 4,
                   transition: 'width 400ms var(--ease-out)',
@@ -840,29 +931,40 @@ export default function CardMatch() {
           </div>
         </div>
 
-        {/* ── Title ── */}
-        <h1
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'var(--text-2xl)',
-            fontWeight: 'var(--weight-light)',
-            color: 'var(--c-lt-text-1)',
-            letterSpacing: 'var(--tracking-tight)',
-            textAlign: 'center',
-            marginBottom: 'var(--sp-6)',
-          }}
-        >
-          Match the cards
-        </h1>
+        {/* ── Round title ── */}
+        <div style={{ textAlign: 'center', marginBottom: 'var(--sp-4)' }}>
+          <div
+            style={{
+              fontSize: 'var(--text-2xs)',
+              color: 'var(--c-lt-text-2)',
+              letterSpacing: 'var(--tracking-wider)',
+              textTransform: 'uppercase',
+              marginBottom: 'var(--sp-1)',
+              fontFamily: 'var(--font-body)',
+            }}
+          >
+            Round {roundIndex + 1} of {totalRounds}
+          </div>
+          <h1
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'var(--text-xl)',
+              fontWeight: 'var(--weight-light)',
+              color: 'var(--c-lt-text-1)',
+              letterSpacing: 'var(--tracking-tight)',
+            }}
+          >
+            {currentRound.title}
+          </h1>
+        </div>
 
-        {/* ── Card Grid (2 columns x 3 rows) ── */}
+        {/* ── Card Grid (2 columns x 4 rows for 4 pairs = 8 cards) ── */}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
-            gridTemplateRows: 'repeat(3, auto)',
             gap: 'var(--sp-3)',
-            marginBottom: 'var(--sp-6)',
+            marginBottom: 'var(--sp-4)',
           }}
         >
           {deck.map((card, i) => (
@@ -877,41 +979,33 @@ export default function CardMatch() {
         </div>
 
         {/* ── Timer ring ── */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--sp-6)' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 'var(--sp-4)', marginBottom: 'var(--sp-4)' }}>
           <TimerRing timeLeft={timeLeft} total={ROUND_TIME} />
-        </div>
-
-        {/* ── Next button ── */}
-        <div style={{ marginTop: 'auto' }}>
-          <button
-            onClick={handleNext}
+          <span
             style={{
-              width: '100%',
-              height: 56,
-              borderRadius: 32,
-              border: 'none',
-              background: 'var(--c-lt-brand)',
-              color: 'var(--c-lt-white)',
-              fontSize: 16,
-              fontWeight: 'var(--weight-med)',
-              fontFamily: 'inherit',
-              cursor: 'pointer',
-              WebkitTapHighlightColor: 'transparent',
+              fontSize: 'var(--text-sm)',
+              color: 'var(--c-lt-text-2)',
+              fontFamily: 'var(--font-body)',
             }}
           >
-            Next
-          </button>
+            {matchedPairs}/{pairCount} matched
+          </span>
         </div>
       </div>
 
-      {/* ── Completion overlay ── */}
-      {gameComplete && (
-        <CompletionOverlay
+      {/* ── Round completion overlay ── */}
+      {roundComplete && (
+        <RoundCompleteOverlay
+          roundIndex={roundIndex}
+          totalRounds={totalRounds}
+          roundTitle={currentRound.title}
+          matchedPairs={matchedPairs}
+          pairCount={pairCount}
           moves={moves}
           timeLeft={timeLeft}
           stars={getStars()}
+          onNextRound={handleNextRound}
           onResults={handleResults}
-          onPlayAgain={handlePlayAgain}
         />
       )}
     </div>
