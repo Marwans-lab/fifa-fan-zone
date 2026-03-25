@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import Screen from '../components/Screen'
 import FanCard from '../components/FanCard'
 import { track } from '../lib/analytics'
-import { useStore } from '../store/useStore'
+import { useStore, type FlowId } from '../store/useStore'
 import { renderCardToBlob, buildShareText } from '../lib/cardExport'
 import { QUIZZES } from '../data/quizzes'
 import { DRAG_DROP_QUIZZES } from '../data/dragDropQuizzes'
 import { IMAGE_QUIZZES } from '../data/imageQuizzes'
 import { SWIPE_QUIZZES } from '../data/swipeQuizzes'
+import { RANKING_QUIZZES } from '../data/rankingQuizzes'
 import lockIcon    from '../assets/icons/Lock-white.svg'
 import chevRight   from '../assets/icons/Chevron-right-white.svg'
 import tickBlack   from '../assets/icons/Tick-black.svg'
@@ -652,7 +653,7 @@ function ExtraQuizCard({
 // ─── Main Card route ──────────────────────────────────────────────────────────
 export default function Card() {
   const navigate = useNavigate()
-  const { state, updateFanCard } = useStore()
+  const { state, updateFanCard, isFlowUnlocked } = useStore()
   const quizRef = useRef<HTMLDivElement>(null)
 
   function handleSave(answers: Record<string, string>) {
@@ -734,6 +735,11 @@ export default function Card() {
   function handleStartCardMatch() {
     track('quiz_card_tapped', { quizId: 'card-match', type: 'card_match' })
     navigate('/card-match')
+  }
+
+  function handleStartRankingQuiz(quizId: string) {
+    track('quiz_card_tapped', { quizId, type: 'ranking' })
+    navigate('/ranking-quiz', { state: { quizId } })
   }
 
   return (
@@ -835,6 +841,21 @@ export default function Card() {
                 locked={!cardComplete}
                 onStart={handleStartCardMatch}
               />
+              {RANKING_QUIZZES.map(rq => {
+                const rqResult = state.quizResults[rq.id]
+                const flowLocked = !cardComplete || !isFlowUnlocked(rq.id as FlowId)
+                return (
+                  <ExtraQuizCard
+                    key={rq.id}
+                    emoji={rq.emoji}
+                    title={rq.title}
+                    subtitle={`${rq.questions.length} questions · Ranking`}
+                    result={rqResult ? { score: rqResult.score, total: rqResult.total } : undefined}
+                    locked={flowLocked}
+                    onStart={() => handleStartRankingQuiz(rq.id)}
+                  />
+                )
+              })}
             </div>
           </section>
         </div>
