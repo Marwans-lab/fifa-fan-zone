@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import { WORLD_CUP_TEAMS } from '../data/teams'
+import './CardMatch.css'
 
 // ─── Types ──────────────────────────────────────────────────────────────────────
 
@@ -25,44 +26,6 @@ const MISMATCH_DELAY = 800
 const MATCH_DELAY = 500
 const DEAL_STAGGER = 60
 const ROUND_TIME = 30
-
-// ─── Keyframe styles (injected once) ────────────────────────────────────────────
-
-const KEYFRAMES = `
-@keyframes card-shake {
-  0%, 100% { transform: rotateY(180deg) translateX(0); }
-  20% { transform: rotateY(180deg) translateX(-6px); }
-  40% { transform: rotateY(180deg) translateX(6px); }
-  60% { transform: rotateY(180deg) translateX(-4px); }
-  80% { transform: rotateY(180deg) translateX(3px); }
-}
-@keyframes card-match-pop {
-  0% { transform: rotateY(180deg) scale(1); }
-  40% { transform: rotateY(180deg) scale(1.08); }
-  100% { transform: rotateY(180deg) scale(1); }
-}
-@keyframes shimmer-slide {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(200%); }
-}
-@keyframes match-ring {
-  0% { transform: scale(0.6); opacity: 1; }
-  100% { transform: scale(1.8); opacity: 0; }
-}
-@keyframes confetti-fall {
-  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(60px) rotate(360deg); opacity: 0; }
-}
-@keyframes stat-count-in {
-  0% { transform: translateY(8px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-@keyframes card-press {
-  0% { transform: scale(1); }
-  50% { transform: scale(0.95); }
-  100% { transform: scale(1); }
-}
-`
 
 // ─── Helpers ────────────────────────────────────────────────────────────────────
 
@@ -101,25 +64,12 @@ function buildDeck(): MatchCard[] {
 
 function CardBack() {
   return (
-    <div
-      style={{
-        position: 'absolute',
-        inset: 0,
-        borderRadius: 'var(--r-md)',
-        background: 'var(--c-lt-brand)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backfaceVisibility: 'hidden',
-        overflow: 'hidden',
-      }}
-    >
-      {/* Geometric overlay pattern */}
+    <div className="f-match-card__back">
       <svg
         width="100%"
         height="100%"
         viewBox="0 0 170 160"
-        style={{ position: 'absolute', inset: 0, opacity: 0.15 }}
+        className="f-match-card__pattern"
         preserveAspectRatio="xMidYMid slice"
       >
         <defs>
@@ -134,15 +84,7 @@ function CardBack() {
         </defs>
         <rect width="170" height="160" fill="url(#card-pattern)" />
       </svg>
-      {/* Shimmer */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(105deg, transparent 40%, var(--c-lt-shimmer) 50%, transparent 60%)',
-          animation: 'shimmer-slide 3s ease-in-out infinite',
-        }}
-      />
+      <div className="f-match-card__shimmer" />
     </div>
   )
 }
@@ -150,18 +92,7 @@ function CardBack() {
 // ─── Match ring burst effect ────────────────────────────────────────────────────
 
 function MatchRing() {
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        inset: -8,
-        borderRadius: 'var(--r-lg)',
-        border: '2px solid var(--c-lt-correct-dark)',
-        animation: 'match-ring 600ms var(--ease-out) forwards',
-        pointerEvents: 'none',
-      }}
-    />
-  )
+  return <div className="f-match-card__ring" />
 }
 
 // ─── Individual card component ──────────────────────────────────────────────────
@@ -193,111 +124,35 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
     }
   }, [isMatched])
 
+  const cardClasses = [
+    'f-match-card',
+    dealt && 'f-match-card--dealt',
+    isFlipped && 'f-match-card--flipped',
+    isMatched && 'f-match-card--matched',
+    isMismatched && 'f-match-card--shaking',
+    status !== 'hidden' && 'f-match-card--disabled',
+  ].filter(Boolean).join(' ')
+
   return (
     <button
       onClick={onFlip}
       disabled={status !== 'hidden'}
       aria-label={isFlipped ? card.display : 'Hidden card'}
-      style={{
-        position: 'relative',
-        width: '100%',
-        aspectRatio: '170 / 160',
-        perspective: 600,
-        background: 'none',
-        border: 'none',
-        padding: 0,
-        cursor: status === 'hidden' ? 'pointer' : 'default',
-        WebkitTapHighlightColor: 'transparent',
-        opacity: dealt ? 1 : 0,
-        transform: dealt ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.85)',
-        transition: 'opacity 400ms var(--ease-out), transform 400ms var(--ease-out)',
-      }}
+      className={cardClasses}
+      style={{ transitionDelay: dealt ? undefined : `${dealDelay}ms` }}
     >
-      <div
-        style={{
-          position: 'relative',
-          width: '100%',
-          height: '100%',
-          transformStyle: 'preserve-3d',
-          transform: isFlipped || isMismatched ? 'rotateY(180deg)' : 'rotateY(0deg)',
-          transition: `transform ${FLIP_DURATION}ms var(--ease-out)`,
-          animation: isMismatched
-            ? 'card-shake 500ms var(--ease-out)'
-            : isMatched
-            ? 'card-match-pop 400ms var(--ease-out)'
-            : 'none',
-        }}
-      >
-        {/* Back face (visible when hidden) */}
+      <div className="f-match-card__inner">
         <CardBack />
 
-        {/* Front face (visible when flipped) */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            borderRadius: 'var(--r-md)',
-            background: isMatched
-              ? 'var(--c-lt-correct-bg)'
-              : 'var(--c-lt-surface)',
-            border: `1.5px solid ${
-              isMatched
-                ? 'var(--c-lt-correct-dark)'
-                : isMismatched
-                ? 'var(--c-error)'
-                : 'var(--c-lt-border)'
-            }`,
-            backfaceVisibility: 'hidden',
-            transform: 'rotateY(180deg)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 'var(--sp-1)',
-            padding: 'var(--sp-2)',
-            boxShadow: isMatched
-              ? '0 0 16px var(--c-lt-correct-glow)'
-              : isMismatched
-              ? '0 0 16px var(--c-lt-error-glow)'
-              : '0 2px 8px var(--c-lt-shadow)',
-            transition: 'box-shadow 300ms ease, border-color 300ms ease, background 300ms ease',
-            overflow: 'hidden',
-          }}
-        >
+        <div className="f-match-card__front">
           {card.type === 'flag' ? (
-            <span style={{ fontSize: 'var(--text-3xl)', lineHeight: 1 }}>{card.display}</span>
+            <span className="f-match-card__flag">{card.display}</span>
           ) : (
-            <span
-              style={{
-                fontSize: 'var(--text-xs)',
-                fontWeight: 'var(--weight-med)',
-                color: 'var(--c-lt-text-1)',
-                textAlign: 'center',
-                lineHeight: 'var(--leading-snug)',
-                letterSpacing: 'var(--tracking-snug)',
-                fontFamily: 'var(--font-body)',
-              }}
-            >
-              {card.display}
-            </span>
+            <span className="f-match-card__name">{card.display}</span>
           )}
 
-          {/* Match checkmark */}
           {isMatched && (
-            <div
-              style={{
-                position: 'absolute',
-                top: 'var(--sp-1)',
-                right: 'var(--sp-1)',
-                width: 18,
-                height: 18,
-                borderRadius: 'var(--r-full)',
-                background: 'var(--c-lt-correct-dark)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
+            <div className="f-match-card__check">
               <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
                 <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -306,7 +161,6 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
         </div>
       </div>
 
-      {/* Match ring burst */}
       {showRing && <MatchRing />}
     </button>
   )
@@ -325,44 +179,24 @@ function TimerRing({ timeLeft, total }: { timeLeft: number; total: number }) {
   return (
     <div style={{ position: 'relative', width: size, height: size }}>
       <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-        {/* Background track */}
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          fill="none"
-          stroke="var(--c-lt-border)"
+          className="f-match-timer__ring-bg"
           strokeWidth={strokeWidth}
         />
-        {/* Progress ring */}
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          fill="none"
-          stroke="var(--c-lt-brand)"
+          className="f-match-timer__ring-progress"
           strokeWidth={strokeWidth}
           strokeDasharray={circumference}
           strokeDashoffset={dashOffset}
-          strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 1s linear' }}
         />
       </svg>
-      <span
-        style={{
-          position: 'absolute',
-          inset: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 16,
-          fontWeight: 'var(--weight-med)',
-          fontFamily: 'var(--font-body)',
-          color: 'var(--c-lt-text-1)',
-        }}
-      >
-        {String(timeLeft).padStart(2, '0')}
-      </span>
+      <span className="f-match-timer__label">{String(timeLeft).padStart(2, '0')}</span>
     </div>
   )
 }
@@ -379,14 +213,10 @@ function AnimatedStat({ value, delay }: { value: string; delay: number }) {
 
   return (
     <div
+      className="f-match-modal__stat-value"
       style={{
-        fontSize: 'var(--text-xl)',
-        fontWeight: 'var(--weight-bold)',
-        color: 'var(--c-lt-brand)',
-        fontFamily: 'var(--font-body)',
         opacity: show ? 1 : 0,
         transform: show ? 'translateY(0)' : 'translateY(8px)',
-        transition: 'opacity 400ms var(--ease-out), transform 400ms var(--ease-out)',
       }}
     >
       {value}
@@ -398,7 +228,7 @@ function AnimatedStat({ value, delay }: { value: string; delay: number }) {
 
 function Confetti() {
   const particles = useMemo(() => {
-    const colors = ['var(--c-lt-correct-dark)', 'var(--c-lt-brand)', 'var(--c-warn)', 'var(--c-accent)']
+    const colors = ['var(--f-brand-color-background-success)', 'var(--f-brand-color-background-primary)', 'var(--c-warn)', 'var(--c-accent)']
     return Array.from({ length: 20 }, (_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
@@ -411,19 +241,18 @@ function Confetti() {
   }, [])
 
   return (
-    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+    <div className="f-match-confetti">
       {particles.map(p => (
         <div
           key={p.id}
+          className="f-match-confetti__particle"
           style={{
-            position: 'absolute',
-            top: -8,
             left: p.left,
             width: p.size,
             height: p.size,
-            borderRadius: p.id % 3 === 0 ? 'var(--r-full)' : 0,
+            borderRadius: p.id % 3 === 0 ? 'var(--f-brand-radius-rounded)' : 0,
             background: p.color,
-            animation: `confetti-fall ${p.duration} var(--ease-out) ${p.delay} forwards`,
+            animation: `f-match-confetti ${p.duration} var(--f-brand-motion-ease-out) ${p.delay} forwards`,
             transform: `rotate(${p.rotation}deg)`,
           }}
         />
@@ -453,43 +282,17 @@ function CompletionOverlay({ moves, timeLeft, stars, onResults, onPlayAgain }: C
   const label = stars === 3 ? 'Perfect!' : stars === 2 ? 'Great Job!' : 'Well Done!'
   const timeUsed = ROUND_TIME - timeLeft
 
+  const modalClasses = [
+    'f-match-modal',
+    visible && 'f-match-modal--visible',
+  ].filter(Boolean).join(' ')
+
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 'var(--z-overlay)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: visible ? 'var(--c-lt-overlay-heavy)' : 'transparent',
-        backdropFilter: visible ? 'blur(12px)' : 'blur(0px)',
-        WebkitBackdropFilter: visible ? 'blur(12px)' : 'blur(0px)',
-        transition: 'background 400ms ease, backdrop-filter 400ms ease',
-        padding: 'var(--sp-6)',
-      }}
-    >
-      <div
-        style={{
-          position: 'relative',
-          width: '100%',
-          maxWidth: 320,
-          background: 'var(--c-lt-surface)',
-          border: '1px solid var(--c-lt-border)',
-          borderRadius: 'var(--r-xl)',
-          padding: 'var(--sp-8) var(--sp-6)',
-          textAlign: 'center',
-          opacity: visible ? 1 : 0,
-          transform: visible ? 'translateY(0) scale(1)' : 'translateY(30px) scale(0.9)',
-          transition: 'opacity 500ms var(--ease-out) 150ms, transform 500ms var(--ease-out) 150ms',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Confetti burst */}
+    <div className={modalClasses}>
+      <div className="f-match-modal__card">
         {visible && stars >= 2 && <Confetti />}
 
-        {/* Stars */}
-        <div style={{ fontSize: 'var(--text-3xl)', marginBottom: 'var(--sp-4)', letterSpacing: 8 }}>
+        <div className="f-match-modal__stars">
           {[1, 2, 3].map(i => (
             <span
               key={i}
@@ -498,7 +301,7 @@ function CompletionOverlay({ moves, timeLeft, stars, onResults, onPlayAgain }: C
                 filter: i <= stars ? 'drop-shadow(0 0 8px var(--c-lt-star-glow))' : 'none',
                 display: 'inline-block',
                 transform: visible && i <= stars ? 'scale(1) rotate(0deg)' : 'scale(0) rotate(-30deg)',
-                transition: `transform 500ms var(--ease-out) ${300 + i * 180}ms, opacity 300ms ease ${300 + i * 180}ms`,
+                transition: `transform 500ms var(--f-brand-motion-ease-out) ${300 + i * 180}ms, opacity 300ms ease ${300 + i * 180}ms`,
               }}
             >
               ⭐
@@ -506,87 +309,25 @@ function CompletionOverlay({ moves, timeLeft, stars, onResults, onPlayAgain }: C
           ))}
         </div>
 
-        <h2
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'var(--text-2xl)',
-            fontWeight: 'var(--weight-light)',
-            color: 'var(--c-lt-text-1)',
-            marginBottom: 'var(--sp-2)',
-            letterSpacing: 'var(--tracking-tight)',
-          }}
-        >
-          {label}
-        </h2>
-        <p
-          style={{
-            fontSize: 'var(--text-sm)',
-            color: 'var(--c-lt-text-2)',
-            marginBottom: 'var(--sp-6)',
-            lineHeight: 'var(--leading-normal)',
-          }}
-        >
-          You matched all {PAIR_COUNT} pairs
-        </p>
+        <h2 className="f-match-modal__title">{label}</h2>
+        <p className="f-match-modal__subtitle">You matched all {PAIR_COUNT} pairs</p>
 
-        {/* Stats row */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: 'var(--sp-6)',
-            marginBottom: 'var(--sp-8)',
-          }}
-        >
+        <div className="f-match-modal__stats">
           <div style={{ textAlign: 'center' }}>
             <AnimatedStat value={String(moves)} delay={700} />
-            <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--c-lt-text-2)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginTop: 2 }}>
-              Moves
-            </div>
+            <div className="f-match-modal__stat-label">Moves</div>
           </div>
-          <div style={{ width: 1, background: 'var(--c-lt-border)' }} />
+          <div className="f-match-modal__divider" />
           <div style={{ textAlign: 'center' }}>
             <AnimatedStat value={`${timeUsed}s`} delay={900} />
-            <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--c-lt-text-2)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginTop: 2 }}>
-              Time
-            </div>
+            <div className="f-match-modal__stat-label">Time</div>
           </div>
         </div>
 
-        {/* Action buttons */}
-        <button
-          onClick={onResults}
-          style={{
-            width: '100%',
-            height: 56,
-            borderRadius: 32,
-            border: 'none',
-            background: 'var(--c-lt-brand)',
-            color: 'var(--c-lt-white)',
-            fontSize: 16,
-            fontWeight: 'var(--weight-med)',
-            fontFamily: 'inherit',
-            cursor: 'pointer',
-            marginBottom: 'var(--sp-3)',
-          }}
-        >
+        <button onClick={onResults} className="f-match-modal__btn-primary">
           View Results
         </button>
-        <button
-          onClick={onPlayAgain}
-          style={{
-            width: '100%',
-            height: 56,
-            borderRadius: 32,
-            border: '1.5px solid var(--c-lt-border)',
-            background: 'var(--c-lt-surface)',
-            color: 'var(--c-lt-text-1)',
-            fontSize: 16,
-            fontWeight: 'var(--weight-med)',
-            fontFamily: 'inherit',
-            cursor: 'pointer',
-          }}
-        >
+        <button onClick={onPlayAgain} className="f-match-modal__btn-secondary">
           Play Again
         </button>
       </div>
@@ -766,105 +507,31 @@ export default function CardMatch() {
   const progressPercent = (matchedPairs / PAIR_COUNT) * 100
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'var(--c-lt-bg)',
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'auto',
-        WebkitOverflowScrolling: 'touch',
-      }}
-    >
-      <style>{KEYFRAMES}</style>
-      <div
-        className="page-in"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          flex: 1,
-          maxWidth: 420,
-          margin: '0 auto',
-          width: '100%',
-          padding: 'var(--sp-4)',
-        }}
-      >
+    <div className="f-match-page">
+      <div className="f-match-page__inner page-in">
         {/* ── Back button + Progress bar ── */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)', marginBottom: 'var(--sp-6)' }}>
-          <button
-            onClick={handleBack}
-            aria-label="Go back"
-            style={{
-              width: 48,
-              height: 48,
-              borderRadius: 'var(--r-full)',
-              background: 'var(--c-lt-surface)',
-              border: '1px solid var(--c-lt-border)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              flexShrink: 0,
-              boxShadow: '0 2px 8px var(--c-lt-shadow)',
-              padding: 0,
-              WebkitTapHighlightColor: 'transparent',
-            }}
-          >
+        <div className="f-match-topbar">
+          <button onClick={handleBack} aria-label="Go back" className="f-match-topbar__back">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path
                 d="M15 18.5C14.87 18.5 14.74 18.45 14.65 18.35L8.65 12.35C8.55 12.26 8.5 12.13 8.5 12C8.5 11.87 8.55 11.74 8.65 11.65L14.65 5.65C14.84 5.46 15.16 5.46 15.35 5.65C15.54 5.84 15.54 6.16 15.35 6.35L9.71 12L15.35 17.65C15.54 17.84 15.54 18.16 15.35 18.35C15.26 18.45 15.13 18.5 15 18.5Z"
-                fill="var(--c-lt-text-1)"
+                fill="var(--f-brand-color-text-default)"
               />
             </svg>
           </button>
-          <div style={{ flex: 1 }}>
+          <div className="f-match-topbar__track">
             <div
-              style={{
-                height: 8,
-                background: 'var(--c-lt-border)',
-                borderRadius: 4,
-                overflow: 'hidden',
-              }}
-            >
-              <div
-                style={{
-                  height: '100%',
-                  width: `${progressPercent}%`,
-                  background: 'linear-gradient(90deg, var(--c-accent), var(--c-lt-correct-dark))',
-                  borderRadius: 4,
-                  transition: 'width 400ms var(--ease-out)',
-                }}
-              />
-            </div>
+              className="f-match-topbar__progress"
+              style={{ width: `${progressPercent}%` }}
+            />
           </div>
         </div>
 
         {/* ── Title ── */}
-        <h1
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'var(--text-2xl)',
-            fontWeight: 'var(--weight-light)',
-            color: 'var(--c-lt-text-1)',
-            letterSpacing: 'var(--tracking-tight)',
-            textAlign: 'center',
-            marginBottom: 'var(--sp-6)',
-          }}
-        >
-          Match the cards
-        </h1>
+        <h1 className="f-match-title">Match the cards</h1>
 
         {/* ── Card Grid (2 columns x 3 rows) ── */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gridTemplateRows: 'repeat(3, auto)',
-            gap: 'var(--sp-3)',
-            marginBottom: 'var(--sp-6)',
-          }}
-        >
+        <div className="f-match-grid">
           {deck.map((card, i) => (
             <GameCard
               key={card.id}
@@ -877,28 +544,13 @@ export default function CardMatch() {
         </div>
 
         {/* ── Timer ring ── */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--sp-6)' }}>
+        <div className="f-match-timer">
           <TimerRing timeLeft={timeLeft} total={ROUND_TIME} />
         </div>
 
         {/* ── Next button ── */}
-        <div style={{ marginTop: 'auto' }}>
-          <button
-            onClick={handleNext}
-            style={{
-              width: '100%',
-              height: 56,
-              borderRadius: 32,
-              border: 'none',
-              background: 'var(--c-lt-brand)',
-              color: 'var(--c-lt-white)',
-              fontSize: 16,
-              fontWeight: 'var(--weight-med)',
-              fontFamily: 'inherit',
-              cursor: 'pointer',
-              WebkitTapHighlightColor: 'transparent',
-            }}
-          >
+        <div className="f-match-next">
+          <button onClick={handleNext} className="f-match-next__btn">
             Next
           </button>
         </div>

@@ -175,6 +175,54 @@
   --z-overlay: 100;
   --z-modal:   200;
 
+  /* ─── FDS Brand Tokens ───────────────────────────────────────────────────── */
+
+  /* Background */
+  --f-brand-color-background-default:        #F2F3FA;
+  --f-brand-color-background-light:          #ffffff;
+  --f-brand-color-background-primary:        #8E2157;
+  --f-brand-color-background-success:        #328256;
+  --f-brand-color-background-success-accent: rgba(50,130,86,0.12);
+  --f-brand-color-background-error:          #CC4726;
+
+  /* Text */
+  --f-brand-color-text-default:    #1f212b;
+  --f-brand-color-text-secondary:  #6e7780;
+  --f-brand-color-text-tertiary:   #4a525d;
+  --f-brand-color-text-inverse:    #ffffff;
+
+  /* Border */
+  --f-brand-color-border-default:  #dbdee8;
+  --f-brand-color-border-primary:  #8E2157;
+  --f-brand-color-border-success:  #328256;
+  --f-brand-color-border-error:    #CC4726;
+
+  /* Overlay */
+  --f-brand-color-overlay:         rgba(0,0,0,0.50);
+
+  /* Radius */
+  --f-brand-radius-base:     8px;
+  --f-brand-radius-inner:    16px;
+  --f-brand-radius-outer:    20px;
+  --f-brand-radius-rounded:  9999px;
+
+  /* Shadow */
+  --f-brand-shadow-medium: 0 4px 16px rgba(31,33,43,0.10);
+  --f-brand-shadow-large:  0 12px 40px rgba(31,33,43,0.18);
+
+  /* Motion */
+  --f-brand-motion-duration-quick:  480ms;
+  --f-brand-motion-duration-gentle: 600ms;
+  --f-brand-motion-ease-out:        cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Typography composite tokens */
+  --f-brand-type-body-medium-size:       15px;
+  --f-brand-type-body-medium-weight:     500;
+  --f-brand-type-headline-medium-size:   22px;
+  --f-brand-type-headline-medium-weight: 300;
+  --f-brand-type-subheading-size:        13px;
+  --f-brand-type-subheading-weight:      500;
+
   /* ─── Glass variants ─────────────────────────────────────────────────────── */
   --glass-bg-strong: rgba(255,255,255,0.14);
   --glass-bg-subtle: rgba(255,255,255,0.05);

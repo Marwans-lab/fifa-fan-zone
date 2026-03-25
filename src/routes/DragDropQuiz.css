@@ -1,0 +1,363 @@
+/* ─── DragDropQuiz BEM styles ─────────────────────────────────────────────── */
+
+/* ── Keyframes ──────────────────────────────────────────────────────────────── */
+
+@keyframes f-drag-shake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-6px) rotate(-1deg); }
+  30% { transform: translateX(5px) rotate(1deg); }
+  45% { transform: translateX(-4px); }
+  60% { transform: translateX(3px); }
+  75% { transform: translateX(-2px); }
+}
+
+@keyframes f-drag-pop-in {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes f-drag-zone-in {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes f-drag-chip-in {
+  0% { opacity: 0; transform: translateY(16px) scale(0.9); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes f-drag-slide-out-left {
+  to { opacity: 0; transform: translateX(-60px); }
+}
+
+@keyframes f-drag-slide-in-right {
+  from { opacity: 0; transform: translateX(60px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes f-drag-success-bounce {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.04); }
+  60% { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+
+/* ── Page ────────────────────────────────────────────────────────────────────── */
+
+.f-drag-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── Top bar ─────────────────────────────────────────────────────────────────── */
+
+.f-drag-topbar {
+  padding: var(--sp-4);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.f-drag-topbar__back {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--f-brand-radius-rounded);
+  background: var(--f-brand-color-background-light);
+  border: 1px solid var(--f-brand-color-border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: var(--f-brand-shadow-medium);
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.f-drag-topbar__track {
+  flex: 1;
+  height: 4px;
+  background: var(--f-brand-color-border-default);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.f-drag-topbar__progress {
+  height: 100%;
+  background: var(--f-brand-color-background-primary);
+  border-radius: 2px;
+  transition: width 300ms var(--f-brand-motion-ease-out);
+}
+
+.f-drag-topbar__count {
+  font-size: var(--text-xs);
+  color: var(--f-brand-color-text-secondary);
+  flex-shrink: 0;
+}
+
+/* ── Question header ─────────────────────────────────────────────────────────── */
+
+.f-drag-header {
+  position: relative;
+  margin: 0 var(--sp-4);
+  padding: var(--sp-6) var(--sp-5);
+  border-radius: var(--f-brand-radius-inner);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--sp-5);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.f-drag-header__emoji {
+  font-size: var(--text-4xl);
+  margin-bottom: var(--sp-2);
+}
+
+.f-drag-header__title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--f-brand-type-headline-medium-weight);
+  color: var(--f-brand-color-text-inverse);
+  text-align: center;
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+}
+
+.f-drag-header__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 50%, rgba(0,0,0,0.18) 100%);
+  pointer-events: none;
+}
+
+/* ── Prompt / Drop Zone ──────────────────────────────────────────────────────── */
+
+.f-drag-prompt {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--f-brand-radius-base);
+  background: var(--f-brand-color-background-light);
+  border: 1.5px dashed var(--f-brand-color-border-default);
+  box-shadow: var(--f-brand-shadow-medium);
+  transition: background 200ms ease, border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+  min-height: var(--sp-12);
+}
+
+.f-drag-prompt--hovered {
+  border-color: var(--f-brand-color-border-primary);
+  border-style: dashed;
+  background: rgba(142,33,87,0.06);
+  transform: scale(1.02);
+  box-shadow: 0 0 16px rgba(142,33,87,0.15);
+}
+
+.f-drag-prompt--correct {
+  border-style: solid;
+  border-color: var(--f-brand-color-border-success);
+  background: var(--f-brand-color-background-success-accent);
+  box-shadow: 0 0 20px rgba(50,130,86,0.20);
+}
+
+.f-drag-prompt--incorrect {
+  border-style: solid;
+  border-color: var(--f-brand-color-border-error);
+  background: rgba(204,71,38,0.08);
+}
+
+.f-drag-prompt--shaking {
+  animation: f-drag-shake 400ms ease;
+}
+
+.f-drag-prompt__label {
+  font-size: var(--f-brand-type-body-medium-size);
+  font-weight: var(--f-brand-type-body-medium-weight);
+  color: var(--f-brand-color-text-default);
+  font-family: var(--font-body);
+  min-width: 90px;
+  flex-shrink: 0;
+}
+
+.f-drag-prompt__slot {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--f-brand-radius-rounded);
+  font-size: var(--f-brand-type-subheading-size);
+  font-weight: var(--f-brand-type-subheading-weight);
+  font-family: var(--font-body);
+  min-height: var(--sp-9);
+  background: rgba(0,0,0,0.03);
+  border: 1px dashed var(--f-brand-color-border-default);
+  color: var(--f-brand-color-text-tertiary);
+  transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.f-drag-prompt__slot--filled {
+  border: none;
+  background: rgba(0,0,0,0.05);
+  color: var(--f-brand-color-text-default);
+}
+
+.f-drag-prompt__slot--correct {
+  background: var(--f-brand-color-background-success-accent);
+  color: var(--f-brand-color-background-success);
+}
+
+.f-drag-prompt__slot--incorrect {
+  background: rgba(204,71,38,0.08);
+  color: var(--f-brand-color-background-error);
+}
+
+.f-drag-prompt__indicator {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-bold);
+  color: var(--f-brand-color-text-inverse);
+  flex-shrink: 0;
+  animation: f-drag-pop-in 300ms var(--f-brand-motion-ease-out);
+}
+
+.f-drag-prompt__indicator--correct {
+  background: var(--f-brand-color-background-success);
+}
+
+.f-drag-prompt__indicator--incorrect {
+  background: var(--f-brand-color-background-error);
+}
+
+/* ── Draggable chip ──────────────────────────────────────────────────────────── */
+
+.f-drag-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--f-brand-radius-rounded);
+  font-size: var(--f-brand-type-subheading-size);
+  font-weight: var(--f-brand-type-subheading-weight);
+  font-family: var(--font-body);
+  color: var(--f-brand-color-text-inverse);
+  background: var(--f-brand-color-background-primary);
+  border: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  white-space: nowrap;
+  transition: transform 320ms var(--f-brand-motion-ease-out),
+              box-shadow 320ms var(--f-brand-motion-ease-out),
+              opacity 200ms ease,
+              background 200ms ease;
+  box-shadow: 0 2px 8px rgba(142,33,87,0.25);
+  z-index: 1;
+}
+
+.f-drag-chip--dragging {
+  cursor: grabbing;
+  transform: scale(1.08);
+  box-shadow: var(--f-brand-shadow-large);
+  z-index: 1000;
+  transition: none;
+}
+
+.f-drag-chip--placed {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.f-drag-chip--correct {
+  background: var(--f-brand-color-background-success);
+  box-shadow: 0 0 16px rgba(50,130,86,0.30);
+}
+
+.f-drag-chip--incorrect {
+  background: var(--f-brand-color-background-error);
+}
+
+/* ── Chip tray ───────────────────────────────────────────────────────────────── */
+
+.f-drag-tray {
+  padding: var(--sp-5) var(--sp-4) var(--sp-4);
+  flex-shrink: 0;
+}
+
+.f-drag-tray__label {
+  font-size: var(--text-2xs);
+  font-weight: var(--f-brand-type-subheading-weight);
+  color: var(--f-brand-color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  margin-bottom: var(--sp-3);
+  text-align: center;
+}
+
+.f-drag-tray__pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  justify-content: center;
+  min-height: var(--sp-12);
+}
+
+/* ── Next / Finish button ────────────────────────────────────────────────────── */
+
+.f-drag-footer {
+  padding: 0 var(--sp-4) var(--sp-8);
+  flex-shrink: 0;
+}
+
+.f-drag-footer__success {
+  text-align: center;
+  font-size: var(--f-brand-type-subheading-size);
+  color: var(--f-brand-color-background-success);
+  margin-bottom: var(--sp-3);
+  font-weight: var(--f-brand-type-subheading-weight);
+  letter-spacing: var(--tracking-wide);
+  animation: f-drag-pop-in 300ms var(--f-brand-motion-ease-out);
+}
+
+.f-drag-footer__btn {
+  width: 100%;
+  height: 56px;
+  border-radius: var(--f-brand-radius-rounded);
+  border: none;
+  font-size: var(--f-brand-type-body-medium-size);
+  font-weight: var(--f-brand-type-body-medium-weight);
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 200ms ease, color 200ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.f-drag-footer__btn--ready {
+  background: var(--f-brand-color-background-primary);
+  color: var(--f-brand-color-text-inverse);
+  animation: f-drag-success-bounce 400ms var(--f-brand-motion-ease-out);
+}
+
+.f-drag-footer__btn--disabled {
+  background: var(--f-brand-color-border-default);
+  color: var(--f-brand-color-text-tertiary);
+  cursor: default;
+}

@@ -4,7 +4,7 @@ import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import { DRAG_DROP_QUIZZES, type DragDropQuiz, type DragDropQuestion } from '../data/dragDropQuizzes'
-import chevLeft from '../assets/icons/Chevron-left-white.svg'
+import './DragDropQuiz.css'
 
 // ─── Helpers ────────────────────────────────────────────────────────────────────
 
@@ -30,57 +30,18 @@ function isInsideRect(x: number, y: number, rect: DOMRect): boolean {
 interface ChipProps {
   answer: string
   isDragging: boolean
-  isPlaced: boolean
   isCorrect: boolean | null
-  style?: React.CSSProperties
 }
 
-function Chip({ answer, isDragging, isPlaced, isCorrect, style }: ChipProps) {
-  const baseStyle: React.CSSProperties = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 'var(--sp-3) var(--sp-5)',
-    borderRadius: 'var(--r-full)',
-    fontSize: 'var(--text-sm)',
-    fontWeight: 'var(--weight-med)',
-    fontFamily: 'var(--font-body)',
-    color: 'var(--c-text-1)',
-    background: 'var(--c-surface)',
-    border: '1.5px solid var(--c-border)',
-    cursor: isDragging ? 'grabbing' : 'grab',
-    userSelect: 'none',
-    WebkitUserSelect: 'none',
-    touchAction: 'none',
-    whiteSpace: 'nowrap',
-    transition: isDragging
-      ? 'none'
-      : 'transform 320ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 320ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease, background 200ms ease, border-color 200ms ease',
-    transform: isDragging ? 'scale(1.08)' : 'scale(1)',
-    boxShadow: isDragging
-      ? '0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1)'
-      : '0 2px 8px rgba(0,0,0,0.2)',
-    zIndex: isDragging ? 1000 : 1,
-    opacity: isPlaced ? 0 : 1,
-    pointerEvents: isPlaced ? 'none' : 'auto',
-  }
+function Chip({ answer, isDragging, isCorrect }: ChipProps) {
+  const classes = [
+    'f-drag-chip',
+    isDragging && 'f-drag-chip--dragging',
+    isCorrect === true && 'f-drag-chip--correct',
+    isCorrect === false && 'f-drag-chip--incorrect',
+  ].filter(Boolean).join(' ')
 
-  if (isCorrect === true) {
-    baseStyle.background = 'var(--c-correct-bg)'
-    baseStyle.borderColor = 'var(--c-correct)'
-    baseStyle.color = 'var(--c-correct)'
-    baseStyle.boxShadow = '0 0 16px var(--c-correct-glow)'
-  } else if (isCorrect === false) {
-    baseStyle.background = 'var(--c-error-bg)'
-    baseStyle.borderColor = 'var(--c-error)'
-    baseStyle.color = 'var(--c-error)'
-  }
-
-  return (
-    <div style={{ ...baseStyle, ...style }}>
-      {answer}
-    </div>
-  )
+  return <div className={classes}>{answer}</div>
 }
 
 // ─── Drop Zone ──────────────────────────────────────────────────────────────────
@@ -95,173 +56,44 @@ interface DropZoneProps {
 }
 
 function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }: DropZoneProps) {
-  const zoneStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 'var(--sp-3)',
-    padding: 'var(--sp-3) var(--sp-4)',
-    borderRadius: 'var(--r-lg)',
-    background: isHovered
-      ? 'var(--c-accent-bg)'
-      : isCorrect === true
-      ? 'var(--c-correct-bg)'
-      : isCorrect === false
-      ? 'var(--c-error-bg)'
-      : 'var(--c-surface)',
-    border: isHovered
-      ? '1.5px dashed var(--c-accent)'
-      : isCorrect === true
-      ? '1.5px solid var(--c-correct-border)'
-      : isCorrect === false
-      ? '1.5px solid var(--c-error-border)'
-      : '1.5px dashed var(--c-border)',
-    transition: 'background 200ms ease, border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease',
-    transform: shaking ? '' : isHovered ? 'scale(1.02)' : 'scale(1)',
-    boxShadow: isCorrect === true
-      ? '0 0 20px var(--c-correct-glow)'
-      : isHovered
-      ? '0 0 16px var(--c-accent-glow)'
-      : 'none',
-    animation: shaking ? 'shake 400ms ease' : `dropZoneIn 400ms cubic-bezier(0.16, 1, 0.3, 1) ${index * 60}ms both`,
-    minHeight: 'var(--sp-12)',
-  }
+  const promptClasses = [
+    'f-drag-prompt',
+    isHovered && 'f-drag-prompt--hovered',
+    isCorrect === true && 'f-drag-prompt--correct',
+    isCorrect === false && 'f-drag-prompt--incorrect',
+    shaking && 'f-drag-prompt--shaking',
+  ].filter(Boolean).join(' ')
 
-  const promptStyle: React.CSSProperties = {
-    fontSize: 'var(--text-md)',
-    fontWeight: 'var(--weight-med)',
-    color: 'var(--c-text-1)',
-    fontFamily: 'var(--font-body)',
-    minWidth: 90,
-    flexShrink: 0,
-  }
-
-  const slotStyle: React.CSSProperties = {
-    flex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 'var(--sp-2) var(--sp-3)',
-    borderRadius: 'var(--r-full)',
-    fontSize: 'var(--text-sm)',
-    fontWeight: 'var(--weight-med)',
-    fontFamily: 'var(--font-body)',
-    minHeight: 'var(--sp-9)',
-    background: placedAnswer
-      ? isCorrect === true
-        ? 'var(--c-correct-bg)'
-        : isCorrect === false
-        ? 'var(--c-error-bg)'
-        : 'var(--c-surface-raise)'
-      : 'var(--c-surface-faint)',
-    border: placedAnswer
-      ? 'none'
-      : '1px dashed var(--c-text-3)',
-    color: placedAnswer
-      ? isCorrect === true
-        ? 'var(--c-correct)'
-        : isCorrect === false
-        ? 'var(--c-error)'
-        : 'var(--c-text-1)'
-      : 'var(--c-text-3)',
-    transition: 'background 200ms ease, color 200ms ease, border-color 200ms ease',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  }
+  const slotClasses = [
+    'f-drag-prompt__slot',
+    placedAnswer && 'f-drag-prompt__slot--filled',
+    isCorrect === true && 'f-drag-prompt__slot--correct',
+    isCorrect === false && 'f-drag-prompt__slot--incorrect',
+  ].filter(Boolean).join(' ')
 
   return (
-    <div style={zoneStyle}>
-      <span style={promptStyle}>{prompt}</span>
+    <div
+      className={promptClasses}
+      style={{ animation: shaking ? undefined : `f-drag-zone-in 400ms var(--f-brand-motion-ease-out) ${index * 60}ms both` }}
+    >
+      <span className="f-drag-prompt__label">{prompt}</span>
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-2)' }}>
-          {/* Arrow indicator */}
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ opacity: 0.3, flexShrink: 0 }}>
             <path d="M3 8h10M10 5l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <div style={slotStyle}>
+          <div className={slotClasses}>
             {placedAnswer || '???'}
           </div>
         </div>
       </div>
-      {/* Correct/incorrect indicator */}
       {isCorrect !== null && (
-        <div
-          style={{
-            width: 24,
-            height: 24,
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 'var(--text-2xs)',
-            fontWeight: 'var(--weight-bold)',
-            background: isCorrect ? 'var(--c-correct)' : 'var(--c-error)',
-            color: 'var(--c-white)',
-            flexShrink: 0,
-            animation: 'popIn 300ms cubic-bezier(0.16, 1, 0.3, 1)',
-          }}
-        >
+        <div className={`f-drag-prompt__indicator ${isCorrect ? 'f-drag-prompt__indicator--correct' : 'f-drag-prompt__indicator--incorrect'}`}>
           {isCorrect ? '✓' : '✗'}
         </div>
       )}
     </div>
   )
-}
-
-// ─── Injected keyframes ─────────────────────────────────────────────────────────
-
-const KEYFRAMES_ID = 'drag-drop-quiz-keyframes'
-
-function ensureKeyframes() {
-  if (document.getElementById(KEYFRAMES_ID)) return
-  const style = document.createElement('style')
-  style.id = KEYFRAMES_ID
-  style.textContent = `
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      15% { transform: translateX(-6px) rotate(-1deg); }
-      30% { transform: translateX(5px) rotate(1deg); }
-      45% { transform: translateX(-4px); }
-      60% { transform: translateX(3px); }
-      75% { transform: translateX(-2px); }
-    }
-    @keyframes popIn {
-      0% { transform: scale(0); opacity: 0; }
-      60% { transform: scale(1.2); }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    @keyframes dropZoneIn {
-      0% { opacity: 0; transform: translateY(12px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes chipIn {
-      0% { opacity: 0; transform: translateY(16px) scale(0.9); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    @keyframes slideOutLeft {
-      to { opacity: 0; transform: translateX(-60px); }
-    }
-    @keyframes slideInRight {
-      from { opacity: 0; transform: translateX(60px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes pulseGlow {
-      0%, 100% { box-shadow: 0 0 8px var(--c-correct-glow); }
-      50% { box-shadow: 0 0 24px var(--c-correct-glow); }
-    }
-    @keyframes successBounce {
-      0% { transform: scale(1); }
-      30% { transform: scale(1.04); }
-      60% { transform: scale(0.98); }
-      100% { transform: scale(1); }
-    }
-    @keyframes scoreCountUp {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.3); color: var(--c-correct); }
-      100% { transform: scale(1); }
-    }
-  `
-  document.head.appendChild(style)
 }
 
 // ─── Question Screen ────────────────────────────────────────────────────────────
@@ -274,7 +106,6 @@ interface QuestionViewProps {
   score: number
   onComplete: (correctCount: number) => void
   onBack: () => void
-  slideClass: string
 }
 
 function QuestionView({
@@ -285,7 +116,6 @@ function QuestionView({
   score,
   onComplete,
   onBack,
-  slideClass,
 }: QuestionViewProps) {
   const [placements, setPlacements] = useState<Record<string, string | null>>({})
   const [results, setResults] = useState<Record<string, boolean | null>>({})
@@ -302,7 +132,6 @@ function QuestionView({
   const chipRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // Initialize placements
   useEffect(() => {
     const init: Record<string, string | null> = {}
     const initResults: Record<string, boolean | null> = {}
@@ -318,7 +147,6 @@ function QuestionView({
 
   const placedAnswers = Object.values(placements).filter(Boolean) as string[]
 
-  // Find which drop zone the pointer is over
   const findHoveredZone = useCallback((clientX: number, clientY: number): string | null => {
     for (const pair of question.pairs) {
       const el = dropZoneRefs.current[pair.id]
@@ -330,11 +158,10 @@ function QuestionView({
     return null
   }, [question.pairs])
 
-  // Handle dropping an answer on a zone
   const handleDrop = useCallback((pairId: string, answer: string) => {
     const pair = question.pairs.find(p => p.id === pairId)
     if (!pair) return
-    if (placements[pairId] !== null) return // already filled
+    if (placements[pairId] !== null) return
 
     const isMatch = pair.answer === answer
 
@@ -345,7 +172,6 @@ function QuestionView({
       setCorrectCount(c => c + 1)
       track('drag_drop_correct', { quizId: quiz.id, questionId: question.id, pairId })
     } else {
-      // Shake and then clear after delay
       setShakingZone(pairId)
       track('drag_drop_incorrect', { quizId: quiz.id, questionId: question.id, pairId })
       setTimeout(() => {
@@ -356,7 +182,6 @@ function QuestionView({
     }
   }, [placements, question, quiz.id])
 
-  // Check if all are correct
   useEffect(() => {
     const allFilled = question.pairs.every(p => results[p.id] === true)
     if (allFilled && question.pairs.length > 0) {
@@ -399,7 +224,6 @@ function QuestionView({
     setHoveredZone(null)
   }, [draggedAnswer, dragPos, findHoveredZone, placements, handleDrop])
 
-  // Touch handlers
   const onTouchStart = useCallback((answer: string) => (e: React.TouchEvent) => {
     e.preventDefault()
     const touch = e.touches[0]
@@ -417,7 +241,6 @@ function QuestionView({
     endDrag()
   }, [endDrag])
 
-  // Mouse handlers
   const onMouseDown = useCallback((answer: string) => (e: React.MouseEvent) => {
     e.preventDefault()
     startDrag(answer, e.clientX, e.clientY)
@@ -437,9 +260,7 @@ function QuestionView({
     }
   }, [draggedAnswer, moveDrag, endDrag])
 
-  // Available (not yet placed correctly) answers
   const availableAnswers = shuffledAnswers.filter(a => {
-    // An answer is available if it's not correctly placed anywhere
     const correctlyPlaced = question.pairs.some(
       p => placements[p.id] === a && results[p.id] === true
     )
@@ -449,66 +270,25 @@ function QuestionView({
   return (
     <div
       ref={containerRef}
-      className={slideClass}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        flex: 1,
-        overflow: 'hidden',
-      }}
+      style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
-      {/* Question header area */}
+      {/* Question header */}
       <div
+        className="f-drag-header"
         style={{
-          position: 'relative',
-          margin: '0 var(--sp-4)',
-          padding: 'var(--sp-6) var(--sp-5)',
-          borderRadius: 'var(--r-lg)',
           background: question.accentColor,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginBottom: 'var(--sp-5)',
-          flexShrink: 0,
-          overflow: 'hidden',
           boxShadow: `0 8px 32px ${question.accentColor}55, inset 0 1px 0 rgba(255,255,255,0.15)`,
         }}
       >
-        <span style={{ fontSize: 'var(--text-4xl)', marginBottom: 'var(--sp-2)' }}>{quiz.emoji}</span>
-        <div
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'var(--text-lg)',
-            fontWeight: 'var(--weight-light)',
-            color: 'var(--c-text-1)',
-            textAlign: 'center',
-            lineHeight: 'var(--leading-snug)',
-            letterSpacing: 'var(--tracking-tight)',
-          }}
-        >
-          {question.title}
-        </div>
-        {/* Depth overlay */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 50%, rgba(0,0,0,0.18) 100%)',
-          pointerEvents: 'none',
-        }} />
+        <span className="f-drag-header__emoji">{quiz.emoji}</span>
+        <div className="f-drag-header__title">{question.title}</div>
+        <div className="f-drag-header__overlay" />
       </div>
 
       {/* Drop zones */}
-      <div
-        style={{
-          flex: 1,
-          padding: '0 var(--sp-4)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--sp-3)',
-        }}
-      >
+      <div style={{ flex: 1, padding: '0 var(--sp-4)', display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)' }}>
         {question.pairs.map((pair, i) => (
           <div
             key={pair.id}
@@ -528,34 +308,11 @@ function QuestionView({
       </div>
 
       {/* Draggable chips tray */}
-      <div
-        style={{
-          padding: 'var(--sp-5) var(--sp-4) var(--sp-4)',
-          flexShrink: 0,
-        }}
-      >
-        <div
-          style={{
-            fontSize: 'var(--text-2xs)',
-            fontWeight: 'var(--weight-med)',
-            color: 'var(--c-text-3)',
-            textTransform: 'uppercase',
-            letterSpacing: 'var(--tracking-wider)',
-            marginBottom: 'var(--sp-3)',
-            textAlign: 'center',
-          }}
-        >
+      <div className="f-drag-tray">
+        <div className="f-drag-tray__label">
           {allCorrect ? '' : 'Drag answers to match'}
         </div>
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 'var(--sp-2)',
-            justifyContent: 'center',
-            minHeight: 'var(--sp-12)',
-          }}
-        >
+        <div className="f-drag-tray__pool">
           {availableAnswers.map((answer, i) => {
             const isBeingDragged = draggedAnswer === answer
             return (
@@ -568,17 +325,12 @@ function QuestionView({
                 onTouchStart={onTouchStart(answer)}
                 onMouseDown={onMouseDown(answer)}
                 style={{
-                  animation: `chipIn 400ms cubic-bezier(0.16, 1, 0.3, 1) ${i * 50}ms both`,
+                  animation: `f-drag-chip-in 400ms var(--f-brand-motion-ease-out) ${i * 50}ms both`,
                   opacity: isBeingDragged ? 0.3 : 1,
                   transition: 'opacity 150ms ease',
                 }}
               >
-                <Chip
-                  answer={answer}
-                  isDragging={false}
-                  isPlaced={false}
-                  isCorrect={null}
-                />
+                <Chip answer={answer} isDragging={false} isCorrect={null} />
               </div>
             )
           })}
@@ -592,55 +344,24 @@ function QuestionView({
             position: 'fixed',
             left: dragPos.x - dragOffset.x,
             top: dragPos.y - dragOffset.y,
-            transform: 'translate(-50%, -50%) scale(1.08)',
+            transform: 'translate(-50%, -50%)',
             pointerEvents: 'none',
             zIndex: 9999,
           }}
         >
-          <Chip
-            answer={draggedAnswer}
-            isDragging={true}
-            isPlaced={false}
-            isCorrect={null}
-          />
+          <Chip answer={draggedAnswer} isDragging={true} isCorrect={null} />
         </div>
       )}
 
-      {/* All correct overlay & next button */}
-      <div style={{ padding: '0 var(--sp-4) var(--sp-8)', flexShrink: 0 }}>
+      {/* Footer */}
+      <div className="f-drag-footer">
         {allCorrect && (
-          <div
-            style={{
-              textAlign: 'center',
-              fontSize: 'var(--text-sm)',
-              color: 'var(--c-correct)',
-              marginBottom: 'var(--sp-3)',
-              fontWeight: 'var(--weight-med)',
-              letterSpacing: 'var(--tracking-wide)',
-              animation: 'popIn 300ms cubic-bezier(0.16, 1, 0.3, 1)',
-            }}
-          >
-            ✓ Perfect match!
-          </div>
+          <div className="f-drag-footer__success">✓ Perfect match!</div>
         )}
         <button
           onClick={() => onComplete(correctCount)}
           disabled={!allCorrect}
-          className="btn"
-          style={{
-            width: '100%',
-            padding: 'var(--sp-4) 0',
-            borderRadius: 'var(--r-full)',
-            border: 'none',
-            background: allCorrect ? 'var(--c-white)' : 'var(--c-surface-raise)',
-            color: allCorrect ? 'var(--c-brand)' : 'var(--c-text-3)',
-            fontSize: 'var(--text-md)',
-            fontWeight: 'var(--weight-med)',
-            cursor: allCorrect ? 'pointer' : 'default',
-            fontFamily: 'inherit',
-            transition: 'background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out)',
-            animation: allCorrect ? 'successBounce 400ms cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
-          }}
+          className={`f-drag-footer__btn ${allCorrect ? 'f-drag-footer__btn--ready' : 'f-drag-footer__btn--disabled'}`}
         >
           {qIndex === total - 1 && allCorrect
             ? `Finish · ${score + question.pairs.length}/${total * question.pairs.length}`
@@ -671,10 +392,6 @@ export default function DragDropQuizRoute() {
   const question = quiz?.questions[qIdx]
   const total = quiz?.questions.length ?? 0
 
-  useEffect(() => {
-    ensureKeyframes()
-  }, [])
-
   const handleComplete = useCallback((correctCount: number) => {
     if (isAnimating.current) return
     const newScore = score + correctCount
@@ -694,10 +411,8 @@ export default function DragDropQuizRoute() {
       return
     }
 
-    // Slide transition
     isAnimating.current = true
     setSlideClass('')
-    // Force a reflow so removing the class takes effect
     requestAnimationFrame(() => {
       setSlideClass('slide-out-left')
       setTimeout(() => {
@@ -716,52 +431,39 @@ export default function DragDropQuizRoute() {
 
   if (!quiz || !question) return null
 
-  // Inject slide animation styles
   const slideStyleMap: Record<string, React.CSSProperties> = {
     '': {},
     'page-in': {},
     'slide-out-left': {
-      animation: 'slideOutLeft 280ms ease forwards',
+      animation: 'f-drag-slide-out-left 280ms ease forwards',
     },
     'slide-in-right': {
-      animation: 'slideInRight 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
+      animation: 'f-drag-slide-in-right 280ms var(--f-brand-motion-ease-out) forwards',
     },
   }
 
   return (
     <Screen>
       <div
-        className={slideClass === 'page-in' ? 'page-in' : ''}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          minHeight: '100%',
-          maxWidth: 420,
-          margin: '0 auto',
-          width: '100%',
-        }}
+        className={`f-drag-page ${slideClass === 'page-in' ? 'page-in' : ''}`}
       >
         {/* Top bar */}
-        <div style={{ padding: 'var(--sp-4)', flexShrink: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
-            <button onClick={handleBack} className="btn-icon" aria-label="Go back">
-              <img src={chevLeft} width={24} height={24} alt="" />
-            </button>
-            <div style={{ flex: 1, height: 4, background: 'var(--c-surface-raise)', borderRadius: 2, overflow: 'hidden' }}>
-              <div
-                style={{
-                  height: '100%',
-                  width: `${((qIdx + 1) / total) * 100}%`,
-                  background: 'var(--c-accent)',
-                  borderRadius: 2,
-                  transition: 'width 300ms ease',
-                }}
+        <div className="f-drag-topbar">
+          <button onClick={handleBack} className="f-drag-topbar__back" aria-label="Go back">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M15 18.5C14.87 18.5 14.74 18.45 14.65 18.35L8.65 12.35C8.55 12.26 8.5 12.13 8.5 12C8.5 11.87 8.55 11.74 8.65 11.65L14.65 5.65C14.84 5.46 15.16 5.46 15.35 5.65C15.54 5.84 15.54 6.16 15.35 6.35L9.71 12L15.35 17.65C15.54 17.84 15.54 18.16 15.35 18.35C15.26 18.45 15.13 18.5 15 18.5Z"
+                fill="var(--f-brand-color-text-default)"
               />
-            </div>
-            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', flexShrink: 0 }}>
-              {qIdx + 1}/{total}
-            </span>
+            </svg>
+          </button>
+          <div className="f-drag-topbar__track">
+            <div
+              className="f-drag-topbar__progress"
+              style={{ width: `${((qIdx + 1) / total) * 100}%` }}
+            />
           </div>
+          <span className="f-drag-topbar__count">{qIdx + 1}/{total}</span>
         </div>
 
         {/* Animated question content */}
@@ -775,7 +477,6 @@ export default function DragDropQuizRoute() {
             score={score}
             onComplete={handleComplete}
             onBack={handleBack}
-            slideClass=""
           />
         </div>
       </div>
