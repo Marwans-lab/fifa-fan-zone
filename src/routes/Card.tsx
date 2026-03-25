@@ -755,6 +755,47 @@ export default function Card() {
           overflowY: 'auto', WebkitOverflowScrolling: 'touch',
         }}
       >
+          {/* ── Fan Hub Header ─────────────────────────────────── */}
+          <header style={{
+            textAlign: 'center',
+            paddingTop: 'var(--sp-6)',
+            paddingBottom: 'var(--sp-6)',
+            position: 'relative',
+          }}>
+            {/* Ambient brand glow */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                top: '-40%', left: '50%', transform: 'translateX(-50%)',
+                width: '120%', height: '160%',
+                background: 'radial-gradient(ellipse at center, rgba(200,16,46,0.12) 0%, transparent 70%)',
+                pointerEvents: 'none',
+              }}
+            />
+            <h1 style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 'var(--weight-thin)',
+              fontStyle: 'italic',
+              fontSize: 'var(--text-2xl)',
+              lineHeight: 'var(--leading-tight)',
+              letterSpacing: 'var(--tracking-tight)',
+              color: 'var(--c-text-1)',
+              position: 'relative',
+            }}>
+              FIFA Fan Zone
+            </h1>
+            <p style={{
+              fontFamily: 'var(--font-body)',
+              fontWeight: 'var(--weight-reg)',
+              fontSize: 'var(--text-sm)',
+              color: 'var(--c-text-2)',
+              marginTop: 'var(--sp-2)',
+              position: 'relative',
+            }}>
+              {cardComplete ? 'Welcome back, fan!' : 'Flip to complete your fan profile'}
+            </p>
+          </header>
 
           {/* ── Fan Card ──────────────────────────────────────── */}
           <section aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 'var(--f-brand-space-md)' }}>
