@@ -1,26 +1,21 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import { QUIZZES, type Quiz, type QuizQuestion } from '../data/quizzes'
-import chevLeft from '../assets/icons/Chevron-left-white.svg'
 
 const QUESTION_TIME = 15 // seconds
 const OPTION_LETTERS = ['A', 'B', 'C', 'D']
 
 // ─── Mock answer-percentage distribution ──────────────────────────────────────
-// Generates stable mock percentages per question (seeded by question id).
-// Correct answer always gets the plurality; total sums to 100.
 function getMockPercentages(
   question: QuizQuestion,
   revealedChoiceId: string | null,
 ): Record<string, number> {
-  // Simple deterministic seed from question id character codes
   const seed = question.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
   const n = question.options.length
   const weights = question.options.map((opt, i) => {
-    const base = ((seed * (i + 7) * 31) % 40) + 5 // 5..44
+    const base = ((seed * (i + 7) * 31) % 40) + 5
     return opt.id === question.correctId ? base + 30 : base
   })
   const total = weights.reduce((a, b) => a + b, 0)
@@ -60,70 +55,54 @@ function OptionButton({
   const isCorrect = optId === correctId
   const isWrong   = isChosen && !isCorrect
 
-  // colours
-  let borderColor = 'var(--c-border)'
-  let badgeBg     = 'var(--c-surface-raise)'
-  let textColor   = 'var(--c-text-1)'
-  let badgeColor  = 'var(--c-text-3)'
+  // Build BEM class
+  let className = 'f-quiz-option'
+  if (!revealed && isChosen) className += ' f-quiz-option--selected'
+  else if (revealed && isCorrect) className += ' f-quiz-option--correct'
+  else if (revealed && isWrong) className += ' f-quiz-option--wrong'
+
+  // Badge + text colors based on state
+  let badgeBg    = 'var(--f-brand-color-background-disabled)'
+  let badgeColor = 'var(--f-brand-color-text-secondary)'
+  let textColor  = 'var(--f-brand-color-text-heading)'
 
   if (!revealed && isChosen) {
-    borderColor = 'var(--c-accent)'
-    badgeBg     = 'var(--c-accent)'
-    badgeColor  = '#000'
+    badgeBg    = 'var(--f-brand-color-background-primary)'
+    badgeColor = '#ffffff'
   } else if (revealed && isCorrect) {
-    borderColor = 'var(--c-correct)'
-    badgeBg     = 'var(--c-correct)'
-    badgeColor  = '#fff'
-    textColor   = 'var(--c-correct)'
+    badgeBg    = 'var(--f-brand-color-border-success)'
+    badgeColor = '#ffffff'
+    textColor  = 'var(--f-brand-color-icon-success)'
   } else if (revealed && isWrong) {
-    borderColor = 'var(--c-error)'
-    badgeBg     = 'var(--c-error)'
-    badgeColor  = '#fff'
-    textColor   = 'var(--c-error)'
+    badgeBg    = 'var(--f-brand-color-border-error)'
+    badgeColor = '#ffffff'
+    textColor  = 'var(--f-brand-color-border-error)'
   } else if (revealed) {
-    borderColor = 'var(--c-border)'
-    textColor   = 'var(--c-text-3)'
-    badgeColor  = 'var(--c-text-3)'
+    textColor  = 'var(--f-brand-color-text-secondary)'
+    badgeColor = 'var(--f-brand-color-text-secondary)'
   }
+
+  // Percentage fill color
+  const fillBg = isCorrect
+    ? 'var(--f-brand-color-background-success-accent)'
+    : isWrong
+    ? 'var(--f-brand-color-background-error)'
+    : 'rgba(0,0,0,0.03)'
 
   return (
     <button
       onClick={revealed ? undefined : onSelect}
       disabled={revealed}
-      style={{
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 14,
-        width: '100%',
-        padding: '0 20px 0 16px',
-        height: 58,
-        borderRadius: 50,
-        border: `1.5px solid ${borderColor}`,
-        background: revealed && isCorrect
-          ? 'rgba(52,219,128,0.08)'
-          : revealed && isWrong
-          ? 'rgba(217,87,87,0.08)'
-          : 'var(--c-surface)',
-        cursor: revealed ? 'default' : 'pointer',
-        fontFamily: 'inherit',
-        textAlign: 'left',
-        overflow: 'hidden',
-        transition: 'border-color 200ms ease, background 200ms ease',
-      }}
+      className={className}
     >
-      {/* Percentage fill bar — always rendered so CSS transition fires left→right */}
+      {/* Percentage fill bar */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
           width: revealed ? `${percentage}%` : '0%',
-          background: isCorrect
-            ? 'rgba(52,219,128,0.12)'
-            : isWrong
-            ? 'rgba(217,87,87,0.10)'
-            : 'rgba(255,255,255,0.04)',
-          borderRadius: 50,
+          background: fillBg,
+          borderRadius: 'var(--f-brand-radius-base)',
           transition: revealed ? 'width 600ms ease' : 'none',
           pointerEvents: 'none',
         }}
@@ -140,10 +119,10 @@ function OptionButton({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: 12,
-          fontWeight: 500,
+          fontSize: 'var(--text-2sm)',
+          fontWeight: 'var(--f-brand-type-body-medium-weight)',
           flexShrink: 0,
-          transition: 'background 200ms ease, color 200ms ease',
+          transition: 'background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out)',
           zIndex: 1,
         }}
       >
@@ -154,10 +133,11 @@ function OptionButton({
       <span
         style={{
           flex: 1,
-          fontSize: 15,
+          fontFamily: 'var(--f-brand-type-body-medium-family)',
+          fontSize: 'var(--f-brand-type-body-medium-size)',
+          fontWeight: isChosen ? 'var(--f-brand-type-body-medium-weight)' : 'var(--weight-reg)',
           color: textColor,
-          fontWeight: isChosen ? 600 : 400,
-          transition: 'color 200ms ease',
+          transition: 'color var(--dur-base) var(--ease-out)',
           zIndex: 1,
         }}
       >
@@ -168,9 +148,13 @@ function OptionButton({
       {revealed && (
         <span
           style={{
-            fontSize: 12,
-            fontWeight: 500,
-            color: isCorrect ? 'var(--c-correct)' : isWrong ? 'var(--c-error)' : 'var(--c-text-3)',
+            fontSize: 'var(--text-2sm)',
+            fontWeight: 'var(--f-brand-type-body-medium-weight)',
+            color: isCorrect
+              ? 'var(--f-brand-color-icon-success)'
+              : isWrong
+              ? 'var(--f-brand-color-border-error)'
+              : 'var(--f-brand-color-text-secondary)',
             flexShrink: 0,
             zIndex: 1,
           }}
@@ -183,7 +167,7 @@ function OptionButton({
 }
 
 // ─── Circular countdown timer ─────────────────────────────────────────────────
-function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: number }) {
+function CircularTimer({ timeLeft, size = 64 }: { timeLeft: number; size?: number }) {
   const R = (size - 8) / 2
   const circumference = 2 * Math.PI * R
   const offset = circumference * (1 - timeLeft / QUESTION_TIME)
@@ -191,11 +175,16 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
   return (
     <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
       <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={cx} cy={cx} r={R} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={3} />
         <circle
           cx={cx} cy={cx} r={R}
           fill="none"
-          stroke="#ffffff"
+          stroke="var(--f-brand-color-background-disabled)"
+          strokeWidth={3}
+        />
+        <circle
+          cx={cx} cy={cx} r={R}
+          fill="none"
+          stroke="var(--f-brand-color-background-primary)"
           strokeWidth={3}
           strokeDasharray={circumference}
           strokeDashoffset={offset}
@@ -203,10 +192,58 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
           style={{ transition: 'stroke-dashoffset 1s linear' }}
         />
       </svg>
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 500, fontFamily: 'var(--font-body)', color: '#ffffff' }}>
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: 'var(--f-brand-type-headline-medium-family)',
+          fontSize: 'var(--f-brand-type-headline-medium-size)',
+          fontWeight: 'var(--f-brand-type-headline-medium-weight)',
+          color: 'var(--f-brand-color-text-heading)',
+        }}
+      >
         {timeLeft}
       </div>
     </div>
+  )
+}
+
+// ─── Back button (ghost, 44px touch) ──────────────────────────────────────────
+function BackButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="f-button--ghost"
+      aria-label="Back"
+      style={{
+        width: 44,
+        height: 44,
+        minHeight: 44,
+        padding: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: '50%',
+        border: 'none',
+        background: 'transparent',
+        cursor: 'pointer',
+        flexShrink: 0,
+        WebkitTapHighlightColor: 'transparent',
+      }}
+    >
+      <svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+        <path
+          d="M15 19l-7-7 7-7"
+          stroke="var(--f-brand-color-text-heading)"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </button>
   )
 }
 
@@ -235,7 +272,14 @@ function QuestionScreen({
   const percentages = revealed ? getMockPercentages(question, chosenId) : {}
 
   return (
-    <Screen>
+    <div
+      style={{
+        background: 'var(--f-brand-color-background-default)',
+        minHeight: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <div
         className="page-in"
         style={{
@@ -247,28 +291,44 @@ function QuestionScreen({
           width: '100%',
         }}
       >
-        {/* ── Top bar (NOT animated — stays fixed) ─────────────── */}
+        {/* ── Top bar ─────────────────────────────────────────── */}
         <div style={{ padding: 'var(--sp-4)', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
-            <button onClick={onBack} className="btn-icon"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
-            <div style={{ flex: 1, height: 4, background: 'var(--c-surface-raise)', borderRadius: 2, overflow: 'hidden' }}>
+            <BackButton onClick={onBack} />
+            {/* Progress bar */}
+            <div
+              style={{
+                flex: 1,
+                height: 4,
+                background: 'var(--f-brand-color-background-disabled)',
+                borderRadius: 'var(--f-brand-radius-rounded)',
+                overflow: 'hidden',
+              }}
+            >
               <div
                 style={{
                   height: '100%',
                   width: `${((qIndex + (revealed ? 1 : 0)) / total) * 100}%`,
-                  background: 'var(--c-accent)',
-                  borderRadius: 2,
+                  background: 'var(--f-brand-color-background-primary)',
+                  borderRadius: 'var(--f-brand-radius-rounded)',
                   transition: 'width 300ms ease',
                 }}
               />
             </div>
-            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', flexShrink: 0 }}>
+            <span
+              style={{
+                fontFamily: 'var(--f-brand-type-body-medium-family)',
+                fontSize: 'var(--f-brand-type-body-medium-size)',
+                color: 'var(--f-brand-color-text-secondary)',
+                flexShrink: 0,
+              }}
+            >
               {qIndex + 1}/{total}
             </span>
           </div>
         </div>
 
-        {/* ── Animated content (header + question + options only) ── */}
+        {/* ── Animated content ──────────────────────────────── */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
           {/* Question image header */}
           <div
@@ -276,7 +336,7 @@ function QuestionScreen({
               position: 'relative',
               margin: '0 var(--sp-4)',
               height: 180,
-              borderRadius: 'var(--r-lg)',
+              borderRadius: 'var(--f-brand-radius-base)',
               background: question.accentColor,
               display: 'flex',
               alignItems: 'center',
@@ -285,11 +345,10 @@ function QuestionScreen({
               marginBottom: 'var(--sp-5)',
               flexShrink: 0,
               overflow: 'hidden',
-              boxShadow: `0 8px 32px ${question.accentColor}55, inset 0 1px 0 rgba(255,255,255,0.15)`,
+              boxShadow: `0 8px 32px ${question.accentColor}55`,
             }}
           >
             {quiz.emoji}
-            {/* Depth overlay */}
             <div style={{
               position: 'absolute', inset: 0,
               background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 50%, rgba(0,0,0,0.18) 100%)',
@@ -297,20 +356,20 @@ function QuestionScreen({
             }} />
           </div>
 
-          {/* Timer — between image and question */}
+          {/* Timer */}
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--sp-4)', flexShrink: 0 }}>
             <CircularTimer timeLeft={timeLeft} size={64} />
           </div>
 
-          {/* Question text */}
+          {/* Question text — FDS Title 4 */}
           <div
             style={{
               padding: '0 var(--sp-6)',
-              fontFamily: 'var(--font-display)',
-              fontSize: 'var(--text-xl)',
-              fontWeight: 'var(--weight-light)',
-              color: 'var(--c-text-1)',
-              lineHeight: 'var(--leading-tight)',
+              fontFamily: 'var(--f-brand-type-title-4-family)',
+              fontSize: 'var(--f-brand-type-title-4-size)',
+              fontWeight: 'var(--f-brand-type-title-4-weight)',
+              lineHeight: 'var(--f-brand-type-title-4-line)',
+              color: 'var(--f-brand-color-text-heading)',
               letterSpacing: 'var(--tracking-tight)',
               textAlign: 'center',
               marginBottom: 'var(--sp-6)',
@@ -346,49 +405,47 @@ function QuestionScreen({
           </div>
         </div>
 
-        {/* ── Fixed bottom: score feedback + Next CTA (no slide) ── */}
+        {/* ── Fixed bottom: score feedback + Next CTA ──────── */}
         <div style={{ padding: 'var(--sp-5) var(--sp-4) var(--sp-8)', flexShrink: 0 }}>
-            {revealed && (
-              <div
-                style={{
-                  textAlign: 'center',
-                  fontSize: 'var(--text-sm)',
-                  color: chosenId === question.correctId ? 'var(--c-correct)' : 'var(--c-error)',
-                  marginBottom: 'var(--sp-3)',
-                  fontWeight: 'var(--weight-med)',
-                  letterSpacing: 'var(--tracking-wide)',
-                }}
-              >
-                {chosenId === question.correctId
-                  ? '✓ Correct! +1 point'
-                  : chosenId
-                  ? '✗ Incorrect'
-                  : '⏱ Time\'s up!'}
-              </div>
-            )}
-            <button
-              onClick={onNext}
-              disabled={!revealed}
-              className="btn"
+          {revealed && (
+            <div
               style={{
-                width: '100%',
-                padding: '16px 0',
-                borderRadius: 50,
-                border: 'none',
-                background: revealed ? '#ffffff' : 'var(--c-surface-raise)',
-                color: revealed ? 'var(--c-brand)' : 'var(--c-text-3)',
-                fontSize: 'var(--text-md)',
-                fontWeight: 'var(--weight-med)',
-                cursor: revealed ? 'pointer' : 'default',
-                fontFamily: 'inherit',
-                transition: 'background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out)',
+                textAlign: 'center',
+                fontFamily: 'var(--f-brand-type-body-medium-family)',
+                fontSize: 'var(--f-brand-type-body-medium-size)',
+                fontWeight: 'var(--f-brand-type-body-medium-weight)',
+                color: chosenId === question.correctId
+                  ? 'var(--f-brand-color-icon-success)'
+                  : 'var(--f-brand-color-border-error)',
+                marginBottom: 'var(--sp-3)',
+                letterSpacing: 'var(--tracking-wide)',
               }}
             >
-              {isLast && revealed ? `Finish · ${score}/${total}` : 'Next'}
-            </button>
-          </div>
+              {chosenId === question.correctId
+                ? '✓ Correct! +1 point'
+                : chosenId
+                ? '✗ Incorrect'
+                : '⏱ Time\'s up!'}
+            </div>
+          )}
+          <button
+            onClick={onNext}
+            disabled={!revealed}
+            className={`f-button ${revealed ? 'f-button--primary' : ''}`}
+            style={{
+              width: '100%',
+              ...(!revealed ? {
+                background: 'var(--f-brand-color-background-disabled)',
+                color: 'var(--f-brand-color-text-secondary)',
+                cursor: 'default',
+              } : {}),
+            }}
+          >
+            {isLast && revealed ? `Finish · ${score}/${total}` : 'Next'}
+          </button>
         </div>
-    </Screen>
+      </div>
+    </div>
   )
 }
 
@@ -408,7 +465,6 @@ export default function QuizRoute() {
   const [revealed,  setRevealed]  = useState(false)
   const [timeLeft,  setTimeLeft]  = useState(QUESTION_TIME)
 
-  // ── MAR-39: slide animation state ──────────────────────────────────────────
   const [slideStyle, setSlideStyle] = useState<React.CSSProperties>({
     transform: 'translateX(0)', opacity: 1,
     transition: 'transform 280ms ease, opacity 280ms ease',
@@ -421,7 +477,6 @@ export default function QuizRoute() {
   const total    = quiz?.questions.length ?? 0
   const isLast   = qIdx === total - 1
 
-  // Slide-in on question index change
   useEffect(() => {
     setSlideStyle({
       transform: 'translateX(60px)', opacity: 0,
@@ -438,7 +493,6 @@ export default function QuizRoute() {
     return () => cancelAnimationFrame(raf)
   }, [qIdx])
 
-  // ── Timer ──────────────────────────────────────────────────────────────────
   useEffect(() => {
     if (revealed) return
     if (timeLeft <= 0) {
@@ -450,7 +504,6 @@ export default function QuizRoute() {
     return () => clearTimeout(t)
   }, [revealed, timeLeft, quiz?.id, qIdx])
 
-  // ── Handlers ───────────────────────────────────────────────────────────────
   const handleSelect = useCallback((id: string) => {
     if (revealed) return
     setChosenId(id)
@@ -473,7 +526,6 @@ export default function QuizRoute() {
       return
     }
 
-    // Slide out left, then advance
     isAnimating.current = true
     setSlideStyle({
       transform: 'translateX(-60px)', opacity: 0,
@@ -486,7 +538,6 @@ export default function QuizRoute() {
       setRevealed(false)
       setTimeLeft(QUESTION_TIME)
       isAnimating.current = false
-      // slide-in triggered by qIdx useEffect above
     }, 250)
   }, [isLast, quiz, total, addPoints, recordQuizResult, navigate])
 
