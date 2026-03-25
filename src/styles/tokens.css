@@ -136,6 +136,86 @@
   --dur-exit:   160ms;
   --dur-gentle: 960ms;
 
+  /* ─── FDS Brand Tokens ────────────────────────────────────────────────────── */
+  /* Colors — core brand */
+  --f-brand-color-primary:                  #8E2157;
+  --f-brand-color-primary-hover:            #5C0931;
+
+  /* Colors — background */
+  --f-brand-color-background-default:       #F2F3FA;
+  --f-brand-color-background-light:         #FFFFFF;
+  --f-brand-color-background-primary:       #8E2157;
+  --f-brand-color-background-primary-hover: #5C0931;
+  --f-brand-color-background-disabled:      #DBDEE8;
+
+  /* Colors — text */
+  --f-brand-color-text-default:   #1F212B;
+  --f-brand-color-text-heading:   #1F212B;
+  --f-brand-color-text-muted:     #4A525D;
+  --f-brand-color-text-subtle:    #6E7780;
+  --f-brand-color-text-light:     #FFFFFF;
+  --f-brand-color-text-primary:   #8E2157;
+  --f-brand-color-text-disabled:  #9099A2;
+
+  /* Colors — border */
+  --f-brand-color-border-default: #DBDEE8;
+  --f-brand-color-border-primary: #8E2157;
+  --f-brand-color-border-disabled:#9099A2;
+
+  /* Colors — shadow */
+  --f-brand-color-shadow-default: #1F212B14;
+
+  /* Spacing */
+  --f-brand-space-none: 0px;
+  --f-brand-space-2xs:  4px;
+  --f-brand-space-xs:   8px;
+  --f-brand-space-sm:   12px;
+  --f-brand-space-md:   16px;
+  --f-brand-space-lg:   24px;
+  --f-brand-space-xl:   32px;
+  --f-brand-space-2xl:  40px;
+  --f-brand-space-3xl:  48px;
+  --f-brand-space-4xl:  64px;
+  --f-brand-space-5xl:  72px;
+  --f-brand-space-6xl:  80px;
+
+  /* Border & Radius */
+  --f-brand-border-size-none:    0px;
+  --f-brand-border-size-default: 1px;
+  --f-brand-border-size-focused: 2px;
+  --f-brand-radius-none:    0px;
+  --f-brand-radius-base:    8px;
+  --f-brand-radius-small:   12px;
+  --f-brand-radius-inner:   16px;
+  --f-brand-radius-outer:   20px;
+  --f-brand-radius-rounded: 64px;
+
+  /* Shadows */
+  --f-brand-shadow-none:     0 0 0 0 transparent;
+  --f-brand-shadow-medium:   0 2px 8px var(--f-brand-color-shadow-default);
+  --f-brand-shadow-large:    0 8px 20px var(--f-brand-color-shadow-default);
+
+  /* Typography composites (font shorthand: weight size/line-height family) */
+  --f-brand-type-page-title-thin: 100 48px/56px 'Jotia', Verdana, Geneva, sans-serif;
+  --f-brand-type-page-title:      300 48px/56px 'Jotia', Verdana, Geneva, sans-serif;
+  --f-brand-type-title-1:         100 36px/44px 'Jotia', Verdana, Geneva, sans-serif;
+  --f-brand-type-title-2:         100 28px/36px 'Jotia', Verdana, Geneva, sans-serif;
+  --f-brand-type-headline:        400 18px/24px 'Graphik', 'Graphik Web', Arial, sans-serif;
+  --f-brand-type-headline-medium: 500 18px/24px 'Graphik', 'Graphik Web', Arial, sans-serif;
+  --f-brand-type-body:            400 16px/24px 'Graphik', 'Graphik Web', Arial, sans-serif;
+  --f-brand-type-body-medium:     500 16px/24px 'Graphik', 'Graphik Web', Arial, sans-serif;
+  --f-brand-type-subheading:      400 14px/20px 'Graphik', 'Graphik Web', Arial, sans-serif;
+  --f-brand-type-caption:         400 12px/16px 'Graphik', 'Graphik Web', Arial, sans-serif;
+
+  /* Motion */
+  --f-brand-motion-duration-instant:  240ms;
+  --f-brand-motion-duration-quick:    480ms;
+  --f-brand-motion-duration-gentle:   960ms;
+  --f-brand-motion-duration-generous: 1200ms;
+  --f-brand-motion-easing-entry:      cubic-bezier(0.4, 0, 1, 1);
+  --f-brand-motion-easing-exit:       cubic-bezier(0, 0, 0.2, 1);
+  --f-brand-motion-easing-default:    cubic-bezier(0.4, 0, 0.2, 1);
+
   /* ─── Backward-compat aliases (keep existing vars working) ───────────────── */
   --color-bg:             var(--c-bg);
   --color-surface:        rgba(255,255,255,0.05);
