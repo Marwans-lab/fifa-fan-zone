@@ -50,10 +50,10 @@ function JourneyStep({
     width: 56, height: 56, borderRadius: '50%',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-    transition: 'all 700ms ease',
+    transition: 'all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
     flexShrink: 0, position: 'relative',
     ...(isCompleted ? {
-      background: '#ffffff', border: '1px solid #ffffff',
+      background: 'var(--f-brand-color-text-light)', border: '1px solid var(--f-brand-color-text-light)',
       boxShadow: '0 0 25px rgba(255,255,255,0.4)',
       transform: 'scale(1.1)', zIndex: 20,
     } : isCurrent ? {
@@ -69,7 +69,7 @@ function JourneyStep({
   return (
     <li style={{
       position: 'relative', zIndex: 10,
-      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
+      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--f-brand-space-sm)',
       width: 56, flexShrink: 0,
     }}>
       <div style={nodeStyle}>
@@ -89,10 +89,10 @@ function JourneyStep({
         )}
       </div>
       <span style={{
-        fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-reg)',
+        fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '400',
         fontSize: 12, letterSpacing: '-0.02em', textAlign: 'center',
-        whiteSpace: 'nowrap', transition: 'color 500ms ease',
-        color: isCompleted || isCurrent ? '#ffffff' : 'rgba(255,255,255,0.3)',
+        whiteSpace: 'nowrap', transition: 'color var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
+        color: isCompleted || isCurrent ? 'var(--f-brand-color-text-light)' : 'rgba(255,255,255,0.3)',
       }}>
         {label}
       </span>
@@ -128,27 +128,27 @@ function JourneyCard({
       style={{
         width: '100%',
         background: 'rgba(255,255,255,0.08)',
-        borderRadius: 20,
-        padding: 16,
+        borderRadius: 'var(--f-brand-radius-outer)',
+        padding: 'var(--f-brand-space-md)',
         border: '1px solid rgba(255,255,255,0.15)',
-        marginBottom: 16,
+        marginBottom: 'var(--f-brand-space-md)',
         boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
         overflow: 'hidden',
       }}
     >
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--f-brand-space-lg)' }}>
         <div>
           <h2 style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
+            fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '500',
             fontSize: 12, letterSpacing: '0.05em',
-            color: 'rgba(255,255,255,0.7)', marginBottom: 4,
+            color: 'rgba(255,255,255,0.7)', marginBottom: 'var(--f-brand-space-2xs)',
           }}>
             Your journey
           </h2>
           <p style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 18, letterSpacing: '-0.02em', color: '#ffffff',
+            fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '500',
+            fontSize: 18, letterSpacing: '-0.02em', color: 'var(--f-brand-color-text-light)',
           }}>
             {status}
           </p>
@@ -161,8 +161,8 @@ function JourneyCard({
           border: '1px solid rgba(255,255,255,0.2)',
         }}>
           <span style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-reg)',
-            fontSize: 12, color: '#ffffff', lineHeight: 1,
+            fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '400',
+            fontSize: 12, color: 'var(--f-brand-color-text-light)', lineHeight: 1,
           }}>
             Step {Math.min(doneCount + 1, 4)}/4
           </span>
@@ -187,15 +187,15 @@ function JourneyCard({
                 {!isLast && (() => {
                   const nextDone = achieved[i + 1]
                   const lineBg = done && nextDone
-                    ? '#ffffff'                                                       // fully active
+                    ? 'var(--f-brand-color-text-light)'                               // fully active
                     : done && !nextDone
-                    ? 'linear-gradient(90deg, #ffffff, rgba(255,255,255,0.2))'        // half active
+                    ? 'linear-gradient(90deg, var(--f-brand-color-text-light), rgba(255,255,255,0.2))' // half active
                     : 'rgba(255,255,255,0.08)'                                        // inactive
                   return (
                     <div style={{
                       flex: 1, height: 2, marginTop: 27,
                       background: lineBg,
-                      transition: 'background 700ms ease',
+                      transition: 'background var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
                     }} />
                   )
                 })()}
@@ -211,12 +211,12 @@ function JourneyCard({
         style={{
           width: '100%', height: 48,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: '#ffffff', color: '#8E2157',
-          fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-bold)',
+          background: 'var(--f-brand-color-text-light)', color: 'var(--f-brand-color-primary)',
+          fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '600',
           fontSize: 15, borderRadius: 9999, border: 'none',
           marginTop: 28, cursor: 'pointer',
           boxShadow: '0 10px 30px rgba(255,255,255,0.12)',
-          transition: 'all 150ms ease',
+          transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
           WebkitTapHighlightColor: 'transparent',
         }}
       >
@@ -259,7 +259,7 @@ function ProgressRing({
           fill="none" stroke={color} strokeWidth={stroke}
           strokeDasharray={circ} strokeDashoffset={offset}
           strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 600ms ease' }}
+          style={{ transition: 'stroke-dashoffset var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)' }}
         />
       )}
     </svg>
@@ -302,18 +302,18 @@ function QuizCard({
       style={{
         width: '100%',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '18px 14px', borderRadius: 22,
+        padding: '18px 14px', borderRadius: 'var(--f-brand-radius-outer)',
         minHeight: 120,
         border: `1px solid ${locked ? 'rgba(255,255,255,0.06)' : done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
         background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
         opacity: locked ? 0.55 : 1,
         cursor: locked ? 'not-allowed' : 'pointer',
-        textAlign: 'left', fontFamily: 'inherit', color: 'var(--c-text-1)',
-        transition: 'all 400ms ease',
+        textAlign: 'left', fontFamily: 'inherit', color: 'var(--f-brand-color-text-default)',
+        transition: 'all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
         WebkitTapHighlightColor: 'transparent',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-md)' }}>
         {/* Circular thumbnail with progress ring */}
         <div style={{
           width: RING_RADIUS * 2, height: RING_RADIUS * 2,
@@ -323,7 +323,7 @@ function QuizCard({
             radius={RING_RADIUS}
             stroke={RING_STROKE}
             progress={done ? 1 : 0}
-            color={done ? 'var(--c-accent)' : 'rgba(255,255,255,0.3)'}
+            color={done ? 'var(--f-brand-color-accent)' : 'rgba(255,255,255,0.3)'}
           />
           {/* Inner circle */}
           <div style={{
@@ -353,21 +353,21 @@ function QuizCard({
         {/* Text */}
         <div>
           <h3 style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 'var(--text-lg)',
-            color: locked ? 'var(--c-text-2)' : '#ffffff',
+            fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '500',
+            fontSize: '18',
+            color: locked ? 'var(--f-brand-color-text-subtle)' : 'var(--f-brand-color-text-light)',
           }}>
             {quiz.title}
           </h3>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 'var(--f-brand-space-xs)' }}>
             {done ? (
-              <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 'var(--weight-med)' }}>
+              <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: '500' }}>
                 Completed · {Math.round(progress * quiz.questions.length)}/{quiz.questions.length} correct
               </span>
             ) : locked ? (
               lockMessage ?? 'Complete previous quiz to unlock'
             ) : (
-              <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 'var(--weight-med)' }}>
+              <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: '500' }}>
                 {quiz.questions.length} questions · {quiz.questions.length * 15}s
               </span>
             )}
@@ -380,7 +380,7 @@ function QuizCard({
           width: 36, height: 36, borderRadius: '50%',
           background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginRight: 4,
+          marginRight: 'var(--f-brand-space-2xs)',
         }}>
           {loading ? (
             <div
@@ -388,7 +388,7 @@ function QuizCard({
               style={{
                 width: 20, height: 20, borderRadius: '50%',
                 border: '2.5px solid rgba(255,255,255,0.15)',
-                borderTopColor: 'var(--c-accent)',
+                borderTopColor: 'var(--f-brand-color-accent)',
                 animation: 'quiz-spin 0.6s linear infinite',
               }}
             />
@@ -430,18 +430,18 @@ function DragDropQuizCard({
       style={{
         width: '100%',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '18px 14px', borderRadius: 22,
+        padding: '18px 14px', borderRadius: 'var(--f-brand-radius-outer)',
         minHeight: 120,
         border: `1px solid ${locked ? 'rgba(255,255,255,0.06)' : done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
         background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
         opacity: locked ? 0.55 : 1,
         cursor: locked ? 'not-allowed' : 'pointer',
-        textAlign: 'left', fontFamily: 'inherit', color: 'var(--c-text-1)',
-        transition: 'all 400ms ease',
+        textAlign: 'left', fontFamily: 'inherit', color: 'var(--f-brand-color-text-default)',
+        transition: 'all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
         WebkitTapHighlightColor: 'transparent',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-md)' }}>
         <div style={{
           width: RING_RADIUS * 2, height: RING_RADIUS * 2,
           position: 'relative', flexShrink: 0,
@@ -450,7 +450,7 @@ function DragDropQuizCard({
             radius={RING_RADIUS}
             stroke={RING_STROKE}
             progress={done ? 1 : 0}
-            color={done ? 'var(--c-accent)' : 'rgba(255,255,255,0.3)'}
+            color={done ? 'var(--f-brand-color-accent)' : 'rgba(255,255,255,0.3)'}
           />
           <div style={{
             position: 'absolute',
@@ -471,27 +471,27 @@ function DragDropQuizCard({
             ) : done ? (
               <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
             ) : (
-              <span style={{ fontSize: 'var(--text-2xl)' }}>{ddQuiz.emoji}</span>
+              <span style={{ fontSize: '28' }}>{ddQuiz.emoji}</span>
             )}
           </div>
         </div>
         <div>
           <h3 style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 'var(--text-lg)',
-            color: locked ? 'var(--c-text-2)' : 'var(--c-text-1)',
+            fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '500',
+            fontSize: '18',
+            color: locked ? 'var(--f-brand-color-text-subtle)' : 'var(--f-brand-color-text-default)',
           }}>
             {ddQuiz.title}
           </h3>
-          <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)', marginTop: 'var(--sp-2)' }}>
+          <p style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)', marginTop: 'var(--f-brand-space-xs)' }}>
             {done ? (
-              <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
+              <span style={{ color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>
                 Completed · {result.score}/{result.total} correct
               </span>
             ) : locked ? (
               'Complete your fan card to unlock'
             ) : (
-              <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
+              <span style={{ color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>
                 {totalPairs} matches · Drag & Drop
               </span>
             )}
@@ -503,7 +503,7 @@ function DragDropQuizCard({
           width: 36, height: 36, borderRadius: '50%',
           background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginRight: 4,
+          marginRight: 'var(--f-brand-space-2xs)',
         }}>
           {loading ? (
             <div
@@ -511,7 +511,7 @@ function DragDropQuizCard({
               style={{
                 width: 20, height: 20, borderRadius: '50%',
                 border: '2.5px solid rgba(255,255,255,0.15)',
-                borderTopColor: 'var(--c-accent)',
+                borderTopColor: 'var(--f-brand-color-accent)',
                 animation: 'quiz-spin 0.6s linear infinite',
               }}
             />
@@ -556,18 +556,18 @@ function ExtraQuizCard({
       style={{
         width: '100%',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '18px 14px', borderRadius: 22,
+        padding: '18px 14px', borderRadius: 'var(--f-brand-radius-outer)',
         minHeight: 120,
         border: `1px solid ${locked ? 'rgba(255,255,255,0.06)' : done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
         background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
         opacity: locked ? 0.55 : 1,
         cursor: locked ? 'not-allowed' : 'pointer',
-        textAlign: 'left', fontFamily: 'inherit', color: 'var(--c-text-1)',
-        transition: 'all 400ms ease',
+        textAlign: 'left', fontFamily: 'inherit', color: 'var(--f-brand-color-text-default)',
+        transition: 'all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
         WebkitTapHighlightColor: 'transparent',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-md)' }}>
         <div style={{
           width: RING_RADIUS * 2, height: RING_RADIUS * 2,
           position: 'relative', flexShrink: 0,
@@ -576,7 +576,7 @@ function ExtraQuizCard({
             radius={RING_RADIUS}
             stroke={RING_STROKE}
             progress={done ? 1 : 0}
-            color={done ? 'var(--c-accent)' : 'rgba(255,255,255,0.3)'}
+            color={done ? 'var(--f-brand-color-accent)' : 'rgba(255,255,255,0.3)'}
           />
           <div style={{
             position: 'absolute',
@@ -597,27 +597,27 @@ function ExtraQuizCard({
             ) : done ? (
               <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
             ) : (
-              <span style={{ fontSize: 'var(--text-2xl)' }}>{emoji}</span>
+              <span style={{ fontSize: '28' }}>{emoji}</span>
             )}
           </div>
         </div>
         <div>
           <h3 style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 'var(--text-lg)',
-            color: locked ? 'var(--c-text-2)' : 'var(--c-text-1)',
+            fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '500',
+            fontSize: '18',
+            color: locked ? 'var(--f-brand-color-text-subtle)' : 'var(--f-brand-color-text-default)',
           }}>
             {title}
           </h3>
-          <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)', marginTop: 'var(--sp-2)' }}>
+          <p style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)', marginTop: 'var(--f-brand-space-xs)' }}>
             {done ? (
-              <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
+              <span style={{ color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>
                 Completed · {result.score}/{result.total} correct
               </span>
             ) : locked ? (
               'Complete your fan card to unlock'
             ) : (
-              <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
+              <span style={{ color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>
                 {subtitle}
               </span>
             )}
@@ -629,7 +629,7 @@ function ExtraQuizCard({
           width: 36, height: 36, borderRadius: '50%',
           background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginRight: 4,
+          marginRight: 'var(--f-brand-space-2xs)',
         }}>
           {loading ? (
             <div
@@ -637,7 +637,7 @@ function ExtraQuizCard({
               style={{
                 width: 20, height: 20, borderRadius: '50%',
                 border: '2.5px solid rgba(255,255,255,0.15)',
-                borderTopColor: 'var(--c-accent)',
+                borderTopColor: 'var(--f-brand-color-accent)',
                 animation: 'quiz-spin 0.6s linear infinite',
               }}
             />
@@ -746,16 +746,16 @@ export default function Card() {
     <Screen>
       {/* ── Content ────────────────────────────────────────── */}
       <div
-        className="page-in hide-scrollbar"
+        className="f-page-enter hide-scrollbar"
         style={{
           flex: 1, position: 'relative',
-          padding: '16px 24px',
+          padding: 'var(--f-brand-space-md) var(--f-brand-space-lg)',
           overflowY: 'auto', WebkitOverflowScrolling: 'touch',
         }}
       >
 
           {/* ── Fan Card ──────────────────────────────────────── */}
-          <section aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 16 }}>
+          <section aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 'var(--f-brand-space-md)' }}>
             <FanCard
               fanCard={state.fanCard}
               onSave={handleSave}
@@ -775,23 +775,23 @@ export default function Card() {
           />
 
           {/* ── Quizzes ───────────────────────────────────────── */}
-          <section ref={quizRef} style={{ paddingBottom: 48 }}>
-            <div style={{ marginBottom: 16 }}>
+          <section ref={quizRef} style={{ paddingBottom: 'var(--f-brand-space-3xl)' }}>
+            <div style={{ marginBottom: 'var(--f-brand-space-md)' }}>
               <h2 style={{
-                fontFamily: 'var(--font-display)', fontWeight: 'var(--weight-thin)',
-                fontSize: 28, letterSpacing: '-0.04em', color: '#ffffff',
+                fontFamily: 'var(--f-base-type-family-primary)', fontWeight: '100',
+                fontSize: 28, letterSpacing: '-0.04em', color: 'var(--f-brand-color-text-light)',
               }}>
                 Earn Avios
               </h2>
               <p style={{
-                fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-reg)',
-                color: 'rgba(255,255,255,0.5)', fontSize: 14, marginTop: 4,
+                fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '400',
+                color: 'rgba(255,255,255,0.5)', fontSize: 14, marginTop: 'var(--f-brand-space-2xs)',
               }}>
                 Complete quizzes to climb the leaderboard
               </p>
             </div>
 
-            <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="f-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-md)' }}>
               {QUIZZES.map((quiz, i) => (
                 <QuizCard
                   key={quiz.id}

@@ -1,0 +1,185 @@
+/* ─── FDS Button ──────────────────────────────────────────────────────────────
+ * BEM block: .f-button
+ * Variants: primary, secondary, ghost, white-outlined, white-filled
+ * Sizes: default, sm, lg
+ * ──────────────────────────────────────────────────────────────────────────── */
+
+/* Step 2 — Token map on the block (primary is the default) */
+.f-button {
+  /* Color */
+  --f-button-bg:              var(--f-brand-color-background-primary, #8E2157);
+  --f-button-bg-hover:        var(--f-brand-color-background-primary-hover, #5C0931);
+  --f-button-bg-disabled:     var(--f-brand-color-background-disabled, #DBDEE8);
+  --f-button-text:            var(--f-brand-color-text-light, #FFFFFF);
+  --f-button-text-hover:      var(--f-brand-color-text-light, #FFFFFF);
+  --f-button-text-disabled:   var(--f-brand-color-text-disabled, #9099A2);
+  --f-button-border-color:    transparent;
+  --f-button-border-hover:    transparent;
+  --f-button-border-disabled: var(--f-brand-color-border-disabled, #9099A2);
+  --f-button-icon:            var(--f-brand-color-icon-light, #FFFFFF);
+  --f-button-icon-disabled:   var(--f-brand-color-icon-disabled, #9099A2);
+
+  /* Sizing */
+  --f-button-border-size:  var(--f-brand-border-size-default, 1px);
+  --f-button-radius:       var(--f-brand-radius-rounded, 64px);
+  --f-button-padding-v:    var(--f-brand-space-sm, 12px);
+  --f-button-padding-h:    var(--f-brand-space-xl, 32px);
+  --f-button-gap:          var(--f-brand-space-xs, 8px);
+
+  /* Typography — composite shorthand */
+  --f-button-font:         var(--f-brand-type-body-medium);
+
+  /* Motion */
+  --f-button-duration:     var(--f-brand-motion-duration-instant, 240ms);
+  --f-button-easing:       var(--f-brand-motion-easing-default);
+}
+
+/* Step 3 — Rules consume only component tokens */
+.f-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--f-button-gap);
+  background: var(--f-button-bg);
+  color: var(--f-button-text);
+  border: var(--f-button-border-size) solid var(--f-button-border-color);
+  border-radius: var(--f-button-radius);
+  padding: var(--f-button-padding-v) var(--f-button-padding-h);
+  font: var(--f-button-font);
+  letter-spacing: -0.005em;
+  min-height: 44px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  transition:
+    background var(--f-button-duration) var(--f-button-easing),
+    color var(--f-button-duration) var(--f-button-easing),
+    border-color var(--f-button-duration) var(--f-button-easing),
+    box-shadow var(--f-button-duration) var(--f-button-easing),
+    transform var(--f-button-duration) var(--f-button-easing);
+}
+
+.f-button:hover:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--f-button-bg-hover);
+  color: var(--f-button-text-hover);
+  border-color: var(--f-button-border-hover);
+}
+
+.f-button:active:not(:disabled):not([aria-disabled="true"]) {
+  transform: scale(0.975);
+}
+
+.f-button:focus-visible {
+  outline: var(--f-brand-border-size-focused, 2px) solid var(--f-brand-color-border-focused, #1F212B);
+  outline-offset: var(--f-brand-space-xs, 8px);
+}
+
+.f-button:disabled,
+.f-button[aria-disabled="true"] {
+  background: var(--f-button-bg-disabled);
+  color: var(--f-button-text-disabled);
+  border-color: var(--f-button-border-disabled);
+  cursor: not-allowed;
+}
+
+/* Step 4 — Modifiers reassign component tokens only */
+
+/* ── Secondary ── */
+.f-button--secondary {
+  --f-button-bg:           transparent;
+  --f-button-bg-hover:     var(--f-brand-color-background-default, #F2F3FA);
+  --f-button-text:         var(--f-brand-color-text-primary, #8E2157);
+  --f-button-text-hover:   var(--f-brand-color-text-primary, #8E2157);
+  --f-button-border-color: var(--f-brand-color-border-primary, #8E2157);
+  --f-button-border-hover: var(--f-brand-color-border-primary, #8E2157);
+  --f-button-icon:         var(--f-brand-color-icon-primary, #8E2157);
+}
+
+/* ── Ghost ── */
+.f-button--ghost {
+  --f-button-bg:           transparent;
+  --f-button-bg-hover:     var(--f-brand-color-background-default, #F2F3FA);
+  --f-button-bg-disabled:  transparent;
+  --f-button-text:         var(--f-brand-color-text-primary, #8E2157);
+  --f-button-text-hover:   var(--f-brand-color-text-primary, #8E2157);
+  --f-button-border-color: transparent;
+  --f-button-border-hover: transparent;
+  --f-button-border-disabled: transparent;
+  --f-button-icon:         var(--f-brand-color-icon-primary, #8E2157);
+}
+
+/* ── White Outlined (for dark backgrounds) ── */
+.f-button--white-outlined {
+  --f-button-bg:           transparent;
+  --f-button-bg-hover:     var(--f-brand-color-background-light, #FFFFFF);
+  --f-button-text:         var(--f-brand-color-text-light, #FFFFFF);
+  --f-button-text-hover:   var(--f-brand-color-text-primary, #8E2157);
+  --f-button-border-color: var(--f-brand-color-border-light, #FFFFFF);
+  --f-button-border-hover: var(--f-brand-color-border-primary, #8E2157);
+  --f-button-icon:         var(--f-brand-color-icon-light, #FFFFFF);
+}
+
+/* ── White Filled ── */
+.f-button--white-filled {
+  --f-button-bg:           var(--f-brand-color-background-light, #FFFFFF);
+  --f-button-bg-hover:     var(--f-brand-color-background-primary-hover, #5C0931);
+  --f-button-text:         var(--f-brand-color-text-primary, #8E2157);
+  --f-button-text-hover:   var(--f-brand-color-text-light, #FFFFFF);
+  --f-button-border-color: var(--f-brand-color-border-primary, #8E2157);
+  --f-button-border-hover: var(--f-brand-color-border-primary-hover, #5C0931);
+  --f-button-icon:         var(--f-brand-color-icon-primary, #8E2157);
+}
+
+/* ── Size: sm ── */
+.f-button--sm {
+  --f-button-padding-v: var(--f-brand-space-xs, 8px);
+  --f-button-padding-h: var(--f-brand-space-md, 16px);
+  --f-button-font:      var(--f-brand-type-subheading-medium);
+}
+
+/* ── Size: lg ── */
+.f-button--lg {
+  --f-button-padding-v: var(--f-brand-space-md, 16px);
+  --f-button-padding-h: var(--f-brand-space-2xl, 40px);
+  --f-button-font:      var(--f-brand-type-headline-medium);
+}
+
+/* ── Full width ── */
+.f-button--full-width {
+  width: 100%;
+}
+
+/* ── Elements ── */
+.f-button__icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.f-button__spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: f-button-spin 600ms linear infinite;
+}
+
+@keyframes f-button-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .f-button {
+    transition-duration: 0.01ms !important;
+  }
+  .f-button__spinner {
+    animation-duration: 0.01ms !important;
+  }
+}

@@ -61,29 +61,29 @@ function OptionButton({
   const isWrong   = isChosen && !isCorrect
 
   // colours
-  let borderColor = 'var(--c-border)'
-  let badgeBg     = 'var(--c-surface-raise)'
-  let textColor   = 'var(--c-text-1)'
-  let badgeColor  = 'var(--c-text-3)'
+  let borderColor = 'var(--f-brand-color-border-default)'
+  let badgeBg     = 'var(--f-brand-color-background-light)'
+  let textColor   = 'var(--f-brand-color-text-default)'
+  let badgeColor  = 'var(--f-brand-color-text-muted)'
 
   if (!revealed && isChosen) {
-    borderColor = 'var(--c-accent)'
-    badgeBg     = 'var(--c-accent)'
-    badgeColor  = '#000'
+    borderColor = 'var(--f-brand-color-accent)'
+    badgeBg     = 'var(--f-brand-color-accent)'
+    badgeColor  = 'var(--f-brand-color-text-default)'
   } else if (revealed && isCorrect) {
-    borderColor = 'var(--c-correct)'
-    badgeBg     = 'var(--c-correct)'
-    badgeColor  = '#fff'
-    textColor   = 'var(--c-correct)'
+    borderColor = 'var(--f-brand-color-border-success)'
+    badgeBg     = 'var(--f-brand-color-border-success)'
+    badgeColor  = 'var(--f-brand-color-text-light)'
+    textColor   = 'var(--f-brand-color-border-success)'
   } else if (revealed && isWrong) {
-    borderColor = 'var(--c-error)'
-    badgeBg     = 'var(--c-error)'
-    badgeColor  = '#fff'
-    textColor   = 'var(--c-error)'
+    borderColor = 'var(--f-brand-color-status-error)'
+    badgeBg     = 'var(--f-brand-color-status-error)'
+    badgeColor  = 'var(--f-brand-color-text-light)'
+    textColor   = 'var(--f-brand-color-status-error)'
   } else if (revealed) {
-    borderColor = 'var(--c-border)'
-    textColor   = 'var(--c-text-3)'
-    badgeColor  = 'var(--c-text-3)'
+    borderColor = 'var(--f-brand-color-border-default)'
+    textColor   = 'var(--f-brand-color-text-muted)'
+    badgeColor  = 'var(--f-brand-color-text-muted)'
   }
 
   return (
@@ -98,18 +98,18 @@ function OptionButton({
         width: '100%',
         padding: '0 20px 0 16px',
         height: 58,
-        borderRadius: 50,
+        borderRadius: 'var(--f-brand-radius-rounded)',
         border: `1.5px solid ${borderColor}`,
         background: revealed && isCorrect
           ? 'rgba(52,219,128,0.08)'
           : revealed && isWrong
           ? 'rgba(217,87,87,0.08)'
-          : 'var(--c-surface)',
+          : 'var(--f-brand-color-background-light)',
         cursor: revealed ? 'default' : 'pointer',
         fontFamily: 'inherit',
         textAlign: 'left',
         overflow: 'hidden',
-        transition: 'border-color 200ms ease, background 200ms ease',
+        transition: 'border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
       }}
     >
       {/* Percentage fill bar — always rendered so CSS transition fires left→right */}
@@ -123,8 +123,8 @@ function OptionButton({
             : isWrong
             ? 'rgba(217,87,87,0.10)'
             : 'rgba(255,255,255,0.04)',
-          borderRadius: 50,
-          transition: revealed ? 'width 600ms ease' : 'none',
+          borderRadius: 'var(--f-brand-radius-rounded)',
+          transition: revealed ? 'width var(--f-brand-motion-duration-gentle) var(--f-brand-motion-easing-default)' : 'none',
           pointerEvents: 'none',
         }}
       />
@@ -143,7 +143,7 @@ function OptionButton({
           fontSize: 12,
           fontWeight: 500,
           flexShrink: 0,
-          transition: 'background 200ms ease, color 200ms ease',
+          transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
           zIndex: 1,
         }}
       >
@@ -157,7 +157,7 @@ function OptionButton({
           fontSize: 15,
           color: textColor,
           fontWeight: isChosen ? 600 : 400,
-          transition: 'color 200ms ease',
+          transition: 'color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
           zIndex: 1,
         }}
       >
@@ -170,7 +170,7 @@ function OptionButton({
           style={{
             fontSize: 12,
             fontWeight: 500,
-            color: isCorrect ? 'var(--c-correct)' : isWrong ? 'var(--c-error)' : 'var(--c-text-3)',
+            color: isCorrect ? 'var(--f-brand-color-border-success)' : isWrong ? 'var(--f-brand-color-status-error)' : 'var(--f-brand-color-text-muted)',
             flexShrink: 0,
             zIndex: 1,
           }}
@@ -190,20 +190,20 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
   const cx = size / 2
   return (
     <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
-      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }} aria-hidden="true">
         <circle cx={cx} cy={cx} r={R} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={3} />
         <circle
           cx={cx} cy={cx} r={R}
           fill="none"
-          stroke="#ffffff"
+          stroke="currentColor"
           strokeWidth={3}
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 1s linear' }}
+          style={{ transition: 'stroke-dashoffset 1s linear', color: 'var(--f-brand-color-text-light)' }}
         />
       </svg>
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 500, fontFamily: 'var(--font-body)', color: '#ffffff' }}>
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 500, fontFamily: 'var(--f-base-type-family-secondary)', color: 'var(--f-brand-color-text-light)' }}>
         {timeLeft}
       </div>
     </div>
@@ -237,7 +237,7 @@ function QuestionScreen({
   return (
     <Screen>
       <div
-        className="page-in"
+        className="f-page-enter"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -248,21 +248,21 @@ function QuestionScreen({
         }}
       >
         {/* ── Top bar (NOT animated — stays fixed) ─────────────── */}
-        <div style={{ padding: 'var(--sp-4)', flexShrink: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
-            <button onClick={onBack} className="btn-icon"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
-            <div style={{ flex: 1, height: 4, background: 'var(--c-surface-raise)', borderRadius: 2, overflow: 'hidden' }}>
+        <div style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
+            <button onClick={onBack} className="f-button f-button--ghost"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
+            <div style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
               <div
                 style={{
                   height: '100%',
                   width: `${((qIndex + (revealed ? 1 : 0)) / total) * 100}%`,
-                  background: 'var(--c-accent)',
-                  borderRadius: 2,
-                  transition: 'width 300ms ease',
+                  background: 'var(--f-brand-color-accent)',
+                  borderRadius: 'var(--f-brand-radius-rounded)',
+                  transition: 'width var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
                 }}
               />
             </div>
-            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', flexShrink: 0 }}>
+            <span style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
               {qIndex + 1}/{total}
             </span>
           </div>
@@ -274,15 +274,15 @@ function QuestionScreen({
           <div
             style={{
               position: 'relative',
-              margin: '0 var(--sp-4)',
+              margin: '0 var(--f-brand-space-md)',
               height: 180,
-              borderRadius: 'var(--r-lg)',
+              borderRadius: 'var(--f-brand-radius-inner)',
               background: question.accentColor,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: 64,
-              marginBottom: 'var(--sp-5)',
+              marginBottom: 'var(--f-brand-space-md)',
               flexShrink: 0,
               overflow: 'hidden',
               boxShadow: `0 8px 32px ${question.accentColor}55, inset 0 1px 0 rgba(255,255,255,0.15)`,
@@ -298,22 +298,22 @@ function QuestionScreen({
           </div>
 
           {/* Timer — between image and question */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--sp-4)', flexShrink: 0 }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--f-brand-space-md)', flexShrink: 0 }}>
             <CircularTimer timeLeft={timeLeft} size={64} />
           </div>
 
           {/* Question text */}
           <div
             style={{
-              padding: '0 var(--sp-6)',
-              fontFamily: 'var(--font-display)',
-              fontSize: 'var(--text-xl)',
-              fontWeight: 'var(--weight-light)',
-              color: 'var(--c-text-1)',
-              lineHeight: 'var(--leading-tight)',
-              letterSpacing: 'var(--tracking-tight)',
+              padding: '0 var(--f-brand-space-lg)',
+              fontFamily: 'var(--f-base-type-family-primary)',
+              fontSize: '22',
+              fontWeight: '300',
+              color: 'var(--f-brand-color-text-default)',
+              lineHeight: '1.12',
+              letterSpacing: '-0.03em',
               textAlign: 'center',
-              marginBottom: 'var(--sp-6)',
+              marginBottom: 'var(--f-brand-space-lg)',
               flexShrink: 0,
             }}
           >
@@ -324,10 +324,10 @@ function QuestionScreen({
           <div
             style={{
               flex: 1,
-              padding: '0 var(--sp-4)',
+              padding: '0 var(--f-brand-space-md)',
               display: 'flex',
               flexDirection: 'column',
-              gap: 'var(--sp-3)',
+              gap: 'var(--f-brand-space-sm)',
             }}
           >
             {question.options.map((opt, i) => (
@@ -347,16 +347,16 @@ function QuestionScreen({
         </div>
 
         {/* ── Fixed bottom: score feedback + Next CTA (no slide) ── */}
-        <div style={{ padding: 'var(--sp-5) var(--sp-4) var(--sp-8)', flexShrink: 0 }}>
+        <div style={{ padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
             {revealed && (
               <div
                 style={{
                   textAlign: 'center',
-                  fontSize: 'var(--text-sm)',
-                  color: chosenId === question.correctId ? 'var(--c-correct)' : 'var(--c-error)',
-                  marginBottom: 'var(--sp-3)',
-                  fontWeight: 'var(--weight-med)',
-                  letterSpacing: 'var(--tracking-wide)',
+                  fontSize: '13',
+                  color: chosenId === question.correctId ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)',
+                  marginBottom: 'var(--f-brand-space-sm)',
+                  fontWeight: '500',
+                  letterSpacing: '0.05em',
                 }}
               >
                 {chosenId === question.correctId
@@ -369,19 +369,19 @@ function QuestionScreen({
             <button
               onClick={onNext}
               disabled={!revealed}
-              className="btn"
+              className="f-button"
               style={{
                 width: '100%',
                 padding: '16px 0',
-                borderRadius: 50,
+                borderRadius: 'var(--f-brand-radius-rounded)',
                 border: 'none',
-                background: revealed ? '#ffffff' : 'var(--c-surface-raise)',
-                color: revealed ? 'var(--c-brand)' : 'var(--c-text-3)',
-                fontSize: 'var(--text-md)',
-                fontWeight: 'var(--weight-med)',
+                background: revealed ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-background-light)',
+                color: revealed ? 'var(--f-brand-color-primary)' : 'var(--f-brand-color-text-muted)',
+                fontSize: '15',
+                fontWeight: '500',
                 cursor: revealed ? 'pointer' : 'default',
                 fontFamily: 'inherit',
-                transition: 'background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out)',
+                transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
               }}
             >
               {isLast && revealed ? `Finish · ${score}/${total}` : 'Next'}
@@ -411,7 +411,7 @@ export default function QuizRoute() {
   // ── MAR-39: slide animation state ──────────────────────────────────────────
   const [slideStyle, setSlideStyle] = useState<React.CSSProperties>({
     transform: 'translateX(0)', opacity: 1,
-    transition: 'transform 280ms ease, opacity 280ms ease',
+    transition: 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
     overflow: 'hidden',
   })
   const isAnimating = useRef(false)
@@ -431,7 +431,7 @@ export default function QuizRoute() {
     const raf = requestAnimationFrame(() => {
       setSlideStyle({
         transform: 'translateX(0)', opacity: 1,
-        transition: 'transform 280ms ease, opacity 280ms ease',
+        transition: 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
         overflow: 'hidden',
       })
     })
@@ -477,7 +477,7 @@ export default function QuizRoute() {
     isAnimating.current = true
     setSlideStyle({
       transform: 'translateX(-60px)', opacity: 0,
-      transition: 'transform 240ms ease, opacity 240ms ease',
+      transition: 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
       overflow: 'hidden',
     })
     setTimeout(() => {

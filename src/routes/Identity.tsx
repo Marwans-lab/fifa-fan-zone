@@ -24,9 +24,9 @@ function CardPreview({
       style={{
         width: '100%',
         aspectRatio: '300 / 420',
-        borderRadius: 'var(--r-xl)',
+        borderRadius: 'var(--f-brand-radius-outer)',
         background: `linear-gradient(160deg, ${c1} 0%, ${c2} 100%)`,
-        border: '1px solid rgba(255,255,255,0.12)',
+        border: '1px solid var(--f-brand-color-border-subtle)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -80,7 +80,7 @@ function CardPreview({
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#fff',
+              color: 'var(--f-brand-color-text-light)',
               gap: 6,
               backdropFilter: 'blur(8px)',
               WebkitBackdropFilter: 'blur(8px)',
@@ -96,7 +96,7 @@ function CardPreview({
 
       {/* Team motto */}
       <div style={{ textAlign: 'center', zIndex: 1 }}>
-        <div style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: 'rgba(255,255,255,0.88)', letterSpacing: 1, marginBottom: 2, fontStyle: 'italic' }}>
+        <div style={{ fontSize: '13', fontWeight: '500', color: 'rgba(255,255,255,0.88)', letterSpacing: 1, marginBottom: 2, fontStyle: 'italic' }}>
           {team.motto}
         </div>
       </div>
@@ -148,53 +148,53 @@ export default function Identity() {
   if (step === 'team') {
     return (
       <Screen>
-        <div className="page-in" style={{
+        <div className="f-page-enter" style={{
           display: 'flex', flexDirection: 'column',
           height: '100%',
-          padding: 'var(--sp-6) var(--sp-5) var(--sp-4)',
+          padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) var(--f-brand-space-md)',
         }}>
           {/* Header */}
-          <div style={{ flexShrink: 0, marginBottom: 'var(--sp-5)' }}>
+          <div style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-md)' }}>
             <h2 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'var(--text-2xl)',
-              fontWeight: 'var(--weight-light)',
-              letterSpacing: 'var(--tracking-tight)',
-              marginBottom: 'var(--sp-1)',
+              fontFamily: 'var(--f-base-type-family-primary)',
+              fontSize: '28',
+              fontWeight: '300',
+              letterSpacing: '-0.03em',
+              marginBottom: 'var(--f-brand-space-2xs)',
             }}>
               Choose your team
             </h2>
-            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)' }}>
+            <p style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)' }}>
               Select the country you're supporting
             </p>
           </div>
 
           {/* Search */}
-          <div style={{ flexShrink: 0, marginBottom: 'var(--sp-3)' }}>
+          <div style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-sm)' }}>
             <input
               type="text"
               placeholder="Search teams…"
               value={query}
               onChange={e => setQuery(e.target.value)}
-              className="input-field"
+              className="f-input"
             />
           </div>
 
           {/* Team list — scrollable */}
-          <div className="scroll-y stagger" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--sp-2)', paddingBottom: 'var(--sp-4)' }}>
+          <div className="scroll-y stagger" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-xs)', paddingBottom: 'var(--f-brand-space-md)' }}>
             {filtered.map(team => (
               <button
                 key={team.id}
                 onClick={() => handleTeamSelect(team.id)}
-                className="glass-row"
+                className="f-surface"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 'var(--sp-3)',
-                  padding: 'var(--sp-3) var(--sp-4)',
+                  gap: 'var(--f-brand-space-sm)',
+                  padding: 'var(--f-brand-space-sm) var(--f-brand-space-md)',
                   cursor: 'pointer',
                   fontFamily: 'inherit',
-                  color: 'var(--c-text-1)',
+                  color: 'var(--f-brand-color-text-default)',
                   textAlign: 'left',
                   flexShrink: 0,
                   width: '100%',
@@ -210,10 +210,10 @@ export default function Identity() {
                 }}>
                   {team.flag}
                 </div>
-                <span style={{ fontSize: 'var(--text-md)', fontWeight: 'var(--weight-reg)', flex: 1 }}>
+                <span style={{ fontSize: '15', fontWeight: '400', flex: 1 }}>
                   {team.name}
                 </span>
-                <span style={{ color: 'var(--c-text-3)', fontSize: 16 }}>›</span>
+                <span style={{ color: 'var(--f-brand-color-text-muted)', fontSize: 16 }}>›</span>
               </button>
             ))}
           </div>
@@ -225,33 +225,33 @@ export default function Identity() {
   // ── Step: preview (returned from Picture route) ──────────────────────────
   return (
     <Screen centered>
-      <div className="page-in" style={{ padding: 'var(--sp-8) var(--sp-5)', textAlign: 'center', maxWidth: 340, width: '100%' }}>
+      <div className="f-page-enter" style={{ padding: 'var(--f-brand-space-xl) var(--f-brand-space-md)', textAlign: 'center', maxWidth: 340, width: '100%' }}>
         <h2 style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: 'var(--text-xl)',
-          fontWeight: 'var(--weight-light)',
-          letterSpacing: 'var(--tracking-tight)',
-          marginBottom: 'var(--sp-2)',
+          fontFamily: 'var(--f-base-type-family-primary)',
+          fontSize: '22',
+          fontWeight: '300',
+          letterSpacing: '-0.03em',
+          marginBottom: 'var(--f-brand-space-xs)',
         }}>
           Looking good!
         </h2>
-        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)', marginBottom: 'var(--sp-6)' }}>
+        <p style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)', marginBottom: 'var(--f-brand-space-lg)' }}>
           Your fan card is ready
         </p>
 
         <CardPreview teamId={selectedTeamId!} photoDataUrl={photoDataUrl} />
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)', marginTop: 'var(--sp-6)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-sm)', marginTop: 'var(--f-brand-space-lg)' }}>
           <button
             onClick={handleContinue}
-            className="btn btn-primary"
+            className="f-button"
             style={{ width: '100%' }}
           >
             Continue
           </button>
           <button
             onClick={handleRetake}
-            className="btn btn-secondary"
+            className="f-button f-button--secondary"
             style={{ width: '100%' }}
           >
             Retake Photo

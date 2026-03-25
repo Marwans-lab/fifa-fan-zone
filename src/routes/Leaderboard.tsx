@@ -18,49 +18,49 @@ export default function Leaderboard() {
 
   return (
     <Screen>
-      <div className="page-in scroll-y" style={{ display: 'flex', flexDirection: 'column', padding: 'var(--sp-6) var(--sp-5) 100px', width: '100%', maxWidth: 420, margin: '0 auto' }}>
+      <div className="f-page-enter scroll-y" style={{ display: 'flex', flexDirection: 'column', padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) 100px', width: '100%', maxWidth: 420, margin: '0 auto' }}>
 
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 'var(--sp-2)' }}>
-          <button onClick={() => navigate(-1)} className="btn-icon"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 'var(--f-brand-space-xs)' }}>
+          <button onClick={() => navigate(-1)} className="f-button f-button--ghost"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
           <div style={{ flex: 1, textAlign: 'center' }}>
             <h2 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'var(--text-lg)',
-              fontWeight: 'var(--weight-light)',
-              letterSpacing: 'var(--tracking-tight)',
-              color: 'var(--c-text-1)',
+              fontFamily: 'var(--f-base-type-family-primary)',
+              fontSize: '18',
+              fontWeight: '300',
+              letterSpacing: '-0.03em',
+              color: 'var(--f-brand-color-text-default)',
             }}>
               Leaderboard
             </h2>
           </div>
           <button
             onClick={() => { track('leaderboard_refresh_tapped'); refresh() }}
-            className="btn-icon"
+            className="f-button f-button--ghost"
             aria-label="Refresh leaderboard"
           ><img src={flipIcon} width={24} height={24} alt="Refresh" /></button>
         </div>
 
         {/* Subtitle */}
-        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-3)', textAlign: 'center', marginBottom: 'var(--sp-5)', lineHeight: 'var(--leading-normal)', letterSpacing: 'var(--tracking-wide)' }}>
+        <div style={{ fontSize: '11', color: 'var(--f-brand-color-text-muted)', textAlign: 'center', marginBottom: 'var(--f-brand-space-md)', lineHeight: '1.52', letterSpacing: '0.05em' }}>
           Cumulative score · Updated {formatRefresh(lastRefresh)} · auto-refreshes every {LEADERBOARD_REFRESH_MS / 60_000} min
         </div>
 
         {/* Your rank */}
         {myRank !== null && (
           <div style={{
-            textAlign: 'center', marginBottom: 'var(--sp-5)',
-            padding: 'var(--sp-3) var(--sp-4)',
-            borderRadius: 'var(--r-md)',
+            textAlign: 'center', marginBottom: 'var(--f-brand-space-md)',
+            padding: 'var(--f-brand-space-sm) var(--f-brand-space-md)',
+            borderRadius: 'var(--f-brand-radius-small)',
             background: 'rgba(200,16,46,0.07)',
-            border: '1px solid var(--c-border-brand)',
-            backdropFilter: 'var(--glass-blur)',
-            WebkitBackdropFilter: 'var(--glass-blur)',
+            border: '1px solid var(--f-brand-color-border-primary)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
           }}>
-            <span style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)' }}>Your rank: </span>
-            <span style={{ fontSize: 'var(--text-md)', fontWeight: 'var(--weight-med)', color: 'var(--c-accent)' }}>#{myRank}</span>
+            <span style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)' }}>Your rank: </span>
+            <span style={{ fontSize: '15', fontWeight: '500', color: 'var(--f-brand-color-accent)' }}>#{myRank}</span>
             {myRank <= 5 && (
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--c-accent)', marginLeft: 8, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ fontSize: '13', color: 'var(--f-brand-color-accent)', marginLeft: 8, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                 <img src={trophyIcon} width={24} height={24} alt="" /> Top 5 — Avios eligible!
               </span>
             )}
@@ -68,36 +68,36 @@ export default function Leaderboard() {
         )}
 
         {/* Rows */}
-        <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-2)' }}>
+        <div className="f-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-xs)' }}>
           {entries.map(row => (
             <div
               key={row.rank}
               style={{
                 display: 'flex', alignItems: 'center',
-                padding: 'var(--sp-4) var(--sp-4)',
-                borderRadius: 'var(--r-md)',
-                background: row.isMe ? 'rgba(200,16,46,0.07)' : 'var(--glass-bg)',
-                border: `1px solid ${row.isMe ? 'var(--c-border-brand)' : 'var(--c-border)'}`,
-                backdropFilter: 'var(--glass-blur)',
-                WebkitBackdropFilter: 'var(--glass-blur)',
-                boxShadow: 'var(--glass-shine)',
-                transition: 'background var(--dur-base) var(--ease-out)',
+                padding: 'var(--f-brand-space-md) var(--f-brand-space-md)',
+                borderRadius: 'var(--f-brand-radius-small)',
+                background: row.isMe ? 'rgba(200,16,46,0.07)' : 'rgba(255,255,255,0.10)',
+                border: `1px solid ${row.isMe ? 'var(--f-brand-color-border-primary)' : 'var(--f-brand-color-border-default)'}`,
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.14)',
+                transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
               }}
             >
-              <div style={{ width: 28, fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: row.rank <= 3 ? 'var(--c-accent)' : 'var(--c-text-3)', flexShrink: 0, lineHeight: 1, display: 'flex', alignItems: 'center' }}>
+              <div style={{ width: 28, fontSize: '13', fontWeight: '500', color: row.rank <= 3 ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-text-muted)', flexShrink: 0, lineHeight: 1, display: 'flex', alignItems: 'center' }}>
                 {row.rank === 1 ? <img src={trophyIcon} width={24} height={24} alt="1" /> : row.rank}
               </div>
-              <div style={{ flex: 1, fontSize: 'var(--text-md)', color: 'var(--c-text-1)', fontWeight: row.isMe ? 'var(--weight-med)' : 'var(--weight-reg)' }}>
+              <div style={{ flex: 1, fontSize: '15', color: 'var(--f-brand-color-text-default)', fontWeight: row.isMe ? '500' : '400' }}>
                 {row.name}
-                {row.isMe && <span style={{ fontSize: 'var(--text-xs)', color: 'var(--c-accent)', marginLeft: 8, letterSpacing: 'var(--tracking-wide)' }}>you</span>}
+                {row.isMe && <span style={{ fontSize: '11', color: 'var(--f-brand-color-accent)', marginLeft: 8, letterSpacing: '0.05em' }}>you</span>}
               </div>
               {[
                 { label: 'SCORE',    value: `${row.pts} Pts` },
                 { label: 'DURATION', value: `${row.durationMins} Mins` },
               ].map(col => (
-                <div key={col.label} style={{ textAlign: 'right', marginLeft: 'var(--sp-3)', minWidth: 54 }}>
-                  <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--c-text-3)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginBottom: 2 }}>{col.label}</div>
-                  <div style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>{col.value}</div>
+                <div key={col.label} style={{ textAlign: 'right', marginLeft: 'var(--f-brand-space-sm)', minWidth: 54 }}>
+                  <div style={{ fontSize: '10', color: 'var(--f-brand-color-text-muted)', letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 2 }}>{col.label}</div>
+                  <div style={{ fontSize: '13', color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>{col.value}</div>
                 </div>
               ))}
             </div>
@@ -105,16 +105,16 @@ export default function Leaderboard() {
         </div>
 
         {/* Disclaimer */}
-        <p style={{ marginTop: 'var(--sp-6)', fontSize: 'var(--text-xs)', color: 'var(--c-text-3)', textAlign: 'center', lineHeight: 'var(--leading-normal)', letterSpacing: 'var(--tracking-wide)' }}>
+        <p style={{ marginTop: 'var(--f-brand-space-lg)', fontSize: '11', color: 'var(--f-brand-color-text-muted)', textAlign: 'center', lineHeight: '1.52', letterSpacing: '0.05em' }}>
           Top 5 fans win Avios. Rankings are provisional until end-of-event.
         </p>
       </div>
 
       {/* Sticky CTA */}
-      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: 'var(--sp-4) var(--sp-6) var(--sp-8)', background: 'linear-gradient(transparent, var(--c-bg) 40%)' }}>
+      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: 'var(--f-brand-space-md) var(--f-brand-space-lg) var(--f-brand-space-xl)', background: 'linear-gradient(transparent, var(--f-brand-color-background-dark) 40%)' }}>
         <button
           onClick={() => { track('leaderboard_home_tapped'); navigate(homeRoute) }}
-          className="btn btn-primary"
+          className="f-button"
           style={{ width: '100%', maxWidth: 420, display: 'block', margin: '0 auto' }}
         >
           Back home

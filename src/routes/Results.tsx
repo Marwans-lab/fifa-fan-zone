@@ -16,11 +16,11 @@ interface QuizResult {
 
 function statusLabel(score: number, total: number): { label: string; color: string } {
   const pct = score / total
-  if (pct === 1)  return { label: 'Perfect Score', color: 'var(--c-accent)' }
-  if (pct >= 0.8) return { label: 'Top Fan',        color: 'var(--c-accent)' }
-  if (pct >= 0.6) return { label: 'Good Try',       color: 'var(--c-warn)' }
-  if (pct >= 0.4) return { label: 'Keep Learning',  color: 'var(--c-warn)' }
-  return               { label: 'Better luck next time', color: 'var(--c-warn)' }
+  if (pct === 1)  return { label: 'Perfect Score', color: 'var(--f-brand-color-accent)' }
+  if (pct >= 0.8) return { label: 'Top Fan',        color: 'var(--f-brand-color-accent)' }
+  if (pct >= 0.6) return { label: 'Good Try',       color: 'var(--f-brand-color-status-warning)' }
+  if (pct >= 0.4) return { label: 'Keep Learning',  color: 'var(--f-brand-color-status-warning)' }
+  return               { label: 'Better luck next time', color: 'var(--f-brand-color-status-warning)' }
 }
 
 // SVG ring size constants — 1.5× the original 136px
@@ -71,18 +71,18 @@ export default function Results() {
   if (!result) {
     return (
       <Screen centered>
-        <div className="page-in" style={{ padding: 'var(--sp-10) var(--sp-6)', textAlign: 'center', maxWidth: 360, width: '100%' }}>
-          <div style={{ marginBottom: 'var(--sp-5)' }}><img src={trophyIcon} width={24} height={24} alt="" /></div>
-          <h2 style={{ fontSize: 'var(--text-2xl)', fontWeight: 'var(--weight-light)', marginBottom: 'var(--sp-2)', letterSpacing: 'var(--tracking-tight)' }}>
+        <div className="f-page-enter" style={{ padding: 'var(--f-brand-space-2xl) var(--f-brand-space-lg)', textAlign: 'center', maxWidth: 360, width: '100%' }}>
+          <div style={{ marginBottom: 'var(--f-brand-space-md)' }}><img src={trophyIcon} width={24} height={24} alt="" /></div>
+          <h2 style={{ fontSize: '28', fontWeight: '300', marginBottom: 'var(--f-brand-space-xs)', letterSpacing: '-0.03em' }}>
             Your Score
           </h2>
-          <p style={{ fontSize: 'var(--text-3xl)', fontWeight: 'var(--weight-med)', color: 'var(--c-accent)', marginBottom: 'var(--sp-8)', letterSpacing: 'var(--tracking-tight)' }}>
-            {appState.points} <span style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)', fontWeight: 'var(--weight-reg)' }}>pts</span>
+          <p style={{ fontSize: '36', fontWeight: '500', color: 'var(--f-brand-color-accent)', marginBottom: 'var(--f-brand-space-xl)', letterSpacing: '-0.03em' }}>
+            {appState.points} <span style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)', fontWeight: '400' }}>pts</span>
           </p>
           <Button fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
             Play a Quiz
           </Button>
-          <Button variant="ghost" fullWidth style={{ marginTop: 'var(--sp-3)' }} onClick={() => navigate(homeRoute)}>
+          <Button variant="ghost" fullWidth style={{ marginTop: 'var(--f-brand-space-sm)' }} onClick={() => navigate(homeRoute)}>
             Back to Home
           </Button>
         </div>
@@ -96,33 +96,33 @@ export default function Results() {
 
   return (
     <Screen centered>
-      <div className="page-in" style={{ padding: 'var(--sp-10) var(--sp-6)', textAlign: 'center', maxWidth: 380, width: '100%' }}>
+      <div className="f-page-enter" style={{ padding: 'var(--f-brand-space-2xl) var(--f-brand-space-lg)', textAlign: 'center', maxWidth: 380, width: '100%' }}>
 
         {/* Status label */}
         <div style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: 'var(--text-2xl)',
-          fontWeight: 'var(--weight-light)',
-          letterSpacing: 'var(--tracking-tight)',
+          fontFamily: 'var(--f-base-type-family-primary)',
+          fontSize: '28',
+          fontWeight: '300',
+          letterSpacing: '-0.03em',
           color,
-          marginBottom: 'var(--sp-2)',
+          marginBottom: 'var(--f-brand-space-xs)',
         }}>
           {label}
         </div>
 
         {/* Quiz title */}
         <div style={{
-          fontSize: 'var(--text-sm)',
-          color: 'var(--c-text-2)',
-          marginBottom: 'var(--sp-8)',
-          letterSpacing: 'var(--tracking-wide)',
+          fontSize: '13',
+          color: 'var(--f-brand-color-text-subtle)',
+          marginBottom: 'var(--f-brand-space-xl)',
+          letterSpacing: '0.05em',
           textTransform: 'uppercase',
         }}>
           {quizTitle}
         </div>
 
         {/* Score ring — animated SVG progress, count-up points inside */}
-        <div style={{ position: 'relative', width: RING_SIZE, height: RING_SIZE, margin: '0 auto var(--sp-8)' }}>
+        <div style={{ position: 'relative', width: RING_SIZE, height: RING_SIZE, margin: '0 auto var(--f-brand-space-xl)' }}>
           <svg
             width={RING_SIZE}
             height={RING_SIZE}
@@ -139,7 +139,7 @@ export default function Results() {
               strokeLinecap="round"
               strokeDasharray={RING_CIRC}
               strokeDashoffset={RING_CIRC * (1 - ringProgress)}
-              style={{ transition: 'stroke-dashoffset 900ms cubic-bezier(0.4,0,0.2,1)', filter: `drop-shadow(0 0 8px ${color}88)` }}
+              style={{ transition: 'stroke-dashoffset var(--f-brand-motion-duration-gentle) var(--f-brand-motion-easing-standard)', filter: `drop-shadow(0 0 8px ${color}88)` }}
             />
           </svg>
           {/* Inner content */}
@@ -147,26 +147,26 @@ export default function Results() {
             position: 'absolute',
             inset: RING_STROKE * 2,
             borderRadius: '50%',
-            background: 'var(--glass-bg)',
-            backdropFilter: 'var(--glass-blur)',
-            WebkitBackdropFilter: 'var(--glass-blur)',
-            boxShadow: `0 0 40px ${color}22, var(--glass-shine)`,
+            background: 'rgba(255,255,255,0.10)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            boxShadow: `0 0 40px ${color}22, inset 0 1px 0 rgba(255,255,255,0.14)`,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-            <span style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-3xl)', fontWeight: 'var(--weight-light)', letterSpacing: 'var(--tracking-tight)', color, lineHeight: 1 }}>
+            <span style={{ fontFamily: 'var(--f-base-type-family-primary)', fontSize: '36', fontWeight: '300', letterSpacing: '-0.03em', color, lineHeight: 1 }}>
               {displayPoints}
             </span>
-            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginTop: 4 }}>
+            <span style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', letterSpacing: '0.09em', textTransform: 'uppercase', marginTop: 4 }}>
               Points
             </span>
           </div>
         </div>
 
         {/* Actions */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)', width: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-sm)', width: '100%' }}>
           <Button fullWidth onClick={() => { track('results_leaderboard_tapped'); navigate('/leaderboard') }}>
             View Leaderboard
           </Button>
