@@ -3,15 +3,15 @@ import { useNavigate } from 'react-router-dom'
 import { track } from '../lib/analytics'
 import { WORLD_CUP_TEAMS } from '../data/teams'
 
-/* ── Progress bar (FDS burgundy brand fill) ──────────────────────────────── */
+/* ── Progress bar (reused from Picture flow) ──────────────────────────────── */
 function ProgressBar({ progress }: { progress: number }) {
   return (
     <div
       style={{
         flex: 1,
         height: 8,
-        borderRadius: 'var(--r-full)',
-        background: 'var(--c-lt-border)',
+        borderRadius: 'var(--f-brand-radius-rounded)',
+        background: 'var(--f-brand-color-border-default)',
         overflow: 'hidden',
       }}
     >
@@ -19,9 +19,10 @@ function ProgressBar({ progress }: { progress: number }) {
         style={{
           width: `${progress}%`,
           height: '100%',
-          borderRadius: 'var(--r-full)',
-          background: 'var(--c-lt-brand)',
-          transition: `width var(--dur-slow) var(--ease-out)`,
+          borderRadius: 'var(--f-brand-radius-rounded)',
+          background: 'linear-gradient(-90deg, var(--f-brand-color-border-success) 61.5%, var(--f-brand-color-background-success) 100%)',
+          boxShadow: '1px 0px 6px var(--f-brand-shadow-large)',
+          transition: `width var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit)`,
         }}
       />
     </div>
@@ -33,7 +34,6 @@ export default function TeamSelection() {
   const navigate = useNavigate()
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [open, setOpen] = useState(false)
-  const [focused, setFocused] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const selectedTeam = selectedId
@@ -69,14 +69,14 @@ export default function TeamSelection() {
 
   return (
     <div
-      className="page-in"
+      className="f-page-enter"
       style={{
         height: '100%',
         width: '100%',
-        background: 'var(--c-lt-bg)',
+        background: 'var(--f-brand-color-background-default)',
         display: 'flex',
         flexDirection: 'column',
-        padding: 'var(--sp-5)',
+        padding: 'var(--f-brand-space-md)',
         boxSizing: 'border-box',
         overflow: 'hidden',
       }}
@@ -85,7 +85,7 @@ export default function TeamSelection() {
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        gap: 'var(--sp-4)',
+        gap: 'var(--f-brand-space-md)',
         flexShrink: 0,
       }}>
         <button
@@ -94,11 +94,9 @@ export default function TeamSelection() {
           style={{
             width: 48,
             height: 48,
-            minWidth: 44,
-            minHeight: 44,
-            borderRadius: 'var(--r-full)',
+            borderRadius: 'var(--f-brand-radius-rounded)',
             border: 'none',
-            background: 'var(--c-lt-surface)',
+            background: 'var(--f-brand-color-background-light)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -107,8 +105,8 @@ export default function TeamSelection() {
             WebkitTapHighlightColor: 'transparent',
           }}
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M15 19l-7-7 7-7" stroke="var(--c-lt-text-1)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M15 19l-7-7 7-7" stroke="var(--f-brand-color-text-default)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
         <ProgressBar progress={50} />
@@ -116,126 +114,102 @@ export default function TeamSelection() {
 
       {/* ── Title ───────────────────────────────────────────────── */}
       <h2 style={{
-        fontFamily: 'var(--font-display)',
-        fontSize: 'var(--text-2xl)',
+        fontFamily: 'var(--f-base-type-family-primary)',
+        fontSize: 28,
         lineHeight: '36px',
-        fontWeight: 'var(--weight-light)',
-        color: 'var(--c-lt-text-1)',
+        fontWeight: '300',
+        color: 'var(--f-brand-color-text-default)',
         textAlign: 'center',
-        marginTop: 'var(--sp-8)',
-        marginBottom: 'var(--sp-8)',
+        marginTop: 'var(--f-brand-space-xl)',
+        marginBottom: 'var(--f-brand-space-xl)',
       }}>
         Select your team
       </h2>
 
       {/* ── Dropdown ────────────────────────────────────────────── */}
       <div ref={dropdownRef} style={{ position: 'relative', flexShrink: 0 }}>
-        {/* Trigger input — FDS input style */}
+        {/* Trigger input */}
         <button
           onClick={() => setOpen(prev => !prev)}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
           aria-haspopup="listbox"
           aria-expanded={open}
           style={{
             width: '100%',
             height: 48,
-            minHeight: 44,
-            background: 'var(--c-lt-surface)',
-            border: focused || open
-              ? '2px solid var(--c-lt-text-1)'
-              : '1px solid var(--c-lt-border)',
-            borderRadius: 'var(--r-sm)',
-            padding: focused || open
-              ? '0 calc(var(--sp-4) - 1px)'
-              : '0 var(--sp-4)',
+            background: 'var(--f-brand-color-background-light)',
+            border: '1px solid var(--f-brand-color-border-default)',
+            borderRadius: 'var(--f-brand-radius-base)',
+            padding: '0 var(--f-brand-space-md)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             cursor: 'pointer',
-            fontFamily: 'var(--font-body)',
-            fontSize: 'var(--text-md)',
-            color: selectedTeam ? 'var(--c-lt-text-1)' : 'var(--c-lt-text-2)',
+            fontFamily: 'inherit',
+            fontSize: 16,
+            color: selectedTeam ? 'var(--f-brand-color-text-default)' : 'var(--f-brand-color-text-subtle)',
             WebkitTapHighlightColor: 'transparent',
-            transition: `border-color var(--dur-base) var(--ease-out)`,
           }}
         >
-          <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
-            {selectedTeam && (
-              <span style={{ fontSize: 'var(--text-xl)' }}>{selectedTeam.flag}</span>
-            )}
-            <span>{selectedTeam ? selectedTeam.name : 'Select a team'}</span>
-          </span>
+          <span>{selectedTeam ? selectedTeam.name : 'Select a team'}</span>
           <svg
             width="16"
             height="16"
             viewBox="0 0 24 24"
             fill="none"
+            aria-hidden="true"
             style={{
               flexShrink: 0,
               transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-              transition: `transform var(--dur-base) var(--ease-out)`,
+              transition: `transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)`,
             }}
           >
-            <path d="M6 9l6 6 6-6" stroke="var(--c-lt-text-2)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M6 9l6 6 6-6" stroke="var(--f-brand-color-text-subtle)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
 
-        {/* Listbox — FDS surface */}
+        {/* Listbox */}
         {open && (
           <ul
             role="listbox"
             style={{
               position: 'absolute',
-              top: 'calc(100% + var(--sp-2))',
+              top: 'calc(100% + var(--f-brand-space-xs))',
               left: 0,
               right: 0,
-              background: 'var(--c-lt-surface)',
-              borderRadius: 'var(--r-lg)',
-              boxShadow: 'var(--c-lt-shadow-lg)',
-              padding: 'var(--sp-2)',
+              background: 'var(--f-brand-color-background-light)',
+              borderRadius: 'var(--f-brand-radius-base)',
+              boxShadow: '0px 2px 4px 2px var(--f-brand-shadow-medium)',
+              padding: '0 var(--f-brand-space-md)',
               maxHeight: 280,
               overflowY: 'auto',
               zIndex: 10,
               listStyle: 'none',
               margin: 0,
               scrollbarWidth: 'thin',
-              scrollbarColor: 'var(--c-lt-text-3) transparent',
+              scrollbarColor: 'var(--f-brand-color-text-muted) transparent',
             }}
           >
-            {WORLD_CUP_TEAMS.map(team => {
-              const isSelected = team.id === selectedId
-              return (
-                <li
-                  key={team.id}
-                  role="option"
-                  aria-selected={isSelected}
-                  onClick={() => handleTeamSelect(team.id)}
-                  style={{
-                    padding: 'var(--sp-3) var(--sp-4)',
-                    borderRadius: 'var(--r-sm)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--sp-3)',
-                    cursor: 'pointer',
-                    fontFamily: 'var(--font-body)',
-                    fontSize: 'var(--text-md)',
-                    fontWeight: 'var(--weight-med)',
-                    color: 'var(--c-lt-text-1)',
-                    background: isSelected ? 'var(--c-lt-bg)' : 'transparent',
-                    border: isSelected
-                      ? '1.5px solid var(--c-lt-brand)'
-                      : '1.5px solid transparent',
-                    minHeight: 44,
-                    WebkitTapHighlightColor: 'transparent',
-                    transition: `background var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out)`,
-                  }}
-                >
-                  <span style={{ fontSize: 'var(--text-xl)' }}>{team.flag}</span>
-                  <span>{team.name}</span>
-                </li>
-              )
-            })}
+            {WORLD_CUP_TEAMS.map((team, i) => (
+              <li
+                key={team.id}
+                role="option"
+                aria-selected={team.id === selectedId}
+                onClick={() => handleTeamSelect(team.id)}
+                style={{
+                  padding: 'var(--f-brand-space-md) 0',
+                  borderBottom: i < WORLD_CUP_TEAMS.length - 1
+                    ? '1px solid var(--f-brand-color-background-default)'
+                    : 'none',
+                  fontSize: 16,
+                  color: 'var(--f-brand-color-text-default)',
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  WebkitTapHighlightColor: 'transparent',
+                }}
+              >
+                {team.name}
+              </li>
+            ))}
           </ul>
         )}
       </div>
@@ -246,34 +220,32 @@ export default function TeamSelection() {
       {/* ── "Already have a card? Log in" ───────────────────────── */}
       <p style={{
         textAlign: 'center',
-        fontSize: 'var(--text-lg)',
-        fontFamily: 'var(--font-body)',
-        color: 'var(--c-lt-text-1)',
-        marginBottom: 'var(--sp-4)',
+        fontSize: 18,
+        color: 'var(--f-brand-color-text-default)',
+        marginBottom: 'var(--f-brand-space-md)',
         flexShrink: 0,
       }}>
         Already have a card?{' '}
-        <span style={{ fontWeight: 'var(--weight-med)' }}>Log in</span>
+        <span style={{ fontWeight: '500' }}>Log in</span>
       </p>
 
-      {/* ── Continue button — FDS primary ─────────────────────── */}
+      {/* ── Continue button ─────────────────────────────────────── */}
       <button
         onClick={handleContinue}
         disabled={!selectedId}
         style={{
           width: '100%',
           height: 56,
-          minHeight: 44,
-          borderRadius: 'var(--r-full)',
+          borderRadius: 'var(--f-brand-radius-rounded)',
           border: 'none',
-          background: 'var(--c-lt-brand)',
-          color: 'var(--c-lt-surface)',
-          fontSize: 'var(--text-md)',
-          fontWeight: 'var(--weight-med)',
-          fontFamily: 'var(--font-body)',
+          background: 'var(--f-brand-color-primary)',
+          color: 'var(--f-brand-color-background-light)',
+          fontSize: 16,
+          fontWeight: '500',
+          fontFamily: 'inherit',
           cursor: selectedId ? 'pointer' : 'default',
           opacity: selectedId ? 1 : 0.5,
-          transition: `opacity var(--dur-base) var(--ease-out)`,
+          transition: `opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)`,
           flexShrink: 0,
           WebkitTapHighlightColor: 'transparent',
         }}

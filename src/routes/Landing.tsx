@@ -39,15 +39,15 @@ function FanCardStack() {
               borderRadius: 'var(--f-brand-radius-inner)',
               transform: `rotate(${card.rotate}deg)`,
               background: `linear-gradient(160deg, ${team.colors[0]}, ${team.colors[1]})`,
-              boxShadow: 'var(--f-brand-shadow-large)',
+              boxShadow: '0 8px 32px var(--f-brand-shadow-medium)',
               zIndex: card.zIndex,
               overflow: 'hidden',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) var(--f-brand-space-md)',
-              border: '1px solid rgba(255,255,255,0.12)',
+              padding: '24px 20px 20px',
+              border: '1px solid var(--f-brand-color-border-subtle)',
               position: 'relative',
             }}
           >
@@ -73,18 +73,12 @@ function FanCardStack() {
             {/* Card header */}
             <div style={{ textAlign: 'left', width: '100%', position: 'relative', zIndex: 1 }}>
               <div style={{
-                font: 'var(--f-brand-type-caption)',
-                letterSpacing: 2,
-                color: 'var(--f-brand-color-text-light)',
+                fontSize: '13', letterSpacing: 2, color: 'var(--f-brand-color-background-light)',
                 textTransform: 'uppercase',
               }}>
                 Your Fan Card
               </div>
-              <div style={{
-                font: 'var(--f-brand-type-caption)',
-                color: 'rgba(255,255,255,0.65)',
-                letterSpacing: 1,
-              }}>
+              <div style={{ fontSize: '10', color: 'rgba(255,255,255,0.65)', letterSpacing: 1 }}>
                 Collector Edition
               </div>
             </div>
@@ -94,7 +88,7 @@ function FanCardStack() {
               width: card.width * 0.45,
               height: card.width * 0.45,
               borderRadius: '50%',
-              background: 'rgba(0,0,0,0.20)',
+              background: 'var(--f-brand-color-background-dark-40a)',
               border: '3px solid rgba(255,255,255,0.45)',
               display: 'flex',
               alignItems: 'center',
@@ -107,17 +101,12 @@ function FanCardStack() {
 
             {/* Team name */}
             <div style={{
-              font: 'var(--f-brand-type-headline-medium)',
-              color: 'rgba(255,255,255,0.88)',
-              letterSpacing: 0.5,
-              fontStyle: 'italic',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--f-brand-space-xs)',
-              position: 'relative',
-              zIndex: 1,
+              fontSize: '18', fontWeight: '500',
+              color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic',
+              display: 'flex', alignItems: 'center', gap: 8,
+              position: 'relative', zIndex: 1,
             }}>
-              <span style={{ fontStyle: 'normal', fontSize: 22 }}>{team.flag}</span>
+              <span style={{ fontStyle: 'normal', fontSize: '22' }}>{team.flag}</span>
               {team.name}
             </div>
           </div>
@@ -148,7 +137,7 @@ export default function Landing() {
 
   return (
     <div
-      className="f-page-entry"
+      className="f-page-enter"
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -162,8 +151,11 @@ export default function Landing() {
       {/* Title */}
       <h1
         style={{
-          font: 'var(--f-brand-type-page-title-thin)',
-          color: 'var(--f-brand-color-text-heading)',
+          fontFamily: 'var(--f-base-type-family-primary)',
+          fontSize: '28',
+          fontWeight: '100',
+          lineHeight: '36px',
+          color: 'var(--f-brand-color-text-default)',
           textAlign: 'center',
           margin: 0,
           maxWidth: 361,
@@ -179,13 +171,24 @@ export default function Landing() {
 
       {/* CTA Button */}
       <button
-        className="f-button f-button--primary"
         onClick={handlePrimary}
         style={{
           marginTop: 'var(--f-brand-space-2xl)',
           width: '100%',
           maxWidth: 361,
-          boxShadow: 'var(--f-brand-shadow-medium)',
+          height: 56,
+          borderRadius: 'var(--f-brand-radius-rounded)',
+          background: 'var(--f-brand-color-primary)',
+          color: 'var(--f-brand-color-background-light)',
+          fontFamily: 'var(--f-base-type-family-secondary)',
+          fontSize: '15',
+          fontWeight: '500',
+          lineHeight: '24px',
+          border: 'none',
+          cursor: 'pointer',
+          padding: 'var(--f-brand-space-md) var(--f-brand-space-xl)',
+          WebkitTapHighlightColor: 'transparent',
+          boxShadow: '0 8px 16px var(--f-brand-shadow-medium)',
         }}
       >
         {hasCard ? 'Continue' : 'Create your fan card'}
