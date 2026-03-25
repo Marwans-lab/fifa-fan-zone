@@ -484,6 +484,8 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
     return () => clearTimeout(t)
   }, [])
 
+  const label = stars === 3 ? 'Perfect!' : stars === 2 ? 'Great Job!' : 'Well Done!'
+
   return (
     <div
       style={{
