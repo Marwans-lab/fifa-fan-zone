@@ -53,15 +53,15 @@ function JourneyStep({
     transition: 'all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
     flexShrink: 0, position: 'relative',
     ...(isCompleted ? {
-      background: 'var(--f-brand-color-text-light)', border: '1px solid var(--f-brand-color-text-light)',
-      boxShadow: '0 0 25px rgba(255,255,255,0.4)',
+      background: 'var(--f-brand-color-text-default)', border: '1px solid var(--f-brand-color-text-default)',
+      boxShadow: '0 0 25px rgba(0,0,0,0.15)',
       transform: 'scale(1.1)', zIndex: 20,
     } : isCurrent ? {
-      background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.4)',
+      background: 'rgba(0,0,0,0.06)', border: '1px solid var(--f-brand-color-border-default)',
       transform: 'scale(1.05)', zIndex: 20,
-      boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
+      boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
     } : {
-      background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)',
+      background: 'rgba(0,0,0,0.02)', border: '1px solid var(--f-brand-color-border-default)',
       zIndex: 10,
     }),
   }
@@ -78,21 +78,21 @@ function JourneyStep({
             className="animate-ping-slow"
             style={{
               position: 'absolute', inset: 0, borderRadius: '50%',
-              background: 'rgba(255,255,255,0.3)', pointerEvents: 'none',
+              background: 'rgba(0,0,0,0.1)', pointerEvents: 'none',
             }}
           />
         )}
         {isCompleted ? (
-          <img src={tickBlack} width={24} height={24} alt="" style={{ position: 'relative', zIndex: 10 }} />
+          <img src={tickBlack} width={24} height={24} alt="" style={{ position: 'relative', zIndex: 10, filter: 'invert(1)' }} />
         ) : (
-          <img src={iconSrc} width={24} height={24} alt="" style={{ opacity: isCurrent ? 1 : 0.3 }} />
+          <img src={iconSrc} width={24} height={24} alt="" style={{ opacity: isCurrent ? 1 : 0.3, filter: 'invert(1)' }} />
         )}
       </div>
       <span style={{
         fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '400',
         fontSize: 12, letterSpacing: '-0.02em', textAlign: 'center',
         whiteSpace: 'nowrap', transition: 'color var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
-        color: isCompleted || isCurrent ? 'var(--f-brand-color-text-light)' : 'rgba(255,255,255,0.3)',
+        color: isCompleted || isCurrent ? 'var(--f-brand-color-text-default)' : 'var(--f-brand-color-text-subtle)',
       }}>
         {label}
       </span>
@@ -127,12 +127,12 @@ function JourneyCard({
       aria-label="Your Journey Progress"
       style={{
         width: '100%',
-        background: 'rgba(255,255,255,0.08)',
+        background: 'var(--f-brand-color-background-light)',
         borderRadius: 'var(--f-brand-radius-outer)',
         padding: 'var(--f-brand-space-md)',
-        border: '1px solid rgba(255,255,255,0.15)',
+        border: '1px solid var(--f-brand-color-border-default)',
         marginBottom: 'var(--f-brand-space-md)',
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
         overflow: 'hidden',
       }}
     >
@@ -142,13 +142,13 @@ function JourneyCard({
           <h2 style={{
             fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '500',
             fontSize: 12, letterSpacing: '0.05em',
-            color: 'rgba(255,255,255,0.7)', marginBottom: 'var(--f-brand-space-2xs)',
+            color: 'var(--f-brand-color-text-muted)', marginBottom: 'var(--f-brand-space-2xs)',
           }}>
             Your journey
           </h2>
           <p style={{
             fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '500',
-            fontSize: 18, letterSpacing: '-0.02em', color: 'var(--f-brand-color-text-light)',
+            fontSize: 18, letterSpacing: '-0.02em', color: 'var(--f-brand-color-text-default)',
           }}>
             {status}
           </p>
@@ -156,13 +156,13 @@ function JourneyCard({
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: '10px 16px',
-          background: 'rgba(255,255,255,0.2)',
+          background: 'rgba(0,0,0,0.04)',
           borderRadius: 9999,
-          border: '1px solid rgba(255,255,255,0.2)',
+          border: '1px solid var(--f-brand-color-border-default)',
         }}>
           <span style={{
             fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '400',
-            fontSize: 12, color: 'var(--f-brand-color-text-light)', lineHeight: 1,
+            fontSize: 12, color: 'var(--f-brand-color-text-default)', lineHeight: 1,
           }}>
             Step {Math.min(doneCount + 1, 4)}/4
           </span>
@@ -187,10 +187,10 @@ function JourneyCard({
                 {!isLast && (() => {
                   const nextDone = achieved[i + 1]
                   const lineBg = done && nextDone
-                    ? 'var(--f-brand-color-text-light)'                               // fully active
+                    ? 'var(--f-brand-color-text-default)'                               // fully active
                     : done && !nextDone
-                    ? 'linear-gradient(90deg, var(--f-brand-color-text-light), rgba(255,255,255,0.2))' // half active
-                    : 'rgba(255,255,255,0.08)'                                        // inactive
+                    ? 'linear-gradient(90deg, var(--f-brand-color-text-default), var(--f-brand-color-border-default))' // half active
+                    : 'var(--f-brand-color-border-default)'                             // inactive
                   return (
                     <div style={{
                       flex: 1, height: 2, marginTop: 27,
@@ -211,11 +211,11 @@ function JourneyCard({
         style={{
           width: '100%', height: 48,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: 'var(--f-brand-color-text-light)', color: 'var(--f-brand-color-primary)',
+          background: 'var(--f-brand-color-text-default)', color: 'var(--f-brand-color-text-light)',
           fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '600',
           fontSize: 15, borderRadius: 9999, border: 'none',
           marginTop: 28, cursor: 'pointer',
-          boxShadow: '0 10px 30px rgba(255,255,255,0.12)',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.12)',
           transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
           WebkitTapHighlightColor: 'transparent',
         }}
@@ -250,7 +250,7 @@ function ProgressRing({
       {/* background track */}
       <circle
         cx={radius} cy={radius} r={norm}
-        fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={stroke}
+        fill="none" stroke="var(--f-brand-color-border-default)" strokeWidth={stroke}
       />
       {/* progress arc */}
       {progress > 0 && (
@@ -304,8 +304,8 @@ function QuizCard({
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '18px 14px', borderRadius: 'var(--f-brand-radius-outer)',
         minHeight: 120,
-        border: `1px solid ${locked ? 'rgba(255,255,255,0.06)' : done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
-        background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
+        border: `1px solid ${locked ? 'var(--f-brand-color-border-disabled)' : done ? 'rgba(0,212,170,0.25)' : 'var(--f-brand-color-border-default)'}`,
+        background: 'var(--f-brand-color-background-light)',
         opacity: locked ? 0.55 : 1,
         cursor: locked ? 'not-allowed' : 'pointer',
         textAlign: 'left', fontFamily: 'inherit', color: 'var(--f-brand-color-text-default)',
@@ -323,7 +323,7 @@ function QuizCard({
             radius={RING_RADIUS}
             stroke={RING_STROKE}
             progress={done ? 1 : 0}
-            color={done ? 'var(--f-brand-color-accent)' : 'rgba(255,255,255,0.3)'}
+            color={done ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-border-default)'}
           />
           {/* Inner circle */}
           <div style={{
@@ -334,16 +334,16 @@ function QuizCard({
             borderRadius: '50%',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             background: locked
-              ? 'rgba(255,255,255,0.04)'
+              ? 'rgba(0,0,0,0.04)'
               : done
               ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
-              : 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
-            boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.25)',
+              : 'linear-gradient(135deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02))',
+            boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.08)',
           }}>
             {locked ? (
-              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4 }} />
+              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4, filter: 'invert(1)' }} />
             ) : done ? (
-              <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
+              <img src={tickBlack} width={24} height={24} alt="" />
             ) : (
               <span style={{ fontSize: 30 }}>{quiz.emoji}</span>
             )}
@@ -355,19 +355,19 @@ function QuizCard({
           <h3 style={{
             fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '500',
             fontSize: '18',
-            color: locked ? 'var(--f-brand-color-text-subtle)' : 'var(--f-brand-color-text-light)',
+            color: locked ? 'var(--f-brand-color-text-subtle)' : 'var(--f-brand-color-text-default)',
           }}>
             {quiz.title}
           </h3>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 'var(--f-brand-space-xs)' }}>
+          <p style={{ fontSize: 13, color: 'var(--f-brand-color-text-muted)', marginTop: 'var(--f-brand-space-xs)' }}>
             {done ? (
-              <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: '500' }}>
+              <span style={{ color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>
                 Completed · {Math.round(progress * quiz.questions.length)}/{quiz.questions.length} correct
               </span>
             ) : locked ? (
               lockMessage ?? 'Complete previous quiz to unlock'
             ) : (
-              <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: '500' }}>
+              <span style={{ color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>
                 {quiz.questions.length} questions · {quiz.questions.length * 15}s
               </span>
             )}
@@ -378,7 +378,7 @@ function QuizCard({
       {!locked && !done && (
         <div style={{
           width: 36, height: 36, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+          background: 'rgba(0,0,0,0.04)', border: '1px solid var(--f-brand-color-border-default)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           marginRight: 'var(--f-brand-space-2xs)',
         }}>
@@ -387,13 +387,13 @@ function QuizCard({
               aria-label="Loading"
               style={{
                 width: 20, height: 20, borderRadius: '50%',
-                border: '2.5px solid rgba(255,255,255,0.15)',
+                border: '2.5px solid var(--f-brand-color-border-default)',
                 borderTopColor: 'var(--f-brand-color-accent)',
                 animation: 'quiz-spin 0.6s linear infinite',
               }}
             />
           ) : (
-            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
+            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5, filter: 'invert(1)' }} />
           )}
         </div>
       )}
@@ -432,8 +432,8 @@ function DragDropQuizCard({
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '18px 14px', borderRadius: 'var(--f-brand-radius-outer)',
         minHeight: 120,
-        border: `1px solid ${locked ? 'rgba(255,255,255,0.06)' : done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
-        background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
+        border: `1px solid ${locked ? 'var(--f-brand-color-border-disabled)' : done ? 'rgba(0,212,170,0.25)' : 'var(--f-brand-color-border-default)'}`,
+        background: 'var(--f-brand-color-background-light)',
         opacity: locked ? 0.55 : 1,
         cursor: locked ? 'not-allowed' : 'pointer',
         textAlign: 'left', fontFamily: 'inherit', color: 'var(--f-brand-color-text-default)',
@@ -450,7 +450,7 @@ function DragDropQuizCard({
             radius={RING_RADIUS}
             stroke={RING_STROKE}
             progress={done ? 1 : 0}
-            color={done ? 'var(--f-brand-color-accent)' : 'rgba(255,255,255,0.3)'}
+            color={done ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-border-default)'}
           />
           <div style={{
             position: 'absolute',
@@ -460,16 +460,16 @@ function DragDropQuizCard({
             borderRadius: '50%',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             background: locked
-              ? 'rgba(255,255,255,0.04)'
+              ? 'rgba(0,0,0,0.04)'
               : done
               ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
-              : 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
-            boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.25)',
+              : 'linear-gradient(135deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02))',
+            boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.08)',
           }}>
             {locked ? (
-              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4 }} />
+              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4, filter: 'invert(1)' }} />
             ) : done ? (
-              <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
+              <img src={tickBlack} width={24} height={24} alt="" />
             ) : (
               <span style={{ fontSize: '28' }}>{ddQuiz.emoji}</span>
             )}
@@ -483,7 +483,7 @@ function DragDropQuizCard({
           }}>
             {ddQuiz.title}
           </h3>
-          <p style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)', marginTop: 'var(--f-brand-space-xs)' }}>
+          <p style={{ fontSize: '13', color: 'var(--f-brand-color-text-muted)', marginTop: 'var(--f-brand-space-xs)' }}>
             {done ? (
               <span style={{ color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>
                 Completed · {result.score}/{result.total} correct
@@ -501,7 +501,7 @@ function DragDropQuizCard({
       {!locked && !done && (
         <div style={{
           width: 36, height: 36, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+          background: 'rgba(0,0,0,0.04)', border: '1px solid var(--f-brand-color-border-default)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           marginRight: 'var(--f-brand-space-2xs)',
         }}>
@@ -510,13 +510,13 @@ function DragDropQuizCard({
               aria-label="Loading"
               style={{
                 width: 20, height: 20, borderRadius: '50%',
-                border: '2.5px solid rgba(255,255,255,0.15)',
+                border: '2.5px solid var(--f-brand-color-border-default)',
                 borderTopColor: 'var(--f-brand-color-accent)',
                 animation: 'quiz-spin 0.6s linear infinite',
               }}
             />
           ) : (
-            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
+            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5, filter: 'invert(1)' }} />
           )}
         </div>
       )}
@@ -560,8 +560,8 @@ function ExtraQuizCard({
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '18px 14px', borderRadius: 'var(--f-brand-radius-outer)',
         minHeight: 120,
-        border: `1px solid ${locked ? 'rgba(255,255,255,0.06)' : done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
-        background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
+        border: `1px solid ${locked ? 'var(--f-brand-color-border-disabled)' : done ? 'rgba(0,212,170,0.25)' : 'var(--f-brand-color-border-default)'}`,
+        background: 'var(--f-brand-color-background-light)',
         opacity: locked ? 0.55 : 1,
         cursor: locked ? 'not-allowed' : 'pointer',
         textAlign: 'left', fontFamily: 'inherit', color: 'var(--f-brand-color-text-default)',
@@ -578,7 +578,7 @@ function ExtraQuizCard({
             radius={RING_RADIUS}
             stroke={RING_STROKE}
             progress={done ? 1 : 0}
-            color={done ? 'var(--f-brand-color-accent)' : 'rgba(255,255,255,0.3)'}
+            color={done ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-border-default)'}
           />
           <div style={{
             position: 'absolute',
@@ -588,16 +588,16 @@ function ExtraQuizCard({
             borderRadius: '50%',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             background: locked
-              ? 'rgba(255,255,255,0.04)'
+              ? 'rgba(0,0,0,0.04)'
               : done
               ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
-              : 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
-            boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.25)',
+              : 'linear-gradient(135deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02))',
+            boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.08)',
           }}>
             {locked ? (
-              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4 }} />
+              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4, filter: 'invert(1)' }} />
             ) : done ? (
-              <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
+              <img src={tickBlack} width={24} height={24} alt="" />
             ) : (
               <span style={{ fontSize: '28' }}>{emoji}</span>
             )}
@@ -611,7 +611,7 @@ function ExtraQuizCard({
           }}>
             {title}
           </h3>
-          <p style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)', marginTop: 'var(--f-brand-space-xs)' }}>
+          <p style={{ fontSize: '13', color: 'var(--f-brand-color-text-muted)', marginTop: 'var(--f-brand-space-xs)' }}>
             {done ? (
               <span style={{ color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>
                 Completed · {result.score}/{result.total} correct
@@ -629,7 +629,7 @@ function ExtraQuizCard({
       {!locked && !done && (
         <div style={{
           width: 36, height: 36, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+          background: 'rgba(0,0,0,0.04)', border: '1px solid var(--f-brand-color-border-default)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           marginRight: 'var(--f-brand-space-2xs)',
         }}>
@@ -638,13 +638,13 @@ function ExtraQuizCard({
               aria-label="Loading"
               style={{
                 width: 20, height: 20, borderRadius: '50%',
-                border: '2.5px solid rgba(255,255,255,0.15)',
+                border: '2.5px solid var(--f-brand-color-border-default)',
                 borderTopColor: 'var(--f-brand-color-accent)',
                 animation: 'quiz-spin 0.6s linear infinite',
               }}
             />
           ) : (
-            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
+            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5, filter: 'invert(1)' }} />
           )}
         </div>
       )}
@@ -751,9 +751,9 @@ export default function Card() {
     navigate('/swipe-quiz', { state: { quizId } })
   }
 
-  function handleStartCardMatch() {
-    track('quiz_card_tapped', { quizId: 'card-match', type: 'card_match' })
-    navigate('/card-match')
+  function handleStartCardMatch(flowId: FlowId) {
+    track('quiz_card_tapped', { quizId: flowId, type: 'card_match' })
+    navigate('/card-match', { state: { flowId } })
   }
 
   function handleStartRankingQuiz(quizId: string) {
@@ -772,6 +772,47 @@ export default function Card() {
           overflowY: 'auto', WebkitOverflowScrolling: 'touch',
         }}
       >
+          {/* ── Fan Hub Header ─────────────────────────────────── */}
+          <header style={{
+            textAlign: 'center',
+            paddingTop: 'var(--sp-6)',
+            paddingBottom: 'var(--sp-6)',
+            position: 'relative',
+          }}>
+            {/* Ambient brand glow */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                top: '-40%', left: '50%', transform: 'translateX(-50%)',
+                width: '120%', height: '160%',
+                background: 'radial-gradient(ellipse at center, rgba(200,16,46,0.12) 0%, transparent 70%)',
+                pointerEvents: 'none',
+              }}
+            />
+            <h1 style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 'var(--weight-thin)',
+              fontStyle: 'italic',
+              fontSize: 'var(--text-2xl)',
+              lineHeight: 'var(--leading-tight)',
+              letterSpacing: 'var(--tracking-tight)',
+              color: 'var(--c-text-1)',
+              position: 'relative',
+            }}>
+              FIFA Fan Zone
+            </h1>
+            <p style={{
+              fontFamily: 'var(--font-body)',
+              fontWeight: 'var(--weight-reg)',
+              fontSize: 'var(--text-sm)',
+              color: 'var(--c-text-2)',
+              marginTop: 'var(--sp-2)',
+              position: 'relative',
+            }}>
+              {cardComplete ? 'Welcome back, fan!' : 'Flip to complete your fan profile'}
+            </p>
+          </header>
 
           {/* ── Fan Card ──────────────────────────────────────── */}
           <section aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 'var(--f-brand-space-md)' }}>
@@ -858,12 +899,22 @@ export default function Card() {
                 )
               })}
               <ExtraQuizCard
-                emoji="🃏"
-                title="Card Match"
-                subtitle="Match the pairs · Memory Game"
-                result={state.quizResults['card-match']}
+                emoji="✈️"
+                title="The Connector"
+                subtitle="5 rounds · Card Match"
+                result={state.quizResults['the-connector'] ? { score: state.quizResults['the-connector'].score, total: state.quizResults['the-connector'].total } : undefined}
                 locked={!cardComplete}
-                onStart={handleStartCardMatch}
+                lockMessage="Complete your fan card to unlock"
+                onStart={() => handleStartCardMatch('the-connector')}
+              />
+              <ExtraQuizCard
+                emoji="🏟"
+                title="The Architect"
+                subtitle="5 rounds · Card Match"
+                result={state.quizResults['the-architect'] ? { score: state.quizResults['the-architect'].score, total: state.quizResults['the-architect'].total } : undefined}
+                locked={!cardComplete || !isFlowUnlocked('the-architect')}
+                lockMessage={!cardComplete ? 'Complete your fan card to unlock' : 'Complete The Connector to unlock'}
+                onStart={() => handleStartCardMatch('the-architect')}
               />
               {RANKING_QUIZZES.map(rq => {
                 const rqResult = state.quizResults[rq.id]
