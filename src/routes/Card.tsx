@@ -5,10 +5,7 @@ import FanCard from '../components/FanCard'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import { renderCardToBlob, buildShareText } from '../lib/cardExport'
-import { QUIZZES } from '../data/quizzes'
-import { DRAG_DROP_QUIZZES } from '../data/dragDropQuizzes'
-import { IMAGE_QUIZZES } from '../data/imageQuizzes'
-import { SWIPE_QUIZZES } from '../data/swipeQuizzes'
+import { FLOWS, MECHANIC_LABELS, type Flow } from '../data/flows'
 import lockIcon    from '../assets/icons/Lock-white.svg'
 import chevRight   from '../assets/icons/Chevron-right-white.svg'
 import tickBlack   from '../assets/icons/Tick-black.svg'
@@ -265,155 +262,25 @@ function ProgressRing({
   )
 }
 
-// ─── Quiz card ────────────────────────────────────────────────────────────────
-type QuizCardState = 'active' | 'done' | 'locked'
+// ─── Flow card ───────────────────────────────────────────────────────────────
+type FlowCardState = 'active' | 'done' | 'locked' | 'coming-soon'
 
 const RING_RADIUS = 40
 const RING_STROKE = 3.5
 
-function QuizCard({
-  quiz,
+function FlowCard({
+  flow,
   cardState,
-  progress,
-  lockMessage,
-  onStart,
-}: {
-  quiz: (typeof QUIZZES)[number]
-  cardState: QuizCardState
-  progress: number
-  lockMessage?: string
-  onStart: () => void
-}) {
-  const locked = cardState === 'locked'
-  const done   = cardState === 'done'
-  const [loading, setLoading] = useState(false)
-
-  function handleClick() {
-    if (loading) return
-    setLoading(true)
-    setTimeout(() => onStart(), 300)
-  }
-
-  return (
-    <button
-      onClick={locked ? undefined : handleClick}
-      disabled={locked || loading}
-      style={{
-        width: '100%',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '18px 14px', borderRadius: 22,
-        minHeight: 120,
-        border: `1px solid ${locked ? 'rgba(255,255,255,0.06)' : done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
-        background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
-        opacity: locked ? 0.55 : 1,
-        cursor: locked ? 'not-allowed' : 'pointer',
-        textAlign: 'left', fontFamily: 'inherit', color: 'var(--c-text-1)',
-        transition: 'all 400ms ease',
-        WebkitTapHighlightColor: 'transparent',
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        {/* Circular thumbnail with progress ring */}
-        <div style={{
-          width: RING_RADIUS * 2, height: RING_RADIUS * 2,
-          position: 'relative', flexShrink: 0,
-        }}>
-          <ProgressRing
-            radius={RING_RADIUS}
-            stroke={RING_STROKE}
-            progress={done ? 1 : 0}
-            color={done ? 'var(--c-accent)' : 'rgba(255,255,255,0.3)'}
-          />
-          {/* Inner circle */}
-          <div style={{
-            position: 'absolute',
-            top: RING_STROKE + 2, left: RING_STROKE + 2,
-            width: (RING_RADIUS - RING_STROKE - 2) * 2,
-            height: (RING_RADIUS - RING_STROKE - 2) * 2,
-            borderRadius: '50%',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: locked
-              ? 'rgba(255,255,255,0.04)'
-              : done
-              ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
-              : 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
-            boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.25)',
-          }}>
-            {locked ? (
-              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4 }} />
-            ) : done ? (
-              <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
-            ) : (
-              <span style={{ fontSize: 30 }}>{quiz.emoji}</span>
-            )}
-          </div>
-        </div>
-
-        {/* Text */}
-        <div>
-          <h3 style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 'var(--text-lg)',
-            color: locked ? 'var(--c-text-2)' : '#ffffff',
-          }}>
-            {quiz.title}
-          </h3>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>
-            {done ? (
-              <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 'var(--weight-med)' }}>
-                Completed · {Math.round(progress * quiz.questions.length)}/{quiz.questions.length} correct
-              </span>
-            ) : locked ? (
-              lockMessage ?? 'Complete previous quiz to unlock'
-            ) : (
-              <span style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 'var(--weight-med)' }}>
-                {quiz.questions.length} questions · {quiz.questions.length * 15}s
-              </span>
-            )}
-          </p>
-        </div>
-      </div>
-
-      {!locked && !done && (
-        <div style={{
-          width: 36, height: 36, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginRight: 4,
-        }}>
-          {loading ? (
-            <div
-              aria-label="Loading"
-              style={{
-                width: 20, height: 20, borderRadius: '50%',
-                border: '2.5px solid rgba(255,255,255,0.15)',
-                borderTopColor: 'var(--c-accent)',
-                animation: 'quiz-spin 0.6s linear infinite',
-              }}
-            />
-          ) : (
-            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
-          )}
-        </div>
-      )}
-    </button>
-  )
-}
-
-// ─── Drag-drop quiz card ─────────────────────────────────────────────────────
-function DragDropQuizCard({
-  quiz: ddQuiz,
   result,
-  locked,
   onStart,
 }: {
-  quiz: (typeof DRAG_DROP_QUIZZES)[number]
+  flow: Flow
+  cardState: FlowCardState
   result: { score: number; total: number } | undefined
-  locked: boolean
   onStart: () => void
 }) {
-  const done = !!result
-  const totalPairs = ddQuiz.questions.reduce((sum, q) => sum + q.pairs.length, 0)
+  const locked = cardState === 'locked' || cardState === 'coming-soon'
+  const done = cardState === 'done'
   const [loading, setLoading] = useState(false)
 
   function handleClick() {
@@ -470,7 +337,7 @@ function DragDropQuizCard({
             ) : done ? (
               <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
             ) : (
-              <span style={{ fontSize: 'var(--text-2xl)' }}>{ddQuiz.emoji}</span>
+              <span style={{ fontSize: 'var(--text-2xl)' }}>{flow.emoji}</span>
             )}
           </div>
         </div>
@@ -480,149 +347,26 @@ function DragDropQuizCard({
             fontSize: 'var(--text-lg)',
             color: locked ? 'var(--c-text-2)' : 'var(--c-text-1)',
           }}>
-            {ddQuiz.title}
+            {flow.name}
           </h3>
           <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)', marginTop: 'var(--sp-2)' }}>
             {done ? (
               <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
-                Completed · {result.score}/{result.total} correct
+                Completed{result ? ` · ${result.score}/${result.total} correct` : ''}
               </span>
+            ) : cardState === 'coming-soon' ? (
+              'Coming Soon'
             ) : locked ? (
-              'Complete your fan card to unlock'
+              'Complete previous flow to unlock'
             ) : (
               <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
-                {totalPairs} matches · Drag & Drop
+                {flow.subtitle} · {MECHANIC_LABELS[flow.mechanic]}
               </span>
             )}
           </p>
         </div>
       </div>
-      {!locked && !done && (
-        <div style={{
-          width: 36, height: 36, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginRight: 4,
-        }}>
-          {loading ? (
-            <div
-              aria-label="Loading"
-              style={{
-                width: 20, height: 20, borderRadius: '50%',
-                border: '2.5px solid rgba(255,255,255,0.15)',
-                borderTopColor: 'var(--c-accent)',
-                animation: 'quiz-spin 0.6s linear infinite',
-              }}
-            />
-          ) : (
-            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5 }} />
-          )}
-        </div>
-      )}
-    </button>
-  )
-}
 
-// ─── Generic quiz card (image, swipe, card-match) ───────────────────────────
-function ExtraQuizCard({
-  emoji,
-  title,
-  subtitle,
-  result,
-  locked,
-  onStart,
-}: {
-  emoji: string
-  title: string
-  subtitle: string
-  result: { score: number; total: number } | undefined
-  locked: boolean
-  onStart: () => void
-}) {
-  const done = !!result
-  const [loading, setLoading] = useState(false)
-
-  function handleClick() {
-    if (loading) return
-    setLoading(true)
-    setTimeout(() => onStart(), 300)
-  }
-
-  return (
-    <button
-      onClick={locked ? undefined : handleClick}
-      disabled={locked || loading}
-      style={{
-        width: '100%',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '18px 14px', borderRadius: 22,
-        minHeight: 120,
-        border: `1px solid ${locked ? 'rgba(255,255,255,0.06)' : done ? 'rgba(0,212,170,0.25)' : 'rgba(255,255,255,0.12)'}`,
-        background: locked ? 'rgba(255,255,255,0.02)' : done ? 'rgba(0,212,170,0.06)' : 'rgba(255,255,255,0.05)',
-        opacity: locked ? 0.55 : 1,
-        cursor: locked ? 'not-allowed' : 'pointer',
-        textAlign: 'left', fontFamily: 'inherit', color: 'var(--c-text-1)',
-        transition: 'all 400ms ease',
-        WebkitTapHighlightColor: 'transparent',
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        <div style={{
-          width: RING_RADIUS * 2, height: RING_RADIUS * 2,
-          position: 'relative', flexShrink: 0,
-        }}>
-          <ProgressRing
-            radius={RING_RADIUS}
-            stroke={RING_STROKE}
-            progress={done ? 1 : 0}
-            color={done ? 'var(--c-accent)' : 'rgba(255,255,255,0.3)'}
-          />
-          <div style={{
-            position: 'absolute',
-            top: RING_STROKE + 2, left: RING_STROKE + 2,
-            width: (RING_RADIUS - RING_STROKE - 2) * 2,
-            height: (RING_RADIUS - RING_STROKE - 2) * 2,
-            borderRadius: '50%',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: locked
-              ? 'rgba(255,255,255,0.04)'
-              : done
-              ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
-              : 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
-            boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.25)',
-          }}>
-            {locked ? (
-              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4 }} />
-            ) : done ? (
-              <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
-            ) : (
-              <span style={{ fontSize: 'var(--text-2xl)' }}>{emoji}</span>
-            )}
-          </div>
-        </div>
-        <div>
-          <h3 style={{
-            fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-med)',
-            fontSize: 'var(--text-lg)',
-            color: locked ? 'var(--c-text-2)' : 'var(--c-text-1)',
-          }}>
-            {title}
-          </h3>
-          <p style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)', marginTop: 'var(--sp-2)' }}>
-            {done ? (
-              <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
-                Completed · {result.score}/{result.total} correct
-              </span>
-            ) : locked ? (
-              'Complete your fan card to unlock'
-            ) : (
-              <span style={{ color: 'var(--c-text-1)', fontWeight: 'var(--weight-med)' }}>
-                {subtitle}
-              </span>
-            )}
-          </p>
-        </div>
-      </div>
       {!locked && !done && (
         <div style={{
           width: 36, height: 36, borderRadius: '50%',
@@ -696,44 +440,17 @@ export default function Card() {
 
   const cardComplete = state.fanCard.completedAt !== null
 
-  function getCardState(i: number): QuizCardState {
+  function getFlowState(flow: Flow): FlowCardState {
+    if (flow.comingSoon) return 'coming-soon'
     if (!cardComplete) return 'locked'
-    const quizId = QUIZZES[i].id
-    if (state.quizResults[quizId]) return 'done'
-    if (i === 0) return 'active'
-    const prevId = QUIZZES[i - 1].id
-    return state.quizResults[prevId] ? 'active' : 'locked'
+    if (state.completedFlows.includes(flow.id)) return 'done'
+    if (state.unlockedFlows.includes(flow.id)) return 'active'
+    return 'locked'
   }
 
-  function getProgress(i: number): number {
-    const result = state.quizResults[QUIZZES[i].id]
-    if (!result) return 0
-    return result.score / result.total
-  }
-
-  function handleStartQuiz(quizId: string) {
-    track('quiz_card_tapped', { quizId })
-    navigate('/quiz', { state: { quizId } })
-  }
-
-  function handleStartDragDropQuiz(quizId: string) {
-    track('quiz_card_tapped', { quizId, type: 'drag_drop' })
-    navigate('/drag-drop-quiz', { state: { quizId } })
-  }
-
-  function handleStartImageQuiz(quizId: string) {
-    track('quiz_card_tapped', { quizId, type: 'image' })
-    navigate('/image-quiz', { state: { quizId } })
-  }
-
-  function handleStartSwipeQuiz(quizId: string) {
-    track('quiz_card_tapped', { quizId, type: 'swipe' })
-    navigate('/swipe-quiz', { state: { quizId } })
-  }
-
-  function handleStartCardMatch() {
-    track('quiz_card_tapped', { quizId: 'card-match', type: 'card_match' })
-    navigate('/card-match')
+  function handleStartFlow(flow: Flow) {
+    track('flow_card_tapped', { flowId: flow.id, mechanic: flow.mechanic })
+    navigate(flow.route, { state: { flowId: flow.id } })
   }
 
   return (
@@ -786,55 +503,15 @@ export default function Card() {
             </div>
 
             <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {QUIZZES.map((quiz, i) => (
-                <QuizCard
-                  key={quiz.id}
-                  quiz={quiz}
-                  cardState={getCardState(i)}
-                  progress={getProgress(i)}
-                  lockMessage={!cardComplete ? 'Complete your fan card to unlock' : undefined}
-                  onStart={() => handleStartQuiz(quiz.id)}
+              {FLOWS.map(flow => (
+                <FlowCard
+                  key={flow.id}
+                  flow={flow}
+                  cardState={getFlowState(flow)}
+                  result={state.quizResults[flow.id]}
+                  onStart={() => handleStartFlow(flow)}
                 />
               ))}
-              {DRAG_DROP_QUIZZES.map(ddQuiz => (
-                <DragDropQuizCard
-                  key={ddQuiz.id}
-                  quiz={ddQuiz}
-                  result={state.quizResults[ddQuiz.id]}
-                  locked={!cardComplete}
-                  onStart={() => handleStartDragDropQuiz(ddQuiz.id)}
-                />
-              ))}
-              {IMAGE_QUIZZES.map(iq => (
-                <ExtraQuizCard
-                  key={iq.id}
-                  emoji={iq.emoji}
-                  title={iq.title}
-                  subtitle={`${iq.questions.length} questions · Image Quiz`}
-                  result={state.quizResults[iq.id]}
-                  locked={!cardComplete}
-                  onStart={() => handleStartImageQuiz(iq.id)}
-                />
-              ))}
-              {SWIPE_QUIZZES.map(sq => (
-                <ExtraQuizCard
-                  key={sq.id}
-                  emoji={sq.emoji}
-                  title={sq.title}
-                  subtitle={`${sq.statements.length} statements · Swipe`}
-                  result={state.quizResults[sq.id]}
-                  locked={!cardComplete}
-                  onStart={() => handleStartSwipeQuiz(sq.id)}
-                />
-              ))}
-              <ExtraQuizCard
-                emoji="🃏"
-                title="Card Match"
-                subtitle="Match the pairs · Memory Game"
-                result={state.quizResults['card-match']}
-                locked={!cardComplete}
-                onStart={handleStartCardMatch}
-              />
             </div>
           </section>
         </div>

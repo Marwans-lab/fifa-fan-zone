@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import { WORLD_CUP_TEAMS } from '../data/teams'
@@ -598,7 +598,9 @@ function CompletionOverlay({ moves, timeLeft, stars, onResults, onPlayAgain }: C
 
 export default function CardMatch() {
   const navigate = useNavigate()
-  const { addPoints, recordQuizResult } = useStore()
+  const location = useLocation()
+  const { addPoints, recordQuizResult, completeFlow } = useStore()
+  const flowId = (location.state as { flowId?: string } | null)?.flowId
 
   const [deck, setDeck] = useState<MatchCard[]>(() => buildDeck())
   const [statuses, setStatuses] = useState<Record<string, CardStatus>>(() => {
@@ -640,10 +642,12 @@ export default function CardMatch() {
       setGameComplete(true)
       const score = calculateScore(moves, matchedPairs)
       addPoints(score)
-      recordQuizResult('card-match', score, PAIR_COUNT)
-      track('card_match_completed', { moves, timeLeft: 0, score, pairs: PAIR_COUNT, matchedPairs })
+      const resultId = flowId ?? 'card-match'
+      recordQuizResult(resultId, score, PAIR_COUNT)
+      if (flowId) completeFlow(flowId)
+      track('card_match_completed', { moves, timeLeft: 0, score, pairs: PAIR_COUNT, matchedPairs, flowId })
     }
-  }, [timeLeft, started, gameComplete, moves, matchedPairs, addPoints, recordQuizResult])
+  }, [timeLeft, started, gameComplete, moves, matchedPairs, addPoints, recordQuizResult, completeFlow, flowId])
 
   // Check completion (all matched)
   useEffect(() => {
@@ -651,10 +655,12 @@ export default function CardMatch() {
       setGameComplete(true)
       const score = calculateScore(moves, matchedPairs)
       addPoints(score)
-      recordQuizResult('card-match', score, PAIR_COUNT)
-      track('card_match_completed', { moves, timeLeft, score, pairs: PAIR_COUNT })
+      const resultId = flowId ?? 'card-match'
+      recordQuizResult(resultId, score, PAIR_COUNT)
+      if (flowId) completeFlow(flowId)
+      track('card_match_completed', { moves, timeLeft, score, pairs: PAIR_COUNT, flowId })
     }
-  }, [matchedPairs, moves, timeLeft, addPoints, recordQuizResult])
+  }, [matchedPairs, moves, timeLeft, addPoints, recordQuizResult, completeFlow, flowId])
 
   const calculateScore = (m: number, matched: number): number => {
     if (matched === 0) return 0
@@ -747,9 +753,9 @@ export default function CardMatch() {
   const handleResults = useCallback(() => {
     const score = calculateScore(moves, matchedPairs)
     navigate('/results', {
-      state: { score, total: PAIR_COUNT, quizTitle: 'Card Match' },
+      state: { score, total: PAIR_COUNT, quizTitle: 'Card Match', flowId },
     })
-  }, [moves, matchedPairs, navigate])
+  }, [moves, matchedPairs, flowId, navigate])
 
   const handleBack = useCallback(() => {
     track('card_match_abandoned', { moves, timeLeft, matchedPairs })
@@ -759,9 +765,9 @@ export default function CardMatch() {
   const handleNext = useCallback(() => {
     const score = calculateScore(moves, matchedPairs)
     navigate('/results', {
-      state: { score, total: PAIR_COUNT, quizTitle: 'Card Match' },
+      state: { score, total: PAIR_COUNT, quizTitle: 'Card Match', flowId },
     })
-  }, [moves, matchedPairs, navigate])
+  }, [moves, matchedPairs, flowId, navigate])
 
   const progressPercent = (matchedPairs / PAIR_COUNT) * 100
 

@@ -12,6 +12,7 @@ interface QuizResult {
   score: number
   total: number
   quizTitle: string
+  flowId?: string
 }
 
 function statusLabel(score: number, total: number): { label: string; color: string } {
@@ -79,7 +80,7 @@ export default function Results() {
           <p style={{ fontSize: 'var(--text-3xl)', fontWeight: 'var(--weight-med)', color: 'var(--c-accent)', marginBottom: 'var(--sp-8)', letterSpacing: 'var(--tracking-tight)' }}>
             {appState.points} <span style={{ fontSize: 'var(--text-sm)', color: 'var(--c-text-2)', fontWeight: 'var(--weight-reg)' }}>pts</span>
           </p>
-          <Button fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
+          <Button fullWidth onClick={() => { track('results_play_again'); navigate('/card') }}>
             Play a Quiz
           </Button>
           <Button variant="ghost" fullWidth style={{ marginTop: 'var(--sp-3)' }} onClick={() => navigate(homeRoute)}>
@@ -173,7 +174,7 @@ export default function Results() {
           <Button variant="secondary" fullWidth onClick={() => { track('results_home_tapped'); navigate(homeRoute) }}>
             Back to Home
           </Button>
-          <Button variant="ghost" fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
+          <Button variant="ghost" fullWidth onClick={() => { track('results_play_again'); navigate('/card') }}>
             Play Another Quiz
           </Button>
         </div>

@@ -473,11 +473,11 @@ function SwipeActions({
 export default function SwipeQuizRoute() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { addPoints, recordQuizResult } = useStore()
+  const { addPoints, recordQuizResult, completeFlow } = useStore()
 
-  const quizId = (location.state as { quizId?: string } | null)?.quizId
-  const quizIdx = quizId
-    ? SWIPE_QUIZZES.findIndex((q) => q.id === quizId)
+  const flowId = (location.state as { flowId?: string } | null)?.flowId
+  const quizIdx = flowId
+    ? SWIPE_QUIZZES.findIndex((q) => q.id === flowId)
     : 0
   const resolvedIdx = quizIdx >= 0 ? quizIdx : 0
   const quiz = SWIPE_QUIZZES[resolvedIdx]
@@ -552,13 +552,15 @@ export default function SwipeQuizRoute() {
             const finalScore = correct ? score + 1 : score
             addPoints(finalScore)
             recordQuizResult(quiz.id, finalScore, total)
+            if (flowId) completeFlow(flowId)
             track('swipe_quiz_completed', {
               quizId: quiz.id,
+              flowId,
               score: finalScore,
               total,
             })
             navigate('/results', {
-              state: { score: finalScore, total, quizTitle: quiz.title },
+              state: { score: finalScore, total, quizTitle: quiz.title, flowId },
             })
           }
         }, 420)
@@ -574,6 +576,8 @@ export default function SwipeQuizRoute() {
       quiz,
       addPoints,
       recordQuizResult,
+      completeFlow,
+      flowId,
       navigate,
     ],
   )

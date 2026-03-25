@@ -396,10 +396,10 @@ function QuestionScreen({
 export default function QuizRoute() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { addPoints, recordQuizResult } = useStore()
+  const { addPoints, recordQuizResult, completeFlow } = useStore()
 
-  const quizId      = (location.state as { quizId?: string } | null)?.quizId
-  const quizIdx     = quizId ? QUIZZES.findIndex(q => q.id === quizId) : 0
+  const flowId      = (location.state as { flowId?: string } | null)?.flowId
+  const quizIdx     = flowId ? QUIZZES.findIndex(q => q.id === flowId) : 0
   const resolvedIdx = quizIdx >= 0 ? quizIdx : 0
 
   const [qIdx,      setQIdx]      = useState(0)
@@ -466,8 +466,9 @@ export default function QuizRoute() {
       setScore(finalScore => {
         addPoints(finalScore)
         recordQuizResult(quiz.id, finalScore, total)
-        track('quiz_completed', { quizId: quiz.id, score: finalScore, total })
-        navigate('/results', { state: { score: finalScore, total, quizTitle: quiz.title } })
+        if (flowId) completeFlow(flowId)
+        track('quiz_completed', { quizId: quiz.id, flowId, score: finalScore, total })
+        navigate('/results', { state: { score: finalScore, total, quizTitle: quiz.title, flowId } })
         return finalScore
       })
       return
@@ -488,7 +489,7 @@ export default function QuizRoute() {
       isAnimating.current = false
       // slide-in triggered by qIdx useEffect above
     }, 250)
-  }, [isLast, quiz, total, addPoints, recordQuizResult, navigate])
+  }, [isLast, quiz, total, addPoints, recordQuizResult, completeFlow, flowId, navigate])
 
   const handleBack = useCallback(() => {
     track('quiz_abandoned', { quizId: quiz?.id, qIdx })

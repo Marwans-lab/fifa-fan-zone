@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { FLOWS } from '../data/flows'
 
 export interface FanCard {
   teamId: string | null
@@ -17,6 +18,10 @@ export interface AppState {
   fanCard: FanCard
   points: number
   quizResults: Record<string, QuizResult>
+  /** Flow IDs that have been unlocked — flow 1 is always unlocked */
+  unlockedFlows: string[]
+  /** Flow IDs that have been completed */
+  completedFlows: string[]
 }
 
 const STORAGE_KEY = 'fanzone_state'
@@ -36,6 +41,8 @@ const defaultState: AppState = {
   },
   points: 0,
   quizResults: {},
+  unlockedFlows: [FLOWS[0].id],
+  completedFlows: [],
 }
 
 function loadState(): AppState {
@@ -48,6 +55,9 @@ function loadState(): AppState {
       ...saved,
       // deep-merge fanCard so missing fields fall back to defaults
       fanCard: { ...defaultState.fanCard, ...(saved.fanCard ?? {}) },
+      // Ensure flow arrays exist (migration from older state shape)
+      unlockedFlows: saved.unlockedFlows ?? defaultState.unlockedFlows,
+      completedFlows: saved.completedFlows ?? defaultState.completedFlows,
     }
   } catch {
     return defaultState
@@ -105,10 +115,26 @@ export function useStore() {
     }))
   }, [])
 
+  const completeFlow = useCallback((flowId: string) => {
+    _setState(prev => {
+      const alreadyCompleted = prev.completedFlows.includes(flowId)
+      const newCompleted = alreadyCompleted ? prev.completedFlows : [...prev.completedFlows, flowId]
+
+      // Unlock the next flow in sequence
+      const currentFlow = FLOWS.find(f => f.id === flowId)
+      const nextFlow = currentFlow ? FLOWS.find(f => f.order === currentFlow.order + 1) : undefined
+      const newUnlocked = nextFlow && !prev.unlockedFlows.includes(nextFlow.id)
+        ? [...prev.unlockedFlows, nextFlow.id]
+        : prev.unlockedFlows
+
+      return { ...prev, completedFlows: newCompleted, unlockedFlows: newUnlocked }
+    })
+  }, [])
+
   const resetState = useCallback(() => {
     _setState(() => defaultState)
     localStorage.removeItem(STORAGE_KEY)
   }, [])
 
-  return { state: _state, updateFanCard, addPoints, recordQuizResult, resetState }
+  return { state: _state, updateFanCard, addPoints, recordQuizResult, completeFlow, resetState }
 }
