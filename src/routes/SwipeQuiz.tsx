@@ -14,9 +14,11 @@ const FEEDBACK_DURATION = 1200
 function SwipeLabel({
   direction,
   opacity,
+  label,
 }: {
   direction: 'true' | 'false'
   opacity: number
+  label: string
 }) {
   const isTrue = direction === 'true'
   return (
@@ -41,7 +43,7 @@ function SwipeLabel({
         zIndex: 10,
       }}
     >
-      {isTrue ? 'TRUE' : 'FALSE'}
+      {label}
     </div>
   )
 }
@@ -137,12 +139,14 @@ function StatementCard({
   isDragging,
   feedbackState,
   exitDirection,
+  labels,
 }: {
   statement: SwipeStatement
   offsetX: number
   isDragging: boolean
   feedbackState: 'correct' | 'incorrect' | null
   exitDirection: 'left' | 'right' | null
+  labels: { right: string; left: string }
 }) {
   const rotation = offsetX * ROTATION_FACTOR
   const trueOpacity = Math.max(0, Math.min(1, offsetX / SWIPE_THRESHOLD))
@@ -241,8 +245,8 @@ function StatementCard({
         />
 
         {/* Swipe labels */}
-        <SwipeLabel direction="true" opacity={trueOpacity} />
-        <SwipeLabel direction="false" opacity={falseOpacity} />
+        <SwipeLabel direction="true" opacity={trueOpacity} label={labels.right} />
+        <SwipeLabel direction="false" opacity={falseOpacity} label={labels.left} />
 
         {/* Feedback overlay */}
         <FeedbackOverlay
@@ -379,9 +383,11 @@ function ProgressDots({
 function SwipeActions({
   onSwipe,
   disabled,
+  labels,
 }: {
   onSwipe: (dir: 'left' | 'right') => void
   disabled: boolean
+  labels: { right: string; left: string }
 }) {
   return (
     <div
@@ -396,7 +402,7 @@ function SwipeActions({
       <button
         onClick={() => onSwipe('left')}
         disabled={disabled}
-        aria-label="False"
+        aria-label={labels.left}
         style={{
           width: 60,
           height: 60,
@@ -433,7 +439,7 @@ function SwipeActions({
       <button
         onClick={() => onSwipe('right')}
         disabled={disabled}
-        aria-label="True"
+        aria-label={labels.right}
         style={{
           width: 60,
           height: 60,
@@ -482,6 +488,7 @@ export default function SwipeQuizRoute() {
   const resolvedIdx = quizIdx >= 0 ? quizIdx : 0
   const quiz = SWIPE_QUIZZES[resolvedIdx]
   const total = quiz.statements.length
+  const labels = quiz.labels ?? { right: 'True', left: 'False' }
 
   const [currentIdx, setCurrentIdx] = useState(0)
   const [score, setScore] = useState(0)
@@ -745,6 +752,7 @@ export default function SwipeQuizRoute() {
               isDragging={isDragging}
               feedbackState={feedbackState}
               exitDirection={exitDirection}
+              labels={labels}
             />
           </div>
         </div>
@@ -769,7 +777,7 @@ export default function SwipeQuizRoute() {
               opacity: 0.6,
             }}
           >
-            False
+            {labels.left}
           </span>
           <span
             style={{
@@ -782,7 +790,7 @@ export default function SwipeQuizRoute() {
               opacity: 0.6,
             }}
           >
-            True
+            {labels.right}
           </span>
         </div>
 
@@ -796,6 +804,7 @@ export default function SwipeQuizRoute() {
           <SwipeActions
             onSwipe={handleButtonSwipe}
             disabled={isTransitioning || feedbackState !== null}
+            labels={labels}
           />
         </div>
       </div>
