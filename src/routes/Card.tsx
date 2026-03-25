@@ -531,6 +531,7 @@ function ExtraQuizCard({
   subtitle,
   result,
   locked,
+  lockMessage,
   onStart,
 }: {
   emoji: string
@@ -538,6 +539,7 @@ function ExtraQuizCard({
   subtitle: string
   result: { score: number; total: number } | undefined
   locked: boolean
+  lockMessage?: string
   onStart: () => void
 }) {
   const done = !!result
@@ -615,7 +617,7 @@ function ExtraQuizCard({
                 Completed · {result.score}/{result.total} correct
               </span>
             ) : locked ? (
-              'Complete your fan card to unlock'
+              lockMessage ?? 'Complete your fan card to unlock'
             ) : (
               <span style={{ color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>
                 {subtitle}
@@ -822,17 +824,21 @@ export default function Card() {
                   onStart={() => handleStartImageQuiz(iq.id)}
                 />
               ))}
-              {SWIPE_QUIZZES.map(sq => (
-                <ExtraQuizCard
-                  key={sq.id}
-                  emoji={sq.emoji}
-                  title={sq.title}
-                  subtitle={`${sq.statements.length} statements · Swipe`}
-                  result={state.quizResults[sq.id]}
-                  locked={!cardComplete}
-                  onStart={() => handleStartSwipeQuiz(sq.id)}
-                />
-              ))}
+              {SWIPE_QUIZZES.map(sq => {
+                const swipeLocked = !cardComplete || (sq.unlockedBy ? !state.quizResults[sq.unlockedBy] : false)
+                return (
+                  <ExtraQuizCard
+                    key={sq.id}
+                    emoji={sq.emoji}
+                    title={sq.title}
+                    subtitle={`${sq.statements.length} statements · Swipe`}
+                    result={state.quizResults[sq.id]}
+                    locked={swipeLocked}
+                    lockMessage={!cardComplete ? 'Complete your fan card to unlock' : 'Complete the previous quiz to unlock'}
+                    onStart={() => handleStartSwipeQuiz(sq.id)}
+                  />
+                )
+              })}
               <ExtraQuizCard
                 emoji="🃏"
                 title="Card Match"
