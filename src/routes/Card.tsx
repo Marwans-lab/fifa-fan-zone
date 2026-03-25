@@ -734,9 +734,9 @@ export default function Card() {
     navigate('/swipe-quiz', { state: { quizId } })
   }
 
-  function handleStartCardMatch() {
-    track('quiz_card_tapped', { quizId: 'card-match', type: 'card_match' })
-    navigate('/card-match')
+  function handleStartCardMatch(flowId: FlowId) {
+    track('quiz_card_tapped', { quizId: flowId, type: 'card_match' })
+    navigate('/card-match', { state: { flowId } })
   }
 
   function handleStartRankingQuiz(quizId: string) {
@@ -840,12 +840,22 @@ export default function Card() {
                 )
               })}
               <ExtraQuizCard
-                emoji="🃏"
-                title="Card Match"
-                subtitle="Match the pairs · Memory Game"
-                result={state.quizResults['card-match']}
+                emoji="✈️"
+                title="The Connector"
+                subtitle="5 rounds · Card Match"
+                result={state.quizResults['the-connector'] ? { score: state.quizResults['the-connector'].score, total: state.quizResults['the-connector'].total } : undefined}
                 locked={!cardComplete}
-                onStart={handleStartCardMatch}
+                lockMessage="Complete your fan card to unlock"
+                onStart={() => handleStartCardMatch('the-connector')}
+              />
+              <ExtraQuizCard
+                emoji="🏟"
+                title="The Architect"
+                subtitle="5 rounds · Card Match"
+                result={state.quizResults['the-architect'] ? { score: state.quizResults['the-architect'].score, total: state.quizResults['the-architect'].total } : undefined}
+                locked={!cardComplete || !isFlowUnlocked('the-architect')}
+                lockMessage={!cardComplete ? 'Complete your fan card to unlock' : 'Complete The Connector to unlock'}
+                onStart={() => handleStartCardMatch('the-architect')}
               />
               {RANKING_QUIZZES.map(rq => {
                 const rqResult = state.quizResults[rq.id]
