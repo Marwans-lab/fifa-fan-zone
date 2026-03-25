@@ -17,6 +17,28 @@ import targetIcon  from '../assets/icons/Target-white.svg'
 import fireIcon    from '../assets/icons/Fire-white.svg'
 import trophyIcon  from '../assets/icons/Trophy-white.svg'
 import qrIcon      from '../assets/icons/qr-logo.svg'
+import stadiumIcon from '../assets/icons/stadium-white.svg'
+import legendsIcon from '../assets/icons/legends-white.svg'
+import historyIcon from '../assets/icons/history-white.svg'
+import refereeIcon from '../assets/icons/referee-white.svg'
+import globeIcon   from '../assets/icons/globe-white.svg'
+import rankingIcon from '../assets/icons/ranking-white.svg'
+import cardsIcon   from '../assets/icons/cards-white.svg'
+
+const QUIZ_ICONS: Record<string, string> = {
+  'host-city-hunt':         stadiumIcon,
+  'world-cup-specials':     trophyIcon,
+  'stadium-showdown':       stadiumIcon,
+  'football-legends':       legendsIcon,
+  'tournament-history':     historyIcon,
+  'the-referee':            refereeIcon,
+  'match-host-cities':      globeIcon,
+  'stadium-spotter':        stadiumIcon,
+  'swipe-world-cup-facts':  trophyIcon,
+  'the-historian':          historyIcon,
+  'card-match':             cardsIcon,
+  'the-retrospective':      rankingIcon,
+}
 
 // ─── Milestone config ─────────────────────────────────────────────────────────
 const MILESTONES = [
@@ -345,7 +367,7 @@ function QuizCard({
             ) : done ? (
               <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
             ) : (
-              <span style={{ fontSize: 30 }}>{quiz.emoji}</span>
+              <img src={QUIZ_ICONS[quiz.id] ?? trophyIcon} width={28} height={28} alt="" style={{ opacity: 0.85 }} />
             )}
           </div>
         </div>
@@ -471,7 +493,7 @@ function DragDropQuizCard({
             ) : done ? (
               <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
             ) : (
-              <span style={{ fontSize: '28' }}>{ddQuiz.emoji}</span>
+              <img src={QUIZ_ICONS[ddQuiz.id] ?? trophyIcon} width={28} height={28} alt="" style={{ opacity: 0.85 }} />
             )}
           </div>
         </div>
@@ -526,7 +548,7 @@ function DragDropQuizCard({
 
 // ─── Generic quiz card (image, swipe, card-match) ───────────────────────────
 function ExtraQuizCard({
-  emoji,
+  iconSrc,
   title,
   subtitle,
   result,
@@ -534,7 +556,7 @@ function ExtraQuizCard({
   lockMessage,
   onStart,
 }: {
-  emoji: string
+  iconSrc: string
   title: string
   subtitle: string
   result: { score: number; total: number } | undefined
@@ -599,7 +621,7 @@ function ExtraQuizCard({
             ) : done ? (
               <img src={tickBlack} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
             ) : (
-              <span style={{ fontSize: '28' }}>{emoji}</span>
+              <img src={iconSrc} width={28} height={28} alt="" style={{ opacity: 0.85 }} />
             )}
           </div>
         </div>
@@ -816,7 +838,7 @@ export default function Card() {
               {IMAGE_QUIZZES.map(iq => (
                 <ExtraQuizCard
                   key={iq.id}
-                  emoji={iq.emoji}
+                  iconSrc={QUIZ_ICONS[iq.id] ?? trophyIcon}
                   title={iq.title}
                   subtitle={`${iq.questions.length} questions · Image Quiz`}
                   result={state.quizResults[iq.id]}
@@ -829,7 +851,7 @@ export default function Card() {
                 return (
                   <ExtraQuizCard
                     key={sq.id}
-                    emoji={sq.emoji}
+                    iconSrc={QUIZ_ICONS[sq.id] ?? trophyIcon}
                     title={sq.title}
                     subtitle={`${sq.statements.length} statements · Swipe`}
                     result={state.quizResults[sq.id]}
@@ -840,7 +862,7 @@ export default function Card() {
                 )
               })}
               <ExtraQuizCard
-                emoji="🃏"
+                iconSrc={QUIZ_ICONS['card-match'] ?? cardsIcon}
                 title="Card Match"
                 subtitle="Match the pairs · Memory Game"
                 result={state.quizResults['card-match']}
@@ -853,7 +875,7 @@ export default function Card() {
                 return (
                   <ExtraQuizCard
                     key={rq.id}
-                    emoji={rq.emoji}
+                    iconSrc={QUIZ_ICONS[rq.id] ?? trophyIcon}
                     title={rq.title}
                     subtitle={`${rq.questions.length} questions · Ranking`}
                     result={rqResult ? { score: rqResult.score, total: rqResult.total } : undefined}
