@@ -97,9 +97,9 @@ function JourneyStep({
           />
         )}
         {isCompleted ? (
-          <img className="card-journey-step-icon-complete" src={tickBlack} width={24} height={24} alt="" style={{ position: 'relative', zIndex: 10, filter: 'invert(1)' }} />
+          <img className="card-journey-step-icon-complete" src={tickBlack} width={20} height={20} alt="" style={{ position: 'relative', zIndex: 10, filter: 'invert(1)' }} />
         ) : (
-          <img className="card-journey-step-icon" src={iconSrc} width={24} height={24} alt="" style={{ opacity: isCurrent ? 1 : 0.3, filter: 'invert(1)' }} />
+          <img className="card-journey-step-icon" src={iconSrc} width={20} height={20} alt="" style={{ opacity: isCurrent ? 1 : 0.3, filter: 'invert(1)' }} />
         )}
       </div>
       <span className="card-journey-step-label" style={{
