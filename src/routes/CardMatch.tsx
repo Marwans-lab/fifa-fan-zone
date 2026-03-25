@@ -570,14 +570,14 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
           }}
         >
           <div style={{ textAlign: 'center' }}>
-            <AnimatedStat value={String(moves)} delay={700} />
+            <AnimatedStat value={String(totalMoves)} delay={700} />
             <div style={{ fontSize: '10', color: 'var(--f-brand-color-text-subtle)', letterSpacing: '0.09em', textTransform: 'uppercase', marginTop: 2 }}>
               Moves
             </div>
           </div>
           <div style={{ width: 1, background: 'var(--f-brand-color-border-default)' }} />
           <div style={{ textAlign: 'center' }}>
-            <AnimatedStat value={`${timeUsed}s`} delay={900} />
+            <AnimatedStat value={`${totalTimeUsed}s`} delay={900} />
             <div style={{ fontSize: '10', color: 'var(--f-brand-color-text-subtle)', letterSpacing: '0.09em', textTransform: 'uppercase', marginTop: 2 }}>
               Time
             </div>
@@ -805,6 +805,8 @@ export default function CardMatch() {
     const newDeck = quiz ? buildFlowDeck(quiz.rounds[0].pairs) : buildDeck()
     setCurrentRound(0)
     setAccumulatedScore(0)
+    setAccumulatedMoves(0)
+    setAccumulatedTimeUsed(0)
     setDeck(newDeck)
     setStatuses(initStatuses(newDeck))
     setFlippedIds([])
@@ -994,12 +996,11 @@ export default function CardMatch() {
       {/* ── Completion overlay ── */}
       {showCompletion && (
         <CompletionOverlay
-          moves={moves}
-          timeLeft={timeLeft}
+          totalMoves={accumulatedMoves}
+          totalTimeUsed={accumulatedTimeUsed}
           stars={getStars()}
           pairCount={pairCount}
           totalRounds={totalRounds}
-          roundTime={roundTime}
           onResults={handleResults}
           onPlayAgain={handlePlayAgain}
         />
