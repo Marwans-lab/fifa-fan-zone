@@ -56,7 +56,7 @@ export const RANKING_QUIZZES: RankingQuiz[] = [
       },
       {
         id: 'rk4',
-        question: 'Rank these teams by consecutive FIFA World Cup appearances (most to fewest)',
+        question: 'Rank these teams by total FIFA World Cup appearances (most to fewest)',
         items: [
           { id: 'a', label: 'Brazil (22)' },
           { id: 'b', label: 'Germany (20)' },

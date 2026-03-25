@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import { useStore, type FlowId } from '../store/useStore'
-import { RANKING_QUIZZES, type RankingQuiz, type RankingItem } from '../data/rankingQuizzes'
+import { RANKING_QUIZZES, type RankingItem } from '../data/rankingQuizzes'
 import chevLeft from '../assets/icons/Chevron-left-white.svg'
 
 const QUESTION_TIME = 15
@@ -27,11 +27,11 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
   return (
     <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
       <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={cx} cy={cx} r={R} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={3} />
+        <circle cx={cx} cy={cx} r={R} fill="none" stroke="var(--c-surface)" strokeWidth={3} />
         <circle
           cx={cx} cy={cx} r={R}
           fill="none"
-          stroke="#ffffff"
+          stroke="var(--c-white)"
           strokeWidth={3}
           strokeDasharray={circumference}
           strokeDashoffset={offset}
@@ -42,7 +42,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
       <div style={{
         position: 'absolute', inset: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 14, fontWeight: 500, fontFamily: 'var(--font-body)', color: '#ffffff',
+        fontSize: 14, fontWeight: 500, fontFamily: 'var(--font-body)', color: 'var(--c-white)',
       }}>
         {timeLeft}
       </div>
@@ -77,7 +77,7 @@ function RankItem({
     bg = 'var(--c-error-bg)'
   } else if (isDragging) {
     borderColor = 'var(--c-accent)'
-    bg = 'rgba(0,212,170,0.08)'
+    bg = 'var(--c-accent-bg)'
   }
 
   function handleTouchStart(e: React.TouchEvent) {
@@ -121,7 +121,7 @@ function RankItem({
           ? isCorrectPosition ? 'var(--c-correct)' : 'var(--c-error)'
           : 'var(--c-surface-raise)',
         color: revealed
-          ? '#fff'
+          ? 'var(--c-white)'
           : 'var(--c-text-2)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: 12, fontWeight: 500, flexShrink: 0,
@@ -445,7 +445,7 @@ export default function RankingQuizRoute() {
             style={{
               width: '100%', padding: '16px 0', borderRadius: 50,
               border: 'none',
-              background: '#ffffff',
+              background: 'var(--c-white)',
               color: 'var(--c-brand)',
               fontSize: 'var(--text-md)',
               fontWeight: 'var(--weight-med)',
