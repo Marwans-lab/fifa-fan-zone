@@ -1,3 +1,5 @@
+import type { FlowId } from '../store/useStore'
+
 export interface CardMatchPair {
   id: string
   clue: string
@@ -9,8 +11,6 @@ export interface CardMatchRound {
   title: string
   pairs: CardMatchPair[]
 }
-
-import type { FlowId } from '../store/useStore'
 
 export interface CardMatchQuiz {
   id: FlowId
