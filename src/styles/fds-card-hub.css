@@ -108,8 +108,8 @@
 }
 
 .f-journey-card__milestone-node--current {
-  background: rgba(142, 33, 87, 0.12);
-  border: var(--f-brand-border-size-default, 1px) solid rgba(142, 33, 87, 0.3);
+  background: var(--c-brand-tint-12);
+  border: var(--f-brand-border-size-default, 1px) solid var(--c-brand-tint-30);
   transform: scale(1.05);
   z-index: 20;
 }
@@ -124,7 +124,7 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: rgba(142, 33, 87, 0.2);
+  background: var(--c-brand-tint-20);
   pointer-events: none;
   animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
@@ -231,7 +231,7 @@
 
 .f-quiz-card--done {
   --f-quiz-card-bg: var(--f-brand-color-background-success-accent, #ECFFF5);
-  border-color: rgba(50, 130, 86, 0.2);
+  border-color: var(--c-lt-correct-border);
 }
 
 .f-quiz-card--locked {
