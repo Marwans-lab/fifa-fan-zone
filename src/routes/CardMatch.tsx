@@ -21,7 +21,7 @@ type CardStatus = 'hidden' | 'flipped' | 'matched' | 'mismatched'
 
 const LEGACY_PAIR_COUNT = 3
 const LEGACY_ROUND_TIME = 30
-const FLOW_PAIR_COUNT = 4
+const FLOW_PAIR_COUNT = 3
 const FLOW_ROUND_TIME = 45
 const FLIP_DURATION = 400
 const MISMATCH_DELAY = 800
@@ -966,14 +966,11 @@ export default function CardMatch() {
           }}
         >
           {/* Matched pairs counter */}
-          <div style={{ textAlign: 'center', minWidth: 48 }}>
+          <div style={{ textAlign: 'center', minWidth: 'var(--sp-12)' }}>
             <div
               style={{
                 font: 'var(--f-brand-type-headline-medium)',
-                fontSize: 'var(--text-lg)',
-                fontWeight: 'var(--weight-bold)',
                 color: matchedPairs > 0 ? 'var(--f-brand-color-background-success)' : 'var(--f-brand-color-text-default)',
-                transition: 'color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
               }}
             >
               {matchedPairs}/{pairCount}
@@ -981,11 +978,10 @@ export default function CardMatch() {
             <div
               style={{
                 font: 'var(--f-brand-type-caption)',
-                fontSize: 'var(--text-2xs)',
                 color: 'var(--f-brand-color-text-subtle)',
                 letterSpacing: 'var(--tracking-wider)',
                 textTransform: 'uppercase',
-                marginTop: 2,
+                marginTop: 'var(--sp-1)',
               }}
             >
               Matched
@@ -996,12 +992,10 @@ export default function CardMatch() {
           <TimerRing timeLeft={timeLeft} total={roundTime} />
 
           {/* Moves counter */}
-          <div style={{ textAlign: 'center', minWidth: 48 }}>
+          <div style={{ textAlign: 'center', minWidth: 'var(--sp-12)' }}>
             <div
               style={{
                 font: 'var(--f-brand-type-headline-medium)',
-                fontSize: 'var(--text-lg)',
-                fontWeight: 'var(--weight-bold)',
                 color: 'var(--f-brand-color-text-default)',
               }}
             >
@@ -1010,11 +1004,10 @@ export default function CardMatch() {
             <div
               style={{
                 font: 'var(--f-brand-type-caption)',
-                fontSize: 'var(--text-2xs)',
                 color: 'var(--f-brand-color-text-subtle)',
                 letterSpacing: 'var(--tracking-wider)',
                 textTransform: 'uppercase',
-                marginTop: 2,
+                marginTop: 'var(--sp-1)',
               }}
             >
               Moves
