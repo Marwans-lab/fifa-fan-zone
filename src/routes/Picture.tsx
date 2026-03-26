@@ -343,9 +343,9 @@ export default function Picture() {
                 border: '1px solid var(--c-lt-overlay-border)',
                 color: 'var(--f-brand-color-text-light)',
                 font: 'var(--f-brand-type-caption-medium)',
-                fontSize: '13',
+                fontSize: 'var(--text-sm)',
                 cursor: 'pointer',
-                letterSpacing: '0.05em',
+                letterSpacing: 'var(--tracking-wide)',
               }}
             >
               Retake photo
@@ -387,7 +387,7 @@ export default function Picture() {
       {cameraError && (
         <p style={{
           font: 'var(--f-brand-type-caption)',
-          fontSize: '11',
+          fontSize: 'var(--text-xs)',
           color: 'var(--f-brand-color-status-error)',
           marginTop: 'var(--f-brand-space-xs)',
           textAlign: 'center',

@@ -85,7 +85,7 @@ function JourneyStep({
       </div>
       <span style={{
         font: 'var(--f-brand-type-caption)',
-        letterSpacing: '-0.02em', textAlign: 'center',
+        letterSpacing: 'var(--tracking-semi)', textAlign: 'center',
         whiteSpace: 'nowrap', transition: 'color var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
         color: isCompleted || isCurrent ? 'var(--f-brand-color-text-default)' : 'var(--f-brand-color-text-subtle)',
       }}>
@@ -136,14 +136,14 @@ function JourneyCard({
         <div>
           <h2 style={{
             font: 'var(--f-brand-type-caption-medium)',
-            letterSpacing: '0.05em',
+            letterSpacing: 'var(--tracking-wide)',
             color: 'var(--f-brand-color-text-muted)', marginBottom: 'var(--f-brand-space-2xs)',
           }}>
             Your journey
           </h2>
           <p style={{
             font: 'var(--f-brand-type-headline-medium)',
-            letterSpacing: '-0.02em', color: 'var(--f-brand-color-text-default)',
+            letterSpacing: 'var(--tracking-semi)', color: 'var(--f-brand-color-text-default)',
           }}>
             {status}
           </p>
@@ -157,7 +157,7 @@ function JourneyCard({
         }}>
           <span style={{
             font: 'var(--f-brand-type-caption)',
-            color: 'var(--f-brand-color-text-default)', lineHeight: 1,
+            color: 'var(--f-brand-color-text-default)', lineHeight: 'var(--leading-none)',
           }}>
             Step {Math.min(doneCount + 1, 4)}/4
           </span>
@@ -207,8 +207,8 @@ function JourneyCard({
           width: '100%', height: 'var(--sp-12)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: 'var(--f-brand-color-text-default)', color: 'var(--f-brand-color-text-light)',
-          font: 'var(--f-brand-type-body-medium)', fontWeight: '600',
-          fontSize: 15, borderRadius: 9999, border: 'none',
+          font: 'var(--f-brand-type-body-medium)', fontWeight: 'var(--weight-bold)',
+          fontSize: 'var(--text-md)', borderRadius: 9999, border: 'none',
           marginTop: 'var(--sp-7)', cursor: 'pointer',
           boxShadow: '0 10px 30px rgba(0,0,0,0.12)',
           transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
@@ -340,7 +340,7 @@ function ExtraQuizCard({
             ) : done ? (
               <img src={tickBlack} width={24} height={24} alt="" />
             ) : (
-              <span style={{ fontSize: '28' }}>{emoji}</span>
+              <span style={{ fontSize: 'var(--text-2xl)' }}>{emoji}</span>
             )}
           </div>
         </div>
@@ -351,15 +351,15 @@ function ExtraQuizCard({
           }}>
             {title}
           </h3>
-          <p style={{ font: 'var(--f-brand-type-caption)', fontSize: '13', color: 'var(--f-brand-color-text-muted)', marginTop: 'var(--f-brand-space-xs)' }}>
+          <p style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-sm)', color: 'var(--f-brand-color-text-muted)', marginTop: 'var(--f-brand-space-xs)' }}>
             {done ? (
-              <span style={{ color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>
+              <span style={{ color: 'var(--f-brand-color-text-default)', fontWeight: 'var(--weight-med)' }}>
                 Completed · {result.score}/{result.total} correct
               </span>
             ) : locked ? (
               lockMessage ?? 'Complete your fan card to unlock'
             ) : (
-              <span style={{ color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>
+              <span style={{ color: 'var(--f-brand-color-text-default)', fontWeight: 'var(--weight-med)' }}>
                 {subtitle}
               </span>
             )}
@@ -557,7 +557,7 @@ export default function Card() {
             <div style={{ marginBottom: 'var(--f-brand-space-md)' }}>
               <h2 style={{
                 font: 'var(--f-brand-type-title-2)',
-                letterSpacing: '-0.04em', color: 'var(--f-brand-color-text-light)',
+                letterSpacing: 'var(--tracking-tighter)', color: 'var(--f-brand-color-text-light)',
               }}>
                 Earn Avios
               </h2>

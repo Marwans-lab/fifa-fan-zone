@@ -283,16 +283,16 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
           }}
         >
           {card.type === 'flag' ? (
-            <span style={{ fontSize: '36', lineHeight: 1 }}>{card.display}</span>
+            <span style={{ fontSize: 'var(--text-3xl)', lineHeight: 'var(--leading-none)' }}>{card.display}</span>
           ) : card.type === 'clue' ? (
             <span
               style={{
                 font: 'var(--f-brand-type-caption)',
-                fontSize: '10',
+                fontSize: 'var(--text-2xs)',
                 color: 'var(--f-brand-color-text-subtle)',
                 textAlign: 'center',
-                lineHeight: '1.4',
-                letterSpacing: '-0.01em',
+                lineHeight: 'var(--leading-relaxed)',
+                letterSpacing: 'var(--tracking-snug)',
               }}
             >
               {card.display}
@@ -301,12 +301,12 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
             <span
               style={{
                 font: 'var(--f-brand-type-caption-medium)',
-                fontSize: '11',
-                fontWeight: '600',
+                fontSize: 'var(--text-xs)',
+                fontWeight: 'var(--weight-bold)',
                 color: 'var(--f-brand-color-text-default)',
                 textAlign: 'center',
-                lineHeight: '1.28',
-                letterSpacing: '-0.015em',
+                lineHeight: 'var(--leading-snug)',
+                letterSpacing: 'var(--tracking-snug)',
               }}
             >
               {card.display}
@@ -410,8 +410,8 @@ function AnimatedStat({ value, delay }: { value: string; delay: number }) {
     <div
       style={{
         font: 'var(--f-brand-type-headline-medium)',
-        fontSize: '22',
-        fontWeight: '600',
+        fontSize: 'var(--text-xl)',
+        fontWeight: 'var(--weight-bold)',
         color: 'var(--f-brand-color-primary)',
         opacity: show ? 1 : 0,
         transform: show ? 'translateY(0)' : 'translateY(8px)',
@@ -519,7 +519,7 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
         {visible && stars >= 2 && <Confetti />}
 
         {/* Stars */}
-        <div style={{ fontSize: '36', marginBottom: 'var(--f-brand-space-md)', letterSpacing: 8 }}>
+        <div style={{ fontSize: 'var(--text-3xl)', marginBottom: 'var(--f-brand-space-md)', letterSpacing: 'var(--tracking-display-ultra)' }}>
           {[1, 2, 3].map(i => (
             <span
               key={i}
@@ -541,17 +541,17 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
             font: 'var(--f-brand-type-title-3)',
             color: 'var(--f-brand-color-text-default)',
             marginBottom: 'var(--f-brand-space-xs)',
-            letterSpacing: '-0.03em',
+            letterSpacing: 'var(--tracking-tight)',
           }}
         >
           {label}
         </h2>
         <p
           style={{
-            fontSize: '13',
+            fontSize: 'var(--text-sm)',
             color: 'var(--f-brand-color-text-subtle)',
             marginBottom: 'var(--f-brand-space-lg)',
-            lineHeight: '1.52',
+            lineHeight: 'var(--leading-normal)',
           }}
         >
           You matched all {pairCount} pairs{totalRounds > 1 ? ` across ${totalRounds} rounds` : ''}
@@ -568,14 +568,14 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
         >
           <div style={{ textAlign: 'center' }}>
             <AnimatedStat value={String(totalMoves)} delay={700} />
-            <div style={{ fontSize: '10', color: 'var(--f-brand-color-text-subtle)', letterSpacing: '0.09em', textTransform: 'uppercase', marginTop: 2 }}>
+            <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--f-brand-color-text-subtle)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginTop: 2 }}>
               Moves
             </div>
           </div>
           <div style={{ width: 1, background: 'var(--f-brand-color-border-default)' }} />
           <div style={{ textAlign: 'center' }}>
             <AnimatedStat value={`${totalTimeUsed}s`} delay={900} />
-            <div style={{ fontSize: '10', color: 'var(--f-brand-color-text-subtle)', letterSpacing: '0.09em', textTransform: 'uppercase', marginTop: 2 }}>
+            <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--f-brand-color-text-subtle)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginTop: 2 }}>
               Time
             </div>
           </div>
@@ -916,7 +916,7 @@ export default function CardMatch() {
           style={{
             font: 'var(--f-brand-type-title-3)',
             color: 'var(--f-brand-color-text-default)',
-            letterSpacing: '-0.03em',
+            letterSpacing: 'var(--tracking-tight)',
             textAlign: 'center',
             marginBottom: quiz ? 'var(--f-brand-space-xs)' : 'var(--f-brand-space-lg)',
           }}
