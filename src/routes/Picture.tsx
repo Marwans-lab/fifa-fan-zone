@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { track } from '../lib/analytics'
+import { getTeam } from '../data/teams'
 import cameraIcon from '../assets/icons/camera-white.svg'
 import chevLeft from '../assets/icons/Chevron-left-white.svg'
 
@@ -21,70 +22,13 @@ function compressDataUrl(source: HTMLVideoElement | HTMLImageElement, flipX = fa
   return canvas.toDataURL('image/jpeg', 0.78)
 }
 
-// ─── Silhouette SVG (dashed outline of head + shoulders) ─────────────────────
-function SilhouettePlaceholder() {
-  return (
-    <svg
-      width="180"
-      height="220"
-      viewBox="0 0 180 220"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      style={{ opacity: 0.35, color: 'var(--f-brand-color-text-disabled)' }}
-    >
-      {/* Head */}
-      <circle
-        cx="90"
-        cy="70"
-        r="42"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeDasharray="8 6"
-        fill="none"
-      />
-      {/* Shoulders */}
-      <path
-        d="M20 210 C20 170, 45 145, 90 140 C135 145, 160 170, 160 210"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeDasharray="8 6"
-        fill="none"
-      />
-    </svg>
-  )
-}
-
-// ─── Progress bar ─────────────────────────────────────────────────────────────
-function ProgressBar({ progress }: { progress: number }) {
-  return (
-    <div
-      style={{
-        flex: 1,
-        height: 8,
-        borderRadius: 'var(--f-brand-radius-rounded)',
-        background: 'var(--f-brand-color-border-default)',
-        overflow: 'hidden',
-      }}
-    >
-      <div
-        style={{
-          width: `${progress}%`,
-          height: '100%',
-          borderRadius: 'var(--f-brand-radius-rounded)',
-          background: 'linear-gradient(-90deg, var(--f-brand-color-border-success) 61.5%, var(--f-brand-color-background-success) 100%)',
-          boxShadow: '1px 0px 6px rgba(0,0,0,0.25)',
-          transition: `width var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit)`,
-        }}
-      />
-    </div>
-  )
-}
-
 // ─── Main Picture route ──────────────────────────────────────────────────────
 export default function Picture() {
   const navigate = useNavigate()
   const location = useLocation()
   const { teamId } = (location.state as { teamId: string } | null) ?? { teamId: '' }
+
+  const team = teamId ? getTeam(teamId) : null
 
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null)
   const [cameraError, setCameraError] = useState<string | null>(null)
@@ -178,12 +122,21 @@ export default function Picture() {
     navigate('/identity', { state: { teamId, photoDataUrl }, replace: true })
   }, [navigate, teamId, photoDataUrl])
 
-  const handleBack = useCallback(() => {
+  const handleChangeTeam = useCallback(() => {
     stopCamera()
     navigate('/identity', { replace: true })
   }, [navigate, stopCamera])
 
   const hasPhoto = !!photoDataUrl
+
+  // Card gradient from team colors
+  const cardBg = team
+    ? `linear-gradient(160deg, ${team.colors[0]} 0%, ${team.colors[1]} 100%)`
+    : 'linear-gradient(160deg, var(--c-card-gradient-1) 0%, var(--c-card-gradient-2) 50%, var(--c-card-gradient-3) 100%)'
+
+  const cardShadow = team
+    ? `0 16px 48px ${team.colors[0]}55, inset 0 1px 0 var(--c-card-inset)`
+    : '0 16px 48px var(--c-card-shadow), inset 0 1px 0 var(--c-card-inset)'
 
   return (
     <div
@@ -191,6 +144,7 @@ export default function Picture() {
       style={{
         display: 'flex',
         flexDirection: 'column',
+        alignItems: 'center',
         height: '100%',
         width: '100%',
         background: 'var(--f-brand-color-background-default)',
@@ -198,205 +152,254 @@ export default function Picture() {
         WebkitOverflowScrolling: 'touch',
       }}
     >
-      {/* ── Top bar: back button + progress ──────────────────── */}
+      {/* ── Back button (top-left) ──────────────────────────── */}
       <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--f-brand-space-md)',
-        padding: '70px var(--f-brand-space-md) 0 var(--f-brand-space-md)',
-        flexShrink: 0,
+        position: 'absolute',
+        top: 'var(--f-brand-space-lg)',
+        left: 'var(--f-brand-space-md)',
+        zIndex: 10,
       }}>
         <button
-          onClick={handleBack}
+          onClick={handleChangeTeam}
           aria-label="Go back"
           style={{
-            width: 48,
-            height: 48,
-            borderRadius: 'var(--f-brand-radius-rounded)',
-            background: 'var(--f-brand-color-text-light)',
-            border: 'none',
+            width: 44,
+            height: 44,
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.08)',
+            border: '1px solid rgba(255,255,255,0.12)',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            flexShrink: 0,
-            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
           }}
         >
-          <img
-            src={chevLeft}
-            width={24}
-            height={24}
-            alt=""
-            style={{ filter: 'brightness(0)' }}
-          />
+          <img src={chevLeft} width={20} height={20} alt="" />
         </button>
-
-        <ProgressBar progress={50} />
       </div>
+
+      {/* ── Spacer ─────────────────────────────────────────── */}
+      <div style={{ flex: '0 0 100px' }} />
 
       {/* ── Title ────────────────────────────────────────────── */}
       <h2 style={{
         fontFamily: 'var(--f-base-type-family-primary)',
-        fontSize: '28',
-        fontWeight: '100',
+        fontSize: 28,
+        fontWeight: 100,
         lineHeight: '36px',
-        color: 'var(--f-brand-color-text-default)',
+        color: 'var(--f-brand-color-text-light)',
         textAlign: 'center',
-        marginTop: 'var(--f-brand-space-lg)',
-        flexShrink: 0,
+        marginBottom: 'var(--f-brand-space-xs)',
       }}>
-        Add your picture
+        Take your selfie
       </h2>
-
-      {/* ── Photo card ───────────────────────────────────────── */}
-      <div style={{
-        margin: 'var(--f-brand-space-lg) var(--f-brand-space-md) 0',
-        background: 'var(--f-brand-color-text-light)',
-        borderRadius: 'var(--f-brand-radius-small)',
-        height: 515,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-        flexShrink: 0,
+      <p style={{
+        fontFamily: 'var(--f-base-type-family-secondary)',
+        fontSize: 14,
+        color: 'rgba(255,255,255,0.48)',
+        textAlign: 'center',
+        marginBottom: 'var(--f-brand-space-lg)',
       }}>
-        {cameraActive && !hasPhoto ? (
-          /* Live camera feed */
-          <div style={{
-            width: '100%',
-            height: '100%',
-            position: 'relative',
-          }}>
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              muted
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center',
-                transform: 'scaleX(-1)',
-              }}
-            />
-            {/* Capture button overlay */}
-            <button
-              onClick={capturePhoto}
-              aria-label="Capture photo"
-              style={{
-                position: 'absolute',
-                bottom: 'var(--f-brand-space-xl)',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: 72,
-                height: 72,
-                borderRadius: 'var(--f-brand-radius-rounded)',
-                background: 'none',
-                border: '3px solid var(--f-brand-color-text-light)',
-                padding: 4,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <div style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: 'var(--f-brand-radius-rounded)',
-                background: 'var(--f-brand-color-text-light)',
-              }} />
-            </button>
-          </div>
-        ) : hasPhoto ? (
-          /* Photo preview */
-          <div style={{
-            width: '100%',
-            height: '100%',
-            position: 'relative',
-          }}>
-            <img
-              src={photoDataUrl!}
-              alt="Your photo"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center top',
-              }}
-            />
-            {/* Retake overlay button */}
-            <button
-              onClick={handleRetake}
-              aria-label="Retake photo"
-              style={{
-                position: 'absolute',
-                bottom: 'var(--f-brand-space-md)',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                padding: 'var(--f-brand-space-xs) var(--f-brand-space-md)',
-                borderRadius: 'var(--f-brand-radius-rounded)',
-                background: 'rgba(0,0,0,0.5)',
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)',
-                border: '1px solid rgba(255,255,255,0.2)',
-                color: 'var(--f-brand-color-text-light)',
-                fontFamily: 'var(--f-base-type-family-secondary)',
-                fontSize: '13',
-                fontWeight: '500',
-                cursor: 'pointer',
-                letterSpacing: '0.05em',
-              }}
-            >
-              Retake
-            </button>
-          </div>
-        ) : (
-          /* Empty state: silhouette + "Take a photo" */
-          <>
-            <SilhouettePlaceholder />
+        Tap the card to take a photo
+      </p>
 
-            <button
-              onClick={handleTakePhoto}
+      {/* ── Card preview ────────────────────────────────────── */}
+      <div
+        onClick={hasPhoto ? undefined : handleTakePhoto}
+        role="button"
+        aria-label={hasPhoto ? 'Your photo' : 'Take a photo'}
+        style={{
+          width: 'calc(100% - var(--f-brand-space-lg) * 2)',
+          maxWidth: 360,
+          aspectRatio: '5 / 7',
+          borderRadius: 'var(--f-brand-radius-outer)',
+          background: cardBg,
+          border: '1px solid var(--c-card-border)',
+          boxShadow: cardShadow,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) var(--f-brand-space-md)',
+          position: 'relative',
+          overflow: 'hidden',
+          cursor: hasPhoto ? 'default' : 'pointer',
+        }}
+      >
+        {/* Card textures */}
+        <div style={{
+          position: 'absolute', inset: 0, borderRadius: 'var(--f-brand-radius-outer)', pointerEvents: 'none',
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.28) 1.5px, transparent 1.5px)',
+          backgroundSize: '16px 16px',
+          mixBlendMode: 'overlay',
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, borderRadius: 'var(--f-brand-radius-outer)', pointerEvents: 'none',
+          backgroundImage: 'repeating-linear-gradient(-55deg, transparent, transparent 18px, rgba(255,255,255,0.10) 18px, rgba(255,255,255,0.10) 19px)',
+          mixBlendMode: 'overlay',
+        }} />
+
+        {/* Holographic stripe */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: 4,
+          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent)',
+        }} />
+
+        {/* Header */}
+        <div style={{ textAlign: 'center', position: 'relative', zIndex: 2 }}>
+          <div style={{
+            fontSize: 14, letterSpacing: 3, color: 'var(--f-brand-color-text-light)',
+            textTransform: 'uppercase', fontFamily: 'var(--f-base-type-family-secondary)',
+            fontWeight: 400,
+          }}>
+            FIFA Fan Zone
+          </div>
+          <div style={{
+            fontSize: 11, color: 'var(--f-brand-color-text-light)',
+            opacity: 0.67, letterSpacing: 1, fontStyle: 'italic',
+          }}>
+            Collector Edition
+          </div>
+        </div>
+
+        {/* Photo circle / camera prompt */}
+        <div style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          gap: 'var(--f-brand-space-md)', position: 'relative', zIndex: 2,
+        }}>
+          {cameraActive && !hasPhoto ? (
+            /* Live camera feed in circular frame */
+            <div style={{
+              width: 180, height: 180, borderRadius: '50%',
+              border: '2px dashed rgba(255,255,255,0.35)',
+              overflow: 'hidden', position: 'relative',
+            }}>
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                style={{
+                  width: '100%', height: '100%',
+                  objectFit: 'cover', objectPosition: 'center',
+                  transform: 'scaleX(-1)',
+                }}
+              />
+              {/* Capture button overlay */}
+              <button
+                onClick={(e) => { e.stopPropagation(); capturePhoto() }}
+                aria-label="Capture photo"
+                style={{
+                  position: 'absolute', bottom: 8, left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: 48, height: 48, borderRadius: '50%',
+                  background: 'rgba(255,255,255,0.25)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                  border: '2px solid var(--f-brand-color-text-light)',
+                  cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}
+              >
+                <div style={{
+                  width: 36, height: 36, borderRadius: '50%',
+                  background: 'var(--f-brand-color-text-light)',
+                }} />
+              </button>
+            </div>
+          ) : hasPhoto ? (
+            /* Photo preview */
+            <div style={{ position: 'relative' }}>
+              <img
+                src={photoDataUrl!}
+                alt="Your photo"
+                style={{
+                  width: 180, height: 180, borderRadius: '50%',
+                  objectFit: 'cover', objectPosition: 'center top',
+                  border: '3px solid rgba(255,255,255,0.55)',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+                }}
+              />
+              {/* Retake overlay */}
+              <button
+                onClick={(e) => { e.stopPropagation(); handleRetake() }}
+                aria-label="Retake photo"
+                style={{
+                  position: 'absolute', bottom: -8, left: '50%',
+                  transform: 'translateX(-50%)',
+                  padding: 'var(--f-brand-space-2xs) var(--f-brand-space-sm)',
+                  borderRadius: 'var(--f-brand-radius-rounded)',
+                  background: 'rgba(0,0,0,0.5)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  color: 'var(--f-brand-color-text-light)',
+                  fontFamily: 'var(--f-base-type-family-secondary)',
+                  fontSize: 11, fontWeight: 500, cursor: 'pointer',
+                  letterSpacing: '0.05em', textTransform: 'uppercase',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                Retake
+              </button>
+            </div>
+          ) : (
+            /* Empty state: dashed circle with camera icon + TAKE PICTURE */
+            <div
               style={{
-                position: 'absolute',
-                top: 209,
-                width: 197,
-                height: 56,
-                borderRadius: 'var(--f-brand-radius-rounded)',
-                background: 'var(--f-brand-color-primary)',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 'var(--f-brand-space-sm)',
-                boxShadow: '0px 8px 16px rgba(31,33,43,0.08)',
-                color: 'var(--f-brand-color-text-light)',
-                fontFamily: 'var(--f-base-type-family-secondary)',
-                fontSize: 16,
-                fontWeight: '500',
-                lineHeight: '24px',
+                width: 180, height: 180, borderRadius: '50%',
+                background: 'rgba(0,0,0,0.28)',
+                border: '2px dashed rgba(255,255,255,0.35)',
+                display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center',
+                gap: 'var(--f-brand-space-xs)',
               }}
             >
-              <span>Take a photo</span>
-              <img src={cameraIcon} width={24} height={24} alt="" />
-            </button>
-          </>
-        )}
+              <img src={cameraIcon} width={28} height={28} alt="" style={{ opacity: 0.7 }} />
+              <span style={{
+                fontSize: 11, letterSpacing: 2, textTransform: 'uppercase',
+                color: 'var(--f-brand-color-text-light)', opacity: 0.7,
+                fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: 500,
+                textAlign: 'center', lineHeight: 1.4,
+              }}>
+                Take{'\n'}Picture
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Team name at bottom of card */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          gap: 'var(--f-brand-space-xs)', position: 'relative', zIndex: 2,
+        }}>
+          {team ? (
+            <>
+              <span style={{ fontSize: 18 }}>{team.flag}</span>
+              <span style={{
+                fontSize: 16, fontWeight: 600, letterSpacing: 2,
+                textTransform: 'uppercase',
+                color: 'var(--f-brand-color-text-light)',
+                fontFamily: 'var(--f-base-type-family-secondary)',
+              }}>
+                {team.name}
+              </span>
+            </>
+          ) : (
+            <span style={{
+              fontSize: 12, color: 'rgba(255,255,255,0.35)', fontStyle: 'italic',
+            }}>
+              No team selected
+            </span>
+          )}
+        </div>
       </div>
 
       {/* ── Camera error ─────────────────────────────────────── */}
       {cameraError && (
         <p style={{
-          fontSize: '11',
-          color: 'var(--f-brand-color-status-error)',
-          marginTop: 'var(--f-brand-space-xs)',
-          textAlign: 'center',
+          fontSize: 11, color: 'var(--f-brand-color-status-error)',
+          marginTop: 'var(--f-brand-space-xs)', textAlign: 'center',
           padding: '0 var(--f-brand-space-md)',
         }}>
           {cameraError}
@@ -413,32 +416,47 @@ export default function Picture() {
         onChange={handleFileChange}
       />
 
-      {/* ── Next button ──────────────────────────────────────── */}
-      <div style={{
-        padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) var(--f-brand-space-xl)',
-        flexShrink: 0,
-      }}>
-        <button
-          onClick={handleNext}
-          disabled={!hasPhoto}
-          style={{
-            width: '100%',
-            height: 56,
-            borderRadius: 'var(--f-brand-radius-rounded)',
-            background: hasPhoto ? 'var(--f-brand-color-primary)' : 'var(--f-brand-color-border-default)',
-            border: 'none',
-            cursor: hasPhoto ? 'pointer' : 'default',
-            color: hasPhoto ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-text-disabled)',
-            fontFamily: 'var(--f-base-type-family-secondary)',
-            fontSize: 16,
-            fontWeight: '500',
-            lineHeight: '24px',
-            transition: `background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)`,
-          }}
-        >
-          Next
-        </button>
-      </div>
+      {/* ── Change team link ─────────────────────────────────── */}
+      <button
+        onClick={handleChangeTeam}
+        style={{
+          marginTop: 'var(--f-brand-space-lg)',
+          background: 'none', border: 'none', cursor: 'pointer',
+          fontFamily: 'var(--f-base-type-family-secondary)',
+          fontSize: 14, color: 'rgba(255,255,255,0.48)',
+          display: 'flex', alignItems: 'center',
+          gap: 'var(--f-brand-space-2xs)',
+        }}
+      >
+        ← Change team
+      </button>
+
+      {/* ── Next button (visible when photo taken) ──────────── */}
+      {hasPhoto && (
+        <div style={{
+          width: '100%',
+          padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) var(--f-brand-space-xl)',
+          flexShrink: 0,
+        }}>
+          <button
+            onClick={handleNext}
+            style={{
+              width: '100%', height: 56,
+              borderRadius: 'var(--f-brand-radius-rounded)',
+              background: 'var(--f-brand-color-text-light)',
+              border: 'none', cursor: 'pointer',
+              color: 'var(--f-brand-color-primary)',
+              fontFamily: 'var(--f-base-type-family-secondary)',
+              fontSize: 16, fontWeight: 600, lineHeight: '24px',
+            }}
+          >
+            Continue
+          </button>
+        </div>
+      )}
+
+      {/* Spacer at bottom */}
+      {!hasPhoto && <div style={{ flex: 1 }} />}
     </div>
   )
 }

@@ -17,6 +17,9 @@ import targetIcon  from '../assets/icons/Target-white.svg'
 import fireIcon    from '../assets/icons/Fire-white.svg'
 import trophyIcon  from '../assets/icons/Trophy-white.svg'
 import qrIcon      from '../assets/icons/qr-logo.svg'
+import editIcon    from '../assets/icons/edit-white.svg'
+import shareIcon   from '../assets/icons/share-white.svg'
+import saveIcon    from '../assets/icons/save-white.svg'
 
 // ─── Milestone config ─────────────────────────────────────────────────────────
 const MILESTONES = [
@@ -756,6 +759,23 @@ export default function Card() {
         }}
       >
 
+          {/* ── Page title ──────────────────────────────────────── */}
+          <div style={{ textAlign: 'center', marginBottom: 'var(--f-brand-space-md)' }}>
+            <h1 style={{
+              fontFamily: 'var(--f-base-type-family-primary)', fontWeight: 100,
+              fontSize: 28, letterSpacing: '-0.04em',
+              color: 'var(--f-brand-color-text-light)', marginBottom: 'var(--f-brand-space-2xs)',
+            }}>
+              Your Fan Card
+            </h1>
+            <p style={{
+              fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: 400,
+              fontSize: 14, color: 'rgba(255,255,255,0.48)',
+            }}>
+              Tap to flip &amp; view your profile
+            </p>
+          </div>
+
           {/* ── Fan Card ──────────────────────────────────────── */}
           <section aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 'var(--f-brand-space-md)' }}>
             <FanCard
@@ -765,6 +785,74 @@ export default function Card() {
               onSaveToDevice={handleSaveToDevice}
             />
           </section>
+
+          {/* ── Edit / Share / Save buttons ────────────────────── */}
+          <div style={{
+            display: 'flex', justifyContent: 'center',
+            gap: 'var(--f-brand-space-md)',
+            marginBottom: 'var(--f-brand-space-md)',
+          }}>
+            <button
+              onClick={() => { track('card_edit_tapped'); navigate('/identity') }}
+              style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                gap: 'var(--f-brand-space-2xs)', background: 'none', border: 'none',
+                cursor: 'pointer', fontFamily: 'inherit', padding: 0,
+              }}
+            >
+              <div style={{
+                width: 56, height: 56, borderRadius: '50%',
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255,255,255,0.14)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <img src={editIcon} width={24} height={24} alt="" />
+              </div>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.48)', letterSpacing: 0.5, fontFamily: 'var(--f-base-type-family-secondary)' }}>
+                Edit
+              </span>
+            </button>
+            <button
+              onClick={() => handleShare()}
+              style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                gap: 'var(--f-brand-space-2xs)', background: 'none', border: 'none',
+                cursor: 'pointer', fontFamily: 'inherit', padding: 0,
+              }}
+            >
+              <div style={{
+                width: 56, height: 56, borderRadius: '50%',
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255,255,255,0.14)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <img src={shareIcon} width={24} height={24} alt="" />
+              </div>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.48)', letterSpacing: 0.5, fontFamily: 'var(--f-base-type-family-secondary)' }}>
+                Share
+              </span>
+            </button>
+            <button
+              onClick={() => handleSaveToDevice()}
+              style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                gap: 'var(--f-brand-space-2xs)', background: 'none', border: 'none',
+                cursor: 'pointer', fontFamily: 'inherit', padding: 0,
+              }}
+            >
+              <div style={{
+                width: 56, height: 56, borderRadius: '50%',
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255,255,255,0.14)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <img src={saveIcon} width={24} height={24} alt="" />
+              </div>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.48)', letterSpacing: 0.5, fontFamily: 'var(--f-base-type-family-secondary)' }}>
+                Save
+              </span>
+            </button>
+          </div>
 
           {/* ── Journey ───────────────────────────────────────── */}
           <JourneyCard

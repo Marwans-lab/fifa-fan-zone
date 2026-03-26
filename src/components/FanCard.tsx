@@ -329,10 +329,10 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
 
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%' }}>
             <div style={{ textAlign: 'left' }}>
-              <div style={{ fontSize: 14, letterSpacing: 2, color: 'var(--f-brand-color-text-light)', textTransform: 'uppercase' }}>
-                Your Fan Card
+              <div style={{ fontSize: 14, letterSpacing: 3, color: 'var(--f-brand-color-text-light)', textTransform: 'uppercase', fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: 400 }}>
+                FIFA Fan Zone
               </div>
-              <div style={{ fontSize: 11, color: 'var(--f-brand-color-text-light)', opacity: 0.67, letterSpacing: 1 }}>
+              <div style={{ fontSize: 11, color: 'var(--f-brand-color-text-light)', opacity: 0.67, letterSpacing: 1, fontStyle: 'italic' }}>
                 Collector Edition
               </div>
             </div>
@@ -357,6 +357,19 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                 </div>
               )}
             </div>
+            {isComplete && (
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: 'var(--f-brand-space-2xs)',
+                padding: '6px 16px', marginTop: 'var(--f-brand-space-sm)',
+                borderRadius: 'var(--f-brand-radius-rounded)',
+                border: '1px solid var(--f-brand-color-accent)',
+                background: 'rgba(0,212,170,0.1)',
+              }}>
+                <span style={{ fontSize: 12, color: 'var(--f-brand-color-accent)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', fontFamily: 'var(--f-base-type-family-secondary)' }}>
+                  ✓ Complete
+                </span>
+              </div>
+            )}
           </div>
 
           <div style={{ fontSize: 14, color: 'var(--f-brand-color-text-light)', opacity: 0.4, display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-2xs)' }}>
