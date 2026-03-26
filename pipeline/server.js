@@ -659,13 +659,18 @@ async function checkForStalledIssues() {
         `[Pipeline] STALL DETECTED: ${issue.identifier} (${stateName}) — no activity for ${stalledMinutes}min, retriggering`
       );
 
-      // For In Progress stalls: reset to Todo first so Cyrus gets a clean state
+      // For In Progress stalls: post @Claude comment first (wakes up existing session),
+      // then reset to Todo + create a new AgentSession as fallback.
       const states = await getStates(issue.team.id);
       const todoState = findState(states, "Todo");
-      if (stateName === "In Progress" && todoState) {
-        markOurComment(issue.id);
-        await transitionIssue(issue.id, todoState.id);
-        await new Promise((r) => setTimeout(r, 1000));
+      if (stateName === "In Progress") {
+        await postComment(issue.id, `@Claude please continue working on this issue — it has been stalled for ${stalledMinutes} minutes.`);
+        await new Promise((r) => setTimeout(r, 2000));
+        if (todoState) {
+          markOurComment(issue.id);
+          await transitionIssue(issue.id, todoState.id);
+          await new Promise((r) => setTimeout(r, 1000));
+        }
       }
 
       // Create a new AgentSession — Linear delivers the webhook to Cyrus automatically
@@ -706,6 +711,9 @@ const server = http.createServer(async (req, res) => {
       )).data?.issue;
       if (!d) throw new Error(`Issue ${identifier} not found`);
       console.log(`[Pipeline] Manual trigger: ${d.identifier} (${d.id})`);
+      // Post @Claude comment to wake up any existing session
+      await postComment(d.id, `@Claude please work on this issue.`);
+      await new Promise((r) => setTimeout(r, 2000));
       // Clear any cooldown so the trigger isn't skipped
       recentTriggers.delete(d.id);
       const ok = await triggerCyrus(d.id, d.identifier);
