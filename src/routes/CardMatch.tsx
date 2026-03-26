@@ -955,9 +955,71 @@ export default function CardMatch() {
           ))}
         </div>
 
-        {/* ── Timer ring ── */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--f-brand-space-lg)' }}>
+        {/* ── Stats row: matches + timer + moves ── */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 'var(--f-brand-space-lg)',
+            marginBottom: 'var(--f-brand-space-lg)',
+          }}
+        >
+          {/* Matched pairs counter */}
+          <div style={{ textAlign: 'center', minWidth: 48 }}>
+            <div
+              style={{
+                font: 'var(--f-brand-type-headline-medium)',
+                fontSize: 'var(--text-lg)',
+                fontWeight: 'var(--weight-bold)',
+                color: matchedPairs > 0 ? 'var(--f-brand-color-background-success)' : 'var(--f-brand-color-text-default)',
+                transition: 'color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
+              }}
+            >
+              {matchedPairs}/{pairCount}
+            </div>
+            <div
+              style={{
+                font: 'var(--f-brand-type-caption)',
+                fontSize: 'var(--text-2xs)',
+                color: 'var(--f-brand-color-text-subtle)',
+                letterSpacing: 'var(--tracking-wider)',
+                textTransform: 'uppercase',
+                marginTop: 2,
+              }}
+            >
+              Matched
+            </div>
+          </div>
+
+          {/* Timer ring (center) */}
           <TimerRing timeLeft={timeLeft} total={roundTime} />
+
+          {/* Moves counter */}
+          <div style={{ textAlign: 'center', minWidth: 48 }}>
+            <div
+              style={{
+                font: 'var(--f-brand-type-headline-medium)',
+                fontSize: 'var(--text-lg)',
+                fontWeight: 'var(--weight-bold)',
+                color: 'var(--f-brand-color-text-default)',
+              }}
+            >
+              {moves}
+            </div>
+            <div
+              style={{
+                font: 'var(--f-brand-type-caption)',
+                fontSize: 'var(--text-2xs)',
+                color: 'var(--f-brand-color-text-subtle)',
+                letterSpacing: 'var(--tracking-wider)',
+                textTransform: 'uppercase',
+                marginTop: 2,
+              }}
+            >
+              Moves
+            </div>
+          </div>
         </div>
 
         {/* ── Next button ── */}
