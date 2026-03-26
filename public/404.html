@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      // GitHub Pages SPA redirect
+      // Converts /fifa-fan-zone/card → /fifa-fan-zone/?p=/card
+      // so index.html can restore the route on load.
+      var base = '/fifa-fan-zone'
+      var path = location.pathname.replace(base, '')
+      var search = location.search
+      location.replace(
+        base + '/?p=' + encodeURIComponent(path + search + location.hash)
+      )
+    </script>
+  </head>
+  <body></body>
+</html>

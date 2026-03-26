@@ -221,6 +221,9 @@ function JourneyCard({
   )
 }
 
+const RING_RADIUS = 32
+const RING_STROKE = 4
+
 // ─── Circular progress ring ───────────────────────────────────────────────────
 function ProgressRing({
   radius,
