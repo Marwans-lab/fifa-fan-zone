@@ -51,6 +51,7 @@
 
   /* Photo */
   --f-fan-card-photo-size:     180px;
+  --f-fan-card-back-photo-size: 96px;
   --f-fan-card-photo-border:   3px solid var(--f-fan-card-border-default);
 
   /* Layout */
@@ -279,13 +280,13 @@
 }
 
 .f-fan-card__back-photo-section .f-fan-card__photo {
-  width: 100px;
-  height: 100px;
+  width: var(--f-fan-card-back-photo-size);
+  height: var(--f-fan-card-back-photo-size);
 }
 
 .f-fan-card__back-photo-section .f-fan-card__photo-placeholder {
-  width: 100px;
-  height: 100px;
+  width: var(--f-fan-card-back-photo-size);
+  height: var(--f-fan-card-back-photo-size);
 }
 
 /* ─── Profile Q&A rows ───────────────────────────────────────────────────────── */
