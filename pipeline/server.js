@@ -227,7 +227,13 @@ async function triggerCyrus(issueId, issueIdentifier) {
     console.error(`[Pipeline] ${issueIdentifier}: Failed to fetch issue details: ${e.message}`);
   }
 
-  // Create a real Linear AgentSession (required for Cyrus to sync activity)
+  // Create a Linear AgentSession via the API.
+  // When we call agentSessionCreateOnIssue, Linear automatically sends an
+  // AgentSessionEvent/created webhook to ALL registered webhook endpoints
+  // (including Cyrus's) with a valid Linear signature. Cyrus receives the
+  // real event (platform=linear) and starts a full-development session.
+  // We do NOT need to manually POST the event to Cyrus — that was redundant
+  // and now fails with 401 (Cyrus validates signatures on /webhook).
   let sessionId;
   try {
     const r = await linearGQL(
@@ -239,45 +245,23 @@ async function triggerCyrus(issueId, issueIdentifier) {
     );
     sessionId = r.data?.agentSessionCreateOnIssue?.agentSession?.id;
     if (!sessionId) throw new Error("No session ID returned");
+    console.log(`[Pipeline] ${issueIdentifier}: Created Linear AgentSession ${sessionId} — Linear will deliver webhook to Cyrus`);
   } catch (e) {
     console.error(`[Pipeline] ${issueIdentifier}: Failed to create AgentSession: ${e.message}`);
-    sessionId = randomUUID(); // fallback — Cyrus runs but can't sync to Linear
-  }
-
-  const payload = JSON.stringify({
-    type: "AgentSessionEvent",
-    action: "created",
-    organizationId: "416d45de-7ee5-4dcc-aa1a-31bb4ec37aa3",
-    createdAt: new Date().toISOString(),
-    agentSession: {
-      id: sessionId,
-      status: "created",
-      issue: { id: issueId, identifier: issueIdentifier, title: issueTitle, description: issueDescription, url: issueUrl, labels },
-    },
-  });
-
-  try {
-    const result = await forwardToCyrus(
-      "POST", "/webhook",
-      { "content-type": "application/json", "content-length": Buffer.byteLength(payload).toString() },
-      payload
-    );
-    console.log(`[Pipeline] ${issueIdentifier}: Triggered Cyrus (session ${sessionId?.slice(0, 8)}, status ${result.status})`);
-    recentTriggers.set(issueId, Date.now());
-    // Immediately mark In Progress in Linear so the next serialization check
-    // sees this issue as active before Cyrus has a chance to update it.
-    try {
-      const states = await getStates("9fb7888e-f60c-4316-b50e-fa1f4d782193");
-      const inProgressState = findState(states, "In Progress");
-      if (inProgressState) await transitionIssue(issueId, inProgressState.id);
-    } catch (e) {
-      console.warn(`[Pipeline] ${issueIdentifier}: Could not pre-set In Progress: ${e.message}`);
-    }
-    return true;
-  } catch (e) {
-    console.error(`[Pipeline] ${issueIdentifier}: Failed to trigger Cyrus: ${e.message}`);
     return false;
   }
+
+  recentTriggers.set(issueId, Date.now());
+  // Immediately mark In Progress in Linear so the next serialization check
+  // sees this issue as active before Cyrus has a chance to update it.
+  try {
+    const states = await getStates("9fb7888e-f60c-4316-b50e-fa1f4d782193");
+    const inProgressState = findState(states, "In Progress");
+    if (inProgressState) await transitionIssue(issueId, inProgressState.id);
+  } catch (e) {
+    console.warn(`[Pipeline] ${issueIdentifier}: Could not pre-set In Progress: ${e.message}`);
+  }
+  return true;
   } finally {
     _triggerInFlight = false;
   }
@@ -442,10 +426,13 @@ async function handleWebhook(payload) {
     return;
   }
 
-  // Stage 1: Todo → Cyrus handles it via the forwarded real Linear webhook.
-  // The middleware already forwarded the webhook above (with valid Linear signature),
-  // so Cyrus will start a session automatically. No extra trigger needed.
+  // Stage 1: Todo → create an AgentSession so Linear delivers the trigger to Cyrus.
+  // Cyrus validates webhook signatures — we can't POST fake events directly.
+  // Instead, agentSessionCreateOnIssue causes Linear to send a real signed webhook.
   if (newState === "Todo") {
+    if (recentComments.has(issueId)) return;
+    markOurComment(issueId);
+    await triggerCyrus(issueId, issueIdentifier);
     return;
   }
 }
@@ -669,30 +656,22 @@ async function checkForStalledIssues() {
       }
 
       console.log(
-        `[Pipeline] STALL DETECTED: ${issue.identifier} (${stateName}) — no activity for ${stalledMinutes}min, bouncing to force webhook`
+        `[Pipeline] STALL DETECTED: ${issue.identifier} (${stateName}) — no activity for ${stalledMinutes}min, retriggering`
       );
 
+      // For In Progress stalls: reset to Todo first so Cyrus gets a clean state
       const states = await getStates(issue.team.id);
       const todoState = findState(states, "Todo");
-      const backlogState = findState(states, "Backlog");
-      if (todoState) {
+      if (stateName === "In Progress" && todoState) {
         markOurComment(issue.id);
-        if (stateName === "Todo" && backlogState) {
-          // Todo → Backlog → Todo: forces two real webhooks.
-          // The Backlog webhook is ignored by Cyrus; the Todo one starts a new session.
-          await transitionIssue(issue.id, backlogState.id);
-          await new Promise((r) => setTimeout(r, 1000));
-          await transitionIssue(issue.id, todoState.id);
-          console.log(`[Pipeline] ${issue.identifier}: Backlog→Todo bounce — Linear webhook will trigger Cyrus`);
-        } else {
-          // In Progress → Todo: direct reset, webhook fires and Cyrus picks it up
-          await transitionIssue(issue.id, todoState.id);
-          console.log(`[Pipeline] ${issue.identifier}: Reset to Todo — Linear webhook will retrigger Cyrus`);
-        }
+        await transitionIssue(issue.id, todoState.id);
+        await new Promise((r) => setTimeout(r, 1000));
       }
+
+      // Create a new AgentSession — Linear delivers the webhook to Cyrus automatically
+      await triggerCyrus(issue.id, issue.identifier);
       retriggeredRecently.set(issue.id, now);
-      // Stop after one bounce per cycle — the webhook will fire and Cyrus will pick it
-      // up. Processing more issues now would race with In Progress state not yet set.
+      // Stop after one trigger per cycle to avoid parallel sessions
       break;
     }
   } catch (e) {
