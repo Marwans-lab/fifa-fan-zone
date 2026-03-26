@@ -116,7 +116,7 @@
   --sp-9:  36px;
   --sp-10: var(--f-brand-space-2xl);   /* 40px */
   --sp-12: var(--f-brand-space-3xl);   /* 48px */
-  --sp-14: 56px;
+  --sp-14: var(--f-base-space-14); /* 56px */
   --sp-16: var(--f-brand-space-4xl);   /* 64px */
   --sp-18: var(--f-brand-space-5xl);   /* 72px */
   --sp-20: var(--f-brand-space-6xl);   /* 80px */

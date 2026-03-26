@@ -116,7 +116,7 @@ export default function TeamSelection() {
       <h2 style={{
         fontFamily: 'var(--f-base-type-family-primary)',
         fontSize: 28,
-        lineHeight: 'var(--sp-9)',
+        lineHeight: '36px',
         fontWeight: '300',
         color: 'var(--f-brand-color-text-default)',
         textAlign: 'center',
