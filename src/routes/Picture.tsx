@@ -166,8 +166,8 @@ export default function Picture() {
             width: 44,
             height: 44,
             borderRadius: '50%',
-            background: 'rgba(255,255,255,0.08)',
-            border: '1px solid rgba(255,255,255,0.12)',
+            background: 'var(--c-surface)',
+            border: '1px solid var(--glass-bg)',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -196,7 +196,7 @@ export default function Picture() {
       <p style={{
         fontFamily: 'var(--f-base-type-family-secondary)',
         fontSize: 14,
-        color: 'rgba(255,255,255,0.48)',
+        color: 'var(--c-text-2)',
         textAlign: 'center',
         marginBottom: 'var(--f-brand-space-lg)',
       }}>
@@ -389,7 +389,7 @@ export default function Picture() {
             </>
           ) : (
             <span style={{
-              fontSize: 12, color: 'rgba(255,255,255,0.35)', fontStyle: 'italic',
+              fontSize: 12, color: 'var(--c-text-3)', fontStyle: 'italic',
             }}>
               No team selected
             </span>
@@ -425,7 +425,7 @@ export default function Picture() {
           marginTop: 'var(--f-brand-space-lg)',
           background: 'none', border: 'none', cursor: 'pointer',
           fontFamily: 'var(--f-base-type-family-secondary)',
-          fontSize: 14, color: 'rgba(255,255,255,0.48)',
+          fontSize: 14, color: 'var(--c-text-2)',
           display: 'flex', alignItems: 'center',
           gap: 'var(--f-brand-space-2xs)',
         }}

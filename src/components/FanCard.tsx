@@ -363,7 +363,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                 padding: '6px 16px', marginTop: 'var(--f-brand-space-sm)',
                 borderRadius: 'var(--f-brand-radius-rounded)',
                 border: '1px solid var(--f-brand-color-accent)',
-                background: 'rgba(0,212,170,0.1)',
+                background: 'var(--c-accent-bg)',
               }}>
                 <span style={{ fontSize: 12, color: 'var(--f-brand-color-accent)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', fontFamily: 'var(--f-base-type-family-secondary)' }}>
                   ✓ Complete
