@@ -99,10 +99,14 @@ function JourneyStep({
 function JourneyCard({
   completedAt,
   quizCount,
+  totalQuizzes,
+  allComplete,
   onStartQuiz,
 }: {
   completedAt: string | null
   quizCount: number
+  totalQuizzes: number
+  allComplete: boolean
   onStartQuiz: () => void
 }) {
   const achieved = [
@@ -151,15 +155,15 @@ function JourneyCard({
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: 'var(--sp-3) var(--sp-4)',
-          background: 'rgba(0,0,0,0.04)',
+          background: allComplete ? 'rgba(0,212,170,0.1)' : 'rgba(0,0,0,0.04)',
           borderRadius: 9999,
-          border: '1px solid var(--f-brand-color-border-default)',
+          border: `1px solid ${allComplete ? 'rgba(0,212,170,0.25)' : 'var(--f-brand-color-border-default)'}`,
         }}>
           <span style={{
             font: 'var(--f-brand-type-caption)',
-            color: 'var(--f-brand-color-text-default)', lineHeight: 1,
+            color: allComplete ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-text-default)', lineHeight: 1,
           }}>
-            Step {Math.min(doneCount + 1, 4)}/4
+            {allComplete ? '✓ Complete' : `Step ${Math.min(doneCount + 1, 4)}/4`}
           </span>
         </div>
       </div>
@@ -181,6 +185,7 @@ function JourneyCard({
                 />
                 {!isLast && (() => {
                   const nextDone = achieved[i + 1]
+                  const isInactive = !done && !nextDone
                   const lineBg = done && nextDone
                     ? 'var(--f-brand-color-text-default)'                               // fully active
                     : done && !nextDone
@@ -190,7 +195,8 @@ function JourneyCard({
                     <div style={{
                       flex: 1, height: 2, marginTop: 'var(--sp-7)',
                       background: lineBg,
-                      transition: 'background var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
+                      opacity: isInactive ? 0.4 : 1,
+                      transition: 'all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
                     }} />
                   )
                 })()}
@@ -200,22 +206,51 @@ function JourneyCard({
         </ol>
       </nav>
 
+      {/* Quiz progress */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)',
+        marginTop: 'var(--f-brand-space-lg)',
+      }}>
+        <div style={{
+          flex: 1, height: 4, borderRadius: 2,
+          background: 'rgba(0,0,0,0.06)', overflow: 'hidden',
+        }}>
+          <div style={{
+            width: totalQuizzes > 0 ? `${(quizCount / totalQuizzes) * 100}%` : '0%',
+            height: '100%', borderRadius: 2,
+            background: allComplete
+              ? 'var(--f-brand-color-accent)'
+              : 'var(--f-brand-color-text-default)',
+            transition: 'width var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
+          }} />
+        </div>
+        <span style={{
+          font: 'var(--f-brand-type-caption)',
+          color: 'var(--f-brand-color-text-muted)', whiteSpace: 'nowrap',
+        }}>
+          {quizCount}/{totalQuizzes} quizzes
+        </span>
+      </div>
+
       {/* Start Quiz CTA */}
       <button
         onClick={onStartQuiz}
+        disabled={allComplete}
         style={{
           width: '100%', height: 'var(--sp-12)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: 'var(--f-brand-color-text-default)', color: 'var(--f-brand-color-text-light)',
+          background: allComplete ? 'rgba(0,212,170,0.1)' : 'var(--f-brand-color-text-default)',
+          color: allComplete ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-text-light)',
           font: 'var(--f-brand-type-body-medium)', fontWeight: '600',
-          fontSize: 15, borderRadius: 9999, border: 'none',
-          marginTop: 'var(--sp-7)', cursor: 'pointer',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.12)',
+          fontSize: 15, borderRadius: 9999,
+          border: allComplete ? '1px solid rgba(0,212,170,0.25)' : 'none',
+          marginTop: 'var(--sp-7)', cursor: allComplete ? 'default' : 'pointer',
+          boxShadow: allComplete ? 'none' : '0 10px 30px rgba(0,0,0,0.12)',
           transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
           WebkitTapHighlightColor: 'transparent',
         }}
       >
-        Start quiz
+        {allComplete ? 'All quizzes completed!' : 'Start quiz'}
       </button>
     </section>
   )
@@ -483,6 +518,33 @@ export default function Card() {
     },
   ]
 
+  // ── Journey card logic: compute total quizzes and find next available quiz ──
+  const totalQuizzes = FLOWS.length
+  const quizCount = FLOWS.filter(f => !!state.quizResults[f.id]).length
+  const allQuizzesDone = quizCount >= totalQuizzes
+
+  const handleJourneyStart = useCallback(() => {
+    track('card_start_quiz_tapped')
+
+    if (!cardComplete) {
+      quizRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
+    }
+
+    // Find first unlocked, uncompleted flow
+    for (const flow of FLOWS) {
+      if (state.quizResults[flow.id]) continue
+      if (isFlowUnlocked(flow.id)) {
+        flow.start()
+        return
+      }
+      break
+    }
+
+    // Fallback: scroll to quiz section
+    quizRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [cardComplete, state.quizResults, isFlowUnlocked])
+
   return (
     <Screen>
       {/* ── Content ────────────────────────────────────────── */}
@@ -545,11 +607,10 @@ export default function Card() {
           {/* ── Journey ───────────────────────────────────────── */}
           <JourneyCard
             completedAt={state.fanCard.completedAt}
-            quizCount={Object.keys(state.quizResults).length}
-            onStartQuiz={() => {
-              track('card_start_quiz_tapped')
-              quizRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            }}
+            quizCount={quizCount}
+            totalQuizzes={totalQuizzes}
+            allComplete={allQuizzesDone}
+            onStartQuiz={handleJourneyStart}
           />
 
           {/* ── Quizzes ───────────────────────────────────────── */}
