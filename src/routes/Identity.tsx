@@ -46,10 +46,10 @@ function CardPreview({
 
       {/* Header text */}
       <div style={{ textAlign: 'center', width: '100%', zIndex: 1 }}>
-        <div style={{ fontSize: 'var(--text-2xs)', letterSpacing: 'var(--tracking-display-wide)', color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', marginBottom: 'var(--sp-1)' }}>
+        <div style={{ fontSize: 'var(--text-2xs)', letterSpacing: 'var(--tracking-display-wide)', color: 'var(--c-text-mid)', textTransform: 'uppercase', marginBottom: 'var(--sp-1)' }}>
           FIFA Fan Zone
         </div>
-        <div style={{ fontSize: 'var(--text-xs)', color: 'rgba(255,255,255,0.35)', letterSpacing: 'var(--tracking-spaced)' }}>
+        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-dim)', letterSpacing: 'var(--tracking-spaced)' }}>
           Collector edition
         </div>
       </div>
@@ -96,7 +96,7 @@ function CardPreview({
 
       {/* Team motto */}
       <div style={{ textAlign: 'center', zIndex: 1 }}>
-        <div style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: 'rgba(255,255,255,0.88)', letterSpacing: 'var(--tracking-spaced)', fontStyle: 'italic' }}>
+        <div style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: 'var(--c-text-hi)', letterSpacing: 'var(--tracking-spaced)', fontStyle: 'italic' }}>
           {team.motto}
         </div>
       </div>
