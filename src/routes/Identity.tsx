@@ -156,9 +156,7 @@ export default function Identity() {
           {/* Header */}
           <div style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-md)' }}>
             <h2 style={{
-              fontFamily: 'var(--f-base-type-family-primary)',
-              fontSize: '28',
-              fontWeight: '300',
+              font: 'var(--f-brand-type-title-3)',
               letterSpacing: '-0.03em',
               marginBottom: 'var(--f-brand-space-2xs)',
             }}>
@@ -227,9 +225,8 @@ export default function Identity() {
     <Screen centered>
       <div className="f-page-enter" style={{ padding: 'var(--f-brand-space-xl) var(--f-brand-space-md)', textAlign: 'center', maxWidth: 340, width: '100%' }}>
         <h2 style={{
-          fontFamily: 'var(--f-base-type-family-primary)',
+          font: 'var(--f-brand-type-title-3)',
           fontSize: '22',
-          fontWeight: '300',
           letterSpacing: '-0.03em',
           marginBottom: 'var(--f-brand-space-xs)',
         }}>

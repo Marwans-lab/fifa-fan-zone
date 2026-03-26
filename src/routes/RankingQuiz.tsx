@@ -42,7 +42,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
       <div style={{
         position: 'absolute', inset: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 14, fontWeight: 500, fontFamily: 'var(--font-body)', color: 'var(--c-white)',
+        font: 'var(--f-brand-type-subheading-medium)', color: 'var(--c-white)',
       }}>
         {timeLeft}
       </div>
@@ -390,9 +390,8 @@ export default function RankingQuizRoute() {
           {/* Question text */}
           <div style={{
             padding: '0 var(--sp-6)',
-            fontFamily: 'var(--font-display)',
+            font: 'var(--f-brand-type-title-3)',
             fontSize: 'var(--text-xl)',
-            fontWeight: 'var(--weight-light)',
             color: 'var(--c-text-1)',
             lineHeight: 'var(--leading-tight)',
             letterSpacing: 'var(--tracking-tight)',
@@ -447,10 +446,9 @@ export default function RankingQuizRoute() {
               border: 'none',
               background: 'var(--c-white)',
               color: 'var(--c-brand)',
+              font: 'var(--f-brand-type-body-medium)',
               fontSize: 'var(--text-md)',
-              fontWeight: 'var(--weight-med)',
               cursor: 'pointer',
-              fontFamily: 'inherit',
               transition: 'background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out)',
             }}
           >

@@ -114,10 +114,7 @@ export default function TeamSelection() {
 
       {/* ── Title ───────────────────────────────────────────────── */}
       <h2 style={{
-        fontFamily: 'var(--f-base-type-family-primary)',
-        fontSize: 28,
-        lineHeight: 'var(--sp-9)',
-        fontWeight: '300',
+        font: 'var(--f-brand-type-title-3)',
         color: 'var(--f-brand-color-text-default)',
         textAlign: 'center',
         marginTop: 'var(--f-brand-space-xl)',
@@ -144,8 +141,7 @@ export default function TeamSelection() {
             alignItems: 'center',
             justifyContent: 'space-between',
             cursor: 'pointer',
-            fontFamily: 'inherit',
-            fontSize: 16,
+            font: 'var(--f-brand-type-body)',
             color: selectedTeam ? 'var(--f-brand-color-text-default)' : 'var(--f-brand-color-text-subtle)',
             WebkitTapHighlightColor: 'transparent',
           }}
@@ -200,10 +196,9 @@ export default function TeamSelection() {
                   borderBottom: i < WORLD_CUP_TEAMS.length - 1
                     ? '1px solid var(--f-brand-color-background-default)'
                     : 'none',
-                  fontSize: 16,
+                  font: 'var(--f-brand-type-body)',
                   color: 'var(--f-brand-color-text-default)',
                   cursor: 'pointer',
-                  fontFamily: 'inherit',
                   WebkitTapHighlightColor: 'transparent',
                 }}
               >
@@ -220,7 +215,7 @@ export default function TeamSelection() {
       {/* ── "Already have a card? Log in" ───────────────────────── */}
       <p style={{
         textAlign: 'center',
-        fontSize: 18,
+        font: 'var(--f-brand-type-headline)',
         color: 'var(--f-brand-color-text-default)',
         marginBottom: 'var(--f-brand-space-md)',
         flexShrink: 0,
@@ -240,9 +235,7 @@ export default function TeamSelection() {
           border: 'none',
           background: 'var(--f-brand-color-primary)',
           color: 'var(--f-brand-color-background-light)',
-          fontSize: 16,
-          fontWeight: '500',
-          fontFamily: 'inherit',
+          font: 'var(--f-brand-type-body-medium)',
           cursor: selectedId ? 'pointer' : 'default',
           opacity: selectedId ? 1 : 0.5,
           transition: `opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)`,
