@@ -133,7 +133,7 @@ function RankItem({
       {/* Label */}
       <span style={{
         flex: 1, fontSize: 'var(--text-md)', color: 'var(--c-text-1)',
-        fontWeight: isDragging ? 600 : 400,
+        fontWeight: isDragging ? 'var(--weight-bold)' : 'var(--weight-reg)',
       }}>
         {item.label}
       </span>
