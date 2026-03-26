@@ -22,9 +22,8 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         <div className="f-page-enter" style={{ textAlign: 'center', padding: 'var(--f-brand-space-xl) var(--f-brand-space-lg)', maxWidth: 300 }}>
           <div style={{ marginBottom: 'var(--f-brand-space-md)', opacity: 0.5 }}><img src={lockIcon} width={24} height={24} alt="" /></div>
           <h2 style={{
-            fontFamily: 'var(--f-base-type-family-primary)',
+            font: 'var(--f-brand-type-title-3)',
             fontSize: '22',
-            fontWeight: '300',
             letterSpacing: '-0.03em',
             marginBottom: 'var(--f-brand-space-sm)',
             color: 'var(--f-brand-color-text-default)',

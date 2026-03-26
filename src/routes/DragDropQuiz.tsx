@@ -42,9 +42,8 @@ function Chip({ answer, isDragging, isPlaced, isCorrect, style }: ChipProps) {
     justifyContent: 'center',
     padding: 'var(--f-brand-space-sm) var(--f-brand-space-md)',
     borderRadius: 'var(--f-brand-radius-rounded)',
+    font: 'var(--f-brand-type-caption-medium)',
     fontSize: '13',
-    fontWeight: '500',
-    fontFamily: 'var(--f-base-type-family-secondary)',
     color: 'var(--f-brand-color-text-default)',
     background: 'var(--f-brand-color-background-light)',
     border: '1.5px solid var(--f-brand-color-border-default)',
@@ -127,10 +126,9 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
   }
 
   const promptStyle: React.CSSProperties = {
+    font: 'var(--f-brand-type-body-medium)',
     fontSize: '15',
-    fontWeight: '500',
     color: 'var(--f-brand-color-text-default)',
-    fontFamily: 'var(--f-base-type-family-secondary)',
     minWidth: 90,
     flexShrink: 0,
   }
@@ -142,9 +140,8 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
     justifyContent: 'center',
     padding: 'var(--f-brand-space-xs) var(--f-brand-space-sm)',
     borderRadius: 'var(--f-brand-radius-rounded)',
+    font: 'var(--f-brand-type-caption-medium)',
     fontSize: '13',
-    fontWeight: '500',
-    fontFamily: 'var(--f-base-type-family-secondary)',
     minHeight: '36px',
     background: placedAnswer
       ? isCorrect === true
@@ -487,9 +484,8 @@ function QuestionView({
         <span style={{ fontSize: '40', marginBottom: 'var(--f-brand-space-xs)' }}>{quiz.emoji}</span>
         <div
           style={{
-            fontFamily: 'var(--f-base-type-family-primary)',
+            font: 'var(--f-brand-type-title-5)',
             fontSize: '18',
-            fontWeight: '300',
             color: 'var(--f-brand-color-text-default)',
             textAlign: 'center',
             lineHeight: '1.28',
@@ -641,10 +637,9 @@ function QuestionView({
             border: 'none',
             background: allCorrect ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-background-light)',
             color: allCorrect ? 'var(--f-brand-color-primary)' : 'var(--f-brand-color-text-muted)',
+            font: 'var(--f-brand-type-body-medium)',
             fontSize: '15',
-            fontWeight: '500',
             cursor: allCorrect ? 'pointer' : 'default',
-            fontFamily: 'inherit',
             transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
             animation: allCorrect ? 'successBounce var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-entry)' : 'none',
           }}

@@ -59,7 +59,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
           style={{ transition: 'stroke-dashoffset 1s linear', color: 'var(--f-brand-color-text-light)' }}
         />
       </svg>
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 500, fontFamily: 'var(--f-base-type-family-secondary)', color: 'var(--f-brand-color-text-light)' }}>
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', font: 'var(--f-brand-type-subheading-medium)', color: 'var(--f-brand-color-text-light)' }}>
         {timeLeft}
       </div>
     </div>
@@ -189,10 +189,9 @@ function ImageOptionCard({
       >
         <span
           style={{
+            font: 'var(--f-brand-type-caption-medium)',
             fontSize: '13',
-            fontWeight: '500',
             color: 'var(--f-brand-color-text-light)',
-            fontFamily: 'var(--f-base-type-family-secondary)',
           }}
         >
           {option.label}
@@ -277,9 +276,8 @@ function ImageQuestionScreen({
           <div
             style={{
               padding: '0 var(--f-brand-space-lg)',
-              fontFamily: 'var(--f-base-type-family-primary)',
+              font: 'var(--f-brand-type-title-3)',
               fontSize: '22',
-              fontWeight: '300',
               color: 'var(--f-brand-color-text-default)',
               lineHeight: '1.12',
               letterSpacing: '-0.03em',
@@ -345,10 +343,9 @@ function ImageQuestionScreen({
               border: 'none',
               background: revealed ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-background-light)',
               color: revealed ? 'var(--f-brand-color-primary)' : 'var(--f-brand-color-text-muted)',
+              font: 'var(--f-brand-type-body-medium)',
               fontSize: '15',
-              fontWeight: '500',
               cursor: revealed ? 'pointer' : 'default',
-              fontFamily: 'inherit',
               transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
             }}
           >

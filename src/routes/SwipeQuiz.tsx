@@ -31,9 +31,8 @@ function SwipeLabel({
         borderRadius: 'var(--f-brand-radius-base)',
         border: `2px solid ${isTrue ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)'}`,
         color: isTrue ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)',
-        fontSize: '18',
+        font: 'var(--f-brand-type-headline-medium)',
         fontWeight: '600',
-        fontFamily: 'var(--f-base-type-family-secondary)',
         letterSpacing: '0.05em',
         textTransform: 'uppercase',
         opacity,
@@ -105,7 +104,7 @@ function FeedbackOverlay({
       {/* Label */}
       <span
         style={{
-          fontFamily: 'var(--f-base-type-family-primary)',
+          font: 'var(--f-brand-type-title-3)',
           fontSize: '22',
           fontWeight: '600',
           color: correct ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)',
@@ -118,7 +117,7 @@ function FeedbackOverlay({
       {/* Explanation */}
       <span
         style={{
-          fontFamily: 'var(--f-base-type-family-secondary)',
+          font: 'var(--f-brand-type-caption)',
           fontSize: '13',
           color: 'var(--f-brand-color-text-subtle)',
           textAlign: 'center',
@@ -258,9 +257,7 @@ function StatementCard({
         {/* Statement text */}
         <div
           style={{
-            fontFamily: 'var(--f-base-type-family-primary)',
-            fontSize: '28',
-            fontWeight: '300',
+            font: 'var(--f-brand-type-title-3)',
             color: 'var(--f-brand-color-text-default)',
             lineHeight: '1.12',
             letterSpacing: '-0.03em',
@@ -278,7 +275,7 @@ function StatementCard({
           style={{
             position: 'absolute',
             bottom: 'var(--f-brand-space-lg)',
-            fontFamily: 'var(--f-base-type-family-secondary)',
+            font: 'var(--f-brand-type-caption)',
             fontSize: '11',
             color: 'var(--f-brand-color-text-muted)',
             letterSpacing: '0.05em',
@@ -666,9 +663,9 @@ export default function SwipeQuizRoute() {
             <div style={{ flex: 1, textAlign: 'center' }}>
               <span
                 style={{
-                  fontFamily: 'var(--f-base-type-family-primary)',
+                  font: 'var(--f-brand-type-headline-medium)',
+                  fontFamily: 'var(--font-display)',
                   fontSize: '15',
-                  fontWeight: '500',
                   color: 'var(--f-brand-color-text-default)',
                   letterSpacing: '-0.015em',
                 }}
@@ -694,19 +691,19 @@ export default function SwipeQuizRoute() {
             >
               <span
                 style={{
+                  font: 'var(--f-brand-type-caption-medium)',
                   fontSize: '11',
                   fontWeight: '600',
                   color: 'var(--f-brand-color-accent)',
-                  fontFamily: 'var(--f-base-type-family-secondary)',
                 }}
               >
                 {score}
               </span>
               <span
                 style={{
+                  font: 'var(--f-brand-type-caption)',
                   fontSize: '10',
                   color: 'var(--f-brand-color-text-muted)',
-                  fontFamily: 'var(--f-base-type-family-secondary)',
                 }}
               >
                 /{total}
@@ -772,12 +769,11 @@ export default function SwipeQuizRoute() {
         >
           <span
             style={{
-              fontFamily: 'var(--f-base-type-family-secondary)',
+              font: 'var(--f-brand-type-caption-medium)',
               fontSize: '11',
               color: 'var(--f-brand-color-status-error)',
               letterSpacing: '0.05em',
               textTransform: 'uppercase',
-              fontWeight: '500',
               opacity: 0.6,
             }}
           >
@@ -785,12 +781,11 @@ export default function SwipeQuizRoute() {
           </span>
           <span
             style={{
-              fontFamily: 'var(--f-base-type-family-secondary)',
+              font: 'var(--f-brand-type-caption-medium)',
               fontSize: '11',
               color: 'var(--f-brand-color-border-success)',
               letterSpacing: '0.05em',
               textTransform: 'uppercase',
-              fontWeight: '500',
               opacity: 0.6,
             }}
           >
