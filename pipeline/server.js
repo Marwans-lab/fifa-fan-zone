@@ -669,18 +669,29 @@ async function checkForStalledIssues() {
       }
 
       console.log(
-        `[Pipeline] STALL DETECTED: ${issue.identifier} (${stateName}) — no activity for ${stalledMinutes}min, resetting to Todo`
+        `[Pipeline] STALL DETECTED: ${issue.identifier} (${stateName}) — no activity for ${stalledMinutes}min, bouncing to force webhook`
       );
 
       const states = await getStates(issue.team.id);
       const todoState = findState(states, "Todo");
+      const backlogState = findState(states, "Backlog");
       if (todoState) {
         markOurComment(issue.id);
-        await transitionIssue(issue.id, todoState.id);
-        console.log(`[Pipeline] ${issue.identifier}: Reset to Todo — Linear webhook will retrigger Cyrus`);
+        if (stateName === "Todo" && backlogState) {
+          // Todo → Backlog → Todo: forces two real webhooks.
+          // The Backlog webhook is ignored by Cyrus; the Todo one starts a new session.
+          await transitionIssue(issue.id, backlogState.id);
+          await new Promise((r) => setTimeout(r, 1000));
+          await transitionIssue(issue.id, todoState.id);
+          console.log(`[Pipeline] ${issue.identifier}: Backlog→Todo bounce — Linear webhook will trigger Cyrus`);
+        } else {
+          // In Progress → Todo: direct reset, webhook fires and Cyrus picks it up
+          await transitionIssue(issue.id, todoState.id);
+          console.log(`[Pipeline] ${issue.identifier}: Reset to Todo — Linear webhook will retrigger Cyrus`);
+        }
       }
       retriggeredRecently.set(issue.id, now);
-      // Stop after one reset per cycle — the webhook will fire and Cyrus will pick it
+      // Stop after one bounce per cycle — the webhook will fire and Cyrus will pick it
       // up. Processing more issues now would race with In Progress state not yet set.
       break;
     }
