@@ -803,13 +803,13 @@ export default function Card() {
             >
               <div style={{
                 width: 56, height: 56, borderRadius: '50%',
-                background: 'rgba(255,255,255,0.08)',
-                border: '1px solid rgba(255,255,255,0.14)',
+                background: 'var(--c-surface)',
+                border: '1px solid var(--c-surface-raise)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 <img src={editIcon} width={24} height={24} alt="" />
               </div>
-              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.48)', letterSpacing: 0.5, fontFamily: 'var(--f-base-type-family-secondary)' }}>
+              <span style={{ fontSize: 11, color: 'var(--c-text-2)', letterSpacing: 0.5, fontFamily: 'var(--f-base-type-family-secondary)' }}>
                 Edit
               </span>
             </button>
@@ -824,13 +824,13 @@ export default function Card() {
             >
               <div style={{
                 width: 56, height: 56, borderRadius: '50%',
-                background: 'rgba(255,255,255,0.08)',
-                border: '1px solid rgba(255,255,255,0.14)',
+                background: 'var(--c-surface)',
+                border: '1px solid var(--c-surface-raise)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 <img src={shareIcon} width={24} height={24} alt="" />
               </div>
-              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.48)', letterSpacing: 0.5, fontFamily: 'var(--f-base-type-family-secondary)' }}>
+              <span style={{ fontSize: 11, color: 'var(--c-text-2)', letterSpacing: 0.5, fontFamily: 'var(--f-base-type-family-secondary)' }}>
                 Share
               </span>
             </button>
@@ -845,13 +845,13 @@ export default function Card() {
             >
               <div style={{
                 width: 56, height: 56, borderRadius: '50%',
-                background: 'rgba(255,255,255,0.08)',
-                border: '1px solid rgba(255,255,255,0.14)',
+                background: 'var(--c-surface)',
+                border: '1px solid var(--c-surface-raise)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 <img src={saveIcon} width={24} height={24} alt="" />
               </div>
-              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.48)', letterSpacing: 0.5, fontFamily: 'var(--f-base-type-family-secondary)' }}>
+              <span style={{ fontSize: 11, color: 'var(--c-text-2)', letterSpacing: 0.5, fontFamily: 'var(--f-base-type-family-secondary)' }}>
                 Save
               </span>
             </button>
