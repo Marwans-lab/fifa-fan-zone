@@ -20,6 +20,7 @@ import './FanCard.css'
 // ─── Public handle (for Edit button) ─────────────────────────────────────────
 export interface FanCardHandle {
   startEditing: () => void
+  flipToBack: () => void
 }
 
 // ─── Profile questions ────────────────────────────────────────────────────────
@@ -152,6 +153,10 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
       setIsFlipped(true)
       setWizardActive(true)
       track('card_edit_tapped')
+    },
+    flipToBack() {
+      setIsFlipped(true)
+      track('card_flipped_to_back')
     },
   }))
 
