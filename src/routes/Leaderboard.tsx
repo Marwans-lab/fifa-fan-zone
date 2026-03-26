@@ -26,7 +26,6 @@ export default function Leaderboard() {
           <div style={{ flex: 1, textAlign: 'center' }}>
             <h2 style={{
               font: 'var(--f-brand-type-headline)',
-              fontFamily: 'var(--font-display)',
               fontWeight: '300',
               letterSpacing: '-0.03em',
               color: 'var(--f-brand-color-text-default)',

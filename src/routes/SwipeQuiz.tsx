@@ -664,7 +664,6 @@ export default function SwipeQuizRoute() {
               <span
                 style={{
                   font: 'var(--f-brand-type-headline-medium)',
-                  fontFamily: 'var(--font-display)',
                   fontSize: '15',
                   color: 'var(--f-brand-color-text-default)',
                   letterSpacing: '-0.015em',

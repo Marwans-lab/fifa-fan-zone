@@ -305,7 +305,7 @@ function ExtraQuizCard({
         background: 'var(--f-brand-color-background-light)',
         opacity: locked ? 0.55 : 1,
         cursor: locked ? 'not-allowed' : 'pointer',
-        textAlign: 'left', fontFamily: 'var(--font-body)', color: 'var(--f-brand-color-text-default)',
+        textAlign: 'left', font: 'var(--f-brand-type-body)', color: 'var(--f-brand-color-text-default)',
         transition: 'all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
         WebkitTapHighlightColor: 'transparent',
       }}
