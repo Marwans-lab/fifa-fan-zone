@@ -73,11 +73,11 @@ export default function Results() {
       <Screen centered>
         <div className="f-page-enter" style={{ padding: 'var(--f-brand-space-2xl) var(--f-brand-space-lg)', textAlign: 'center', maxWidth: 360, width: '100%' }}>
           <div style={{ marginBottom: 'var(--f-brand-space-md)' }}><img src={trophyIcon} width={24} height={24} alt="" /></div>
-          <h2 style={{ fontSize: '28', fontWeight: '300', marginBottom: 'var(--f-brand-space-xs)', letterSpacing: '-0.03em' }}>
+          <h2 style={{ font: 'var(--f-brand-type-title-3)', marginBottom: 'var(--f-brand-space-xs)', letterSpacing: '-0.03em' }}>
             Your Score
           </h2>
-          <p style={{ fontSize: '36', fontWeight: '500', color: 'var(--f-brand-color-accent)', marginBottom: 'var(--f-brand-space-xl)', letterSpacing: '-0.03em' }}>
-            {appState.points} <span style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)', fontWeight: '400' }}>pts</span>
+          <p style={{ font: 'var(--f-brand-type-title-1)', color: 'var(--f-brand-color-accent)', marginBottom: 'var(--f-brand-space-xl)', letterSpacing: '-0.03em', fontWeight: '500' }}>
+            {appState.points} <span style={{ font: 'var(--f-brand-type-caption)', color: 'var(--f-brand-color-text-subtle)' }}>pts</span>
           </p>
           <Button fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
             Play a Quiz
@@ -100,9 +100,7 @@ export default function Results() {
 
         {/* Status label */}
         <div style={{
-          fontFamily: 'var(--f-base-type-family-primary)',
-          fontSize: '28',
-          fontWeight: '300',
+          font: 'var(--f-brand-type-title-3)',
           letterSpacing: '-0.03em',
           color,
           marginBottom: 'var(--f-brand-space-xs)',
@@ -112,11 +110,12 @@ export default function Results() {
 
         {/* Quiz title */}
         <div style={{
-          fontSize: '13',
+          font: 'var(--f-brand-type-caption)',
           color: 'var(--f-brand-color-text-subtle)',
           marginBottom: 'var(--f-brand-space-xl)',
           letterSpacing: '0.05em',
           textTransform: 'uppercase',
+          fontSize: '13',
         }}>
           {quizTitle}
         </div>
@@ -156,10 +155,10 @@ export default function Results() {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-            <span style={{ fontFamily: 'var(--f-base-type-family-primary)', fontSize: '36', fontWeight: '300', letterSpacing: '-0.03em', color, lineHeight: 1 }}>
+            <span style={{ font: 'var(--f-brand-type-title-1)', letterSpacing: '-0.03em', color, lineHeight: 1 }}>
               {displayPoints}
             </span>
-            <span style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', letterSpacing: '0.09em', textTransform: 'uppercase', marginTop: 4 }}>
+            <span style={{ font: 'var(--f-brand-type-caption)', color: 'var(--f-brand-color-text-subtle)', letterSpacing: '0.09em', textTransform: 'uppercase', marginTop: 4, fontSize: '11' }}>
               Points
             </span>
           </div>

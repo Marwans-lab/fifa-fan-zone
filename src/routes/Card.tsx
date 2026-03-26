@@ -84,8 +84,8 @@ function JourneyStep({
         )}
       </div>
       <span style={{
-        fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '400',
-        fontSize: 12, letterSpacing: '-0.02em', textAlign: 'center',
+        font: 'var(--f-brand-type-caption)',
+        letterSpacing: '-0.02em', textAlign: 'center',
         whiteSpace: 'nowrap', transition: 'color var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
         color: isCompleted || isCurrent ? 'var(--f-brand-color-text-default)' : 'var(--f-brand-color-text-subtle)',
       }}>
@@ -135,15 +135,15 @@ function JourneyCard({
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--f-brand-space-lg)' }}>
         <div>
           <h2 style={{
-            fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '500',
-            fontSize: 12, letterSpacing: '0.05em',
+            font: 'var(--f-brand-type-caption-medium)',
+            letterSpacing: '0.05em',
             color: 'var(--f-brand-color-text-muted)', marginBottom: 'var(--f-brand-space-2xs)',
           }}>
             Your journey
           </h2>
           <p style={{
-            fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '500',
-            fontSize: 18, letterSpacing: '-0.02em', color: 'var(--f-brand-color-text-default)',
+            font: 'var(--f-brand-type-headline-medium)',
+            letterSpacing: '-0.02em', color: 'var(--f-brand-color-text-default)',
           }}>
             {status}
           </p>
@@ -156,8 +156,8 @@ function JourneyCard({
           border: '1px solid var(--f-brand-color-border-default)',
         }}>
           <span style={{
-            fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '400',
-            fontSize: 12, color: 'var(--f-brand-color-text-default)', lineHeight: 1,
+            font: 'var(--f-brand-type-caption)',
+            color: 'var(--f-brand-color-text-default)', lineHeight: 1,
           }}>
             Step {Math.min(doneCount + 1, 4)}/4
           </span>
@@ -207,7 +207,7 @@ function JourneyCard({
           width: '100%', height: 48,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: 'var(--f-brand-color-text-default)', color: 'var(--f-brand-color-text-light)',
-          fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '600',
+          font: 'var(--f-brand-type-body-medium)', fontWeight: '600',
           fontSize: 15, borderRadius: 9999, border: 'none',
           marginTop: 28, cursor: 'pointer',
           boxShadow: '0 10px 30px rgba(0,0,0,0.12)',
@@ -305,7 +305,7 @@ function ExtraQuizCard({
         background: 'var(--f-brand-color-background-light)',
         opacity: locked ? 0.55 : 1,
         cursor: locked ? 'not-allowed' : 'pointer',
-        textAlign: 'left', fontFamily: 'inherit', color: 'var(--f-brand-color-text-default)',
+        textAlign: 'left', fontFamily: 'var(--font-body)', color: 'var(--f-brand-color-text-default)',
         transition: 'all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
         WebkitTapHighlightColor: 'transparent',
       }}
@@ -346,13 +346,12 @@ function ExtraQuizCard({
         </div>
         <div>
           <h3 style={{
-            fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '500',
-            fontSize: '18',
+            font: 'var(--f-brand-type-headline-medium)',
             color: locked ? 'var(--f-brand-color-text-subtle)' : 'var(--f-brand-color-text-default)',
           }}>
             {title}
           </h3>
-          <p style={{ fontSize: '13', color: 'var(--f-brand-color-text-muted)', marginTop: 'var(--f-brand-space-xs)' }}>
+          <p style={{ font: 'var(--f-brand-type-caption)', fontSize: '13', color: 'var(--f-brand-color-text-muted)', marginTop: 'var(--f-brand-space-xs)' }}>
             {done ? (
               <span style={{ color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>
                 Completed · {result.score}/{result.total} correct
@@ -514,11 +513,8 @@ export default function Card() {
               }}
             />
             <h1 style={{
-              fontFamily: 'var(--font-display)',
-              fontWeight: 'var(--weight-thin)',
+              font: 'var(--f-brand-type-title-2)',
               fontStyle: 'italic',
-              fontSize: 'var(--text-2xl)',
-              lineHeight: 'var(--leading-tight)',
               letterSpacing: 'var(--tracking-tight)',
               color: 'var(--c-text-1)',
               position: 'relative',
@@ -526,8 +522,7 @@ export default function Card() {
               FIFA Fan Zone
             </h1>
             <p style={{
-              fontFamily: 'var(--font-body)',
-              fontWeight: 'var(--weight-reg)',
+              font: 'var(--f-brand-type-subheading)',
               fontSize: 'var(--text-sm)',
               color: 'var(--c-text-2)',
               marginTop: 'var(--sp-2)',
@@ -561,14 +556,14 @@ export default function Card() {
           <section ref={quizRef} style={{ paddingBottom: 'var(--f-brand-space-3xl)' }}>
             <div style={{ marginBottom: 'var(--f-brand-space-md)' }}>
               <h2 style={{
-                fontFamily: 'var(--f-base-type-family-primary)', fontWeight: '100',
-                fontSize: 28, letterSpacing: '-0.04em', color: 'var(--f-brand-color-text-light)',
+                font: 'var(--f-brand-type-title-2)',
+                letterSpacing: '-0.04em', color: 'var(--f-brand-color-text-light)',
               }}>
                 Earn Avios
               </h2>
               <p style={{
-                fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '400',
-                color: 'rgba(255,255,255,0.5)', fontSize: 14, marginTop: 'var(--f-brand-space-2xs)',
+                font: 'var(--f-brand-type-subheading)',
+                color: 'rgba(255,255,255,0.5)', marginTop: 'var(--f-brand-space-2xs)',
               }}>
                 Complete quizzes to climb the leaderboard
               </p>
