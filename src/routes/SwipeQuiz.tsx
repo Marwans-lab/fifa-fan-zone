@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
-import { useStore } from '../store/useStore'
+import { useStore, FLOW_IDS, type FlowId } from '../store/useStore'
 import { SWIPE_QUIZZES, type SwipeStatement } from '../data/swipeQuizzes'
 import chevLeft from '../assets/icons/Chevron-left-white.svg'
 
@@ -479,7 +479,7 @@ function SwipeActions({
 export default function SwipeQuizRoute() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { addPoints, recordQuizResult } = useStore()
+  const { addPoints, recordQuizResult, completeFlow } = useStore()
 
   const quizId = (location.state as { quizId?: string } | null)?.quizId
   const quizIdx = quizId
@@ -559,6 +559,9 @@ export default function SwipeQuizRoute() {
             const finalScore = correct ? score + 1 : score
             addPoints(finalScore)
             recordQuizResult(quiz.id, finalScore, total)
+            if ((FLOW_IDS as readonly string[]).includes(quiz.id)) {
+              completeFlow(quiz.id as FlowId)
+            }
             track('swipe_quiz_completed', {
               quizId: quiz.id,
               score: finalScore,
@@ -581,6 +584,7 @@ export default function SwipeQuizRoute() {
       quiz,
       addPoints,
       recordQuizResult,
+      completeFlow,
       navigate,
     ],
   )
