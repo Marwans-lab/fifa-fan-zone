@@ -50,7 +50,7 @@ function CardPreview({
           FIFA Fan Zone
         </div>
         <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: 1 }}>
-          Collector Edition
+          Collector edition
         </div>
       </div>
 
@@ -88,7 +88,7 @@ function CardPreview({
           >
             <img src={cameraIcon} width={24} height={24} alt="" />
             <span style={{ fontSize: 9, letterSpacing: 2, textTransform: 'uppercase', opacity: 0.8, lineHeight: 1.2, textAlign: 'center' }}>
-              Take<br />Picture
+              Take<br />picture
             </span>
           </div>
         )}
@@ -247,14 +247,14 @@ export default function Identity() {
             className="f-button"
             style={{ width: '100%' }}
           >
-            Continue
+            Save fan card
           </button>
           <button
             onClick={handleRetake}
             className="f-button f-button--secondary"
             style={{ width: '100%' }}
           >
-            Retake Photo
+            Retake photo
           </button>
         </div>
       </div>

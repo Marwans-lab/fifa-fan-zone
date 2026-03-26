@@ -76,10 +76,10 @@ function FanCardStack() {
                 fontSize: '13', letterSpacing: 2, color: 'var(--f-brand-color-background-light)',
                 textTransform: 'uppercase',
               }}>
-                Your Fan Card
+                Your fan card
               </div>
               <div style={{ fontSize: '10', color: 'rgba(255,255,255,0.65)', letterSpacing: 1 }}>
-                Collector Edition
+                Collector edition
               </div>
             </div>
 
@@ -161,7 +161,7 @@ export default function Landing() {
           maxWidth: 361,
         }}
       >
-        You Could Win Tickets to FIFA World Cup 2026
+        You could win tickets to FIFA World Cup 2026
       </h1>
 
       {/* Fan Card Stack */}
@@ -191,7 +191,7 @@ export default function Landing() {
           boxShadow: '0 8px 16px var(--f-brand-shadow-medium)',
         }}
       >
-        {hasCard ? 'Continue' : 'Create your fan card'}
+        {hasCard ? 'View your fan card' : 'Create your fan card'}
       </button>
     </div>
   )

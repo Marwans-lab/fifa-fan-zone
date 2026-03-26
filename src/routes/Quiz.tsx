@@ -362,7 +362,7 @@ function QuestionScreen({
                 {chosenId === question.correctId
                   ? '✓ Correct! +1 point'
                   : chosenId
-                  ? '✗ Incorrect'
+                  ? '✗ Not quite'
                   : '⏱ Time\'s up!'}
               </div>
             )}
@@ -384,7 +384,7 @@ function QuestionScreen({
                 transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
               }}
             >
-              {isLast && revealed ? `Finish · ${score}/${total}` : 'Next'}
+              {isLast && revealed ? `Finish · ${score}/${total}` : 'Next question'}
             </button>
           </div>
         </div>
