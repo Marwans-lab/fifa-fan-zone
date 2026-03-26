@@ -73,12 +73,12 @@ function FanCardStack() {
             {/* Card header */}
             <div style={{ textAlign: 'left', width: '100%', position: 'relative', zIndex: 1 }}>
               <div style={{
-                font: 'var(--f-brand-type-caption)', fontSize: '13', letterSpacing: 2, color: 'var(--f-brand-color-background-light)',
+                font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-sm)', letterSpacing: 'var(--tracking-display)', color: 'var(--f-brand-color-background-light)',
                 textTransform: 'uppercase',
               }}>
                 Your fan card
               </div>
-              <div style={{ font: 'var(--f-brand-type-caption)', fontSize: '10', color: 'rgba(255,255,255,0.65)', letterSpacing: 1 }}>
+              <div style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-2xs)', color: 'rgba(255,255,255,0.65)', letterSpacing: 'var(--tracking-spaced)' }}>
                 Collector edition
               </div>
             </div>
@@ -102,11 +102,11 @@ function FanCardStack() {
             {/* Team name */}
             <div style={{
               font: 'var(--f-brand-type-headline-medium)',
-              color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic',
+              color: 'rgba(255,255,255,0.88)', letterSpacing: 'var(--tracking-label)', fontStyle: 'italic',
               display: 'flex', alignItems: 'center', gap: 'var(--sp-2)',
               position: 'relative', zIndex: 1,
             }}>
-              <span style={{ fontStyle: 'normal', fontSize: '22' }}>{team.flag}</span>
+              <span style={{ fontStyle: 'normal', fontSize: 'var(--text-xl)' }}>{team.flag}</span>
               {team.name}
             </div>
           </div>
@@ -178,7 +178,7 @@ export default function Landing() {
           background: 'var(--f-brand-color-primary)',
           color: 'var(--f-brand-color-background-light)',
           font: 'var(--f-brand-type-body-medium)',
-          fontSize: '15',
+          fontSize: 'var(--text-md)',
           border: 'none',
           cursor: 'pointer',
           padding: 'var(--f-brand-space-md) var(--f-brand-space-xl)',

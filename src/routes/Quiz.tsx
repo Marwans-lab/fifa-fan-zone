@@ -154,9 +154,9 @@ function OptionButton({
         style={{
           flex: 1,
           font: 'var(--f-brand-type-body)',
-          fontSize: 15,
+          fontSize: 'var(--text-md)',
           color: textColor,
-          fontWeight: isChosen ? 600 : 400,
+          fontWeight: isChosen ? 'var(--weight-bold)' : 'var(--weight-reg)',
           transition: 'color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
           zIndex: 1,
         }}
@@ -202,7 +202,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
           style={{ transition: 'stroke-dashoffset 1s linear', color: 'var(--f-brand-color-text-light)' }}
         />
       </svg>
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', font: 'var(--f-brand-type-subheading-medium)', fontSize: 14, color: 'var(--f-brand-color-text-light)' }}>
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', font: 'var(--f-brand-type-subheading-medium)', color: 'var(--f-brand-color-text-light)' }}>
         {timeLeft}
       </div>
     </div>
@@ -261,7 +261,7 @@ function QuestionScreen({
                 }}
               />
             </div>
-            <span style={{ font: 'var(--f-brand-type-caption)', fontSize: '11', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
+            <span style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
               {qIndex + 1}/{total}
             </span>
           </div>
@@ -280,7 +280,7 @@ function QuestionScreen({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 64,
+              fontSize: 'var(--text-5xl)',
               marginBottom: 'var(--f-brand-space-md)',
               flexShrink: 0,
               overflow: 'hidden',
@@ -306,10 +306,10 @@ function QuestionScreen({
             style={{
               padding: '0 var(--f-brand-space-lg)',
               font: 'var(--f-brand-type-title-3)',
-              fontSize: '22',
+              fontSize: 'var(--text-xl)',
               color: 'var(--f-brand-color-text-default)',
-              lineHeight: '1.12',
-              letterSpacing: '-0.03em',
+              lineHeight: 'var(--leading-tight)',
+              letterSpacing: 'var(--tracking-tight)',
               textAlign: 'center',
               marginBottom: 'var(--f-brand-space-lg)',
               flexShrink: 0,
@@ -351,10 +351,10 @@ function QuestionScreen({
                 style={{
                   textAlign: 'center',
                   font: 'var(--f-brand-type-caption-medium)',
-                  fontSize: '13',
+                  fontSize: 'var(--text-sm)',
                   color: chosenId === question.correctId ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)',
                   marginBottom: 'var(--f-brand-space-sm)',
-                  letterSpacing: '0.05em',
+                  letterSpacing: 'var(--tracking-wide)',
                 }}
               >
                 {chosenId === question.correctId
@@ -376,7 +376,7 @@ function QuestionScreen({
                 background: revealed ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-background-light)',
                 color: revealed ? 'var(--f-brand-color-primary)' : 'var(--f-brand-color-text-muted)',
                 font: 'var(--f-brand-type-body-medium)',
-                fontSize: '15',
+                fontSize: 'var(--text-md)',
                 cursor: revealed ? 'pointer' : 'default',
                 transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
               }}

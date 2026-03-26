@@ -124,7 +124,7 @@ function RankItem({
           ? 'var(--c-white)'
           : 'var(--c-text-2)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 12, fontWeight: 500, flexShrink: 0,
+        fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', flexShrink: 0,
         transition: 'background 200ms ease, color 200ms ease',
       }}>
         {revealed ? (isCorrectPosition ? '✓' : '✗') : positionLabel}

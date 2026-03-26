@@ -221,7 +221,7 @@ export default function TeamSelection() {
         flexShrink: 0,
       }}>
         Already have a card?{' '}
-        <span style={{ fontWeight: '500' }}>Log in</span>
+        <span style={{ fontWeight: 'var(--weight-med)' }}>Log in</span>
       </p>
 
       {/* ── Continue button ─────────────────────────────────────── */}

@@ -190,7 +190,7 @@ function ImageOptionCard({
         <span
           style={{
             font: 'var(--f-brand-type-caption-medium)',
-            fontSize: '13',
+            fontSize: 'var(--text-sm)',
             color: 'var(--f-brand-color-text-light)',
           }}
         >
@@ -259,7 +259,7 @@ function ImageQuestionScreen({
                 }}
               />
             </div>
-            <span style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
+            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
               {qIndex + 1}/{total}
             </span>
           </div>
@@ -277,10 +277,10 @@ function ImageQuestionScreen({
             style={{
               padding: '0 var(--f-brand-space-lg)',
               font: 'var(--f-brand-type-title-3)',
-              fontSize: '22',
+              fontSize: 'var(--text-xl)',
               color: 'var(--f-brand-color-text-default)',
-              lineHeight: '1.12',
-              letterSpacing: '-0.03em',
+              lineHeight: 'var(--leading-tight)',
+              letterSpacing: 'var(--tracking-tight)',
               textAlign: 'center',
               marginBottom: 'var(--f-brand-space-lg)',
               flexShrink: 0,
@@ -318,11 +318,11 @@ function ImageQuestionScreen({
             <div
               style={{
                 textAlign: 'center',
-                fontSize: '13',
+                fontSize: 'var(--text-sm)',
                 color: chosenId === question.correctId ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)',
                 marginBottom: 'var(--f-brand-space-sm)',
-                fontWeight: '500',
-                letterSpacing: '0.05em',
+                fontWeight: 'var(--weight-med)',
+                letterSpacing: 'var(--tracking-wide)',
               }}
             >
               {chosenId === question.correctId
@@ -344,7 +344,7 @@ function ImageQuestionScreen({
               background: revealed ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-background-light)',
               color: revealed ? 'var(--f-brand-color-primary)' : 'var(--f-brand-color-text-muted)',
               font: 'var(--f-brand-type-body-medium)',
-              fontSize: '15',
+              fontSize: 'var(--text-md)',
               cursor: revealed ? 'pointer' : 'default',
               transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
             }}
