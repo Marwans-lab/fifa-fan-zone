@@ -680,7 +680,9 @@ async function checkForStalledIssues() {
         console.log(`[Pipeline] ${issue.identifier}: Reset to Todo — Linear webhook will retrigger Cyrus`);
       }
       retriggeredRecently.set(issue.id, now);
-      await new Promise((r) => setTimeout(r, 3000));
+      // Stop after one reset per cycle — the webhook will fire and Cyrus will pick it
+      // up. Processing more issues now would race with In Progress state not yet set.
+      break;
     }
   } catch (e) {
     console.error(`[Pipeline] Stall detector error: ${e.message}`);
