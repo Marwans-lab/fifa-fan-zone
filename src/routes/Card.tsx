@@ -770,7 +770,7 @@ export default function Card() {
             </h1>
             <p style={{
               fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: 400,
-              fontSize: 14, color: 'rgba(255,255,255,0.48)',
+              fontSize: 14, color: 'var(--c-text-2)',
             }}>
               Tap to flip &amp; view your profile
             </p>
@@ -794,6 +794,7 @@ export default function Card() {
           }}>
             <button
               onClick={() => { track('card_edit_tapped'); navigate('/identity') }}
+              aria-label="Edit fan card"
               style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center',
                 gap: 'var(--f-brand-space-2xs)', background: 'none', border: 'none',
@@ -814,6 +815,7 @@ export default function Card() {
             </button>
             <button
               onClick={() => handleShare()}
+              aria-label="Share fan card"
               style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center',
                 gap: 'var(--f-brand-space-2xs)', background: 'none', border: 'none',
@@ -834,6 +836,7 @@ export default function Card() {
             </button>
             <button
               onClick={() => handleSaveToDevice()}
+              aria-label="Save fan card to device"
               style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center',
                 gap: 'var(--f-brand-space-2xs)', background: 'none', border: 'none',

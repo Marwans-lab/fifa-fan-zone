@@ -206,7 +206,9 @@ export default function Picture() {
       {/* ── Card preview ────────────────────────────────────── */}
       <div
         onClick={hasPhoto ? undefined : handleTakePhoto}
+        onKeyDown={hasPhoto ? undefined : (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleTakePhoto() } }}
         role="button"
+        tabIndex={hasPhoto ? undefined : 0}
         aria-label={hasPhoto ? 'Your photo' : 'Take a photo'}
         style={{
           width: 'calc(100% - var(--f-brand-space-lg) * 2)',
