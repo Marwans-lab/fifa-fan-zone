@@ -25,8 +25,8 @@ export default function Leaderboard() {
           <button onClick={() => navigate(-1)} className="f-button f-button--ghost"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
           <div style={{ flex: 1, textAlign: 'center' }}>
             <h2 style={{
-              font: 'var(--f-brand-type-headline)',
-              fontWeight: '300',
+              font: 'var(--f-brand-type-title-5)',
+              fontSize: '18',
               letterSpacing: '-0.03em',
               color: 'var(--f-brand-color-text-default)',
             }}>

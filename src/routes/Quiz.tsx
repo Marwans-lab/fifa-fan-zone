@@ -202,7 +202,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
           style={{ transition: 'stroke-dashoffset 1s linear', color: 'var(--f-brand-color-text-light)' }}
         />
       </svg>
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', font: 'var(--f-brand-type-subheading-medium)', fontSize: 14, color: 'var(--f-brand-color-text-light)' }}>
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', font: 'var(--f-brand-type-subheading-medium)', color: 'var(--f-brand-color-text-light)' }}>
         {timeLeft}
       </div>
     </div>
