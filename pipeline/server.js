@@ -198,7 +198,7 @@ async function triggerCyrus(issueId, issueIdentifier) {
   // Running parallel sessions causes conflicting PRs — each branches off a different commit.
   try {
     const activeResult = await linearGQL(
-      `query { issues(filter: { team: { key: { eq: "MAR" } }, state: { name: { in: ["In Progress"] } } }, first: 10) { nodes { id identifier } } }`,
+      `query { issues(filter: { team: { key: { eq: "MAR" } }, project: { id: { eq: "978662f2-57f8-44e3-9a5b-1e8059819bd8" } }, state: { name: { in: ["In Progress"] } }, archivedAt: { null: true } }, first: 10) { nodes { id identifier } } }`,
       {}
     );
     const otherActive = (activeResult.data?.issues?.nodes || []).filter(i => i.id !== issueId);
@@ -643,7 +643,7 @@ async function checkForStalledIssues() {
       // Check serialization before resetting: skip if another issue is already In Progress
       try {
         const activeResult = await linearGQL(
-          `query { issues(filter: { team: { key: { eq: "MAR" } }, state: { name: { in: ["In Progress"] } } }, first: 10) { nodes { id identifier } } }`,
+          `query { issues(filter: { team: { key: { eq: "MAR" } }, project: { id: { eq: "978662f2-57f8-44e3-9a5b-1e8059819bd8" } }, state: { name: { in: ["In Progress"] } }, archivedAt: { null: true } }, first: 10) { nodes { id identifier } } }`,
           {}
         );
         const otherActive = (activeResult.data?.issues?.nodes || []).filter(i => i.id !== issue.id);
@@ -709,7 +709,7 @@ const server = http.createServer(async (req, res) => {
           const issueId = payload.data?.id;
           try {
             const activeResult = await linearGQL(
-              `query { issues(filter: { team: { key: { eq: "MAR" } }, state: { name: { in: ["In Progress"] } } }, first: 10) { nodes { id identifier } } }`,
+              `query { issues(filter: { team: { key: { eq: "MAR" } }, project: { id: { eq: "978662f2-57f8-44e3-9a5b-1e8059819bd8" } }, state: { name: { in: ["In Progress"] } }, archivedAt: { null: true } }, first: 10) { nodes { id identifier } } }`,
               {}
             );
             const otherActive = (activeResult.data?.issues?.nodes || []).filter(i => i.id !== issueId);
