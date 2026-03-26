@@ -159,7 +159,7 @@ export default function Results() {
             <span style={{ fontFamily: 'var(--f-base-type-family-primary)', fontSize: '36', fontWeight: '300', letterSpacing: '-0.03em', color, lineHeight: 1 }}>
               {displayPoints}
             </span>
-            <span style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', letterSpacing: '0.09em', textTransform: 'uppercase', marginTop: 4 }}>
+            <span style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', letterSpacing: '0.09em', textTransform: 'uppercase', marginTop: 'var(--sp-1)' }}>
               Points
             </span>
           </div>

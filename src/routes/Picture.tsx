@@ -203,15 +203,15 @@ export default function Picture() {
         display: 'flex',
         alignItems: 'center',
         gap: 'var(--f-brand-space-md)',
-        padding: '70px var(--f-brand-space-md) 0 var(--f-brand-space-md)',
+        padding: 'var(--sp-18) var(--f-brand-space-md) 0 var(--f-brand-space-md)',
         flexShrink: 0,
       }}>
         <button
           onClick={handleBack}
           aria-label="Go back"
           style={{
-            width: 48,
-            height: 48,
+            width: 'var(--sp-12)',
+            height: 'var(--sp-12)',
             borderRadius: 'var(--f-brand-radius-rounded)',
             background: 'var(--f-brand-color-text-light)',
             border: 'none',
@@ -292,12 +292,12 @@ export default function Picture() {
                 bottom: 'var(--f-brand-space-xl)',
                 left: '50%',
                 transform: 'translateX(-50%)',
-                width: 72,
-                height: 72,
+                width: 'var(--sp-18)',
+                height: 'var(--sp-18)',
                 borderRadius: 'var(--f-brand-radius-rounded)',
                 background: 'none',
                 border: 'var(--c-capture-ring) solid var(--f-brand-color-text-light)',
-                padding: 4,
+                padding: 'var(--sp-1)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -366,7 +366,7 @@ export default function Picture() {
                 position: 'absolute',
                 top: 209,
                 width: 197,
-                height: 56,
+                height: 'var(--sp-14)',
                 borderRadius: 'var(--f-brand-radius-rounded)',
                 background: 'var(--f-brand-color-primary)',
                 border: 'none',
@@ -423,7 +423,7 @@ export default function Picture() {
           disabled={!hasPhoto}
           style={{
             width: '100%',
-            height: 56,
+            height: 'var(--sp-14)',
             borderRadius: 'var(--f-brand-radius-rounded)',
             background: hasPhoto ? 'var(--f-brand-color-primary)' : 'var(--f-brand-color-border-default)',
             border: 'none',

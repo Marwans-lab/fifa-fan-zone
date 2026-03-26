@@ -340,7 +340,7 @@ function ImageQuestionScreen({
             className="f-button"
             style={{
               width: '100%',
-              padding: '16px 0',
+              padding: 'var(--sp-4) 0',
               borderRadius: 'var(--f-brand-radius-rounded)',
               border: 'none',
               background: revealed ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-background-light)',

@@ -60,7 +60,7 @@ export default function Leaderboard() {
             <span style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)' }}>Your rank: </span>
             <span style={{ fontSize: '15', fontWeight: '500', color: 'var(--f-brand-color-accent)' }}>#{myRank}</span>
             {myRank <= 5 && (
-              <span style={{ fontSize: '13', color: 'var(--f-brand-color-accent)', marginLeft: 8, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ fontSize: '13', color: 'var(--f-brand-color-accent)', marginLeft: 'var(--sp-2)', display: 'inline-flex', alignItems: 'center', gap: 'var(--sp-1)' }}>
                 <img src={trophyIcon} width={24} height={24} alt="" /> Top 5 — Avios eligible!
               </span>
             )}
@@ -101,7 +101,7 @@ export default function Leaderboard() {
               </div>
               <div style={{ flex: 1, fontSize: '15', color: 'var(--f-brand-color-text-default)', fontWeight: row.isMe ? '500' : '400' }}>
                 {row.name}
-                {row.isMe && <span style={{ fontSize: '11', color: 'var(--f-brand-color-accent)', marginLeft: 8, letterSpacing: '0.05em' }}>you</span>}
+                {row.isMe && <span style={{ fontSize: '11', color: 'var(--f-brand-color-accent)', marginLeft: 'var(--sp-2)', letterSpacing: '0.05em' }}>you</span>}
               </div>
               {[
                 { label: 'Score',    value: `${row.pts} pts` },

@@ -31,7 +31,7 @@ function CardPreview({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '24px 20px 20px',
+        padding: 'var(--sp-6) var(--sp-5) var(--sp-5)',
         overflow: 'hidden',
         position: 'relative',
         boxShadow: `0 16px 48px ${c1}55, inset 0 1px 0 rgba(255,255,255,0.08)`,
@@ -46,7 +46,7 @@ function CardPreview({
 
       {/* Header text */}
       <div style={{ textAlign: 'center', width: '100%', zIndex: 1 }}>
-        <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', marginBottom: 4 }}>
+        <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', marginBottom: 'var(--sp-1)' }}>
           FIFA Fan Zone
         </div>
         <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: 1 }}>
@@ -81,7 +81,7 @@ function CardPreview({
               alignItems: 'center',
               justifyContent: 'center',
               color: 'var(--f-brand-color-text-light)',
-              gap: 6,
+              gap: 'var(--sp-2)',
               backdropFilter: 'blur(var(--f-brand-blur-subtle))',
               WebkitBackdropFilter: 'blur(var(--f-brand-blur-subtle))',
             }}
@@ -96,7 +96,7 @@ function CardPreview({
 
       {/* Team motto */}
       <div style={{ textAlign: 'center', zIndex: 1 }}>
-        <div style={{ fontSize: '13', fontWeight: '500', color: 'rgba(255,255,255,0.88)', letterSpacing: 1, marginBottom: 2, fontStyle: 'italic' }}>
+        <div style={{ fontSize: '13', fontWeight: '500', color: 'rgba(255,255,255,0.88)', letterSpacing: 1, fontStyle: 'italic' }}>
           {team.motto}
         </div>
       </div>
