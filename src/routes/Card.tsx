@@ -1,6 +1,7 @@
 import { useRef, useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Screen from '../components/Screen'
+import Button from '../components/Button'
 import FanCard, { type FanCardHandle } from '../components/FanCard'
 import { track } from '../lib/analytics'
 import { useStore, type FlowId } from '../store/useStore'
@@ -547,30 +548,17 @@ export default function Card() {
 
           {/* ── Complete fan card CTA ────────────────────────────── */}
           {!cardComplete && (
-            <button
+            <Button
+              fullWidth
               onClick={() => {
                 track('complete_fan_card_tapped')
                 fanCardSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
                 setTimeout(() => fanCardRef.current?.flipToBack(), 500)
               }}
-              style={{
-                width: '100%', height: 'var(--sp-12)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'var(--f-brand-color-background-primary)',
-                color: 'var(--f-brand-color-text-light)',
-                font: 'var(--f-brand-type-body-medium)',
-                fontWeight: 'var(--weight-bold)',
-                fontSize: 'var(--text-md)',
-                borderRadius: 9999, border: 'none',
-                marginBottom: 'var(--f-brand-space-md)',
-                cursor: 'pointer',
-                boxShadow: '0 10px 30px rgba(142,33,87,0.3)',
-                transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
-                WebkitTapHighlightColor: 'transparent',
-              }}
+              style={{ marginBottom: 'var(--f-brand-space-md)' }}
             >
               Complete fan card
-            </button>
+            </Button>
           )}
 
           {/* ── Journey ───────────────────────────────────────── */}
