@@ -708,8 +708,37 @@ const server = http.createServer(async (req, res) => {
   let body = "";
   req.on("data", (c) => (body += c));
   req.on("end", async () => {
-    // Forward everything to Cyrus first (non-blocking)
-    const cyrusResult = forwardToCyrus(req.method, req.url, req.headers, body);
+    // For Todo state-change webhooks: gate forwarding so only ONE issue triggers
+    // Cyrus at a time. If another issue is already In Progress, swallow the webhook
+    // and let the stall detector handle it in a future cycle.
+    let shouldForward = true;
+    if (req.url === "/webhook" && req.method === "POST") {
+      try {
+        const payload = JSON.parse(body);
+        if (payload.type === "Issue" && payload.action === "update" && payload.data?.state?.name === "Todo") {
+          const issueId = payload.data?.id;
+          try {
+            const activeResult = await linearGQL(
+              `query { issues(filter: { team: { key: { eq: "MAR" } }, state: { name: { in: ["In Progress"] } } }, first: 10) { nodes { id identifier } } }`,
+              {}
+            );
+            const otherActive = (activeResult.data?.issues?.nodes || []).filter(i => i.id !== issueId);
+            if (otherActive.length > 0) {
+              console.log(`[Pipeline] ${payload.data?.identifier}: Todo webhook gated — ${otherActive.map(i => i.identifier).join(", ")} already In Progress. Stall detector will retry.`);
+              shouldForward = false;
+            }
+          } catch (e) {
+            // If we can't check, allow the forward (fail open)
+            console.warn(`[Pipeline] Could not check In Progress for gate: ${e.message}`);
+          }
+        }
+      } catch { /* not JSON or not an issue event, just forward */ }
+    }
+
+    // Forward to Cyrus (non-blocking), unless gated above
+    const cyrusResult = shouldForward
+      ? forwardToCyrus(req.method, req.url, req.headers, body)
+      : Promise.resolve({ status: 200, body: '{"success":true}' });
 
     // Process pipeline logic for webhook events
     if (req.url === "/webhook" && req.method === "POST") {
