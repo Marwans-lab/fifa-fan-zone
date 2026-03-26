@@ -1,7 +1,7 @@
 import { useRef, useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Screen from '../components/Screen'
-import FanCard from '../components/FanCard'
+import FanCard, { type FanCardHandle } from '../components/FanCard'
 import { track } from '../lib/analytics'
 import { useStore, type FlowId } from '../store/useStore'
 import { renderCardToBlob, buildShareText } from '../lib/cardExport'
@@ -397,6 +397,8 @@ export default function Card() {
   const navigate = useNavigate()
   const { state, updateFanCard, isFlowUnlocked } = useStore()
   const quizRef = useRef<HTMLDivElement>(null)
+  const fanCardRef = useRef<FanCardHandle>(null)
+  const fanCardSectionRef = useRef<HTMLElement>(null)
 
   function handleSave(answers: Record<string, string>) {
     updateFanCard({ answers, completedAt: new Date().toISOString() })
@@ -528,19 +530,48 @@ export default function Card() {
               marginTop: 'var(--sp-2)',
               position: 'relative',
             }}>
-              {cardComplete ? 'Welcome back, fan!' : 'Flip to complete your fan profile'}
+              {cardComplete ? 'Welcome back, fan!' : 'Your fan card is almost ready'}
             </p>
           </header>
 
           {/* ── Fan Card ──────────────────────────────────────── */}
-          <section aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 'var(--f-brand-space-md)' }}>
+          <section ref={fanCardSectionRef} aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 'var(--f-brand-space-md)' }}>
             <FanCard
+              ref={fanCardRef}
               fanCard={state.fanCard}
               onSave={handleSave}
               onShare={handleShare}
               onSaveToDevice={handleSaveToDevice}
             />
           </section>
+
+          {/* ── Complete fan card CTA ────────────────────────────── */}
+          {!cardComplete && (
+            <button
+              onClick={() => {
+                track('complete_fan_card_tapped')
+                fanCardSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                setTimeout(() => fanCardRef.current?.flipToBack(), 500)
+              }}
+              style={{
+                width: '100%', height: 'var(--sp-12)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'var(--f-brand-color-background-primary)',
+                color: 'var(--f-brand-color-text-light)',
+                font: 'var(--f-brand-type-body-medium)',
+                fontWeight: 'var(--weight-bold)',
+                fontSize: 'var(--text-md)',
+                borderRadius: 9999, border: 'none',
+                marginBottom: 'var(--f-brand-space-md)',
+                cursor: 'pointer',
+                boxShadow: '0 10px 30px rgba(142,33,87,0.3)',
+                transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
+                WebkitTapHighlightColor: 'transparent',
+              }}
+            >
+              Complete fan card
+            </button>
+          )}
 
           {/* ── Journey ───────────────────────────────────────── */}
           <JourneyCard
