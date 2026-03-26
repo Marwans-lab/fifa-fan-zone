@@ -23,9 +23,9 @@ export default function AuthGuard({ children }: AuthGuardProps) {
           <div style={{ marginBottom: 'var(--f-brand-space-md)', opacity: 0.5 }}><img src={lockIcon} width={24} height={24} alt="" /></div>
           <h2 style={{
             fontFamily: 'var(--f-base-type-family-primary)',
-            fontSize: '22',
-            fontWeight: '300',
-            letterSpacing: '-0.03em',
+            fontSize: 'var(--text-xl)',
+            fontWeight: 'var(--weight-light)',
+            letterSpacing: 'var(--tracking-tight)',
             marginBottom: 'var(--f-brand-space-sm)',
             color: 'var(--f-brand-color-text-default)',
           }}>
@@ -33,8 +33,8 @@ export default function AuthGuard({ children }: AuthGuardProps) {
           </h2>
           <p style={{
             color: 'var(--f-brand-color-text-subtle)',
-            fontSize: '13',
-            lineHeight: '1.52',
+            fontSize: 'var(--text-sm)',
+            lineHeight: 'var(--leading-normal)',
             marginBottom: 'var(--f-brand-space-lg)',
           }}>
             We couldn't establish a session. Please try again or re-open FanZone from the Qatar Airways app.

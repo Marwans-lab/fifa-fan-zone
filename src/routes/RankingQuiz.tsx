@@ -42,7 +42,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
       <div style={{
         position: 'absolute', inset: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 14, fontWeight: 500, fontFamily: 'var(--font-body)', color: 'var(--c-white)',
+        fontSize: 'var(--text-sub)', fontWeight: 'var(--weight-med)', fontFamily: 'var(--font-body)', color: 'var(--c-white)',
       }}>
         {timeLeft}
       </div>
@@ -124,7 +124,7 @@ function RankItem({
           ? 'var(--c-white)'
           : 'var(--c-text-2)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 12, fontWeight: 500, flexShrink: 0,
+        fontSize: 'var(--text-caption)', fontWeight: 'var(--weight-med)', flexShrink: 0,
         transition: 'background 200ms ease, color 200ms ease',
       }}>
         {revealed ? (isCorrectPosition ? '✓' : '✗') : positionLabel}
@@ -133,7 +133,7 @@ function RankItem({
       {/* Label */}
       <span style={{
         flex: 1, fontSize: 'var(--text-md)', color: 'var(--c-text-1)',
-        fontWeight: isDragging ? 600 : 400,
+        fontWeight: isDragging ? 'var(--weight-bold)' : 'var(--weight-reg)',
       }}>
         {item.label}
       </span>

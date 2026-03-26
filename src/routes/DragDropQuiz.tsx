@@ -42,8 +42,8 @@ function Chip({ answer, isDragging, isPlaced, isCorrect, style }: ChipProps) {
     justifyContent: 'center',
     padding: 'var(--f-brand-space-sm) var(--f-brand-space-md)',
     borderRadius: 'var(--f-brand-radius-rounded)',
-    fontSize: '13',
-    fontWeight: '500',
+    fontSize: 'var(--text-sm)',
+    fontWeight: 'var(--weight-med)',
     fontFamily: 'var(--f-base-type-family-secondary)',
     color: 'var(--f-brand-color-text-default)',
     background: 'var(--f-brand-color-background-light)',
@@ -127,8 +127,8 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
   }
 
   const promptStyle: React.CSSProperties = {
-    fontSize: '15',
-    fontWeight: '500',
+    fontSize: 'var(--text-md)',
+    fontWeight: 'var(--weight-med)',
     color: 'var(--f-brand-color-text-default)',
     fontFamily: 'var(--f-base-type-family-secondary)',
     minWidth: 90,
@@ -142,8 +142,8 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
     justifyContent: 'center',
     padding: 'var(--f-brand-space-xs) var(--f-brand-space-sm)',
     borderRadius: 'var(--f-brand-radius-rounded)',
-    fontSize: '13',
-    fontWeight: '500',
+    fontSize: 'var(--text-sm)',
+    fontWeight: 'var(--weight-med)',
     fontFamily: 'var(--f-base-type-family-secondary)',
     minHeight: '36px',
     background: placedAnswer
@@ -193,8 +193,8 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '10',
-            fontWeight: '600',
+            fontSize: 'var(--text-2xs)',
+            fontWeight: 'var(--weight-bold)',
             background: isCorrect ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)',
             color: 'var(--f-brand-color-text-light)',
             flexShrink: 0,
@@ -484,16 +484,16 @@ function QuestionView({
           boxShadow: `0 8px 32px ${question.accentColor}55, inset 0 1px 0 rgba(255,255,255,0.15)`,
         }}
       >
-        <span style={{ fontSize: '40', marginBottom: 'var(--f-brand-space-xs)' }}>{quiz.emoji}</span>
+        <span style={{ fontSize: 'var(--text-4xl)', marginBottom: 'var(--f-brand-space-xs)' }}>{quiz.emoji}</span>
         <div
           style={{
             fontFamily: 'var(--f-base-type-family-primary)',
-            fontSize: '18',
-            fontWeight: '300',
+            fontSize: 'var(--text-lg)',
+            fontWeight: 'var(--weight-light)',
             color: 'var(--f-brand-color-text-default)',
             textAlign: 'center',
             lineHeight: '1.28',
-            letterSpacing: '-0.03em',
+            letterSpacing: 'var(--tracking-tight)',
           }}
         >
           {question.title}
@@ -543,11 +543,11 @@ function QuestionView({
       >
         <div
           style={{
-            fontSize: '10',
-            fontWeight: '500',
+            fontSize: 'var(--text-2xs)',
+            fontWeight: 'var(--weight-med)',
             color: 'var(--f-brand-color-text-muted)',
             textTransform: 'uppercase',
-            letterSpacing: '0.09em',
+            letterSpacing: 'var(--tracking-wider)',
             marginBottom: 'var(--f-brand-space-sm)',
             textAlign: 'center',
           }}
@@ -619,11 +619,11 @@ function QuestionView({
           <div
             style={{
               textAlign: 'center',
-              fontSize: '13',
+              fontSize: 'var(--text-sm)',
               color: 'var(--f-brand-color-border-success)',
               marginBottom: 'var(--f-brand-space-sm)',
-              fontWeight: '500',
-              letterSpacing: '0.05em',
+              fontWeight: 'var(--weight-med)',
+              letterSpacing: 'var(--tracking-wide)',
               animation: 'popIn var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-entry)',
             }}
           >
@@ -641,8 +641,8 @@ function QuestionView({
             border: 'none',
             background: allCorrect ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-background-light)',
             color: allCorrect ? 'var(--f-brand-color-primary)' : 'var(--f-brand-color-text-muted)',
-            fontSize: '15',
-            fontWeight: '500',
+            fontSize: 'var(--text-md)',
+            fontWeight: 'var(--weight-med)',
             cursor: allCorrect ? 'pointer' : 'default',
             fontFamily: 'inherit',
             transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
@@ -765,7 +765,7 @@ export default function DragDropQuizRoute() {
                 }}
               />
             </div>
-            <span style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
+            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
               {qIdx + 1}/{total}
             </span>
           </div>

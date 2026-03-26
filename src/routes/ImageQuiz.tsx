@@ -59,7 +59,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
           style={{ transition: 'stroke-dashoffset 1s linear', color: 'var(--f-brand-color-text-light)' }}
         />
       </svg>
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 500, fontFamily: 'var(--f-base-type-family-secondary)', color: 'var(--f-brand-color-text-light)' }}>
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--text-sub)', fontWeight: 'var(--weight-med)', fontFamily: 'var(--f-base-type-family-secondary)', color: 'var(--f-brand-color-text-light)' }}>
         {timeLeft}
       </div>
     </div>
@@ -189,8 +189,8 @@ function ImageOptionCard({
       >
         <span
           style={{
-            fontSize: '13',
-            fontWeight: '500',
+            fontSize: 'var(--text-sm)',
+            fontWeight: 'var(--weight-med)',
             color: 'var(--f-brand-color-text-light)',
             fontFamily: 'var(--f-base-type-family-secondary)',
           }}
@@ -260,7 +260,7 @@ function ImageQuestionScreen({
                 }}
               />
             </div>
-            <span style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
+            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
               {qIndex + 1}/{total}
             </span>
           </div>
@@ -278,11 +278,11 @@ function ImageQuestionScreen({
             style={{
               padding: '0 var(--f-brand-space-lg)',
               fontFamily: 'var(--f-base-type-family-primary)',
-              fontSize: '22',
-              fontWeight: '300',
+              fontSize: 'var(--text-xl)',
+              fontWeight: 'var(--weight-light)',
               color: 'var(--f-brand-color-text-default)',
               lineHeight: '1.12',
-              letterSpacing: '-0.03em',
+              letterSpacing: 'var(--tracking-tight)',
               textAlign: 'center',
               marginBottom: 'var(--f-brand-space-lg)',
               flexShrink: 0,
@@ -320,11 +320,11 @@ function ImageQuestionScreen({
             <div
               style={{
                 textAlign: 'center',
-                fontSize: '13',
+                fontSize: 'var(--text-sm)',
                 color: chosenId === question.correctId ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)',
                 marginBottom: 'var(--f-brand-space-sm)',
-                fontWeight: '500',
-                letterSpacing: '0.05em',
+                fontWeight: 'var(--weight-med)',
+                letterSpacing: 'var(--tracking-wide)',
               }}
             >
               {chosenId === question.correctId
@@ -345,8 +345,8 @@ function ImageQuestionScreen({
               border: 'none',
               background: revealed ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-background-light)',
               color: revealed ? 'var(--f-brand-color-primary)' : 'var(--f-brand-color-text-muted)',
-              fontSize: '15',
-              fontWeight: '500',
+              fontSize: 'var(--text-md)',
+              fontWeight: 'var(--weight-med)',
               cursor: revealed ? 'pointer' : 'default',
               fontFamily: 'inherit',
               transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',

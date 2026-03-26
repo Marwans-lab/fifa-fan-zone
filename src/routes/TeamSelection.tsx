@@ -115,9 +115,9 @@ export default function TeamSelection() {
       {/* ── Title ───────────────────────────────────────────────── */}
       <h2 style={{
         fontFamily: 'var(--f-base-type-family-primary)',
-        fontSize: 28,
+        fontSize: 'var(--text-2xl)',
         lineHeight: '36px',
-        fontWeight: '300',
+        fontWeight: 'var(--weight-light)',
         color: 'var(--f-brand-color-text-default)',
         textAlign: 'center',
         marginTop: 'var(--f-brand-space-xl)',
@@ -145,7 +145,7 @@ export default function TeamSelection() {
             justifyContent: 'space-between',
             cursor: 'pointer',
             fontFamily: 'inherit',
-            fontSize: 16,
+            fontSize: 'var(--text-base)',
             color: selectedTeam ? 'var(--f-brand-color-text-default)' : 'var(--f-brand-color-text-subtle)',
             WebkitTapHighlightColor: 'transparent',
           }}
@@ -200,7 +200,7 @@ export default function TeamSelection() {
                   borderBottom: i < WORLD_CUP_TEAMS.length - 1
                     ? '1px solid var(--f-brand-color-background-default)'
                     : 'none',
-                  fontSize: 16,
+                  fontSize: 'var(--text-base)',
                   color: 'var(--f-brand-color-text-default)',
                   cursor: 'pointer',
                   fontFamily: 'inherit',
@@ -220,13 +220,13 @@ export default function TeamSelection() {
       {/* ── "Already have a card? Log in" ───────────────────────── */}
       <p style={{
         textAlign: 'center',
-        fontSize: 18,
+        fontSize: 'var(--text-lg)',
         color: 'var(--f-brand-color-text-default)',
         marginBottom: 'var(--f-brand-space-md)',
         flexShrink: 0,
       }}>
         Already have a card?{' '}
-        <span style={{ fontWeight: '500' }}>Log in</span>
+        <span style={{ fontWeight: 'var(--weight-med)' }}>Log in</span>
       </p>
 
       {/* ── Continue button ─────────────────────────────────────── */}
@@ -240,8 +240,8 @@ export default function TeamSelection() {
           border: 'none',
           background: 'var(--f-brand-color-primary)',
           color: 'var(--f-brand-color-background-light)',
-          fontSize: 16,
-          fontWeight: '500',
+          fontSize: 'var(--text-base)',
+          fontWeight: 'var(--weight-med)',
           fontFamily: 'inherit',
           cursor: selectedId ? 'pointer' : 'default',
           opacity: selectedId ? 1 : 0.5,

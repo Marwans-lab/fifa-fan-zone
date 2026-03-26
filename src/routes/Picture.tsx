@@ -238,8 +238,8 @@ export default function Picture() {
       {/* ── Title ────────────────────────────────────────────── */}
       <h2 style={{
         fontFamily: 'var(--f-base-type-family-primary)',
-        fontSize: '28',
-        fontWeight: '100',
+        fontSize: 'var(--text-2xl)',
+        fontWeight: 'var(--weight-thin)',
         lineHeight: '36px',
         color: 'var(--f-brand-color-text-default)',
         textAlign: 'center',
@@ -346,10 +346,10 @@ export default function Picture() {
                 border: '1px solid rgba(255,255,255,0.2)',
                 color: 'var(--f-brand-color-text-light)',
                 fontFamily: 'var(--f-base-type-family-secondary)',
-                fontSize: '13',
-                fontWeight: '500',
+                fontSize: 'var(--text-sm)',
+                fontWeight: 'var(--weight-med)',
                 cursor: 'pointer',
-                letterSpacing: '0.05em',
+                letterSpacing: 'var(--tracking-wide)',
               }}
             >
               Retake
@@ -378,8 +378,8 @@ export default function Picture() {
                 boxShadow: '0px 8px 16px rgba(31,33,43,0.08)',
                 color: 'var(--f-brand-color-text-light)',
                 fontFamily: 'var(--f-base-type-family-secondary)',
-                fontSize: 16,
-                fontWeight: '500',
+                fontSize: 'var(--text-base)',
+                fontWeight: 'var(--weight-med)',
                 lineHeight: '24px',
               }}
             >
@@ -393,7 +393,7 @@ export default function Picture() {
       {/* ── Camera error ─────────────────────────────────────── */}
       {cameraError && (
         <p style={{
-          fontSize: '11',
+          fontSize: 'var(--text-xs)',
           color: 'var(--f-brand-color-status-error)',
           marginTop: 'var(--f-brand-space-xs)',
           textAlign: 'center',
@@ -430,8 +430,8 @@ export default function Picture() {
             cursor: hasPhoto ? 'pointer' : 'default',
             color: hasPhoto ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-text-disabled)',
             fontFamily: 'var(--f-base-type-family-secondary)',
-            fontSize: 16,
-            fontWeight: '500',
+            fontSize: 'var(--text-base)',
+            fontWeight: 'var(--weight-med)',
             lineHeight: '24px',
             transition: `background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)`,
           }}

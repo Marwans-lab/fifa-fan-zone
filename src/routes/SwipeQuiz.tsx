@@ -31,10 +31,10 @@ function SwipeLabel({
         borderRadius: 'var(--f-brand-radius-base)',
         border: `2px solid ${isTrue ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)'}`,
         color: isTrue ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)',
-        fontSize: '18',
-        fontWeight: '600',
+        fontSize: 'var(--text-lg)',
+        fontWeight: 'var(--weight-bold)',
         fontFamily: 'var(--f-base-type-family-secondary)',
-        letterSpacing: '0.05em',
+        letterSpacing: 'var(--tracking-wide)',
         textTransform: 'uppercase',
         opacity,
         transform: `rotate(${isTrue ? -12 : 12}deg)`,
@@ -87,7 +87,7 @@ function FeedbackOverlay({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '28',
+          fontSize: 'var(--text-2xl)',
           boxShadow: `0 0 40px ${correct ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-border-error)'}`,
         }}
       >
@@ -106,10 +106,10 @@ function FeedbackOverlay({
       <span
         style={{
           fontFamily: 'var(--f-base-type-family-primary)',
-          fontSize: '22',
-          fontWeight: '600',
+          fontSize: 'var(--text-xl)',
+          fontWeight: 'var(--weight-bold)',
           color: correct ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)',
-          letterSpacing: '0.05em',
+          letterSpacing: 'var(--tracking-wide)',
         }}
       >
         {correct ? 'Correct!' : 'Wrong!'}
@@ -119,7 +119,7 @@ function FeedbackOverlay({
       <span
         style={{
           fontFamily: 'var(--f-base-type-family-secondary)',
-          fontSize: '13',
+          fontSize: 'var(--text-sm)',
           color: 'var(--f-brand-color-text-subtle)',
           textAlign: 'center',
           lineHeight: '1.28',
@@ -259,11 +259,11 @@ function StatementCard({
         <div
           style={{
             fontFamily: 'var(--f-base-type-family-primary)',
-            fontSize: '28',
-            fontWeight: '300',
+            fontSize: 'var(--text-2xl)',
+            fontWeight: 'var(--weight-light)',
             color: 'var(--f-brand-color-text-default)',
             lineHeight: '1.12',
-            letterSpacing: '-0.03em',
+            letterSpacing: 'var(--tracking-tight)',
             textAlign: 'center',
             opacity: feedbackState ? 0 : 1,
             transition: 'opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
@@ -279,9 +279,9 @@ function StatementCard({
             position: 'absolute',
             bottom: 'var(--f-brand-space-lg)',
             fontFamily: 'var(--f-base-type-family-secondary)',
-            fontSize: '11',
+            fontSize: 'var(--text-xs)',
             color: 'var(--f-brand-color-text-muted)',
-            letterSpacing: '0.05em',
+            letterSpacing: 'var(--tracking-wide)',
             textTransform: 'uppercase',
             opacity: feedbackState ? 0 : 0.6,
             transition: 'opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
@@ -667,10 +667,10 @@ export default function SwipeQuizRoute() {
               <span
                 style={{
                   fontFamily: 'var(--f-base-type-family-primary)',
-                  fontSize: '15',
-                  fontWeight: '500',
+                  fontSize: 'var(--text-md)',
+                  fontWeight: 'var(--weight-med)',
                   color: 'var(--f-brand-color-text-default)',
-                  letterSpacing: '-0.015em',
+                  letterSpacing: 'var(--tracking-snug)',
                 }}
               >
                 {quiz.title}
@@ -694,8 +694,8 @@ export default function SwipeQuizRoute() {
             >
               <span
                 style={{
-                  fontSize: '11',
-                  fontWeight: '600',
+                  fontSize: 'var(--text-xs)',
+                  fontWeight: 'var(--weight-bold)',
                   color: 'var(--f-brand-color-accent)',
                   fontFamily: 'var(--f-base-type-family-secondary)',
                 }}
@@ -704,7 +704,7 @@ export default function SwipeQuizRoute() {
               </span>
               <span
                 style={{
-                  fontSize: '10',
+                  fontSize: 'var(--text-2xs)',
                   color: 'var(--f-brand-color-text-muted)',
                   fontFamily: 'var(--f-base-type-family-secondary)',
                 }}
@@ -773,11 +773,11 @@ export default function SwipeQuizRoute() {
           <span
             style={{
               fontFamily: 'var(--f-base-type-family-secondary)',
-              fontSize: '11',
+              fontSize: 'var(--text-xs)',
               color: 'var(--f-brand-color-status-error)',
-              letterSpacing: '0.05em',
+              letterSpacing: 'var(--tracking-wide)',
               textTransform: 'uppercase',
-              fontWeight: '500',
+              fontWeight: 'var(--weight-med)',
               opacity: 0.6,
             }}
           >
@@ -786,11 +786,11 @@ export default function SwipeQuizRoute() {
           <span
             style={{
               fontFamily: 'var(--f-base-type-family-secondary)',
-              fontSize: '11',
+              fontSize: 'var(--text-xs)',
               color: 'var(--f-brand-color-border-success)',
-              letterSpacing: '0.05em',
+              letterSpacing: 'var(--tracking-wide)',
               textTransform: 'uppercase',
-              fontWeight: '500',
+              fontWeight: 'var(--weight-med)',
               opacity: 0.6,
             }}
           >

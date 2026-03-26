@@ -76,13 +76,17 @@
 
   --text-2xs: 10px;
   --text-xs:  11px;
+  --text-caption: 12px;
   --text-sm:  13px;
+  --text-sub: 14px;
   --text-md:  15px;
+  --text-base: 16px;
   --text-lg:  18px;
   --text-xl:  22px;
   --text-2xl: 28px;
   --text-3xl: 36px;
   --text-4xl: 40px;
+  --text-5xl: 64px;
 
   --weight-thin:  100;
   --weight-light: 300;
@@ -97,8 +101,13 @@
   --tracking-tight:  -0.03em;
   --tracking-snug:   -0.015em;
   --tracking-normal: -0.005em;
-  --tracking-wide:   0.05em;
-  --tracking-wider:  0.09em;
+  --tracking-wide:      0.05em;
+  --tracking-wider:     0.09em;
+  --tracking-half:      0.5px;
+  --tracking-label:     1px;
+  --tracking-caps:      2px;
+  --tracking-caps-wide: 3px;
+  --tracking-display:   8px;
 
   /* ─── Spacing (8pt grid) ─────────────────────────────────────────────────── */
   --sp-1:  var(--f-brand-space-2xs);   /* 4px */

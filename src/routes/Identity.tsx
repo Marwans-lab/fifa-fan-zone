@@ -46,10 +46,10 @@ function CardPreview({
 
       {/* Header text */}
       <div style={{ textAlign: 'center', width: '100%', zIndex: 1 }}>
-        <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', marginBottom: 4 }}>
+        <div style={{ fontSize: 'var(--text-2xs)', letterSpacing: 'var(--tracking-caps-wide)', color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', marginBottom: 4 }}>
           FIFA Fan Zone
         </div>
-        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: 1 }}>
+        <div style={{ fontSize: 'var(--text-xs)', color: 'rgba(255,255,255,0.35)', letterSpacing: 'var(--tracking-label)' }}>
           Collector Edition
         </div>
       </div>
@@ -87,7 +87,7 @@ function CardPreview({
             }}
           >
             <img src={cameraIcon} width={24} height={24} alt="" />
-            <span style={{ fontSize: 9, letterSpacing: 2, textTransform: 'uppercase', opacity: 0.8, lineHeight: 1.2, textAlign: 'center' }}>
+            <span style={{ fontSize: 'var(--text-2xs)', letterSpacing: 'var(--tracking-caps)', textTransform: 'uppercase', opacity: 0.8, lineHeight: 1.2, textAlign: 'center' }}>
               Take<br />Picture
             </span>
           </div>
@@ -96,7 +96,7 @@ function CardPreview({
 
       {/* Team motto */}
       <div style={{ textAlign: 'center', zIndex: 1 }}>
-        <div style={{ fontSize: '13', fontWeight: '500', color: 'rgba(255,255,255,0.88)', letterSpacing: 1, marginBottom: 2, fontStyle: 'italic' }}>
+        <div style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: 'rgba(255,255,255,0.88)', letterSpacing: 'var(--tracking-label)', marginBottom: 2, fontStyle: 'italic' }}>
           {team.motto}
         </div>
       </div>
@@ -157,14 +157,14 @@ export default function Identity() {
           <div style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-md)' }}>
             <h2 style={{
               fontFamily: 'var(--f-base-type-family-primary)',
-              fontSize: '28',
-              fontWeight: '300',
-              letterSpacing: '-0.03em',
+              fontSize: 'var(--text-2xl)',
+              fontWeight: 'var(--weight-light)',
+              letterSpacing: 'var(--tracking-tight)',
               marginBottom: 'var(--f-brand-space-2xs)',
             }}>
               Choose your team
             </h2>
-            <p style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)' }}>
+            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--f-brand-color-text-subtle)' }}>
               Select the country you're supporting
             </p>
           </div>
@@ -206,14 +206,14 @@ export default function Identity() {
                   background: `linear-gradient(135deg, ${team.colors[0]}, ${team.colors[1]})`,
                   border: '1px solid rgba(255,255,255,0.1)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 16,
+                  fontSize: 'var(--text-base)',
                 }}>
                   {team.flag}
                 </div>
-                <span style={{ fontSize: '15', fontWeight: '400', flex: 1 }}>
+                <span style={{ fontSize: 'var(--text-md)', fontWeight: 'var(--weight-reg)', flex: 1 }}>
                   {team.name}
                 </span>
-                <span style={{ color: 'var(--f-brand-color-text-muted)', fontSize: 16 }}>›</span>
+                <span style={{ color: 'var(--f-brand-color-text-muted)', fontSize: 'var(--text-base)' }}>›</span>
               </button>
             ))}
           </div>
@@ -228,14 +228,14 @@ export default function Identity() {
       <div className="f-page-enter" style={{ padding: 'var(--f-brand-space-xl) var(--f-brand-space-md)', textAlign: 'center', maxWidth: 340, width: '100%' }}>
         <h2 style={{
           fontFamily: 'var(--f-base-type-family-primary)',
-          fontSize: '22',
-          fontWeight: '300',
-          letterSpacing: '-0.03em',
+          fontSize: 'var(--text-xl)',
+          fontWeight: 'var(--weight-light)',
+          letterSpacing: 'var(--tracking-tight)',
           marginBottom: 'var(--f-brand-space-xs)',
         }}>
           Looking good!
         </h2>
-        <p style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)', marginBottom: 'var(--f-brand-space-lg)' }}>
+        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--f-brand-color-text-subtle)', marginBottom: 'var(--f-brand-space-lg)' }}>
           Your fan card is ready
         </p>
 

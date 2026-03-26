@@ -73,12 +73,12 @@ function FanCardStack() {
             {/* Card header */}
             <div style={{ textAlign: 'left', width: '100%', position: 'relative', zIndex: 1 }}>
               <div style={{
-                fontSize: '13', letterSpacing: 2, color: 'var(--f-brand-color-background-light)',
+                fontSize: 'var(--text-sm)', letterSpacing: 'var(--tracking-caps)', color: 'var(--f-brand-color-background-light)',
                 textTransform: 'uppercase',
               }}>
                 Your Fan Card
               </div>
-              <div style={{ fontSize: '10', color: 'rgba(255,255,255,0.65)', letterSpacing: 1 }}>
+              <div style={{ fontSize: 'var(--text-2xs)', color: 'rgba(255,255,255,0.65)', letterSpacing: 'var(--tracking-label)' }}>
                 Collector Edition
               </div>
             </div>
@@ -101,12 +101,12 @@ function FanCardStack() {
 
             {/* Team name */}
             <div style={{
-              fontSize: '18', fontWeight: '500',
-              color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic',
+              fontSize: 'var(--text-lg)', fontWeight: 'var(--weight-med)',
+              color: 'rgba(255,255,255,0.88)', letterSpacing: 'var(--tracking-half)', fontStyle: 'italic',
               display: 'flex', alignItems: 'center', gap: 8,
               position: 'relative', zIndex: 1,
             }}>
-              <span style={{ fontStyle: 'normal', fontSize: '22' }}>{team.flag}</span>
+              <span style={{ fontStyle: 'normal', fontSize: 'var(--text-xl)' }}>{team.flag}</span>
               {team.name}
             </div>
           </div>
@@ -152,8 +152,8 @@ export default function Landing() {
       <h1
         style={{
           fontFamily: 'var(--f-base-type-family-primary)',
-          fontSize: '28',
-          fontWeight: '100',
+          fontSize: 'var(--text-2xl)',
+          fontWeight: 'var(--weight-thin)',
           lineHeight: '36px',
           color: 'var(--f-brand-color-text-default)',
           textAlign: 'center',
@@ -181,8 +181,8 @@ export default function Landing() {
           background: 'var(--f-brand-color-primary)',
           color: 'var(--f-brand-color-background-light)',
           fontFamily: 'var(--f-base-type-family-secondary)',
-          fontSize: '15',
-          fontWeight: '500',
+          fontSize: 'var(--text-md)',
+          fontWeight: 'var(--weight-med)',
           lineHeight: '24px',
           border: 'none',
           cursor: 'pointer',
