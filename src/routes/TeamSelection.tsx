@@ -92,8 +92,8 @@ export default function TeamSelection() {
           onClick={handleBack}
           aria-label="Go back"
           style={{
-            width: 48,
-            height: 48,
+            width: 'var(--sp-12)',
+            height: 'var(--sp-12)',
             borderRadius: 'var(--f-brand-radius-rounded)',
             border: 'none',
             background: 'var(--f-brand-color-background-light)',
@@ -116,7 +116,7 @@ export default function TeamSelection() {
       <h2 style={{
         fontFamily: 'var(--f-base-type-family-primary)',
         fontSize: 28,
-        lineHeight: '36px',
+        lineHeight: 'var(--sp-9)',
         fontWeight: '300',
         color: 'var(--f-brand-color-text-default)',
         textAlign: 'center',
@@ -135,7 +135,7 @@ export default function TeamSelection() {
           aria-expanded={open}
           style={{
             width: '100%',
-            height: 48,
+            height: 'var(--sp-12)',
             background: 'var(--f-brand-color-background-light)',
             border: '1px solid var(--f-brand-color-border-default)',
             borderRadius: 'var(--f-brand-radius-base)',
@@ -235,7 +235,7 @@ export default function TeamSelection() {
         disabled={!selectedId}
         style={{
           width: '100%',
-          height: 56,
+          height: 'var(--sp-14)',
           borderRadius: 'var(--f-brand-radius-rounded)',
           border: 'none',
           background: 'var(--f-brand-color-primary)',

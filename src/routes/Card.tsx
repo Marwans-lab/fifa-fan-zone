@@ -42,7 +42,7 @@ function JourneyStep({
   isCurrent?: boolean
 }) {
   const nodeStyle: React.CSSProperties = {
-    width: 56, height: 56, borderRadius: '50%',
+    width: 'var(--sp-14)', height: 'var(--sp-14)', borderRadius: '50%',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
     transition: 'all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
@@ -65,7 +65,7 @@ function JourneyStep({
     <li style={{
       position: 'relative', zIndex: 10,
       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--f-brand-space-sm)',
-      width: 56, flexShrink: 0,
+      width: 'var(--sp-14)', flexShrink: 0,
     }}>
       <div style={nodeStyle}>
         {isCurrent && (
@@ -150,7 +150,7 @@ function JourneyCard({
         </div>
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: '10px 16px',
+          padding: 'var(--sp-3) var(--sp-4)',
           background: 'rgba(0,0,0,0.04)',
           borderRadius: 9999,
           border: '1px solid var(--f-brand-color-border-default)',
@@ -188,7 +188,7 @@ function JourneyCard({
                     : 'var(--f-brand-color-border-default)'                             // inactive
                   return (
                     <div style={{
-                      flex: 1, height: 2, marginTop: 27,
+                      flex: 1, height: 2, marginTop: 'var(--sp-7)',
                       background: lineBg,
                       transition: 'background var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
                     }} />
@@ -204,12 +204,12 @@ function JourneyCard({
       <button
         onClick={onStartQuiz}
         style={{
-          width: '100%', height: 48,
+          width: '100%', height: 'var(--sp-12)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: 'var(--f-brand-color-text-default)', color: 'var(--f-brand-color-text-light)',
           fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '600',
           fontSize: 15, borderRadius: 9999, border: 'none',
-          marginTop: 28, cursor: 'pointer',
+          marginTop: 'var(--sp-7)', cursor: 'pointer',
           boxShadow: '0 10px 30px rgba(0,0,0,0.12)',
           transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
           WebkitTapHighlightColor: 'transparent',
@@ -299,7 +299,7 @@ function ExtraQuizCard({
       style={{
         width: '100%',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '18px 14px', borderRadius: 'var(--f-brand-radius-outer)',
+        padding: 'var(--sp-5) var(--sp-4)', borderRadius: 'var(--f-brand-radius-outer)',
         minHeight: 120,
         border: `1px solid ${locked ? 'var(--f-brand-color-border-disabled)' : done ? 'rgba(0,212,170,0.25)' : 'var(--f-brand-color-border-default)'}`,
         background: 'var(--f-brand-color-background-light)',

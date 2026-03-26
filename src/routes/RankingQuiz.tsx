@@ -443,7 +443,7 @@ export default function RankingQuizRoute() {
             onClick={revealed ? handleNext : handleSubmit}
             className="btn"
             style={{
-              width: '100%', padding: '16px 0', borderRadius: 50,
+              width: '100%', padding: 'var(--sp-4) 0', borderRadius: 50,
               border: 'none',
               background: 'var(--c-white)',
               color: 'var(--c-brand)',
