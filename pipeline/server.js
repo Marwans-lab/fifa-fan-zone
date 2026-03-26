@@ -172,6 +172,10 @@ function markOurComment(issueId) {
 const recentTriggers = new Map();
 const TRIGGER_COOLDOWN = 20 * 60_000; // 20 min cooldown between triggers per issue
 
+// In-process mutex: prevents two simultaneous trigger calls from both passing
+// the "0 In Progress" check before either has transitioned the issue to In Progress.
+let _triggerInFlight = false;
+
 // Helper: create a Linear AgentSession and trigger Cyrus via AgentSessionEvent
 async function triggerCyrus(issueId, issueIdentifier) {
   // Deduplication: skip if triggered recently
@@ -181,6 +185,15 @@ async function triggerCyrus(issueId, issueIdentifier) {
     return false;
   }
 
+  // In-process mutex: only one trigger can proceed at a time (prevents race where
+  // two simultaneous webhooks both see "0 In Progress" before either sets state).
+  if (_triggerInFlight) {
+    console.log(`[Pipeline] ${issueIdentifier}: Skipping trigger — another trigger already in flight.`);
+    return false;
+  }
+  _triggerInFlight = true;
+
+  try {
   // Serialization: only one active Cyrus session at a time.
   // Running parallel sessions causes conflicting PRs — each branches off a different commit.
   try {
@@ -214,7 +227,13 @@ async function triggerCyrus(issueId, issueIdentifier) {
     console.error(`[Pipeline] ${issueIdentifier}: Failed to fetch issue details: ${e.message}`);
   }
 
-  // Create a real Linear AgentSession (required for Cyrus to sync activity)
+  // Create a Linear AgentSession via the API.
+  // When we call agentSessionCreateOnIssue, Linear automatically sends an
+  // AgentSessionEvent/created webhook to ALL registered webhook endpoints
+  // (including Cyrus's) with a valid Linear signature. Cyrus receives the
+  // real event (platform=linear) and starts a full-development session.
+  // We do NOT need to manually POST the event to Cyrus — that was redundant
+  // and now fails with 401 (Cyrus validates signatures on /webhook).
   let sessionId;
   try {
     const r = await linearGQL(
@@ -226,35 +245,25 @@ async function triggerCyrus(issueId, issueIdentifier) {
     );
     sessionId = r.data?.agentSessionCreateOnIssue?.agentSession?.id;
     if (!sessionId) throw new Error("No session ID returned");
+    console.log(`[Pipeline] ${issueIdentifier}: Created Linear AgentSession ${sessionId} — Linear will deliver webhook to Cyrus`);
   } catch (e) {
     console.error(`[Pipeline] ${issueIdentifier}: Failed to create AgentSession: ${e.message}`);
-    sessionId = randomUUID(); // fallback — Cyrus runs but can't sync to Linear
+    return false;
   }
 
-  const payload = JSON.stringify({
-    type: "AgentSessionEvent",
-    action: "created",
-    organizationId: "416d45de-7ee5-4dcc-aa1a-31bb4ec37aa3",
-    createdAt: new Date().toISOString(),
-    agentSession: {
-      id: sessionId,
-      status: "created",
-      issue: { id: issueId, identifier: issueIdentifier, title: issueTitle, description: issueDescription, url: issueUrl, labels },
-    },
-  });
-
+  recentTriggers.set(issueId, Date.now());
+  // Immediately mark In Progress in Linear so the next serialization check
+  // sees this issue as active before Cyrus has a chance to update it.
   try {
-    const result = await forwardToCyrus(
-      "POST", "/webhook",
-      { "content-type": "application/json", "content-length": Buffer.byteLength(payload).toString() },
-      payload
-    );
-    console.log(`[Pipeline] ${issueIdentifier}: Triggered Cyrus (session ${sessionId?.slice(0, 8)}, status ${result.status})`);
-    recentTriggers.set(issueId, Date.now());
-    return true;
+    const states = await getStates("9fb7888e-f60c-4316-b50e-fa1f4d782193");
+    const inProgressState = findState(states, "In Progress");
+    if (inProgressState) await transitionIssue(issueId, inProgressState.id);
   } catch (e) {
-    console.error(`[Pipeline] ${issueIdentifier}: Failed to trigger Cyrus: ${e.message}`);
-    return false;
+    console.warn(`[Pipeline] ${issueIdentifier}: Could not pre-set In Progress: ${e.message}`);
+  }
+  return true;
+  } finally {
+    _triggerInFlight = false;
   }
 }
 
@@ -417,9 +426,9 @@ async function handleWebhook(payload) {
     return;
   }
 
-  // Stage 1: Todo → trigger Cyrus directly via AgentSessionEvent webhook
-  // Bypasses Arcade OAuth by constructing a Linear AgentSessionEvent payload
-  // and POSTing it directly to Cyrus's /webhook with CYRUS_API_KEY.
+  // Stage 1: Todo → create an AgentSession so Linear delivers the trigger to Cyrus.
+  // Cyrus validates webhook signatures — we can't POST fake events directly.
+  // Instead, agentSessionCreateOnIssue causes Linear to send a real signed webhook.
   if (newState === "Todo") {
     if (recentComments.has(issueId)) return;
     markOurComment(issueId);
@@ -625,16 +634,45 @@ async function checkForStalledIssues() {
         continue;
       }
 
-      // --- Todo / In Progress: retrigger via AgentSessionEvent ---
+      // --- Todo / In Progress: reset to Todo to generate a real Linear webhook ---
+      // Cyrus validates signatures on /webhook, so fake AgentSessionEvents are rejected.
+      // The correct retrigger path is: set issue back to Todo → Linear sends a real
+      // signed webhook → middleware forwards it → Cyrus starts a new session naturally.
       if (now - lastUpdate < STALL_THRESHOLD) continue;
+
+      // Check serialization before resetting: skip if another issue is already In Progress
+      try {
+        const activeResult = await linearGQL(
+          `query { issues(filter: { team: { key: { eq: "MAR" } }, state: { name: { in: ["In Progress"] } } }, first: 10) { nodes { id identifier } } }`,
+          {}
+        );
+        const otherActive = (activeResult.data?.issues?.nodes || []).filter(i => i.id !== issue.id);
+        if (otherActive.length > 0) {
+          console.log(`[Pipeline] ${issue.identifier}: Skip retrigger — ${otherActive.map(i => i.identifier).join(", ")} already In Progress`);
+          continue;
+        }
+      } catch (e) {
+        console.warn(`[Pipeline] ${issue.identifier}: Could not check active sessions: ${e.message}`);
+      }
 
       console.log(
         `[Pipeline] STALL DETECTED: ${issue.identifier} (${stateName}) — no activity for ${stalledMinutes}min, retriggering`
       );
 
+      // For In Progress stalls: reset to Todo first so Cyrus gets a clean state
+      const states = await getStates(issue.team.id);
+      const todoState = findState(states, "Todo");
+      if (stateName === "In Progress" && todoState) {
+        markOurComment(issue.id);
+        await transitionIssue(issue.id, todoState.id);
+        await new Promise((r) => setTimeout(r, 1000));
+      }
+
+      // Create a new AgentSession — Linear delivers the webhook to Cyrus automatically
       await triggerCyrus(issue.id, issue.identifier);
       retriggeredRecently.set(issue.id, now);
-      await new Promise((r) => setTimeout(r, 3000));
+      // Stop after one trigger per cycle to avoid parallel sessions
+      break;
     }
   } catch (e) {
     console.error(`[Pipeline] Stall detector error: ${e.message}`);
@@ -660,8 +698,37 @@ const server = http.createServer(async (req, res) => {
   let body = "";
   req.on("data", (c) => (body += c));
   req.on("end", async () => {
-    // Forward everything to Cyrus first (non-blocking)
-    const cyrusResult = forwardToCyrus(req.method, req.url, req.headers, body);
+    // For Todo state-change webhooks: gate forwarding so only ONE issue triggers
+    // Cyrus at a time. If another issue is already In Progress, swallow the webhook
+    // and let the stall detector handle it in a future cycle.
+    let shouldForward = true;
+    if (req.url === "/webhook" && req.method === "POST") {
+      try {
+        const payload = JSON.parse(body);
+        if (payload.type === "Issue" && payload.action === "update" && payload.data?.state?.name === "Todo") {
+          const issueId = payload.data?.id;
+          try {
+            const activeResult = await linearGQL(
+              `query { issues(filter: { team: { key: { eq: "MAR" } }, state: { name: { in: ["In Progress"] } } }, first: 10) { nodes { id identifier } } }`,
+              {}
+            );
+            const otherActive = (activeResult.data?.issues?.nodes || []).filter(i => i.id !== issueId);
+            if (otherActive.length > 0) {
+              console.log(`[Pipeline] ${payload.data?.identifier}: Todo webhook gated — ${otherActive.map(i => i.identifier).join(", ")} already In Progress. Stall detector will retry.`);
+              shouldForward = false;
+            }
+          } catch (e) {
+            // If we can't check, allow the forward (fail open)
+            console.warn(`[Pipeline] Could not check In Progress for gate: ${e.message}`);
+          }
+        }
+      } catch { /* not JSON or not an issue event, just forward */ }
+    }
+
+    // Forward to Cyrus (non-blocking), unless gated above
+    const cyrusResult = shouldForward
+      ? forwardToCyrus(req.method, req.url, req.headers, body)
+      : Promise.resolve({ status: 200, body: '{"success":true}' });
 
     // Process pipeline logic for webhook events
     if (req.url === "/webhook" && req.method === "POST") {
