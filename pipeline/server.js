@@ -181,6 +181,22 @@ async function triggerCyrus(issueId, issueIdentifier) {
     return false;
   }
 
+  // Serialization: only one active Cyrus session at a time.
+  // Running parallel sessions causes conflicting PRs — each branches off a different commit.
+  try {
+    const activeResult = await linearGQL(
+      `query { issues(filter: { team: { key: { eq: "MAR" } }, state: { name: { in: ["In Progress"] } } }, first: 10) { nodes { id identifier } } }`,
+      {}
+    );
+    const otherActive = (activeResult.data?.issues?.nodes || []).filter(i => i.id !== issueId);
+    if (otherActive.length > 0) {
+      console.log(`[Pipeline] ${issueIdentifier}: Skipping trigger — ${otherActive.map(i => i.identifier).join(", ")} already In Progress. Will retry next cycle.`);
+      return false;
+    }
+  } catch (e) {
+    console.warn(`[Pipeline] ${issueIdentifier}: Could not check for active sessions: ${e.message} — proceeding anyway`);
+  }
+
   // Fetch issue details for the prompt
   let issueTitle = issueIdentifier, issueDescription = "", issueUrl = "", labels = [];
   try {
@@ -477,6 +493,35 @@ async function checkForStalledIssues() {
           if (pr) {
             console.log(`[Pipeline] STALL DETECTED: ${issue.identifier} (Done) has unmerged PR #${pr.number} — merging now`);
             retriggeredRecently.set(issue.id, now);
+            // Check mergeability before trying — CONFLICTING PRs need a rebase
+            let mergeState = "UNKNOWN";
+            try {
+              const prInfo = JSON.parse(execSync(
+                `gh pr view ${pr.number} -R ${GITHUB_REPO} --json mergeStateStatus 2>/dev/null`,
+                { encoding: "utf-8" }
+              ));
+              mergeState = prInfo.mergeStateStatus;
+            } catch { /* ignore */ }
+
+            if (mergeState === "DIRTY" || mergeState === "CONFLICTING") {
+              console.log(`[Pipeline] ${issue.identifier}: PR #${pr.number} has conflicts (${mergeState}) — closing PR and resetting to Todo for fresh re-implementation`);
+              try {
+                execSync(
+                  `gh pr close ${pr.number} -R ${GITHUB_REPO} --comment "Closing due to merge conflicts. Resetting to Todo for fresh implementation on latest main." 2>&1`,
+                  { encoding: "utf-8" }
+                );
+              } catch { /* ignore close errors */ }
+              const states = await getStates(issue.team.id);
+              const todoState = findState(states, "Todo");
+              if (todoState) {
+                markOurComment(issue.id);
+                await transitionIssue(issue.id, todoState.id);
+                console.log(`[Pipeline] ${issue.identifier}: Reset to Todo after closing conflicting PR #${pr.number}`);
+              }
+              retriggeredRecently.set(issue.id, now);
+              continue;
+            }
+
             try {
               execSync(
                 `gh pr merge ${pr.number} -R ${GITHUB_REPO} --squash --delete-branch 2>&1`,
