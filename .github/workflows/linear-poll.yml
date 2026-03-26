@@ -88,7 +88,10 @@ jobs:
           fi
 
           # ============================================================
-          # STAGE 2: In Review + agent responded → move to Done
+          # STAGE 2: In Review + open PR → move to Done
+          # Cyrus validates internally during full-development procedure.
+          # No separate QA step needed — @Claude comments via API keys
+          # do NOT trigger Cyrus sessions, so the old QA approach was dead.
           # ============================================================
           if [ -n "$IN_REVIEW_ID" ] && [ -n "$DONE_ID" ]; then
             REVIEW_ISSUES=$(gql "{ issues(filter: { team: { id: { eq: \\\"$TEAM_ID\\\" } }, state: { id: { eq: \\\"$IN_REVIEW_ID\\\" } } }) { nodes { id identifier } } }")
@@ -97,32 +100,13 @@ jobs:
             echo "--- In Review: $REVIEW_COUNT issues ---"
 
             echo "$REVIEW_ISSUES" | jq -r '.data.issues.nodes[] | "\(.id) \(.identifier)"' | while read -r UUID IDENT; do
-              # Check comments for agent summary (QA complete)
-              COMMENTS=$(gql "{ issue(id: \\\"$IDENT\\\") { comments { nodes { body createdAt } } } }")
-
-              # Look for QA trigger and agent response after it
-              HAS_QA=$(echo "$COMMENTS" | jq '[.data.issue.comments.nodes[] | select(.body | contains("[QA REVIEW]"))] | length')
-              HAS_SUMMARY=$(echo "$COMMENTS" | jq '[.data.issue.comments.nodes[] | select(.body | (contains("## Summary") or contains("**Summary**") or contains("PR #") or contains("All checks pass") or contains("LGTM")))] | length')
-
-              if [ "$HAS_QA" -gt 0 ] && [ "$HAS_SUMMARY" -gt 0 ]; then
-                # Check if QA failed
-                FAILED=$(echo "$COMMENTS" | jq '[.data.issue.comments.nodes[] | select(.body | (contains("back to **Todo**") or contains("needs fixing")))] | length')
-                if [ "$FAILED" -gt 0 ]; then
-                  echo "$IDENT: QA failed → skipping (agent should handle bounce)"
-                else
-                  echo "$IDENT: QA complete with summary → moving to Done"
-                  transition "$UUID" "$DONE_ID"
-                  comment "$UUID" "**[PIPELINE]** QA review complete. Auto-moving to Done."
-                fi
-              elif [ "$HAS_QA" -eq 0 ]; then
-                # No QA comment yet — check if there's a PR (Cyrus finished but middleware missed it)
-                PR=$(find_pr "$IDENT")
-                if [ -n "$PR" ] && [ "$PR" != "null" ]; then
-                  echo "$IDENT: In Review but no QA comment, has PR #$PR — posting QA trigger"
-                  comment "$UUID" "@Claude **[QA REVIEW]** Review this implementation. Check acceptance criteria, code quality, no regressions. If everything passes, move to **Done**. If anything fails, move back to **Todo**."
-                fi
+              PR=$(find_pr "$IDENT")
+              if [ -n "$PR" ] && [ "$PR" != "null" ]; then
+                echo "$IDENT: Has open PR #$PR → moving to Done (Cyrus validates internally)"
+                transition "$UUID" "$DONE_ID"
+                comment "$UUID" "**[PIPELINE]** PR #$PR ready. Auto-moving to Done for merge."
               else
-                echo "$IDENT: QA triggered, waiting for agent response"
+                echo "$IDENT: In Review but no open PR — skipping (middleware stall detector handles)"
               fi
             done
           fi

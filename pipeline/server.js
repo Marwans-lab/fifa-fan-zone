@@ -167,200 +167,85 @@ function markOurComment(issueId) {
   setTimeout(() => recentComments.delete(key), 10_000);
 }
 
-// --- QA completion watcher ---
-// Cyrus routes QA reviews as full-development and never transitions state.
-// This watcher polls for Cyrus's response and auto-transitions to Done.
-const activeWatchers = new Map(); // issueId → intervalId
+// Track recently triggered issues to prevent duplicate sessions
+// issueId → timestamp of last trigger
+const recentTriggers = new Map();
+const TRIGGER_COOLDOWN = 20 * 60_000; // 20 min cooldown between triggers per issue
 
-async function getIssueComments(issueId) {
-  const result = await linearGQL(
-    `query($id: String!) {
-      issue(id: $id) {
-        comments {
-          nodes { body createdAt user { isMe name } }
-        }
-      }
-    }`,
-    { id: issueId }
-  );
-  return result.data?.issue?.comments?.nodes || [];
-}
+// Helper: create a Linear AgentSession and trigger Cyrus via AgentSessionEvent
+async function triggerCyrus(issueId, issueIdentifier) {
+  // Deduplication: skip if triggered recently
+  const lastTrigger = recentTriggers.get(issueId);
+  if (lastTrigger && Date.now() - lastTrigger < TRIGGER_COOLDOWN) {
+    console.log(`[Pipeline] ${issueIdentifier}: Skipping trigger — cooldown active (last: ${Math.round((Date.now() - lastTrigger) / 60_000)}min ago)`);
+    return false;
+  }
 
-function startQAWatcher(issueId, issueIdentifier, teamId, qaPostedAt) {
-  if (activeWatchers.has(issueId)) return;
-
-  const qaTime = new Date(qaPostedAt).getTime();
-  let checks = 0;
-  const MAX_CHECKS = 30; // 30 checks × 60s = 30 min max
-  const INTERVAL = 60_000; // check every 60s
-
-  console.log(`[Pipeline] ${issueIdentifier}: QA watcher started (checking every 60s for up to 30min)`);
-
-  const intervalId = setInterval(async () => {
-    checks++;
-    try {
-      const comments = await getIssueComments(issueId);
-
-      // Look for a Claude agent comment posted AFTER our QA comment
-      // that indicates QA work is done (contains summary markers)
-      const agentResponse = comments.find((c) => {
-        const commentTime = new Date(c.createdAt).getTime();
-        if (commentTime <= qaTime) return false;
-        // Cyrus/Claude agent posts summaries with these markers
-        if (c.user?.isMe) return true; // comment from the OAuth app (Cyrus)
-        // Also detect by content pattern
-        const b = c.body || "";
-        return (
-          b.includes("## Summary") ||
-          b.includes("**Summary**") ||
-          b.includes("PR #") ||
-          b.includes("pull request") ||
-          b.includes("All checks pass") ||
-          b.includes("moved to") ||
-          b.includes("LGTM")
-        );
-      });
-
-      if (agentResponse) {
-        clearInterval(intervalId);
-        activeWatchers.delete(issueId);
-
-        // Check if issue is still in "In Review" before transitioning
-        const issueResult = await linearGQL(
-          `query($id: String!) { issue(id: $id) { state { name } } }`,
-          { id: issueId }
-        );
-        const currentState = issueResult.data?.issue?.state?.name;
-        if (currentState !== "In Review") {
-          console.log(`[Pipeline] ${issueIdentifier}: Already moved to ${currentState}, watcher done`);
-          return;
-        }
-
-        // Check if QA passed or failed by looking at the response content
-        const body = agentResponse.body || "";
-        const failed = body.includes("back to **Todo**") || body.includes("move back to") || body.includes("needs fixing");
-
-        if (failed) {
-          // QA failed — move to Todo
-          const states = await getStates(teamId);
-          const todoState = findState(states, "Todo");
-          if (todoState) {
-            markOurComment(issueId);
-            await transitionIssue(issueId, todoState.id);
-            console.log(`[Pipeline] ${issueIdentifier}: QA failed, moved to Todo`);
-          }
-        } else {
-          // QA passed — move to Done
-          const states = await getStates(teamId);
-          const doneState = findState(states, "Done");
-          if (doneState) {
-            markOurComment(issueId);
-            await transitionIssue(issueId, doneState.id);
-            console.log(`[Pipeline] ${issueIdentifier}: QA passed, auto-moved to Done`);
-            await postComment(
-              issueId,
-              `**[PIPELINE]** QA review complete — auto-transitioning to Done.`
-            );
-          }
-        }
-        return;
-      }
-
-      if (checks >= MAX_CHECKS) {
-        clearInterval(intervalId);
-        activeWatchers.delete(issueId);
-        console.log(`[Pipeline] ${issueIdentifier}: QA watcher timed out after 30min`);
-        // Force move to Done — if Cyrus didn't respond, don't block the pipeline
-        const issueResult = await linearGQL(
-          `query($id: String!) { issue(id: $id) { state { name } } }`,
-          { id: issueId }
-        );
-        if (issueResult.data?.issue?.state?.name === "In Review") {
-          const states = await getStates(teamId);
-          const doneState = findState(states, "Done");
-          if (doneState) {
-            markOurComment(issueId);
-            await transitionIssue(issueId, doneState.id);
-            console.log(`[Pipeline] ${issueIdentifier}: Timed out, force-moved to Done`);
-            await postComment(
-              issueId,
-              `**[PIPELINE]** QA watcher timed out (30min). Auto-moving to Done to unblock pipeline.`
-            );
-          }
-        }
-      }
-    } catch (e) {
-      console.error(`[Pipeline] ${issueIdentifier}: QA watcher error: ${e.message}`);
+  // Fetch issue details for the prompt
+  let issueTitle = issueIdentifier, issueDescription = "", issueUrl = "", labels = [];
+  try {
+    const d = (await linearGQL(
+      `query($id: String!) { issue(id: $id) { title description url labels { nodes { id name } } } }`,
+      { id: issueId }
+    )).data?.issue;
+    if (d) {
+      issueTitle = d.title || issueIdentifier;
+      issueDescription = d.description || "";
+      issueUrl = d.url || "";
+      labels = (d.labels?.nodes || []).map((l) => ({ id: l.id, name: l.name }));
     }
-  }, INTERVAL);
+  } catch (e) {
+    console.error(`[Pipeline] ${issueIdentifier}: Failed to fetch issue details: ${e.message}`);
+  }
 
-  activeWatchers.set(issueId, intervalId);
+  // Create a real Linear AgentSession (required for Cyrus to sync activity)
+  let sessionId;
+  try {
+    const r = await linearGQL(
+      `mutation($input: AgentSessionCreateOnIssue!) {
+        agentSessionCreateOnIssue(input: $input) { agentSession { id } success }
+      }`,
+      { input: { issueId } },
+      LINEAR_TOKEN
+    );
+    sessionId = r.data?.agentSessionCreateOnIssue?.agentSession?.id;
+    if (!sessionId) throw new Error("No session ID returned");
+  } catch (e) {
+    console.error(`[Pipeline] ${issueIdentifier}: Failed to create AgentSession: ${e.message}`);
+    sessionId = randomUUID(); // fallback — Cyrus runs but can't sync to Linear
+  }
+
+  const payload = JSON.stringify({
+    type: "AgentSessionEvent",
+    action: "created",
+    organizationId: "416d45de-7ee5-4dcc-aa1a-31bb4ec37aa3",
+    createdAt: new Date().toISOString(),
+    agentSession: {
+      id: sessionId,
+      status: "created",
+      issue: { id: issueId, identifier: issueIdentifier, title: issueTitle, description: issueDescription, url: issueUrl, labels },
+    },
+  });
+
+  try {
+    const result = await forwardToCyrus(
+      "POST", "/webhook",
+      { "content-type": "application/json", "content-length": Buffer.byteLength(payload).toString() },
+      payload
+    );
+    console.log(`[Pipeline] ${issueIdentifier}: Triggered Cyrus (session ${sessionId?.slice(0, 8)}, status ${result.status})`);
+    recentTriggers.set(issueId, Date.now());
+    return true;
+  } catch (e) {
+    console.error(`[Pipeline] ${issueIdentifier}: Failed to trigger Cyrus: ${e.message}`);
+    return false;
+  }
 }
 
 // --- Pipeline logic ---
 async function handleCommentWebhook(payload) {
-  // Detect Cyrus finishing QA — comment on an "In Review" issue
-  if (payload.type !== "Comment" || payload.action !== "create") return;
-
-  const issueId = payload.data?.issue?.id;
-  const issueIdentifier = payload.data?.issue?.identifier;
-  if (!issueId) return;
-
-  // Only care if we have an active watcher for this issue
-  if (!activeWatchers.has(issueId)) return;
-
-  const body = payload.data?.body || "";
-  const isAgentComment =
-    body.includes("## Summary") ||
-    body.includes("**Summary**") ||
-    body.includes("PR #") ||
-    body.includes("All checks pass") ||
-    body.includes("LGTM");
-
-  if (!isAgentComment) return;
-
-  console.log(`[Pipeline] ${issueIdentifier}: Detected agent response via comment webhook`);
-
-  // Cancel the polling watcher — we'll handle it here
-  const intervalId = activeWatchers.get(issueId);
-  if (intervalId) {
-    clearInterval(intervalId);
-    activeWatchers.delete(issueId);
-  }
-
-  // Verify issue is still In Review
-  const issueResult = await linearGQL(
-    `query($id: String!) { issue(id: $id) { state { name } team { id } } }`,
-    { id: issueId }
-  );
-  const currentState = issueResult.data?.issue?.state?.name;
-  const teamId = issueResult.data?.issue?.team?.id;
-  if (currentState !== "In Review") {
-    console.log(`[Pipeline] ${issueIdentifier}: Already ${currentState}, skipping`);
-    return;
-  }
-
-  const failed = body.includes("back to **Todo**") || body.includes("move back to") || body.includes("needs fixing");
-  const states = await getStates(teamId);
-
-  if (failed) {
-    const todoState = findState(states, "Todo");
-    if (todoState) {
-      markOurComment(issueId);
-      await transitionIssue(issueId, todoState.id);
-      console.log(`[Pipeline] ${issueIdentifier}: QA failed (comment webhook), moved to Todo`);
-      triggerPoller(`${issueIdentifier} QA failed → Todo`);
-    }
-  } else {
-    const doneState = findState(states, "Done");
-    if (doneState) {
-      markOurComment(issueId);
-      await transitionIssue(issueId, doneState.id);
-      console.log(`[Pipeline] ${issueIdentifier}: QA passed (comment webhook), moved to Done`);
-      await postComment(issueId, `**[PIPELINE]** QA review complete — auto-transitioning to Done.`);
-      triggerPoller(`${issueIdentifier} QA passed → Done`);
-    }
-  }
+  // No-op — QA via comment is removed (Cyrus validates internally).
+  // Comment webhooks are still forwarded to Cyrus for AgentSession prompts.
 }
 
 async function handleWebhook(payload) {
@@ -387,29 +272,19 @@ async function handleWebhook(payload) {
   // Trigger cloud poller on every state change — catches anything we miss
   triggerPoller(`${issueIdentifier} → ${newState}`);
 
-  // Stage 2: In Review → trigger QA
-  // Comments are posted using LINEAR_PERSONAL_KEY (user identity) so Cyrus
-  // won't ignore them as self-comments. GitHub Action also triggers QA on PR
-  // open as a fallback.
+  // Stage 2: In Review → Done (Cyrus validates internally during full-development)
+  // QA via comment never worked (personal key doesn't trigger Cyrus).
+  // Cyrus already runs validation as part of its procedure — trust it and move on.
   if (newState === "In Review") {
     if (recentComments.has(issueId)) return;
     markOurComment(issueId);
 
-    const labelInfo = labels.includes("Frontend")
-      ? "Frontend"
-      : labels.includes("Backend")
-        ? "Backend"
-        : "General";
-
-    console.log(`[Pipeline] ${issueIdentifier}: Triggering QA review`);
-    const qaPostedAt = new Date().toISOString();
-    await postComment(
-      issueId,
-      `@Claude **[QA REVIEW]** Review this ${labelInfo} implementation.\n\nCheck:\n- All acceptance criteria from the issue description are met\n- If the issue has a Figma link, use Figma_ExportImage to compare the design against the implementation — it must match pixel-for-pixel\n- Code quality and no regressions\n- No hardcoded values, no leftover debug code\n- Edge cases handled\n\nIf everything passes, move to **Done**.\nIf anything fails, move back to **Todo** and explain exactly what needs fixing.`
-    );
-
-    // Start watcher to auto-transition when Cyrus finishes QA
-    startQAWatcher(issueId, issueIdentifier, teamId, qaPostedAt);
+    const states = await getStates(teamId);
+    const doneState = findState(states, "Done");
+    if (doneState) {
+      await transitionIssue(issueId, doneState.id);
+      console.log(`[Pipeline] ${issueIdentifier}: In Review → Done (Cyrus validated internally)`);
+    }
     return;
   }
 
@@ -532,77 +407,7 @@ async function handleWebhook(payload) {
   if (newState === "Todo") {
     if (recentComments.has(issueId)) return;
     markOurComment(issueId);
-
-    // Fetch full issue details (title + description) from Linear
-    let issueTitle = issueIdentifier;
-    let issueDescription = "";
-    let issueUrl = "";
-    try {
-      const issueResult = await linearGQL(
-        `query($id: String!) { issue(id: $id) { title description url team { id key } } }`,
-        { id: issueId }
-      );
-      const d = issueResult.data?.issue;
-      if (d) {
-        issueTitle = d.title || issueIdentifier;
-        issueDescription = d.description || "";
-        issueUrl = d.url || "";
-      }
-    } catch (e) {
-      console.error(`[Pipeline] ${issueIdentifier}: Failed to fetch issue details: ${e.message}`);
-    }
-
-    // Create a real Linear AgentSession so Cyrus can sync activity back to Linear
-    let sessionId;
-    try {
-      const sessionResult = await linearGQL(
-        `mutation($input: AgentSessionCreateOnIssue!) {
-          agentSessionCreateOnIssue(input: $input) {
-            agentSession { id }
-            success
-          }
-        }`,
-        { input: { issueId } },
-        LINEAR_TOKEN
-      );
-      sessionId = sessionResult.data?.agentSessionCreateOnIssue?.agentSession?.id;
-      if (!sessionId) throw new Error("No session ID returned");
-      console.log(`[Pipeline] ${issueIdentifier}: Created Linear AgentSession ${sessionId}`);
-    } catch (e) {
-      console.error(`[Pipeline] ${issueIdentifier}: Failed to create AgentSession: ${e.message}`);
-      sessionId = randomUUID(); // fallback — Cyrus will still run but won't sync to Linear
-    }
-
-    const syntheticPayload = JSON.stringify({
-      type: "AgentSessionEvent",
-      action: "created",
-      organizationId: "416d45de-7ee5-4dcc-aa1a-31bb4ec37aa3",
-      createdAt: new Date().toISOString(),
-      agentSession: {
-        id: sessionId,
-        status: "created",
-        issue: {
-          id: issueId,
-          identifier: issueIdentifier,
-          title: issueTitle,
-          description: issueDescription,
-          url: issueUrl,
-          labels: labels.map((name, i) => ({ id: `lbl-${i}`, name })),
-        },
-      },
-    });
-
-    try {
-      const result = await forwardToCyrus(
-        "POST",
-        "/webhook",
-        { "content-type": "application/json", "content-length": Buffer.byteLength(syntheticPayload).toString() },
-        syntheticPayload
-      );
-      console.log(`[Pipeline] ${issueIdentifier}: Triggered Cyrus (AgentSessionEvent, status ${result.status})`);
-    } catch (e) {
-      console.error(`[Pipeline] ${issueIdentifier}: Failed to trigger Cyrus: ${e.message}`);
-    }
+    await triggerCyrus(issueId, issueIdentifier);
     return;
   }
 }
@@ -759,48 +564,30 @@ async function checkForStalledIssues() {
         continue;
       }
 
-      // --- In Review issues: retrigger QA if no watcher active ---
+      // --- In Review issues: auto-move to Done if stalled ---
       if (stateName === "In Review") {
         if (now - lastUpdate < STALL_THRESHOLD) continue;
-        if (activeWatchers.has(issue.id)) continue; // watcher already running
 
-        const labels = (issue.labels?.nodes || []).map((l) => l.name);
-        const labelInfo = labels.includes("Frontend") ? "Frontend" : labels.includes("Backend") ? "Backend" : "General";
-
-        console.log(`[Pipeline] STALL DETECTED: ${issue.identifier} (In Review) — no QA watcher, retriggering QA`);
-        retriggeredRecently.set(issue.id, now);
-        markOurComment(issue.id);
-        const qaPostedAt = new Date().toISOString();
-        await postComment(
-          issue.id,
-          `@Claude **[QA REVIEW]** Review this ${labelInfo} implementation.\n\nCheck:\n- All acceptance criteria from the issue description are met\n- Code quality and no regressions\n- No hardcoded values, no leftover debug code\n- Edge cases handled\n\nIf everything passes, move to **Done**.\nIf anything fails, move back to **Todo** and explain exactly what needs fixing.`
-        );
-        startQAWatcher(issue.id, issue.identifier, issue.team.id, qaPostedAt);
+        console.log(`[Pipeline] STALL DETECTED: ${issue.identifier} (In Review) — stalled ${stalledMinutes}min, moving to Done`);
+        const states = await getStates(issue.team.id);
+        const doneState = findState(states, "Done");
+        if (doneState) {
+          markOurComment(issue.id);
+          await transitionIssue(issue.id, doneState.id);
+          console.log(`[Pipeline] ${issue.identifier}: Stall-moved In Review → Done`);
+        }
         await new Promise((r) => setTimeout(r, 3000));
         continue;
       }
 
-      // --- Todo / In Progress: retrigger dev work ---
-      const comments = issue.comments?.nodes || [];
-      const hasRecentClaudeComment = comments.some((c) => {
-        const age = now - new Date(c.createdAt).getTime();
-        return age < STALL_THRESHOLD && (c.body || "").includes("@Claude");
-      });
-      if (hasRecentClaudeComment) continue;
+      // --- Todo / In Progress: retrigger via AgentSessionEvent ---
       if (now - lastUpdate < STALL_THRESHOLD) continue;
-
-      const labels = (issue.labels?.nodes || []).map((l) => l.name);
-      const labelInfo = labels.includes("Frontend") ? "Frontend" : "General";
 
       console.log(
         `[Pipeline] STALL DETECTED: ${issue.identifier} (${stateName}) — no activity for ${stalledMinutes}min, retriggering`
       );
 
-      markOurComment(issue.id);
-      await postComment(
-        issue.id,
-        `@Claude **[AUTO-RETRIGGER]** This ${labelInfo} issue appears stalled (no activity for ${stalledMinutes}min). Please pick it up and continue working on it.`
-      );
+      await triggerCyrus(issue.id, issue.identifier);
       retriggeredRecently.set(issue.id, now);
       await new Promise((r) => setTimeout(r, 3000));
     }

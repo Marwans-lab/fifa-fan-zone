@@ -154,8 +154,33 @@ start_caffeinate() {
   log "caffeinate started (PID $CAFFEINATE_PID) — system sleep prevented"
 }
 
+clear_zombie_sessions() {
+  local state="$HOME/.cyrus/state/edge-worker-state.json"
+  [ -f "$state" ] || return
+  python3 - <<'PYEOF'
+import json, datetime, os, sys
+path = os.path.expanduser('~/.cyrus/state/edge-worker-state.json')
+try:
+    with open(path) as f:
+        data = json.load(f)
+    sessions = data['state']['agentSessions']
+    count = sum(1 for s in sessions.values() if s['status'] == 'active')
+    for s in sessions.values():
+        if s['status'] == 'active':
+            s['status'] = 'complete'
+    data['savedAt'] = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.000Z')
+    with open(path, 'w') as f:
+        json.dump(data, f)
+    print(f'Cleared {count} zombie active sessions')
+except Exception as e:
+    print(f'Warning: zombie session cleanup failed: {e}', file=sys.stderr)
+PYEOF
+}
+
 start_cyrus() {
   kill_port $CYRUS_PORT
+  log "Clearing zombie Cyrus sessions..."
+  clear_zombie_sessions
   log "Starting Cyrus on port $CYRUS_PORT..."
   cyrus start &
   CYRUS_PID=$!
