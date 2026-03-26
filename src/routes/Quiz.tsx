@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
-import { useStore } from '../store/useStore'
+import { useStore, FLOW_IDS, type FlowId } from '../store/useStore'
 import { QUIZZES, type Quiz, type QuizQuestion } from '../data/quizzes'
 import chevLeft from '../assets/icons/Chevron-left-white.svg'
 
@@ -396,7 +396,7 @@ function QuestionScreen({
 export default function QuizRoute() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { addPoints, recordQuizResult } = useStore()
+  const { addPoints, recordQuizResult, completeFlow } = useStore()
 
   const quizId      = (location.state as { quizId?: string } | null)?.quizId
   const quizIdx     = quizId ? QUIZZES.findIndex(q => q.id === quizId) : 0
@@ -466,6 +466,9 @@ export default function QuizRoute() {
       setScore(finalScore => {
         addPoints(finalScore)
         recordQuizResult(quiz.id, finalScore, total)
+        if ((FLOW_IDS as readonly string[]).includes(quiz.id)) {
+          completeFlow(quiz.id as FlowId)
+        }
         track('quiz_completed', { quizId: quiz.id, score: finalScore, total })
         navigate('/results', { state: { score: finalScore, total, quizTitle: quiz.title } })
         return finalScore
@@ -488,7 +491,7 @@ export default function QuizRoute() {
       isAnimating.current = false
       // slide-in triggered by qIdx useEffect above
     }, 250)
-  }, [isLast, quiz, total, addPoints, recordQuizResult, navigate])
+  }, [isLast, quiz, total, addPoints, recordQuizResult, completeFlow, navigate])
 
   const handleBack = useCallback(() => {
     track('quiz_abandoned', { quizId: quiz?.id, qIdx })
