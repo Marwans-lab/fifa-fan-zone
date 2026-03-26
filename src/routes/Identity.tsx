@@ -66,7 +66,7 @@ function CardPreview({
               objectFit: 'cover',
               objectPosition: 'top',
               border: '3px solid rgba(255,255,255,0.55)',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+              boxShadow: 'var(--f-brand-shadow-large)',
             }}
           />
         ) : (
@@ -75,15 +75,15 @@ function CardPreview({
               width: 120, height: 120,
               borderRadius: '50%',
               background: 'rgba(0,0,0,0.28)',
-              border: '2px dashed rgba(255,255,255,0.45)',
+              border: 'var(--c-photo-placeholder-border)',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
               color: 'var(--f-brand-color-text-light)',
               gap: 6,
-              backdropFilter: 'blur(8px)',
-              WebkitBackdropFilter: 'blur(8px)',
+              backdropFilter: 'blur(var(--f-brand-blur-subtle))',
+              WebkitBackdropFilter: 'blur(var(--f-brand-blur-subtle))',
             }}
           >
             <img src={cameraIcon} width={24} height={24} alt="" />
