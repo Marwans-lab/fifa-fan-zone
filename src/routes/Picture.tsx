@@ -352,7 +352,7 @@ export default function Picture() {
                 letterSpacing: '0.05em',
               }}
             >
-              Retake
+              Retake photo
             </button>
           </div>
         ) : (
@@ -436,7 +436,7 @@ export default function Picture() {
             transition: `background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)`,
           }}
         >
-          Next
+          Confirm photo
         </button>
       </div>
     </div>

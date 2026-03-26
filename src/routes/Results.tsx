@@ -16,10 +16,10 @@ interface QuizResult {
 
 function statusLabel(score: number, total: number): { label: string; color: string } {
   const pct = score / total
-  if (pct === 1)  return { label: 'Perfect Score', color: 'var(--f-brand-color-accent)' }
-  if (pct >= 0.8) return { label: 'Top Fan',        color: 'var(--f-brand-color-accent)' }
-  if (pct >= 0.6) return { label: 'Good Try',       color: 'var(--f-brand-color-status-warning)' }
-  if (pct >= 0.4) return { label: 'Keep Learning',  color: 'var(--f-brand-color-status-warning)' }
+  if (pct === 1)  return { label: 'Perfect score', color: 'var(--f-brand-color-accent)' }
+  if (pct >= 0.8) return { label: 'Top fan',        color: 'var(--f-brand-color-accent)' }
+  if (pct >= 0.6) return { label: 'Good try',       color: 'var(--f-brand-color-status-warning)' }
+  if (pct >= 0.4) return { label: 'Keep learning',  color: 'var(--f-brand-color-status-warning)' }
   return               { label: 'Better luck next time', color: 'var(--f-brand-color-status-warning)' }
 }
 
@@ -74,16 +74,16 @@ export default function Results() {
         <div className="f-page-enter" style={{ padding: 'var(--f-brand-space-2xl) var(--f-brand-space-lg)', textAlign: 'center', maxWidth: 360, width: '100%' }}>
           <div style={{ marginBottom: 'var(--f-brand-space-md)' }}><img src={trophyIcon} width={24} height={24} alt="" /></div>
           <h2 style={{ fontSize: '28', fontWeight: '300', marginBottom: 'var(--f-brand-space-xs)', letterSpacing: '-0.03em' }}>
-            Your Score
+            Your score
           </h2>
           <p style={{ fontSize: '36', fontWeight: '500', color: 'var(--f-brand-color-accent)', marginBottom: 'var(--f-brand-space-xl)', letterSpacing: '-0.03em' }}>
             {appState.points} <span style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)', fontWeight: '400' }}>pts</span>
           </p>
           <Button fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
-            Play a Quiz
+            Play a quiz
           </Button>
           <Button variant="ghost" fullWidth style={{ marginTop: 'var(--f-brand-space-sm)' }} onClick={() => navigate(homeRoute)}>
-            Back to Home
+            Return home
           </Button>
         </div>
       </Screen>
@@ -168,13 +168,13 @@ export default function Results() {
         {/* Actions */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-sm)', width: '100%' }}>
           <Button fullWidth onClick={() => { track('results_leaderboard_tapped'); navigate('/leaderboard') }}>
-            View Leaderboard
+            View leaderboard
           </Button>
           <Button variant="secondary" fullWidth onClick={() => { track('results_home_tapped'); navigate(homeRoute) }}>
-            Back to Home
+            Return home
           </Button>
           <Button variant="ghost" fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
-            Play Another Quiz
+            Play another quiz
           </Button>
         </div>
       </div>

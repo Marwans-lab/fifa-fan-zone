@@ -69,6 +69,18 @@ export default function Leaderboard() {
 
         {/* Rows */}
         <div className="f-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-xs)' }}>
+          {entries.length === 0 && (
+            <div style={{
+              textAlign: 'center',
+              padding: 'var(--f-brand-space-2xl) var(--f-brand-space-md)',
+              color: 'var(--f-brand-color-text-muted)',
+              fontSize: '15',
+              lineHeight: '1.5',
+            }}>
+              <img src={trophyIcon} width={32} height={32} alt="" style={{ opacity: 0.4, marginBottom: 'var(--f-brand-space-sm)' }} />
+              <p>No players yet — complete a quiz to appear on the leaderboard</p>
+            </div>
+          )}
           {entries.map(row => (
             <div
               key={row.rank}
@@ -92,8 +104,8 @@ export default function Leaderboard() {
                 {row.isMe && <span style={{ fontSize: '11', color: 'var(--f-brand-color-accent)', marginLeft: 8, letterSpacing: '0.05em' }}>you</span>}
               </div>
               {[
-                { label: 'SCORE',    value: `${row.pts} Pts` },
-                { label: 'DURATION', value: `${row.durationMins} Mins` },
+                { label: 'Score',    value: `${row.pts} pts` },
+                { label: 'Duration', value: `${row.durationMins} min` },
               ].map(col => (
                 <div key={col.label} style={{ textAlign: 'right', marginLeft: 'var(--f-brand-space-sm)', minWidth: 54 }}>
                   <div style={{ fontSize: '10', color: 'var(--f-brand-color-text-muted)', letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 2 }}>{col.label}</div>
@@ -117,7 +129,7 @@ export default function Leaderboard() {
           className="f-button"
           style={{ width: '100%', maxWidth: 420, display: 'block', margin: '0 auto' }}
         >
-          Back home
+          Return home
         </button>
       </div>
     </Screen>

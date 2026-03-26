@@ -250,7 +250,7 @@ export default function TeamSelection() {
           WebkitTapHighlightColor: 'transparent',
         }}
       >
-        Continue
+        Add your photo
       </button>
     </div>
   )
