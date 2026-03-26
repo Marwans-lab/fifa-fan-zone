@@ -72,7 +72,7 @@ function ProgressBar({ progress }: { progress: number }) {
           height: '100%',
           borderRadius: 'var(--f-brand-radius-rounded)',
           background: 'linear-gradient(-90deg, var(--f-brand-color-border-success) 61.5%, var(--f-brand-color-background-success) 100%)',
-          boxShadow: '1px 0px 6px rgba(0,0,0,0.25)',
+          boxShadow: 'var(--f-brand-shadow-medium)',
           transition: `width var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit)`,
         }}
       />
@@ -220,7 +220,7 @@ export default function Picture() {
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
-            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+            boxShadow: 'var(--f-brand-shadow-medium)',
           }}
         >
           <img
@@ -296,7 +296,7 @@ export default function Picture() {
                 height: 72,
                 borderRadius: 'var(--f-brand-radius-rounded)',
                 background: 'none',
-                border: '3px solid var(--f-brand-color-text-light)',
+                border: 'var(--c-capture-ring) solid var(--f-brand-color-text-light)',
                 padding: 4,
                 cursor: 'pointer',
                 display: 'flex',
@@ -341,9 +341,9 @@ export default function Picture() {
                 padding: 'var(--f-brand-space-xs) var(--f-brand-space-md)',
                 borderRadius: 'var(--f-brand-radius-rounded)',
                 background: 'rgba(0,0,0,0.5)',
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)',
-                border: '1px solid rgba(255,255,255,0.2)',
+                backdropFilter: 'blur(var(--f-brand-blur-subtle))',
+                WebkitBackdropFilter: 'blur(var(--f-brand-blur-subtle))',
+                border: '1px solid var(--c-lt-overlay-border)',
                 color: 'var(--f-brand-color-text-light)',
                 fontFamily: 'var(--f-base-type-family-secondary)',
                 fontSize: '13',
@@ -375,7 +375,7 @@ export default function Picture() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 'var(--f-brand-space-sm)',
-                boxShadow: '0px 8px 16px rgba(31,33,43,0.08)',
+                boxShadow: 'var(--f-brand-shadow-large)',
                 color: 'var(--f-brand-color-text-light)',
                 fontFamily: 'var(--f-base-type-family-secondary)',
                 fontSize: 16,

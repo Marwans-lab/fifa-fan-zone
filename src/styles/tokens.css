@@ -70,6 +70,10 @@
   --shadow-md: 0 4px 20px rgba(0,0,0,0.55), var(--glass-shine);
   --shadow-lg: 0 8px 48px rgba(0,0,0,0.70), var(--glass-shine);
 
+  /* ─── Component-specific tokens ────────────────────────────────────────────── */
+  --c-photo-placeholder-border: 2px dashed rgba(255,255,255,0.45);
+  --c-capture-ring: 3px;
+
   /* ─── Typography ─────────────────────────────────────────────────────────── */
   --font-display: var(--f-base-type-family-primary);
   --font-body:    var(--f-base-type-family-secondary);
@@ -190,10 +194,14 @@
   --f-brand-radius-outer:   20px;
   --f-brand-radius-rounded: 64px;
 
+  /* Blur */
+  --f-brand-blur-subtle: 8px;
+
   /* Shadows */
   --f-brand-shadow-none:     0 0 0 0 transparent;
   --f-brand-shadow-medium:   0 2px 8px var(--f-brand-color-shadow-default);
   --f-brand-shadow-large:    0 8px 20px var(--f-brand-color-shadow-default);
+  --f-brand-color-focus-glow: rgba(142, 33, 87, 0.16);
 
   /* Typography composites (font shorthand: weight size/line-height family) */
   --f-brand-type-page-title-thin: 100 48px/56px 'Jotia', Verdana, Geneva, sans-serif;

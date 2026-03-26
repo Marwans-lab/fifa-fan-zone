@@ -339,7 +339,7 @@ h1, h2, h3, h4 {
 
 .f-input:focus {
   border-color: var(--f-brand-color-border-focused, #8E2157);
-  box-shadow: 0 0 0 var(--f-brand-border-size-focused, 2px) rgba(142, 33, 87, 0.16);
+  box-shadow: 0 0 0 var(--f-brand-border-size-focused, 2px) var(--f-brand-color-focus-glow);
 }
 
 .f-input::placeholder {
@@ -364,7 +364,7 @@ h1, h2, h3, h4 {
 
 .input-field:focus {
   border-color: var(--f-brand-color-border-focused, #8E2157);
-  box-shadow: 0 0 0 var(--f-brand-border-size-focused, 2px) rgba(142, 33, 87, 0.16);
+  box-shadow: 0 0 0 var(--f-brand-border-size-focused, 2px) var(--f-brand-color-focus-glow);
 }
 
 .input-field::placeholder {
