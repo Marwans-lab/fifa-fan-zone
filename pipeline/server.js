@@ -1,6 +1,7 @@
 import http from "node:http";
 import https from "node:https";
 import { execSync } from "node:child_process";
+import { randomUUID } from "node:crypto";
 
 // --- Config ---
 const PORT = 3457;
@@ -71,11 +72,16 @@ function linearGQL(query, variables, token) {
   });
 }
 
-async function postComment(issueId, body) {
-  // Use personal API key so comments come from the user, not the Claude agent.
-  // Cyrus ignores self-comments (self-loop protection), so @Claude mentions
-  // must come from a different identity to trigger agent sessions.
-  const token = LINEAR_PERSONAL_KEY || LINEAR_TOKEN;
+async function postComment(issueId, body, { asAgent = false } = {}) {
+  // By default: use personal API key so comments come from the user identity.
+  // asAgent: use LINEAR_TOKEN (Cyrus OAuth) — for non-trigger comments like
+  // deploy status, QA results, etc. where we DON'T need Cyrus to act on them.
+  //
+  // IMPORTANT: Neither personal key nor Cyrus OAuth triggers Cyrus sessions.
+  // Only third-party OAuth (Arcade) comments trigger sessions. The pipeline
+  // posts informational comments only — session triggering must come from
+  // Arcade or user comments with @Claude.
+  const token = asAgent ? LINEAR_TOKEN : (LINEAR_PERSONAL_KEY || LINEAR_TOKEN);
   const result = await linearGQL(
     `mutation($issueId: String!, $body: String!) {
       commentCreate(input: { issueId: $issueId, body: $body }) {
@@ -85,7 +91,7 @@ async function postComment(issueId, body) {
     { issueId, body },
     token
   );
-  console.log(`[Pipeline] Comment posted on issue ${issueId} (as ${LINEAR_PERSONAL_KEY ? "user" : "agent"})`);
+  console.log(`[Pipeline] Comment posted on issue ${issueId} (as ${asAgent ? "agent" : "user"})`);
   return result;
 }
 
@@ -427,11 +433,37 @@ async function handleWebhook(payload) {
       );
 
       if (!pr) {
-        console.log(`[Pipeline] ${issueIdentifier}: No PR found, skipping deploy`);
-        await postComment(
-          issueId,
-          `**[DEPLOY SKIPPED]** No open PR found for ${issueIdentifier}. Issue stays at Done.`
+        // No open PR — check if one was already merged
+        const mergedJson = execSync(
+          `gh pr list -R ${GITHUB_REPO} --state merged --json number,title,headRefName --search "${issueIdentifier}" 2>/dev/null`,
+          { encoding: "utf-8" }
         );
+        const mergedPrs = JSON.parse(mergedJson || "[]");
+        const mergedPr = mergedPrs.find(
+          (p) =>
+            p.title.includes(issueIdentifier) ||
+            p.headRefName.toLowerCase().includes(issueIdentifier.toLowerCase().replace("-", "-"))
+        );
+
+        if (mergedPr) {
+          // PR already merged — skip straight to Deployed
+          console.log(`[Pipeline] ${issueIdentifier}: PR #${mergedPr.number} already merged — moving to Deployed`);
+          const states = await getStates(teamId);
+          const deployedState = findState(states, "Deployed");
+          if (deployedState) {
+            await transitionIssue(issueId, deployedState.id);
+            await postComment(
+              issueId,
+              `**[DEPLOYED]** PR #${mergedPr.number} was already merged to main. Auto-transitioning to Deployed.`
+            );
+          }
+        } else {
+          console.log(`[Pipeline] ${issueIdentifier}: No open or merged PR found, skipping deploy`);
+          await postComment(
+            issueId,
+            `**[DEPLOY SKIPPED]** No open or merged PR found for ${issueIdentifier}. Issue stays at Done — stall detector will move to Todo if unresolved.`
+          );
+        }
         return;
       }
 
@@ -494,39 +526,294 @@ async function handleWebhook(payload) {
     return;
   }
 
-  // Stage 1 (retry): Todo → if issue was bounced back by QA, it will be
-  // picked up by Cyrus automatically since it's re-assigned/delegated
+  // Stage 1: Todo → trigger Cyrus directly via AgentSessionEvent webhook
+  // Bypasses Arcade OAuth by constructing a Linear AgentSessionEvent payload
+  // and POSTing it directly to Cyrus's /webhook with CYRUS_API_KEY.
   if (newState === "Todo") {
-    // Check if this was bounced back from QA (has a previous state of In Review)
-    const prevStateName = payload.updatedFrom?.stateId;
-    if (prevStateName) {
-      try {
-        const states = await getStates(teamId);
-        const prevState = states.find((s) => s.id === prevStateName);
-        if (prevState && prevState.name === "In Review") {
-          if (recentComments.has(issueId)) return;
-          markOurComment(issueId);
+    if (recentComments.has(issueId)) return;
+    markOurComment(issueId);
 
-          const labelInfo = labels.includes("Frontend")
-            ? "Frontend"
-            : labels.includes("Backend")
-              ? "Backend"
-              : "General";
-
-          console.log(
-            `[Pipeline] ${issueIdentifier}: QA bounced back, re-triggering ${labelInfo} dev`
-          );
-          await postComment(
-            issueId,
-            `@Claude **[QA BOUNCE]** This issue was sent back by QA. Read the QA feedback in the previous comments and fix the issues. You are the ${labelInfo} specialist — address every point raised by QA, then move back to **In Review**.`
-          );
-        }
-      } catch (e) {
-        console.error(`[Pipeline] Error checking previous state: ${e.message}`);
+    // Fetch full issue details (title + description) from Linear
+    let issueTitle = issueIdentifier;
+    let issueDescription = "";
+    let issueUrl = "";
+    try {
+      const issueResult = await linearGQL(
+        `query($id: String!) { issue(id: $id) { title description url team { id key } } }`,
+        { id: issueId }
+      );
+      const d = issueResult.data?.issue;
+      if (d) {
+        issueTitle = d.title || issueIdentifier;
+        issueDescription = d.description || "";
+        issueUrl = d.url || "";
       }
+    } catch (e) {
+      console.error(`[Pipeline] ${issueIdentifier}: Failed to fetch issue details: ${e.message}`);
     }
+
+    // Create a real Linear AgentSession so Cyrus can sync activity back to Linear
+    let sessionId;
+    try {
+      const sessionResult = await linearGQL(
+        `mutation($input: AgentSessionCreateOnIssue!) {
+          agentSessionCreateOnIssue(input: $input) {
+            agentSession { id }
+            success
+          }
+        }`,
+        { input: { issueId } },
+        LINEAR_TOKEN
+      );
+      sessionId = sessionResult.data?.agentSessionCreateOnIssue?.agentSession?.id;
+      if (!sessionId) throw new Error("No session ID returned");
+      console.log(`[Pipeline] ${issueIdentifier}: Created Linear AgentSession ${sessionId}`);
+    } catch (e) {
+      console.error(`[Pipeline] ${issueIdentifier}: Failed to create AgentSession: ${e.message}`);
+      sessionId = randomUUID(); // fallback — Cyrus will still run but won't sync to Linear
+    }
+
+    const syntheticPayload = JSON.stringify({
+      type: "AgentSessionEvent",
+      action: "created",
+      organizationId: "416d45de-7ee5-4dcc-aa1a-31bb4ec37aa3",
+      createdAt: new Date().toISOString(),
+      agentSession: {
+        id: sessionId,
+        status: "created",
+        issue: {
+          id: issueId,
+          identifier: issueIdentifier,
+          title: issueTitle,
+          description: issueDescription,
+          url: issueUrl,
+          labels: labels.map((name, i) => ({ id: `lbl-${i}`, name })),
+        },
+      },
+    });
+
+    try {
+      const result = await forwardToCyrus(
+        "POST",
+        "/webhook",
+        { "content-type": "application/json", "content-length": Buffer.byteLength(syntheticPayload).toString() },
+        syntheticPayload
+      );
+      console.log(`[Pipeline] ${issueIdentifier}: Triggered Cyrus (AgentSessionEvent, status ${result.status})`);
+    } catch (e) {
+      console.error(`[Pipeline] ${issueIdentifier}: Failed to trigger Cyrus: ${e.message}`);
+    }
+    return;
   }
 }
+
+// --- Stall detector: auto-retrigger stuck issues ---
+// Periodically checks for Todo/In Progress issues that haven't had activity
+// and re-posts @Claude to kick Cyrus back into action (e.g. after rate limits).
+const STALL_CHECK_INTERVAL = 10 * 60_000; // every 10 minutes
+const STALL_THRESHOLD = 15 * 60_000; // issue stuck for 15+ minutes = stalled
+const retriggeredRecently = new Map(); // issueId → timestamp
+
+async function checkForStalledIssues() {
+  try {
+    // Fetch all active issues (Todo, In Progress, In Review, Done) in MAR
+    const result = await linearGQL(
+      `query {
+        issues(filter: {
+          team: { key: { eq: "MAR" } },
+          state: { name: { in: ["Todo", "In Progress", "In Review", "Done"] } }
+        }, first: 50) {
+          nodes {
+            id
+            identifier
+            title
+            state { name }
+            updatedAt
+            team { id }
+            labels { nodes { name } }
+            comments { nodes { body createdAt } }
+          }
+        }
+      }`,
+      {}
+    );
+
+    const issues = result.data?.issues?.nodes || [];
+    const now = Date.now();
+
+    // Skip onboarding template issues
+    const IGNORE_ISSUES = new Set(["MAR-1", "MAR-2", "MAR-3", "MAR-4"]);
+
+    for (const issue of issues) {
+      if (IGNORE_ISSUES.has(issue.identifier)) continue;
+
+      const stateName = issue.state.name;
+      const lastUpdate = new Date(issue.updatedAt).getTime();
+      const stalledMinutes = Math.round((now - lastUpdate) / 60_000);
+
+      // Skip if we retriggered this issue recently (within 30 min)
+      const lastRetrigger = retriggeredRecently.get(issue.id);
+      if (lastRetrigger && now - lastRetrigger < 30 * 60_000) continue;
+
+      // --- Done issues: auto-merge unmerged PRs ---
+      if (stateName === "Done") {
+        if (now - lastUpdate < STALL_THRESHOLD) continue;
+        try {
+          const prJson = execSync(
+            `gh pr list -R ${GITHUB_REPO} --state open --json number,title,headRefName --search "${issue.identifier}" 2>/dev/null`,
+            { encoding: "utf-8" }
+          );
+          const prs = JSON.parse(prJson || "[]");
+          const pr = prs.find(
+            (p) =>
+              p.title.includes(issue.identifier) ||
+              p.headRefName.toLowerCase().includes(issue.identifier.toLowerCase().replace("-", "-"))
+          );
+          if (pr) {
+            console.log(`[Pipeline] STALL DETECTED: ${issue.identifier} (Done) has unmerged PR #${pr.number} — merging now`);
+            retriggeredRecently.set(issue.id, now);
+            try {
+              execSync(
+                `gh pr merge ${pr.number} -R ${GITHUB_REPO} --squash --delete-branch 2>&1`,
+                { encoding: "utf-8" }
+              );
+              console.log(`[Pipeline] ${issue.identifier}: PR #${pr.number} merged by stall detector`);
+
+              // Wait for GitHub Actions deploy (same verification as main handler)
+              let deployed = false;
+              for (let attempt = 0; attempt < 20; attempt++) {
+                await new Promise((r) => setTimeout(r, 10_000));
+                try {
+                  const runJson = execSync(
+                    `gh run list -R ${GITHUB_REPO} --limit 1 --json status,conclusion 2>/dev/null`,
+                    { encoding: "utf-8" }
+                  );
+                  const runs = JSON.parse(runJson || "[]");
+                  if (runs[0]?.status === "completed") {
+                    if (runs[0].conclusion === "success") deployed = true;
+                    break;
+                  }
+                } catch { /* keep waiting */ }
+              }
+
+              if (deployed) {
+                const states = await getStates(issue.team.id);
+                const deployedState = findState(states, "Deployed");
+                if (deployedState) {
+                  await transitionIssue(issue.id, deployedState.id);
+                  await postComment(issue.id, `**[PIPELINE]** Stall detector merged PR #${pr.number} and deployed to GitHub Pages.`);
+                  console.log(`[Pipeline] ${issue.identifier}: Deployed successfully`);
+                }
+              } else {
+                console.log(`[Pipeline] ${issue.identifier}: PR merged but deploy not confirmed — staying at Done`);
+                await postComment(issue.id, `**[PIPELINE]** PR #${pr.number} merged but GitHub Pages deploy not confirmed. Issue stays at Done — will retry.`);
+              }
+            } catch (mergeErr) {
+              console.error(`[Pipeline] ${issue.identifier}: Merge failed: ${mergeErr.message}`);
+              await postComment(issue.id, `**[PIPELINE]** Stall detector tried to merge PR #${pr.number} but failed: ${mergeErr.message}`);
+            }
+          } else {
+            // No open PR — check if a PR was already merged (issue should be Deployed)
+            // or if no PR exists at all (issue needs re-work)
+            retriggeredRecently.set(issue.id, now);
+            try {
+              const mergedJson = execSync(
+                `gh pr list -R ${GITHUB_REPO} --state merged --json number,title,headRefName --search "${issue.identifier}" 2>/dev/null`,
+                { encoding: "utf-8" }
+              );
+              const mergedPrs = JSON.parse(mergedJson || "[]");
+              const mergedPr = mergedPrs.find(
+                (p) =>
+                  p.title.includes(issue.identifier) ||
+                  p.headRefName.toLowerCase().includes(issue.identifier.toLowerCase().replace("-", "-"))
+              );
+
+              if (mergedPr) {
+                // PR was already merged — move to Deployed
+                console.log(`[Pipeline] STALL DETECTED: ${issue.identifier} (Done) has merged PR #${mergedPr.number} but wasn't transitioned — moving to Deployed`);
+                const states = await getStates(issue.team.id);
+                const deployedState = findState(states, "Deployed");
+                if (deployedState) {
+                  markOurComment(issue.id);
+                  await transitionIssue(issue.id, deployedState.id);
+                  await postComment(issue.id, `**[PIPELINE]** PR #${mergedPr.number} was already merged. Auto-moving to Deployed (stall recovery).`);
+                }
+              } else {
+                // No open or merged PR — move back to Todo so agent picks it up
+                console.log(`[Pipeline] STALL DETECTED: ${issue.identifier} (Done) has no open or merged PR — moving to Todo for re-work`);
+                const states = await getStates(issue.team.id);
+                const todoState = findState(states, "Todo");
+                if (todoState) {
+                  markOurComment(issue.id);
+                  await transitionIssue(issue.id, todoState.id);
+                  console.log(`[Pipeline] ${issue.identifier}: Moved to Todo — Cyrus will pick it up automatically`);
+                }
+              }
+            } catch (prCheckErr) {
+              console.error(`[Pipeline] ${issue.identifier}: PR check error: ${prCheckErr.message}`);
+            }
+          }
+        } catch (e) {
+          console.error(`[Pipeline] ${issue.identifier}: Done stall check error: ${e.message}`);
+        }
+        continue;
+      }
+
+      // --- In Review issues: retrigger QA if no watcher active ---
+      if (stateName === "In Review") {
+        if (now - lastUpdate < STALL_THRESHOLD) continue;
+        if (activeWatchers.has(issue.id)) continue; // watcher already running
+
+        const labels = (issue.labels?.nodes || []).map((l) => l.name);
+        const labelInfo = labels.includes("Frontend") ? "Frontend" : labels.includes("Backend") ? "Backend" : "General";
+
+        console.log(`[Pipeline] STALL DETECTED: ${issue.identifier} (In Review) — no QA watcher, retriggering QA`);
+        retriggeredRecently.set(issue.id, now);
+        markOurComment(issue.id);
+        const qaPostedAt = new Date().toISOString();
+        await postComment(
+          issue.id,
+          `@Claude **[QA REVIEW]** Review this ${labelInfo} implementation.\n\nCheck:\n- All acceptance criteria from the issue description are met\n- Code quality and no regressions\n- No hardcoded values, no leftover debug code\n- Edge cases handled\n\nIf everything passes, move to **Done**.\nIf anything fails, move back to **Todo** and explain exactly what needs fixing.`
+        );
+        startQAWatcher(issue.id, issue.identifier, issue.team.id, qaPostedAt);
+        await new Promise((r) => setTimeout(r, 3000));
+        continue;
+      }
+
+      // --- Todo / In Progress: retrigger dev work ---
+      const comments = issue.comments?.nodes || [];
+      const hasRecentClaudeComment = comments.some((c) => {
+        const age = now - new Date(c.createdAt).getTime();
+        return age < STALL_THRESHOLD && (c.body || "").includes("@Claude");
+      });
+      if (hasRecentClaudeComment) continue;
+      if (now - lastUpdate < STALL_THRESHOLD) continue;
+
+      const labels = (issue.labels?.nodes || []).map((l) => l.name);
+      const labelInfo = labels.includes("Frontend") ? "Frontend" : "General";
+
+      console.log(
+        `[Pipeline] STALL DETECTED: ${issue.identifier} (${stateName}) — no activity for ${stalledMinutes}min, retriggering`
+      );
+
+      markOurComment(issue.id);
+      await postComment(
+        issue.id,
+        `@Claude **[AUTO-RETRIGGER]** This ${labelInfo} issue appears stalled (no activity for ${stalledMinutes}min). Please pick it up and continue working on it.`
+      );
+      retriggeredRecently.set(issue.id, now);
+      await new Promise((r) => setTimeout(r, 3000));
+    }
+  } catch (e) {
+    console.error(`[Pipeline] Stall detector error: ${e.message}`);
+  }
+}
+
+// Start the stall detector
+setInterval(checkForStalledIssues, STALL_CHECK_INTERVAL);
+// Run once on startup after a short delay
+setTimeout(checkForStalledIssues, 30_000);
+console.log(`[Pipeline] Stall detector enabled (checks every ${STALL_CHECK_INTERVAL / 60_000}min, threshold ${STALL_THRESHOLD / 60_000}min)`);
 
 // --- Server ---
 const server = http.createServer(async (req, res) => {
@@ -556,6 +843,9 @@ const server = http.createServer(async (req, res) => {
 
     // Wait for Cyrus response and return it
     const result = await cyrusResult;
+    if (req.url === "/webhook") {
+      console.log(`[Pipeline] Cyrus response: ${result.status} — ${result.body?.substring(0, 200)}`);
+    }
     res.writeHead(result.status || 200);
     res.end(result.body);
   });
