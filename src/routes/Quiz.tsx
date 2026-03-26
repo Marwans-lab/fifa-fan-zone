@@ -94,10 +94,10 @@ function OptionButton({
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
-        gap: 14,
+        gap: 'var(--sp-3)',
         width: '100%',
-        padding: '0 20px 0 16px',
-        height: 58,
+        padding: '0 var(--sp-5) 0 var(--sp-4)',
+        height: 'var(--sp-14)',
         borderRadius: 'var(--f-brand-radius-rounded)',
         border: `1.5px solid ${borderColor}`,
         background: revealed && isCorrect
@@ -372,7 +372,7 @@ function QuestionScreen({
               className="f-button"
               style={{
                 width: '100%',
-                padding: '16px 0',
+                padding: 'var(--sp-4) 0',
                 borderRadius: 'var(--f-brand-radius-rounded)',
                 border: 'none',
                 background: revealed ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-background-light)',

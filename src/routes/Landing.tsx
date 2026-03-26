@@ -46,7 +46,7 @@ function FanCardStack() {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '24px 20px 20px',
+              padding: 'var(--sp-6) var(--sp-5) var(--sp-5)',
               border: '1px solid var(--f-brand-color-border-subtle)',
               position: 'relative',
             }}
@@ -103,7 +103,7 @@ function FanCardStack() {
             <div style={{
               fontSize: '18', fontWeight: '500',
               color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic',
-              display: 'flex', alignItems: 'center', gap: 8,
+              display: 'flex', alignItems: 'center', gap: 'var(--sp-2)',
               position: 'relative', zIndex: 1,
             }}>
               <span style={{ fontStyle: 'normal', fontSize: '22' }}>{team.flag}</span>
@@ -144,7 +144,7 @@ export default function Landing() {
         alignItems: 'center',
         minHeight: '100%',
         background: 'var(--f-brand-color-background-default)',
-        padding: '86px var(--f-brand-space-md) var(--f-brand-space-2xl)',
+        padding: 'var(--sp-20) var(--f-brand-space-md) var(--f-brand-space-2xl)',
         boxSizing: 'border-box',
       }}
     >
@@ -176,7 +176,7 @@ export default function Landing() {
           marginTop: 'var(--f-brand-space-2xl)',
           width: '100%',
           maxWidth: 361,
-          height: 56,
+          height: 'var(--sp-14)',
           borderRadius: 'var(--f-brand-radius-rounded)',
           background: 'var(--f-brand-color-primary)',
           color: 'var(--f-brand-color-background-light)',
