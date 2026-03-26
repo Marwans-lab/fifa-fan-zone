@@ -25,8 +25,8 @@ export default function Leaderboard() {
           <button onClick={() => navigate(-1)} className="f-button f-button--ghost"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
           <div style={{ flex: 1, textAlign: 'center' }}>
             <h2 style={{
-              fontFamily: 'var(--f-base-type-family-primary)',
-              fontSize: '18',
+              font: 'var(--f-brand-type-headline)',
+              fontFamily: 'var(--font-display)',
               fontWeight: '300',
               letterSpacing: '-0.03em',
               color: 'var(--f-brand-color-text-default)',
@@ -42,7 +42,7 @@ export default function Leaderboard() {
         </div>
 
         {/* Subtitle */}
-        <div style={{ fontSize: '11', color: 'var(--f-brand-color-text-muted)', textAlign: 'center', marginBottom: 'var(--f-brand-space-md)', lineHeight: '1.52', letterSpacing: '0.05em' }}>
+        <div style={{ font: 'var(--f-brand-type-caption)', fontSize: '11', color: 'var(--f-brand-color-text-muted)', textAlign: 'center', marginBottom: 'var(--f-brand-space-md)', lineHeight: '1.52', letterSpacing: '0.05em' }}>
           Cumulative score · Updated {formatRefresh(lastRefresh)} · auto-refreshes every {LEADERBOARD_REFRESH_MS / 60_000} min
         </div>
 
@@ -57,10 +57,10 @@ export default function Leaderboard() {
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
           }}>
-            <span style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)' }}>Your rank: </span>
-            <span style={{ fontSize: '15', fontWeight: '500', color: 'var(--f-brand-color-accent)' }}>#{myRank}</span>
+            <span style={{ font: 'var(--f-brand-type-caption)', fontSize: '13', color: 'var(--f-brand-color-text-subtle)' }}>Your rank: </span>
+            <span style={{ font: 'var(--f-brand-type-body-medium)', fontSize: '15', color: 'var(--f-brand-color-accent)' }}>#{myRank}</span>
             {myRank <= 5 && (
-              <span style={{ fontSize: '13', color: 'var(--f-brand-color-accent)', marginLeft: 'var(--sp-2)', display: 'inline-flex', alignItems: 'center', gap: 'var(--sp-1)' }}>
+              <span style={{ font: 'var(--f-brand-type-caption)', fontSize: '13', color: 'var(--f-brand-color-accent)', marginLeft: 'var(--sp-2)', display: 'inline-flex', alignItems: 'center', gap: 'var(--sp-1)' }}>
                 <img src={trophyIcon} width={24} height={24} alt="" /> Top 5 — Avios eligible!
               </span>
             )}
@@ -96,20 +96,20 @@ export default function Leaderboard() {
                 transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
               }}
             >
-              <div style={{ width: 28, fontSize: '13', fontWeight: '500', color: row.rank <= 3 ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-text-muted)', flexShrink: 0, lineHeight: 1, display: 'flex', alignItems: 'center' }}>
+              <div style={{ width: 28, font: 'var(--f-brand-type-caption-medium)', fontSize: '13', color: row.rank <= 3 ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-text-muted)', flexShrink: 0, lineHeight: 1, display: 'flex', alignItems: 'center' }}>
                 {row.rank === 1 ? <img src={trophyIcon} width={24} height={24} alt="1" /> : row.rank}
               </div>
-              <div style={{ flex: 1, fontSize: '15', color: 'var(--f-brand-color-text-default)', fontWeight: row.isMe ? '500' : '400' }}>
+              <div style={{ flex: 1, font: 'var(--f-brand-type-body)', fontSize: '15', color: 'var(--f-brand-color-text-default)', fontWeight: row.isMe ? '500' : '400' }}>
                 {row.name}
-                {row.isMe && <span style={{ fontSize: '11', color: 'var(--f-brand-color-accent)', marginLeft: 'var(--sp-2)', letterSpacing: '0.05em' }}>you</span>}
+                {row.isMe && <span style={{ font: 'var(--f-brand-type-caption)', fontSize: '11', color: 'var(--f-brand-color-accent)', marginLeft: 'var(--sp-2)', letterSpacing: '0.05em' }}>you</span>}
               </div>
               {[
                 { label: 'Score',    value: `${row.pts} pts` },
                 { label: 'Duration', value: `${row.durationMins} min` },
               ].map(col => (
                 <div key={col.label} style={{ textAlign: 'right', marginLeft: 'var(--f-brand-space-sm)', minWidth: 54 }}>
-                  <div style={{ fontSize: '10', color: 'var(--f-brand-color-text-muted)', letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 2 }}>{col.label}</div>
-                  <div style={{ fontSize: '13', color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>{col.value}</div>
+                  <div style={{ font: 'var(--f-brand-type-caption)', fontSize: '10', color: 'var(--f-brand-color-text-muted)', letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 2 }}>{col.label}</div>
+                  <div style={{ font: 'var(--f-brand-type-caption-medium)', fontSize: '13', color: 'var(--f-brand-color-text-default)' }}>{col.value}</div>
                 </div>
               ))}
             </div>
@@ -117,7 +117,7 @@ export default function Leaderboard() {
         </div>
 
         {/* Disclaimer */}
-        <p style={{ marginTop: 'var(--f-brand-space-lg)', fontSize: '11', color: 'var(--f-brand-color-text-muted)', textAlign: 'center', lineHeight: '1.52', letterSpacing: '0.05em' }}>
+        <p style={{ marginTop: 'var(--f-brand-space-lg)', font: 'var(--f-brand-type-caption)', fontSize: '11', color: 'var(--f-brand-color-text-muted)', textAlign: 'center', lineHeight: '1.52', letterSpacing: '0.05em' }}>
           Top 5 fans win Avios. Rankings are provisional until end-of-event.
         </p>
       </div>

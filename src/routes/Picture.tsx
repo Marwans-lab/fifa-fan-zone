@@ -237,10 +237,7 @@ export default function Picture() {
 
       {/* ── Title ────────────────────────────────────────────── */}
       <h2 style={{
-        fontFamily: 'var(--f-base-type-family-primary)',
-        fontSize: '28',
-        fontWeight: '100',
-        lineHeight: '36px',
+        font: 'var(--f-brand-type-title-2)',
         color: 'var(--f-brand-color-text-default)',
         textAlign: 'center',
         marginTop: 'var(--f-brand-space-lg)',
@@ -345,9 +342,8 @@ export default function Picture() {
                 WebkitBackdropFilter: 'blur(var(--f-brand-blur-subtle))',
                 border: '1px solid var(--c-lt-overlay-border)',
                 color: 'var(--f-brand-color-text-light)',
-                fontFamily: 'var(--f-base-type-family-secondary)',
+                font: 'var(--f-brand-type-caption-medium)',
                 fontSize: '13',
-                fontWeight: '500',
                 cursor: 'pointer',
                 letterSpacing: '0.05em',
               }}
@@ -377,10 +373,7 @@ export default function Picture() {
                 gap: 'var(--f-brand-space-sm)',
                 boxShadow: 'var(--f-brand-shadow-large)',
                 color: 'var(--f-brand-color-text-light)',
-                fontFamily: 'var(--f-base-type-family-secondary)',
-                fontSize: 16,
-                fontWeight: '500',
-                lineHeight: '24px',
+                font: 'var(--f-brand-type-body-medium)',
               }}
             >
               <span>Take a photo</span>
@@ -393,6 +386,7 @@ export default function Picture() {
       {/* ── Camera error ─────────────────────────────────────── */}
       {cameraError && (
         <p style={{
+          font: 'var(--f-brand-type-caption)',
           fontSize: '11',
           color: 'var(--f-brand-color-status-error)',
           marginTop: 'var(--f-brand-space-xs)',
@@ -429,10 +423,7 @@ export default function Picture() {
             border: 'none',
             cursor: hasPhoto ? 'pointer' : 'default',
             color: hasPhoto ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-text-disabled)',
-            fontFamily: 'var(--f-base-type-family-secondary)',
-            fontSize: 16,
-            fontWeight: '500',
-            lineHeight: '24px',
+            font: 'var(--f-brand-type-body-medium)',
             transition: `background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)`,
           }}
         >

@@ -73,12 +73,12 @@ function FanCardStack() {
             {/* Card header */}
             <div style={{ textAlign: 'left', width: '100%', position: 'relative', zIndex: 1 }}>
               <div style={{
-                fontSize: '13', letterSpacing: 2, color: 'var(--f-brand-color-background-light)',
+                font: 'var(--f-brand-type-caption)', fontSize: '13', letterSpacing: 2, color: 'var(--f-brand-color-background-light)',
                 textTransform: 'uppercase',
               }}>
                 Your fan card
               </div>
-              <div style={{ fontSize: '10', color: 'rgba(255,255,255,0.65)', letterSpacing: 1 }}>
+              <div style={{ font: 'var(--f-brand-type-caption)', fontSize: '10', color: 'rgba(255,255,255,0.65)', letterSpacing: 1 }}>
                 Collector edition
               </div>
             </div>
@@ -101,7 +101,7 @@ function FanCardStack() {
 
             {/* Team name */}
             <div style={{
-              fontSize: '18', fontWeight: '500',
+              font: 'var(--f-brand-type-headline-medium)',
               color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic',
               display: 'flex', alignItems: 'center', gap: 'var(--sp-2)',
               position: 'relative', zIndex: 1,
@@ -151,10 +151,7 @@ export default function Landing() {
       {/* Title */}
       <h1
         style={{
-          fontFamily: 'var(--f-base-type-family-primary)',
-          fontSize: '28',
-          fontWeight: '100',
-          lineHeight: '36px',
+          font: 'var(--f-brand-type-title-2)',
           color: 'var(--f-brand-color-text-default)',
           textAlign: 'center',
           margin: 0,
@@ -180,10 +177,8 @@ export default function Landing() {
           borderRadius: 'var(--f-brand-radius-rounded)',
           background: 'var(--f-brand-color-primary)',
           color: 'var(--f-brand-color-background-light)',
-          fontFamily: 'var(--f-base-type-family-secondary)',
+          font: 'var(--f-brand-type-body-medium)',
           fontSize: '15',
-          fontWeight: '500',
-          lineHeight: '24px',
           border: 'none',
           cursor: 'pointer',
           padding: 'var(--f-brand-space-md) var(--f-brand-space-xl)',
