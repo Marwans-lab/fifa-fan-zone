@@ -60,6 +60,17 @@
   --c-lt-overlay-border: rgba(255,255,255,0.20);
   --c-lt-shadow-lg: 0 8px 32px rgba(31,33,43,0.12), 0 2px 8px rgba(31,33,43,0.08);
 
+  /* ─── Interaction tints (no direct FDS equivalent) ────────────────────── */
+  --c-brand-tint-6:    rgba(142, 33, 87, 0.06);
+  --c-brand-tint-12:   rgba(142, 33, 87, 0.12);
+  --c-brand-tint-20:   rgba(142, 33, 87, 0.20);
+  --c-brand-tint-30:   rgba(142, 33, 87, 0.30);
+  --c-dark-tint-6:     rgba(31, 33, 43, 0.06);
+  --c-white-92:        rgba(255, 255, 255, 0.92);
+  --c-brand-selection:  rgba(142, 33, 87, 0.20);
+  --c-brand-focus-ring: rgba(142, 33, 87, 0.16);
+  --c-lt-correct-border: rgba(50, 130, 86, 0.20);
+
   /* ─── Glass / elevation (app-specific dark-theme) ──────────────────────── */
   --glass-bg:     rgba(255,255,255,0.10);
   --glass-border: rgba(255,255,255,0.18);

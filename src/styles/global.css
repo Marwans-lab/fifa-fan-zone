@@ -149,7 +149,7 @@ h1, h2, h3, h4 {
 }
 
 .f-button--secondary:hover:not(:disabled) {
-  --f-button-bg: rgba(142, 33, 87, 0.06);
+  --f-button-bg: var(--c-brand-tint-6);
 }
 
 .f-button--ghost {
@@ -159,7 +159,7 @@ h1, h2, h3, h4 {
 }
 
 .f-button--ghost:hover:not(:disabled) {
-  --f-button-bg: rgba(31, 33, 43, 0.06);
+  --f-button-bg: var(--c-dark-tint-6);
 }
 
 .f-button--white-outlined {
@@ -169,7 +169,7 @@ h1, h2, h3, h4 {
 }
 
 .f-button--white-outlined:hover:not(:disabled) {
-  --f-button-bg: rgba(255, 255, 255, 0.12);
+  --f-button-bg: var(--c-surface-raise);
 }
 
 .f-button--white-filled {
@@ -178,7 +178,7 @@ h1, h2, h3, h4 {
 }
 
 .f-button--white-filled:hover:not(:disabled) {
-  --f-button-bg: rgba(255, 255, 255, 0.92);
+  --f-button-bg: var(--c-white-92);
 }
 
 /* ── Size modifiers ──────────────────────────────────────────────────────── */
@@ -251,7 +251,7 @@ h1, h2, h3, h4 {
   --f-button-text: var(--f-brand-color-text-inverse, #FFFFFF);
 }
 .btn-primary:hover:not(:disabled) {
-  --f-button-bg: var(--f-brand-color-primary-hover, #7A1C4B);
+  --f-button-bg: var(--f-brand-color-background-primary-hover, #5C0931);
 }
 .btn-secondary {
   --f-button-bg: transparent;
@@ -259,7 +259,7 @@ h1, h2, h3, h4 {
   --f-button-border: 1px solid var(--f-brand-color-primary, #8E2157);
 }
 .btn-secondary:hover:not(:disabled) {
-  --f-button-bg: rgba(142, 33, 87, 0.06);
+  --f-button-bg: var(--c-brand-tint-6);
 }
 .btn-ghost {
   --f-button-bg: transparent;
@@ -267,7 +267,7 @@ h1, h2, h3, h4 {
   --f-button-border: none;
 }
 .btn-ghost:hover:not(:disabled) {
-  --f-button-bg: rgba(31, 33, 43, 0.06);
+  --f-button-bg: var(--c-dark-tint-6);
 }
 
 /* ─── Icon button ────────────────────────────────────────────────────────── */
@@ -504,7 +504,7 @@ a:focus-visible {
 
 /* ─── Selection ──────────────────────────────────────────────────────────── */
 ::selection {
-  background: rgba(142, 33, 87, 0.20);
+  background: var(--c-brand-selection);
   color: var(--f-brand-color-text-default, #1F212B);
 }
 
