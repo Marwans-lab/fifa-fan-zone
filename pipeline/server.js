@@ -694,6 +694,31 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // Manual trigger: POST /trigger/:identifier (e.g. /trigger/MAR-117)
+  // Bypasses the serialization gate — use when an issue is stuck in Todo.
+  if (req.method === "POST" && req.url.startsWith("/trigger/")) {
+    const identifier = req.url.slice("/trigger/".length);
+    try {
+      // Resolve identifier → internal UUID
+      const d = (await linearGQL(
+        `query($id: String!) { issue(id: $id) { id identifier title } }`,
+        { id: identifier }
+      )).data?.issue;
+      if (!d) throw new Error(`Issue ${identifier} not found`);
+      console.log(`[Pipeline] Manual trigger: ${d.identifier} (${d.id})`);
+      // Clear any cooldown so the trigger isn't skipped
+      recentTriggers.delete(d.id);
+      const ok = await triggerCyrus(d.id, d.identifier);
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ triggered: ok, issue: d.identifier }));
+    } catch (e) {
+      console.error(`[Pipeline] Manual trigger failed: ${e.message}`);
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
+
   // Collect body
   let body = "";
   req.on("data", (c) => (body += c));
