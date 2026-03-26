@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Screen from '../components/Screen'
 import FanCard from '../components/FanCard'
 import { track } from '../lib/analytics'
-import { useStore, type FlowId } from '../store/useStore'
+import { useStore, FLOW_IDS, type FlowId } from '../store/useStore'
 import { renderCardToBlob, buildShareText } from '../lib/cardExport'
 import { QUIZZES } from '../data/quizzes'
 import { DRAG_DROP_QUIZZES } from '../data/dragDropQuizzes'
@@ -12,25 +12,56 @@ import { SWIPE_QUIZZES } from '../data/swipeQuizzes'
 import { RANKING_QUIZZES } from '../data/rankingQuizzes'
 import lockIcon    from '../assets/icons/Lock-white.svg'
 import chevRight   from '../assets/icons/Chevron-right-white.svg'
-import tickBlack   from '../assets/icons/Tick-black.svg'
-import targetIcon  from '../assets/icons/Target-white.svg'
-import fireIcon    from '../assets/icons/Fire-white.svg'
-import trophyIcon  from '../assets/icons/Trophy-white.svg'
-import qrIcon      from '../assets/icons/qr-logo.svg'
+import tickBlack       from '../assets/icons/Tick-black.svg'
+import tickWhite       from '../assets/icons/Tick-white.svg'
+import globeIcon       from '../assets/icons/globe-white.svg'
+import stadiumIcon     from '../assets/icons/stadium-white.svg'
+import historyIcon     from '../assets/icons/history-white.svg'
+import refereeIcon     from '../assets/icons/referee-white.svg'
+import rankingIcon     from '../assets/icons/ranking-white.svg'
+import cardsIcon       from '../assets/icons/cards-white.svg'
+import legendsIcon     from '../assets/icons/legends-white.svg'
+import qrIconDark      from '../assets/icons/qr-logo-dark.svg'
+import globeIconDark   from '../assets/icons/globe-dark.svg'
+import stadiumIconDark from '../assets/icons/stadium-dark.svg'
+import historyIconDark from '../assets/icons/history-dark.svg'
+import refereeIconDark from '../assets/icons/referee-dark.svg'
+import rankingIconDark from '../assets/icons/ranking-dark.svg'
+
+const QUIZ_ICONS: Record<string, string> = {
+  'host-city-hunt':         stadiumIcon,
+  'world-cup-specials':     rankingIcon,
+  'stadium-showdown':       stadiumIcon,
+  'football-legends':       legendsIcon,
+  'tournament-history':     historyIcon,
+  'the-referee':            refereeIcon,
+  'match-host-cities':      globeIcon,
+  'stadium-spotter':        stadiumIcon,
+  'swipe-world-cup-facts':  rankingIcon,
+  'the-historian':          historyIcon,
+  'card-match':             cardsIcon,
+  'the-retrospective':      rankingIcon,
+  'the-connector':          globeIcon,
+  'the-architect':          stadiumIcon,
+}
 
 // ─── Milestone config ─────────────────────────────────────────────────────────
 const MILESTONES = [
-  { iconSrc: qrIcon,     label: 'Fan card',   key: 'card'     },
-  { iconSrc: targetIcon, label: '1st quiz',    key: 'quiz1'    },
-  { iconSrc: fireIcon,   label: '3 quizzes',   key: 'quiz3'    },
-  { iconSrc: trophyIcon, label: 'Champion',    key: 'champion' },
+  { iconSrc: qrIconDark,      label: 'Fan card',       key: 'card'              },
+  { iconSrc: globeIconDark,   label: 'Connector',      key: 'the-connector'     },
+  { iconSrc: stadiumIconDark, label: 'Architect',       key: 'the-architect'     },
+  { iconSrc: historyIconDark, label: 'Historian',       key: 'the-historian'     },
+  { iconSrc: refereeIconDark, label: 'Referee',         key: 'the-referee'       },
+  { iconSrc: rankingIconDark, label: 'Retrospective',   key: 'the-retrospective' },
 ] as const
+
+const TOTAL_MILESTONES = MILESTONES.length
 
 function statusLabel(done: number): string {
   if (done === 0) return 'New arrival'
   if (done === 1) return 'Rising fan'
-  if (done === 2) return 'Quiz taker'
-  if (done === 3) return 'Top fan'
+  if (done <= 3)  return 'Quiz taker'
+  if (done <= 5)  return 'Top fan'
   return 'Quiz champion'
 }
 
@@ -47,7 +78,7 @@ function JourneyStep({
   isCurrent?: boolean
 }) {
   const nodeStyle: React.CSSProperties = {
-    width: 56, height: 56, borderRadius: '50%',
+    width: 44, height: 44, borderRadius: '50%',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
     transition: 'all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
@@ -69,8 +100,8 @@ function JourneyStep({
   return (
     <li style={{
       position: 'relative', zIndex: 10,
-      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--f-brand-space-sm)',
-      width: 56, flexShrink: 0,
+      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--f-brand-space-xs)',
+      width: 44, flexShrink: 0,
     }}>
       <div style={nodeStyle}>
         {isCurrent && (
@@ -83,14 +114,14 @@ function JourneyStep({
           />
         )}
         {isCompleted ? (
-          <img src={tickBlack} width={24} height={24} alt="" style={{ position: 'relative', zIndex: 10, filter: 'invert(1)' }} />
+          <img src={tickWhite} width={24} height={24} alt="" style={{ position: 'relative', zIndex: 10 }} />
         ) : (
-          <img src={iconSrc} width={24} height={24} alt="" style={{ opacity: isCurrent ? 1 : 0.3, filter: 'invert(1)' }} />
+          <img src={iconSrc} width={24} height={24} alt="" style={{ opacity: isCurrent ? 1 : 0.3 }} />
         )}
       </div>
       <span style={{
         fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '400',
-        fontSize: 12, letterSpacing: '-0.02em', textAlign: 'center',
+        fontSize: 10, letterSpacing: '-0.02em', textAlign: 'center',
         whiteSpace: 'nowrap', transition: 'color var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
         color: isCompleted || isCurrent ? 'var(--f-brand-color-text-default)' : 'var(--f-brand-color-text-subtle)',
       }}>
@@ -103,18 +134,16 @@ function JourneyStep({
 // ─── Journey Card ─────────────────────────────────────────────────────────────
 function JourneyCard({
   completedAt,
-  quizCount,
+  completedFlows,
   onStartQuiz,
 }: {
   completedAt: string | null
-  quizCount: number
+  completedFlows: FlowId[]
   onStartQuiz: () => void
 }) {
   const achieved = [
     completedAt !== null,
-    quizCount >= 1,
-    quizCount >= 3,
-    quizCount >= 5,
+    ...FLOW_IDS.map(id => completedFlows.includes(id)),
   ]
   const doneCount = achieved.filter(Boolean).length
   const status = statusLabel(doneCount)
@@ -164,7 +193,7 @@ function JourneyCard({
             fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '400',
             fontSize: 12, color: 'var(--f-brand-color-text-default)', lineHeight: 1,
           }}>
-            Step {Math.min(doneCount + 1, 4)}/4
+            Step {Math.min(doneCount + 1, TOTAL_MILESTONES)}/{TOTAL_MILESTONES}
           </span>
         </div>
       </div>
@@ -193,7 +222,7 @@ function JourneyCard({
                     : 'var(--f-brand-color-border-default)'                             // inactive
                   return (
                     <div style={{
-                      flex: 1, height: 2, marginTop: 27,
+                      flex: 1, height: 2, marginTop: 21,
                       background: lineBg,
                       transition: 'background var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
                     }} />
@@ -345,7 +374,7 @@ function QuizCard({
             ) : done ? (
               <img src={tickBlack} width={24} height={24} alt="" />
             ) : (
-              <span style={{ fontSize: 30 }}>{quiz.emoji}</span>
+              <img src={QUIZ_ICONS[quiz.id] ?? rankingIcon} width={28} height={28} alt="" style={{ opacity: 0.85 }} />
             )}
           </div>
         </div>
@@ -471,7 +500,7 @@ function DragDropQuizCard({
             ) : done ? (
               <img src={tickBlack} width={24} height={24} alt="" />
             ) : (
-              <span style={{ fontSize: '28' }}>{ddQuiz.emoji}</span>
+              <img src={QUIZ_ICONS[ddQuiz.id] ?? rankingIcon} width={28} height={28} alt="" style={{ opacity: 0.85 }} />
             )}
           </div>
         </div>
@@ -526,7 +555,7 @@ function DragDropQuizCard({
 
 // ─── Generic quiz card (image, swipe, card-match) ───────────────────────────
 function ExtraQuizCard({
-  emoji,
+  iconSrc,
   title,
   subtitle,
   result,
@@ -534,7 +563,7 @@ function ExtraQuizCard({
   lockMessage,
   onStart,
 }: {
-  emoji: string
+  iconSrc: string
   title: string
   subtitle: string
   result: { score: number; total: number } | undefined
@@ -599,7 +628,7 @@ function ExtraQuizCard({
             ) : done ? (
               <img src={tickBlack} width={24} height={24} alt="" />
             ) : (
-              <span style={{ fontSize: '28' }}>{emoji}</span>
+              <img src={iconSrc} width={28} height={28} alt="" style={{ opacity: 0.85 }} />
             )}
           </div>
         </div>
@@ -769,7 +798,7 @@ export default function Card() {
           {/* ── Journey ───────────────────────────────────────── */}
           <JourneyCard
             completedAt={state.fanCard.completedAt}
-            quizCount={Object.keys(state.quizResults).length}
+            completedFlows={state.completedFlows}
             onStartQuiz={() => {
               track('card_start_quiz_tapped')
               quizRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -816,7 +845,7 @@ export default function Card() {
               {IMAGE_QUIZZES.map(iq => (
                 <ExtraQuizCard
                   key={iq.id}
-                  emoji={iq.emoji}
+                  iconSrc={QUIZ_ICONS[iq.id] ?? stadiumIcon}
                   title={iq.title}
                   subtitle={`${iq.questions.length} questions · Image Quiz`}
                   result={state.quizResults[iq.id]}
@@ -829,7 +858,7 @@ export default function Card() {
                 return (
                   <ExtraQuizCard
                     key={sq.id}
-                    emoji={sq.emoji}
+                    iconSrc={QUIZ_ICONS[sq.id] ?? historyIcon}
                     title={sq.title}
                     subtitle={`${sq.statements.length} statements · Swipe`}
                     result={state.quizResults[sq.id]}
@@ -840,7 +869,7 @@ export default function Card() {
                 )
               })}
               <ExtraQuizCard
-                emoji="✈️"
+                iconSrc={QUIZ_ICONS['the-connector'] ?? globeIcon}
                 title="The Connector"
                 subtitle="5 rounds · Card Match"
                 result={state.quizResults['the-connector'] ? { score: state.quizResults['the-connector'].score, total: state.quizResults['the-connector'].total } : undefined}
@@ -849,7 +878,7 @@ export default function Card() {
                 onStart={() => handleStartCardMatch('the-connector')}
               />
               <ExtraQuizCard
-                emoji="🏟"
+                iconSrc={QUIZ_ICONS['the-architect'] ?? stadiumIcon}
                 title="The Architect"
                 subtitle="5 rounds · Card Match"
                 result={state.quizResults['the-architect'] ? { score: state.quizResults['the-architect'].score, total: state.quizResults['the-architect'].total } : undefined}
@@ -863,7 +892,7 @@ export default function Card() {
                 return (
                   <ExtraQuizCard
                     key={rq.id}
-                    emoji={rq.emoji}
+                    iconSrc={QUIZ_ICONS[rq.id] ?? rankingIcon}
                     title={rq.title}
                     subtitle={`${rq.questions.length} questions · Ranking`}
                     result={rqResult ? { score: rqResult.score, total: rqResult.total } : undefined}
