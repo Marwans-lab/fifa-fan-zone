@@ -563,7 +563,7 @@ export default function Card() {
               </h2>
               <p style={{
                 font: 'var(--f-brand-type-subheading)',
-                color: 'rgba(255,255,255,0.5)', marginTop: 'var(--f-brand-space-2xs)',
+                color: 'var(--c-text-2)', marginTop: 'var(--f-brand-space-2xs)',
               }}>
                 Complete quizzes to climb the leaderboard
               </p>

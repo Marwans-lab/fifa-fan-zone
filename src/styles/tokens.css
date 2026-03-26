@@ -17,7 +17,10 @@
   --c-border-brand:  rgba(200,16,46,0.32);
 
   --c-text-1: rgba(255,255,255,0.94);
+  --c-text-hi: rgba(255,255,255,0.88);
+  --c-text-mid: rgba(255,255,255,0.65);
   --c-text-2: rgba(255,255,255,0.48);
+  --c-text-dim: rgba(255,255,255,0.35);
   --c-text-3: rgba(255,255,255,0.24);
 
   --c-accent:      #00d4aa;

@@ -78,7 +78,7 @@ function FanCardStack() {
               }}>
                 Your fan card
               </div>
-              <div style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-2xs)', color: 'rgba(255,255,255,0.65)', letterSpacing: 'var(--tracking-spaced)' }}>
+              <div style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-2xs)', color: 'var(--c-text-mid)', letterSpacing: 'var(--tracking-spaced)' }}>
                 Collector edition
               </div>
             </div>
@@ -102,7 +102,7 @@ function FanCardStack() {
             {/* Team name */}
             <div style={{
               font: 'var(--f-brand-type-headline-medium)',
-              color: 'rgba(255,255,255,0.88)', letterSpacing: 'var(--tracking-label)', fontStyle: 'italic',
+              color: 'var(--c-text-hi)', letterSpacing: 'var(--tracking-label)', fontStyle: 'italic',
               display: 'flex', alignItems: 'center', gap: 'var(--sp-2)',
               position: 'relative', zIndex: 1,
             }}>
