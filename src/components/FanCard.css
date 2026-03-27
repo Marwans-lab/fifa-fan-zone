@@ -271,23 +271,6 @@
   text-transform: uppercase;
 }
 
-/* ─── Back face photo ───────────────────────────────────────────────────────── */
-.f-fan-card__back-photo-section {
-  display: flex;
-  justify-content: center;
-  margin-bottom: var(--f-fan-card-gap);
-}
-
-.f-fan-card__back-photo-section .f-fan-card__photo {
-  width: 100px;
-  height: 100px;
-}
-
-.f-fan-card__back-photo-section .f-fan-card__photo-placeholder {
-  width: 100px;
-  height: 100px;
-}
-
 /* ─── Profile Q&A rows ───────────────────────────────────────────────────────── */
 .f-fan-card__profile {
   display: flex;
