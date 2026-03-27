@@ -231,32 +231,6 @@ function JourneyCard({
         </ol>
       </nav>
 
-      {/* Quiz progress */}
-      <div className="card-journey-progress" style={{
-        display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)',
-        marginTop: 'var(--f-brand-space-lg)',
-      }}>
-        <div className="card-journey-progress-track" style={{
-          flex: 1, height: 4, borderRadius: 2,
-          background: 'rgba(0,0,0,0.06)', overflow: 'hidden',
-        }}>
-          <div className="card-journey-progress-fill" style={{
-            width: totalQuizzes > 0 ? `${(quizCount / totalQuizzes) * 100}%` : '0%',
-            height: '100%', borderRadius: 2,
-            background: allComplete
-              ? 'var(--f-brand-color-accent)'
-              : 'var(--f-brand-color-text-default)',
-            transition: 'width var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
-          }} />
-        </div>
-        <span className="card-journey-progress-label" style={{
-          font: 'var(--f-brand-type-caption)',
-          color: 'var(--f-brand-color-text-muted)', whiteSpace: 'nowrap',
-        }}>
-          {quizCount}/{totalQuizzes} quizzes
-        </span>
-      </div>
-
       {/* Start Quiz CTA */}
       <button className="card-journey-cta"
         data-ui="start-quiz-btn"
