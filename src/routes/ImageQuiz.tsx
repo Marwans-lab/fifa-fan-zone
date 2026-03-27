@@ -45,7 +45,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
   const offset = circumference * (1 - timeLeft / QUESTION_TIME)
   const cx = size / 2
   return (
-    <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
+    <div className="image-quiz-timer" style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
       <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }} aria-hidden="true">
         <circle cx={cx} cy={cx} r={R} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={3} />
         <circle
@@ -59,7 +59,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
           style={{ transition: 'stroke-dashoffset 1s linear', color: 'var(--f-brand-color-text-light)' }}
         />
       </svg>
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 500, fontFamily: 'var(--f-base-type-family-secondary)', color: 'var(--f-brand-color-text-light)' }}>
+      <div className="image-quiz-timer-label" style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 500, fontFamily: 'var(--f-base-type-family-secondary)', color: 'var(--f-brand-color-text-light)' }}>
         {timeLeft}
       </div>
     </div>
@@ -118,6 +118,7 @@ function ImageOptionCard({
     >
       {/* Image */}
       <img
+        className="image-option-img"
         src={option.imageUrl}
         alt={option.label}
         onLoad={() => setImgLoaded(true)}
@@ -135,6 +136,7 @@ function ImageOptionCard({
       {/* Loading placeholder */}
       {!imgLoaded && (
         <div
+          className="image-option-loading"
           style={{
             position: 'absolute',
             inset: 0,
@@ -145,6 +147,7 @@ function ImageOptionCard({
           }}
         >
           <div
+            className="image-option-spinner"
             style={{
               width: 24,
               height: 24,
@@ -160,6 +163,7 @@ function ImageOptionCard({
       {/* Feedback overlay — green for correct, red for wrong */}
       {showOverlay && (
         <div
+          className="image-option-feedback"
           style={{
             position: 'absolute',
             inset: 0,
@@ -177,6 +181,7 @@ function ImageOptionCard({
 
       {/* Label at bottom */}
       <div
+        className="image-option-label-container"
         style={{
           position: 'absolute',
           bottom: 0,
@@ -188,6 +193,7 @@ function ImageOptionCard({
         }}
       >
         <span
+          className="image-option-label"
           style={{
             fontSize: '13',
             fontWeight: '500',
@@ -233,7 +239,7 @@ function ImageQuestionScreen({
   return (
     <Screen>
       <div
-        className="f-page-enter"
+        className="image-quiz-screen f-page-enter"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -244,13 +250,14 @@ function ImageQuestionScreen({
         }}
       >
         {/* ── Top bar ─────────────────────────────────── */}
-        <div style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
+        <div className="image-quiz-top-bar" style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+          <div className="image-quiz-top-bar-inner" style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
             <button onClick={onBack} className="f-button f-button--ghost">
               <img src={chevLeft} width={24} height={24} alt="Back" />
             </button>
-            <div style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
+            <div className="image-quiz-progress-track" style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
               <div
+                className="image-quiz-progress-fill"
                 style={{
                   height: '100%',
                   width: `${((qIndex + (revealed ? 1 : 0)) / total) * 100}%`,
@@ -260,21 +267,22 @@ function ImageQuestionScreen({
                 }}
               />
             </div>
-            <span style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
+            <span className="image-quiz-counter" style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
               {qIndex + 1}/{total}
             </span>
           </div>
         </div>
 
         {/* ── Animated content ─────────────────────────── */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
+        <div className="image-quiz-content" style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
           {/* Timer */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+          <div className="image-quiz-timer-wrapper" style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--f-brand-space-md)', flexShrink: 0 }}>
             <CircularTimer timeLeft={timeLeft} size={64} />
           </div>
 
           {/* Question text */}
           <div
+            className="image-quiz-question"
             style={{
               padding: '0 var(--f-brand-space-lg)',
               fontFamily: 'var(--f-base-type-family-primary)',
@@ -293,6 +301,7 @@ function ImageQuestionScreen({
 
           {/* 2×2 Image grid */}
           <div
+            className="image-quiz-grid"
             style={{
               padding: '0 var(--f-brand-space-md)',
               display: 'grid',
@@ -315,9 +324,10 @@ function ImageQuestionScreen({
         </div>
 
         {/* ── Fixed bottom: feedback + Next CTA ────────── */}
-        <div style={{ padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
+        <div className="image-quiz-bottom" style={{ padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
           {revealed && (
             <div
+              className="image-quiz-feedback"
               style={{
                 textAlign: 'center',
                 fontSize: '13',

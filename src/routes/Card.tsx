@@ -62,15 +62,15 @@ function JourneyStep({
   }
 
   return (
-    <li style={{
+    <li className="journey-step" style={{
       position: 'relative', zIndex: 10,
       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--f-brand-space-sm)',
       width: 56, flexShrink: 0,
     }}>
-      <div style={nodeStyle}>
+      <div className="journey-step-node" style={nodeStyle}>
         {isCurrent && (
           <div
-            className="animate-ping-slow"
+            className="journey-step-ping animate-ping-slow"
             style={{
               position: 'absolute', inset: 0, borderRadius: '50%',
               background: 'rgba(0,0,0,0.1)', pointerEvents: 'none',
@@ -78,12 +78,12 @@ function JourneyStep({
           />
         )}
         {isCompleted ? (
-          <img src={tickBlack} width={24} height={24} alt="" style={{ position: 'relative', zIndex: 10, filter: 'invert(1)' }} />
+          <img className="journey-step-completed-icon" src={tickBlack} width={24} height={24} alt="" style={{ position: 'relative', zIndex: 10, filter: 'invert(1)' }} />
         ) : (
-          <img src={iconSrc} width={24} height={24} alt="" style={{ opacity: isCurrent ? 1 : 0.3, filter: 'invert(1)' }} />
+          <img className="journey-step-icon" src={iconSrc} width={24} height={24} alt="" style={{ opacity: isCurrent ? 1 : 0.3, filter: 'invert(1)' }} />
         )}
       </div>
-      <span style={{
+      <span className="journey-step-label" style={{
         fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '400',
         fontSize: 12, letterSpacing: '-0.02em', textAlign: 'center',
         whiteSpace: 'nowrap', transition: 'color var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
@@ -132,30 +132,30 @@ function JourneyCard({
       }}
     >
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--f-brand-space-lg)' }}>
-        <div>
-          <h2 style={{
+      <div className="journey-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--f-brand-space-lg)' }}>
+        <div className="journey-card-header-left">
+          <h2 className="journey-card-title" style={{
             fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '500',
             fontSize: 12, letterSpacing: '0.05em',
             color: 'var(--f-brand-color-text-muted)', marginBottom: 'var(--f-brand-space-2xs)',
           }}>
             Your journey
           </h2>
-          <p style={{
+          <p className="journey-card-status" style={{
             fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '500',
             fontSize: 18, letterSpacing: '-0.02em', color: 'var(--f-brand-color-text-default)',
           }}>
             {status}
           </p>
         </div>
-        <div style={{
+        <div className="journey-card-step-badge" style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: '10px 16px',
           background: 'rgba(0,0,0,0.04)',
           borderRadius: 9999,
           border: '1px solid var(--f-brand-color-border-default)',
         }}>
-          <span style={{
+          <span className="journey-card-step-label" style={{
             fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '400',
             fontSize: 12, color: 'var(--f-brand-color-text-default)', lineHeight: 1,
           }}>
@@ -166,13 +166,13 @@ function JourneyCard({
 
       {/* Steps track */}
       <nav aria-label="Journey Steps">
-        <ol style={{ display: 'flex', alignItems: 'flex-start', width: '100%', position: 'relative', listStyle: 'none' }}>
+        <ol className="journey-steps-list" style={{ display: 'flex', alignItems: 'flex-start', width: '100%', position: 'relative', listStyle: 'none' }}>
           {MILESTONES.map((m, i) => {
             const done = achieved[i]
             const isCurrent = currentIdx === i
             const isLast = i === MILESTONES.length - 1
             return (
-              <div key={m.key} style={{ display: 'contents' }}>
+              <div key={m.key} className="journey-step-wrapper" style={{ display: 'contents' }}>
                 <JourneyStep
                   iconSrc={m.iconSrc}
                   label={m.label}
@@ -187,7 +187,7 @@ function JourneyCard({
                     ? 'linear-gradient(90deg, var(--f-brand-color-text-default), var(--f-brand-color-border-default))' // half active
                     : 'var(--f-brand-color-border-default)'                             // inactive
                   return (
-                    <div style={{
+                    <div className="journey-step-connector" style={{
                       flex: 1, height: 2, marginTop: 27,
                       background: lineBg,
                       transition: 'background var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
@@ -202,6 +202,7 @@ function JourneyCard({
 
       {/* Start Quiz CTA */}
       <button
+        className="journey-card-start-btn"
         onClick={onStartQuiz}
         style={{
           width: '100%', height: 48,
@@ -241,18 +242,21 @@ function ProgressRing({
   const offset = circ * (1 - progress)
   return (
     <svg
+      className="progress-ring-svg"
       width={radius * 2}
       height={radius * 2}
       style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }}
     >
       {/* background track */}
       <circle
+        className="progress-ring-track"
         cx={radius} cy={radius} r={norm}
         fill="none" stroke="var(--f-brand-color-border-default)" strokeWidth={stroke}
       />
       {/* progress arc */}
       {progress > 0 && (
         <circle
+          className="progress-ring-arc"
           cx={radius} cy={radius} r={norm}
           fill="none" stroke={color} strokeWidth={stroke}
           strokeDasharray={circ} strokeDashoffset={offset}
@@ -310,8 +314,8 @@ function ExtraQuizCard({
         WebkitTapHighlightColor: 'transparent',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-md)' }}>
-        <div style={{
+      <div className="extra-quiz-card-left" style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-md)' }}>
+        <div className="extra-quiz-card-ring-wrapper" style={{
           width: RING_RADIUS * 2, height: RING_RADIUS * 2,
           position: 'relative', flexShrink: 0,
         }}>
@@ -321,7 +325,7 @@ function ExtraQuizCard({
             progress={done ? 1 : 0}
             color={done ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-border-default)'}
           />
-          <div style={{
+          <div className="extra-quiz-card-icon-inner" style={{
             position: 'absolute',
             top: RING_STROKE + 2, left: RING_STROKE + 2,
             width: (RING_RADIUS - RING_STROKE - 2) * 2,
@@ -336,31 +340,31 @@ function ExtraQuizCard({
             boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.08)',
           }}>
             {locked ? (
-              <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4, filter: 'invert(1)' }} />
+              <img className="extra-quiz-card-lock-icon" src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4, filter: 'invert(1)' }} />
             ) : done ? (
-              <img src={tickBlack} width={24} height={24} alt="" />
+              <img className="extra-quiz-card-tick-icon" src={tickBlack} width={24} height={24} alt="" />
             ) : (
-              <span style={{ fontSize: '28' }}>{emoji}</span>
+              <span className="extra-quiz-card-emoji" style={{ fontSize: '28' }}>{emoji}</span>
             )}
           </div>
         </div>
-        <div>
-          <h3 style={{
+        <div className="extra-quiz-card-text">
+          <h3 className="extra-quiz-card-title" style={{
             fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '500',
             fontSize: '18',
             color: locked ? 'var(--f-brand-color-text-subtle)' : 'var(--f-brand-color-text-default)',
           }}>
             {title}
           </h3>
-          <p style={{ fontSize: '13', color: 'var(--f-brand-color-text-muted)', marginTop: 'var(--f-brand-space-xs)' }}>
+          <p className="extra-quiz-card-subtitle" style={{ fontSize: '13', color: 'var(--f-brand-color-text-muted)', marginTop: 'var(--f-brand-space-xs)' }}>
             {done ? (
-              <span style={{ color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>
+              <span className="extra-quiz-card-completed-text" style={{ color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>
                 Completed · {result.score}/{result.total} correct
               </span>
             ) : locked ? (
               lockMessage ?? 'Complete your fan card to unlock'
             ) : (
-              <span style={{ color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>
+              <span className="extra-quiz-card-start-text" style={{ color: 'var(--f-brand-color-text-default)', fontWeight: '500' }}>
                 {subtitle}
               </span>
             )}
@@ -368,7 +372,7 @@ function ExtraQuizCard({
         </div>
       </div>
       {!locked && !done && (
-        <div style={{
+        <div className="extra-quiz-card-chevron-wrapper" style={{
           width: 36, height: 36, borderRadius: '50%',
           background: 'rgba(0,0,0,0.04)', border: '1px solid var(--f-brand-color-border-default)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -376,6 +380,7 @@ function ExtraQuizCard({
         }}>
           {loading ? (
             <div
+              className="extra-quiz-card-spinner"
               aria-label="Loading"
               style={{
                 width: 20, height: 20, borderRadius: '50%',
@@ -385,7 +390,7 @@ function ExtraQuizCard({
               }}
             />
           ) : (
-            <img src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5, filter: 'invert(1)' }} />
+            <img className="extra-quiz-card-chevron-icon" src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.5, filter: 'invert(1)' }} />
           )}
         </div>
       )}
@@ -488,7 +493,7 @@ export default function Card() {
     <Screen>
       {/* ── Content ────────────────────────────────────────── */}
       <div
-        className="f-page-enter hide-scrollbar"
+        className="card-page f-page-enter hide-scrollbar"
         style={{
           flex: 1, position: 'relative',
           padding: 'var(--f-brand-space-md) var(--f-brand-space-lg)',
@@ -496,7 +501,7 @@ export default function Card() {
         }}
       >
           {/* ── Fan Hub Header ─────────────────────────────────── */}
-          <header style={{
+          <header className="card-hub-header" style={{
             textAlign: 'center',
             paddingTop: 'var(--sp-6)',
             paddingBottom: 'var(--sp-6)',
@@ -504,6 +509,7 @@ export default function Card() {
           }}>
             {/* Ambient brand glow */}
             <div
+              className="card-hub-glow"
               aria-hidden="true"
               style={{
                 position: 'absolute',
@@ -513,7 +519,7 @@ export default function Card() {
                 pointerEvents: 'none',
               }}
             />
-            <h1 style={{
+            <h1 className="card-hub-title" style={{
               fontFamily: 'var(--font-display)',
               fontWeight: 'var(--weight-thin)',
               fontStyle: 'italic',
@@ -525,7 +531,7 @@ export default function Card() {
             }}>
               FIFA Fan Zone
             </h1>
-            <p style={{
+            <p className="card-hub-subtitle" style={{
               fontFamily: 'var(--font-body)',
               fontWeight: 'var(--weight-reg)',
               fontSize: 'var(--text-sm)',
@@ -538,7 +544,7 @@ export default function Card() {
           </header>
 
           {/* ── Fan Card ──────────────────────────────────────── */}
-          <section aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 'var(--f-brand-space-md)' }}>
+          <section className="card-fan-card-section" aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 'var(--f-brand-space-md)' }}>
             <FanCard
               fanCard={state.fanCard}
               onSave={handleSave}
@@ -558,15 +564,15 @@ export default function Card() {
           />
 
           {/* ── Quizzes ───────────────────────────────────────── */}
-          <section ref={quizRef} style={{ paddingBottom: 'var(--f-brand-space-3xl)' }}>
-            <div style={{ marginBottom: 'var(--f-brand-space-md)' }}>
-              <h2 style={{
+          <section className="card-quizzes-section" ref={quizRef} style={{ paddingBottom: 'var(--f-brand-space-3xl)' }}>
+            <div className="card-quizzes-header" style={{ marginBottom: 'var(--f-brand-space-md)' }}>
+              <h2 className="card-quizzes-title" style={{
                 fontFamily: 'var(--f-base-type-family-primary)', fontWeight: '100',
                 fontSize: 28, letterSpacing: '-0.04em', color: 'var(--f-brand-color-text-light)',
               }}>
                 Earn Avios
               </h2>
-              <p style={{
+              <p className="card-quizzes-subtitle" style={{
                 fontFamily: 'var(--f-base-type-family-secondary)', fontWeight: '400',
                 color: 'rgba(255,255,255,0.5)', fontSize: 14, marginTop: 'var(--f-brand-space-2xs)',
               }}>
@@ -574,7 +580,7 @@ export default function Card() {
               </p>
             </div>
 
-            <div className="f-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-md)' }}>
+            <div className="card-quizzes-list f-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-md)' }}>
               {FLOWS.map(flow => {
                 const result = state.quizResults[flow.id]
                 const locked = !cardComplete || !isFlowUnlocked(flow.id)

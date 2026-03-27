@@ -114,6 +114,7 @@ function OptionButton({
     >
       {/* Percentage fill bar — always rendered so CSS transition fires left→right */}
       <div
+        className="quiz-option-fill-bar"
         style={{
           position: 'absolute',
           inset: 0,
@@ -131,6 +132,7 @@ function OptionButton({
 
       {/* Letter badge */}
       <div
+        className="quiz-option-letter-badge"
         style={{
           width: 28,
           height: 28,
@@ -152,6 +154,7 @@ function OptionButton({
 
       {/* Option label */}
       <span
+        className="quiz-option-label"
         style={{
           flex: 1,
           fontSize: 15,
@@ -167,6 +170,7 @@ function OptionButton({
       {/* Percentage (after reveal) */}
       {revealed && (
         <span
+          className="quiz-option-percentage"
           style={{
             fontSize: 12,
             fontWeight: 500,
@@ -189,8 +193,8 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
   const offset = circumference * (1 - timeLeft / QUESTION_TIME)
   const cx = size / 2
   return (
-    <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
-      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }} aria-hidden="true">
+    <div className="quiz-timer" style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
+      <svg className="quiz-timer-svg" width={size} height={size} style={{ transform: 'rotate(-90deg)' }} aria-hidden="true">
         <circle cx={cx} cy={cx} r={R} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={3} />
         <circle
           cx={cx} cy={cx} r={R}
@@ -203,7 +207,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
           style={{ transition: 'stroke-dashoffset 1s linear', color: 'var(--f-brand-color-text-light)' }}
         />
       </svg>
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 500, fontFamily: 'var(--f-base-type-family-secondary)', color: 'var(--f-brand-color-text-light)' }}>
+      <div className="quiz-timer-count" style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 500, fontFamily: 'var(--f-base-type-family-secondary)', color: 'var(--f-brand-color-text-light)' }}>
         {timeLeft}
       </div>
     </div>
@@ -237,7 +241,7 @@ function QuestionScreen({
   return (
     <Screen>
       <div
-        className="f-page-enter"
+        className="quiz-question-screen f-page-enter"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -248,11 +252,12 @@ function QuestionScreen({
         }}
       >
         {/* ── Top bar (NOT animated — stays fixed) ─────────────── */}
-        <div style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
+        <div className="quiz-top-bar" style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+          <div className="quiz-top-bar-row" style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
             <button onClick={onBack} className="f-button f-button--ghost"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
-            <div style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
+            <div className="quiz-progress-track" style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
               <div
+                className="quiz-progress-fill"
                 style={{
                   height: '100%',
                   width: `${((qIndex + (revealed ? 1 : 0)) / total) * 100}%`,
@@ -262,16 +267,17 @@ function QuestionScreen({
                 }}
               />
             </div>
-            <span style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
+            <span className="quiz-counter" style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
               {qIndex + 1}/{total}
             </span>
           </div>
         </div>
 
         {/* ── Animated content (header + question + options only) ── */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
+        <div className="quiz-animated-content" style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
           {/* Question image header */}
           <div
+            className="quiz-question-header"
             style={{
               position: 'relative',
               margin: '0 var(--f-brand-space-md)',
@@ -290,7 +296,7 @@ function QuestionScreen({
           >
             {quiz.emoji}
             {/* Depth overlay */}
-            <div style={{
+            <div className="quiz-question-header-overlay" style={{
               position: 'absolute', inset: 0,
               background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 50%, rgba(0,0,0,0.18) 100%)',
               pointerEvents: 'none',
@@ -298,12 +304,13 @@ function QuestionScreen({
           </div>
 
           {/* Timer — between image and question */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+          <div className="quiz-timer-wrapper" style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--f-brand-space-md)', flexShrink: 0 }}>
             <CircularTimer timeLeft={timeLeft} size={64} />
           </div>
 
           {/* Question text */}
           <div
+            className="quiz-question-text"
             style={{
               padding: '0 var(--f-brand-space-lg)',
               fontFamily: 'var(--f-base-type-family-primary)',
@@ -322,6 +329,7 @@ function QuestionScreen({
 
           {/* Options */}
           <div
+            className="quiz-options"
             style={{
               flex: 1,
               padding: '0 var(--f-brand-space-md)',
@@ -347,9 +355,10 @@ function QuestionScreen({
         </div>
 
         {/* ── Fixed bottom: score feedback + Next CTA (no slide) ── */}
-        <div style={{ padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
+        <div className="quiz-bottom-bar" style={{ padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
             {revealed && (
               <div
+                className="quiz-feedback-text"
                 style={{
                   textAlign: 'center',
                   fontSize: '13',

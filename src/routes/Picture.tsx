@@ -25,6 +25,7 @@ function compressDataUrl(source: HTMLVideoElement | HTMLImageElement, flipX = fa
 function SilhouettePlaceholder() {
   return (
     <svg
+      className="picture-silhouette"
       width="180"
       height="220"
       viewBox="0 0 180 220"
@@ -58,6 +59,7 @@ function SilhouettePlaceholder() {
 function ProgressBar({ progress }: { progress: number }) {
   return (
     <div
+      className="progress-bar-track"
       style={{
         flex: 1,
         height: 8,
@@ -67,6 +69,7 @@ function ProgressBar({ progress }: { progress: number }) {
       }}
     >
       <div
+        className="progress-bar-fill"
         style={{
           width: `${progress}%`,
           height: '100%',
@@ -187,7 +190,7 @@ export default function Picture() {
 
   return (
     <div
-      className="f-page-enter"
+      className="picture-page f-page-enter"
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -199,7 +202,7 @@ export default function Picture() {
       }}
     >
       {/* ── Top bar: back button + progress ──────────────────── */}
-      <div style={{
+      <div className="picture-top-bar" style={{
         display: 'flex',
         alignItems: 'center',
         gap: 'var(--f-brand-space-md)',
@@ -207,6 +210,7 @@ export default function Picture() {
         flexShrink: 0,
       }}>
         <button
+          className="picture-back-btn"
           onClick={handleBack}
           aria-label="Go back"
           style={{
@@ -224,6 +228,7 @@ export default function Picture() {
           }}
         >
           <img
+            className="picture-back-icon"
             src={chevLeft}
             width={24}
             height={24}
@@ -236,7 +241,7 @@ export default function Picture() {
       </div>
 
       {/* ── Title ────────────────────────────────────────────── */}
-      <h2 style={{
+      <h2 className="picture-title" style={{
         fontFamily: 'var(--f-base-type-family-primary)',
         fontSize: '28',
         fontWeight: '100',
@@ -250,7 +255,7 @@ export default function Picture() {
       </h2>
 
       {/* ── Photo card ───────────────────────────────────────── */}
-      <div style={{
+      <div className="picture-card" style={{
         margin: 'var(--f-brand-space-lg) var(--f-brand-space-md) 0',
         background: 'var(--f-brand-color-text-light)',
         borderRadius: 'var(--f-brand-radius-small)',
@@ -265,12 +270,13 @@ export default function Picture() {
       }}>
         {cameraActive && !hasPhoto ? (
           /* Live camera feed */
-          <div style={{
+          <div className="picture-camera-wrapper" style={{
             width: '100%',
             height: '100%',
             position: 'relative',
           }}>
             <video
+              className="picture-video"
               ref={videoRef}
               autoPlay
               playsInline
@@ -285,6 +291,7 @@ export default function Picture() {
             />
             {/* Capture button overlay */}
             <button
+              className="picture-capture-btn"
               onClick={capturePhoto}
               aria-label="Capture photo"
               style={{
@@ -304,7 +311,7 @@ export default function Picture() {
                 justifyContent: 'center',
               }}
             >
-              <div style={{
+              <div className="picture-capture-inner" style={{
                 width: '100%',
                 height: '100%',
                 borderRadius: 'var(--f-brand-radius-rounded)',
@@ -314,12 +321,13 @@ export default function Picture() {
           </div>
         ) : hasPhoto ? (
           /* Photo preview */
-          <div style={{
+          <div className="picture-preview-wrapper" style={{
             width: '100%',
             height: '100%',
             position: 'relative',
           }}>
             <img
+              className="picture-preview-img"
               src={photoDataUrl!}
               alt="Your photo"
               style={{
@@ -331,6 +339,7 @@ export default function Picture() {
             />
             {/* Retake overlay button */}
             <button
+              className="picture-retake-overlay-btn"
               onClick={handleRetake}
               aria-label="Retake photo"
               style={{
@@ -361,6 +370,7 @@ export default function Picture() {
             <SilhouettePlaceholder />
 
             <button
+              className="picture-take-photo-btn"
               onClick={handleTakePhoto}
               style={{
                 position: 'absolute',
@@ -383,8 +393,8 @@ export default function Picture() {
                 lineHeight: '24px',
               }}
             >
-              <span>Take a photo</span>
-              <img src={cameraIcon} width={24} height={24} alt="" />
+              <span className="picture-take-photo-label">Take a photo</span>
+              <img className="picture-camera-icon" src={cameraIcon} width={24} height={24} alt="" />
             </button>
           </>
         )}
@@ -392,7 +402,7 @@ export default function Picture() {
 
       {/* ── Camera error ─────────────────────────────────────── */}
       {cameraError && (
-        <p style={{
+        <p className="picture-camera-error" style={{
           fontSize: '11',
           color: 'var(--f-brand-color-status-error)',
           marginTop: 'var(--f-brand-space-xs)',
@@ -405,6 +415,7 @@ export default function Picture() {
 
       {/* ── Hidden file input fallback ───────────────────────── */}
       <input
+        className="picture-file-input"
         ref={fileInputRef}
         type="file"
         accept="image/*"
@@ -414,11 +425,12 @@ export default function Picture() {
       />
 
       {/* ── Next button ──────────────────────────────────────── */}
-      <div style={{
+      <div className="picture-next-wrapper" style={{
         padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) var(--f-brand-space-xl)',
         flexShrink: 0,
       }}>
         <button
+          className="picture-next-btn"
           onClick={handleNext}
           disabled={!hasPhoto}
           style={{

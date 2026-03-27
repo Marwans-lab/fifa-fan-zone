@@ -21,6 +21,7 @@ function CardPreview({
 
   return (
     <div
+      className="card-preview"
       style={{
         width: '100%',
         aspectRatio: '300 / 420',
@@ -38,26 +39,27 @@ function CardPreview({
       }}
     >
       {/* Top holographic stripe */}
-      <div style={{
+      <div className="card-preview-holographic-stripe" style={{
         position: 'absolute', top: 0, left: 0, right: 0,
         height: 4,
         background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent)',
       }} />
 
       {/* Header text */}
-      <div style={{ textAlign: 'center', width: '100%', zIndex: 1 }}>
-        <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', marginBottom: 4 }}>
+      <div className="card-preview-header" style={{ textAlign: 'center', width: '100%', zIndex: 1 }}>
+        <div className="card-preview-header-title" style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', marginBottom: 4 }}>
           FIFA Fan Zone
         </div>
-        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: 1 }}>
+        <div className="card-preview-header-subtitle" style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: 1 }}>
           Collector edition
         </div>
       </div>
 
       {/* Photo or placeholder */}
-      <div style={{ zIndex: 1 }}>
+      <div className="card-preview-photo-wrapper" style={{ zIndex: 1 }}>
         {photoDataUrl ? (
           <img
+            className="card-preview-photo"
             src={photoDataUrl}
             alt="Your photo"
             style={{
@@ -71,6 +73,7 @@ function CardPreview({
           />
         ) : (
           <div
+            className="card-preview-photo-placeholder"
             style={{
               width: 120, height: 120,
               borderRadius: '50%',
@@ -86,8 +89,8 @@ function CardPreview({
               WebkitBackdropFilter: 'blur(var(--f-brand-blur-subtle))',
             }}
           >
-            <img src={cameraIcon} width={24} height={24} alt="" />
-            <span style={{ fontSize: 9, letterSpacing: 2, textTransform: 'uppercase', opacity: 0.8, lineHeight: 1.2, textAlign: 'center' }}>
+            <img className="card-preview-camera-icon" src={cameraIcon} width={24} height={24} alt="" />
+            <span className="card-preview-take-picture" style={{ fontSize: 9, letterSpacing: 2, textTransform: 'uppercase', opacity: 0.8, lineHeight: 1.2, textAlign: 'center' }}>
               Take<br />picture
             </span>
           </div>
@@ -95,8 +98,8 @@ function CardPreview({
       </div>
 
       {/* Team motto */}
-      <div style={{ textAlign: 'center', zIndex: 1 }}>
-        <div style={{ fontSize: '13', fontWeight: '500', color: 'rgba(255,255,255,0.88)', letterSpacing: 1, marginBottom: 2, fontStyle: 'italic' }}>
+      <div className="card-preview-motto-wrapper" style={{ textAlign: 'center', zIndex: 1 }}>
+        <div className="card-preview-motto-text" style={{ fontSize: '13', fontWeight: '500', color: 'rgba(255,255,255,0.88)', letterSpacing: 1, marginBottom: 2, fontStyle: 'italic' }}>
           {team.motto}
         </div>
       </div>
@@ -148,14 +151,14 @@ export default function Identity() {
   if (step === 'team') {
     return (
       <Screen>
-        <div className="f-page-enter" style={{
+        <div className="identity-team-step f-page-enter" style={{
           display: 'flex', flexDirection: 'column',
           height: '100%',
           padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) var(--f-brand-space-md)',
         }}>
           {/* Header */}
-          <div style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-md)' }}>
-            <h2 style={{
+          <div className="identity-team-header" style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-md)' }}>
+            <h2 className="identity-team-title" style={{
               fontFamily: 'var(--f-base-type-family-primary)',
               fontSize: '28',
               fontWeight: '300',
@@ -164,13 +167,13 @@ export default function Identity() {
             }}>
               Choose your team
             </h2>
-            <p style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)' }}>
+            <p className="identity-team-subtitle" style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)' }}>
               Select the country you're supporting
             </p>
           </div>
 
           {/* Search */}
-          <div style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-sm)' }}>
+          <div className="identity-team-search-wrapper" style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-sm)' }}>
             <input
               type="text"
               placeholder="Search teams…"
@@ -181,12 +184,12 @@ export default function Identity() {
           </div>
 
           {/* Team list — scrollable */}
-          <div className="scroll-y stagger" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-xs)', paddingBottom: 'var(--f-brand-space-md)' }}>
+          <div className="identity-team-list scroll-y stagger" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-xs)', paddingBottom: 'var(--f-brand-space-md)' }}>
             {filtered.map(team => (
               <button
                 key={team.id}
                 onClick={() => handleTeamSelect(team.id)}
-                className="f-surface"
+                className="identity-team-item f-surface"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -201,7 +204,7 @@ export default function Identity() {
                 }}
               >
                 {/* Colour swatch */}
-                <div style={{
+                <div className="identity-team-item-swatch" style={{
                   width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
                   background: `linear-gradient(135deg, ${team.colors[0]}, ${team.colors[1]})`,
                   border: '1px solid rgba(255,255,255,0.1)',
@@ -210,10 +213,10 @@ export default function Identity() {
                 }}>
                   {team.flag}
                 </div>
-                <span style={{ fontSize: '15', fontWeight: '400', flex: 1 }}>
+                <span className="identity-team-item-name" style={{ fontSize: '15', fontWeight: '400', flex: 1 }}>
                   {team.name}
                 </span>
-                <span style={{ color: 'var(--f-brand-color-text-muted)', fontSize: 16 }}>›</span>
+                <span className="identity-team-item-arrow" style={{ color: 'var(--f-brand-color-text-muted)', fontSize: 16 }}>›</span>
               </button>
             ))}
           </div>
@@ -225,8 +228,8 @@ export default function Identity() {
   // ── Step: preview (returned from Picture route) ──────────────────────────
   return (
     <Screen centered>
-      <div className="f-page-enter" style={{ padding: 'var(--f-brand-space-xl) var(--f-brand-space-md)', textAlign: 'center', maxWidth: 340, width: '100%' }}>
-        <h2 style={{
+      <div className="identity-preview-step f-page-enter" style={{ padding: 'var(--f-brand-space-xl) var(--f-brand-space-md)', textAlign: 'center', maxWidth: 340, width: '100%' }}>
+        <h2 className="identity-preview-title" style={{
           fontFamily: 'var(--f-base-type-family-primary)',
           fontSize: '22',
           fontWeight: '300',
@@ -235,23 +238,23 @@ export default function Identity() {
         }}>
           Looking good!
         </h2>
-        <p style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)', marginBottom: 'var(--f-brand-space-lg)' }}>
+        <p className="identity-preview-subtitle" style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)', marginBottom: 'var(--f-brand-space-lg)' }}>
           Your fan card is ready
         </p>
 
         <CardPreview teamId={selectedTeamId!} photoDataUrl={photoDataUrl} />
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-sm)', marginTop: 'var(--f-brand-space-lg)' }}>
+        <div className="identity-preview-actions" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-sm)', marginTop: 'var(--f-brand-space-lg)' }}>
           <button
             onClick={handleContinue}
-            className="f-button"
+            className="identity-preview-save-btn f-button"
             style={{ width: '100%' }}
           >
             Save fan card
           </button>
           <button
             onClick={handleRetake}
-            className="f-button f-button--secondary"
+            className="identity-preview-retake-btn f-button f-button--secondary"
             style={{ width: '100%' }}
           >
             Retake photo

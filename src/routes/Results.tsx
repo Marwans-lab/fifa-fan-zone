@@ -71,13 +71,13 @@ export default function Results() {
   if (!result) {
     return (
       <Screen centered>
-        <div className="f-page-enter" style={{ padding: 'var(--f-brand-space-2xl) var(--f-brand-space-lg)', textAlign: 'center', maxWidth: 360, width: '100%' }}>
-          <div style={{ marginBottom: 'var(--f-brand-space-md)' }}><img src={trophyIcon} width={24} height={24} alt="" /></div>
-          <h2 style={{ fontSize: '28', fontWeight: '300', marginBottom: 'var(--f-brand-space-xs)', letterSpacing: '-0.03em' }}>
+        <div className="results-empty-card f-page-enter" style={{ padding: 'var(--f-brand-space-2xl) var(--f-brand-space-lg)', textAlign: 'center', maxWidth: 360, width: '100%' }}>
+          <div className="results-empty-icon-wrapper" style={{ marginBottom: 'var(--f-brand-space-md)' }}><img className="results-empty-icon" src={trophyIcon} width={24} height={24} alt="" /></div>
+          <h2 className="results-empty-title" style={{ fontSize: '28', fontWeight: '300', marginBottom: 'var(--f-brand-space-xs)', letterSpacing: '-0.03em' }}>
             Your score
           </h2>
-          <p style={{ fontSize: '36', fontWeight: '500', color: 'var(--f-brand-color-accent)', marginBottom: 'var(--f-brand-space-xl)', letterSpacing: '-0.03em' }}>
-            {appState.points} <span style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)', fontWeight: '400' }}>pts</span>
+          <p className="results-empty-score" style={{ fontSize: '36', fontWeight: '500', color: 'var(--f-brand-color-accent)', marginBottom: 'var(--f-brand-space-xl)', letterSpacing: '-0.03em' }}>
+            {appState.points} <span className="results-empty-score-unit" style={{ fontSize: '13', color: 'var(--f-brand-color-text-subtle)', fontWeight: '400' }}>pts</span>
           </p>
           <Button fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
             Play a quiz
@@ -96,10 +96,10 @@ export default function Results() {
 
   return (
     <Screen centered>
-      <div className="f-page-enter" style={{ padding: 'var(--f-brand-space-2xl) var(--f-brand-space-lg)', textAlign: 'center', maxWidth: 380, width: '100%' }}>
+      <div className="results-card f-page-enter" style={{ padding: 'var(--f-brand-space-2xl) var(--f-brand-space-lg)', textAlign: 'center', maxWidth: 380, width: '100%' }}>
 
         {/* Status label */}
-        <div style={{
+        <div className="results-status-label" style={{
           fontFamily: 'var(--f-base-type-family-primary)',
           fontSize: '28',
           fontWeight: '300',
@@ -111,7 +111,7 @@ export default function Results() {
         </div>
 
         {/* Quiz title */}
-        <div style={{
+        <div className="results-quiz-title" style={{
           fontSize: '13',
           color: 'var(--f-brand-color-text-subtle)',
           marginBottom: 'var(--f-brand-space-xl)',
@@ -122,16 +122,16 @@ export default function Results() {
         </div>
 
         {/* Score ring — animated SVG progress, count-up points inside */}
-        <div style={{ position: 'relative', width: RING_SIZE, height: RING_SIZE, margin: '0 auto var(--f-brand-space-xl)' }}>
-          <svg
+        <div className="results-ring-container" style={{ position: 'relative', width: RING_SIZE, height: RING_SIZE, margin: '0 auto var(--f-brand-space-xl)' }}>
+          <svg className="results-ring-svg"
             width={RING_SIZE}
             height={RING_SIZE}
             style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }}
           >
             {/* Track */}
-            <circle cx={RING_CX} cy={RING_CX} r={RING_R} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={RING_STROKE} />
+            <circle className="results-ring-track" cx={RING_CX} cy={RING_CX} r={RING_R} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={RING_STROKE} />
             {/* Progress arc */}
-            <circle
+            <circle className="results-ring-progress"
               cx={RING_CX} cy={RING_CX} r={RING_R}
               fill="none"
               stroke={color}
@@ -143,7 +143,7 @@ export default function Results() {
             />
           </svg>
           {/* Inner content */}
-          <div style={{
+          <div className="results-ring-inner" style={{
             position: 'absolute',
             inset: RING_STROKE * 2,
             borderRadius: '50%',
@@ -156,17 +156,17 @@ export default function Results() {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-            <span style={{ fontFamily: 'var(--f-base-type-family-primary)', fontSize: '36', fontWeight: '300', letterSpacing: '-0.03em', color, lineHeight: 1 }}>
+            <span className="results-ring-points-value" style={{ fontFamily: 'var(--f-base-type-family-primary)', fontSize: '36', fontWeight: '300', letterSpacing: '-0.03em', color, lineHeight: 1 }}>
               {displayPoints}
             </span>
-            <span style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', letterSpacing: '0.09em', textTransform: 'uppercase', marginTop: 4 }}>
+            <span className="results-ring-points-label" style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', letterSpacing: '0.09em', textTransform: 'uppercase', marginTop: 4 }}>
               Points
             </span>
           </div>
         </div>
 
         {/* Actions */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-sm)', width: '100%' }}>
+        <div className="results-actions" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-sm)', width: '100%' }}>
           <Button fullWidth onClick={() => { track('results_leaderboard_tapped'); navigate('/leaderboard') }}>
             View leaderboard
           </Button>

@@ -19,9 +19,9 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   if (status === 'unauthenticated') {
     return (
       <Screen centered>
-        <div className="f-page-enter" style={{ textAlign: 'center', padding: 'var(--f-brand-space-xl) var(--f-brand-space-lg)', maxWidth: 300 }}>
-          <div style={{ marginBottom: 'var(--f-brand-space-md)', opacity: 0.5 }}><img src={lockIcon} width={24} height={24} alt="" /></div>
-          <h2 style={{
+        <div className="auth-guard-error-card f-page-enter" style={{ textAlign: 'center', padding: 'var(--f-brand-space-xl) var(--f-brand-space-lg)', maxWidth: 300 }}>
+          <div className="auth-guard-error-icon-wrapper" style={{ marginBottom: 'var(--f-brand-space-md)', opacity: 0.5 }}><img className="auth-guard-error-icon" src={lockIcon} width={24} height={24} alt="" /></div>
+          <h2 className="auth-guard-error-title" style={{
             fontFamily: 'var(--f-base-type-family-primary)',
             fontSize: '22',
             fontWeight: '300',
@@ -31,7 +31,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
           }}>
             Session unavailable
           </h2>
-          <p style={{
+          <p className="auth-guard-error-body" style={{
             color: 'var(--f-brand-color-text-subtle)',
             fontSize: '13',
             lineHeight: '1.52',

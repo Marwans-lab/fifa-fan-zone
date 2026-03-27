@@ -23,6 +23,7 @@ function SwipeLabel({
   const isTrue = direction === 'true'
   return (
     <div
+      className="swipe-label"
       style={{
         position: 'absolute',
         top: 'var(--f-brand-space-lg)',
@@ -60,6 +61,7 @@ function FeedbackOverlay({
 }) {
   return (
     <div
+      className="swipe-feedback-overlay"
       style={{
         position: 'absolute',
         inset: 0,
@@ -78,6 +80,7 @@ function FeedbackOverlay({
     >
       {/* Result icon */}
       <div
+        className="swipe-feedback-icon"
         style={{
           width: 72,
           height: 72,
@@ -104,6 +107,7 @@ function FeedbackOverlay({
 
       {/* Label */}
       <span
+        className="swipe-feedback-label"
         style={{
           fontFamily: 'var(--f-base-type-family-primary)',
           fontSize: '22',
@@ -117,6 +121,7 @@ function FeedbackOverlay({
 
       {/* Explanation */}
       <span
+        className="swipe-feedback-explanation"
         style={{
           fontFamily: 'var(--f-base-type-family-secondary)',
           fontSize: '13',
@@ -171,6 +176,7 @@ function StatementCard({
 
   return (
     <div
+      className="swipe-statement-card"
       style={{
         position: 'absolute',
         inset: 0,
@@ -191,6 +197,7 @@ function StatementCard({
       }}
     >
       <div
+        className="swipe-statement-card-inner"
         style={{
           position: 'relative',
           width: '100%',
@@ -229,6 +236,7 @@ function StatementCard({
       >
         {/* Accent glow at top */}
         <div
+          className="swipe-statement-card-glow"
           style={{
             position: 'absolute',
             top: -60,
@@ -257,6 +265,7 @@ function StatementCard({
 
         {/* Statement text */}
         <div
+          className="swipe-statement-text"
           style={{
             fontFamily: 'var(--f-base-type-family-primary)',
             fontSize: '28',
@@ -275,6 +284,7 @@ function StatementCard({
 
         {/* Instruction hint */}
         <div
+          className="swipe-statement-hint"
           style={{
             position: 'absolute',
             bottom: 'var(--f-brand-space-lg)',
@@ -298,6 +308,7 @@ function StatementCard({
 function BackgroundCard({ visible }: { visible: boolean }) {
   return (
     <div
+      className="swipe-background-card-wrapper"
       style={{
         position: 'absolute',
         inset: 0,
@@ -309,6 +320,7 @@ function BackgroundCard({ visible }: { visible: boolean }) {
       }}
     >
       <div
+        className="swipe-background-card"
         style={{
           width: '100%',
           maxWidth: 340,
@@ -339,6 +351,7 @@ function ProgressDots({
 }) {
   return (
     <div
+      className="swipe-progress-dots"
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -353,6 +366,7 @@ function ProgressDots({
         return (
           <div
             key={i}
+            className="swipe-progress-dot"
             style={{
               width: isCurrent ? 24 : 8,
               height: 8,
@@ -391,6 +405,7 @@ function SwipeActions({
 }) {
   return (
     <div
+      className="swipe-actions"
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -400,6 +415,7 @@ function SwipeActions({
     >
       {/* False button */}
       <button
+        className="swipe-action-btn swipe-action-btn--false"
         onClick={() => onSwipe('left')}
         disabled={disabled}
         aria-label={labels.left}
@@ -430,13 +446,14 @@ function SwipeActions({
           e.currentTarget.style.transform = 'scale(1)'
         }}
       >
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <svg className="swipe-action-false-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M18 6L6 18M6 6l12 12" stroke="var(--f-brand-color-status-error)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
 
       {/* True button */}
       <button
+        className="swipe-action-btn swipe-action-btn--true"
         onClick={() => onSwipe('right')}
         disabled={disabled}
         aria-label={labels.right}
@@ -467,7 +484,7 @@ function SwipeActions({
           e.currentTarget.style.transform = 'scale(1)'
         }}
       >
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <svg className="swipe-action-true-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M5 13l4 4L19 7" stroke="var(--f-brand-color-border-success)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
@@ -640,7 +657,7 @@ export default function SwipeQuizRoute() {
   return (
     <Screen>
       <div
-        className="f-page-enter"
+        className="swipe-quiz-page f-page-enter"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -651,8 +668,9 @@ export default function SwipeQuizRoute() {
         }}
       >
         {/* ── Top bar ────────────────────────────────────────────── */}
-        <div style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+        <div className="swipe-quiz-top-bar" style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
           <div
+            className="swipe-quiz-top-bar-inner"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -665,6 +683,7 @@ export default function SwipeQuizRoute() {
 
             <div style={{ flex: 1, textAlign: 'center' }}>
               <span
+                className="swipe-quiz-title"
                 style={{
                   fontFamily: 'var(--f-base-type-family-primary)',
                   fontSize: '15',
@@ -679,6 +698,7 @@ export default function SwipeQuizRoute() {
 
             {/* Score badge */}
             <div
+              className="swipe-quiz-score-badge"
               style={{
                 minWidth: 40,
                 height: 28,
@@ -693,6 +713,7 @@ export default function SwipeQuizRoute() {
               }}
             >
               <span
+                className="swipe-quiz-score-value"
                 style={{
                   fontSize: '11',
                   fontWeight: '600',
@@ -703,6 +724,7 @@ export default function SwipeQuizRoute() {
                 {score}
               </span>
               <span
+                className="swipe-quiz-score-total"
                 style={{
                   fontSize: '10',
                   color: 'var(--f-brand-color-text-muted)',
@@ -716,12 +738,13 @@ export default function SwipeQuizRoute() {
         </div>
 
         {/* ── Progress dots ─────────────────────────────────────── */}
-        <div style={{ padding: '0 var(--f-brand-space-md) var(--f-brand-space-md)', flexShrink: 0 }}>
+        <div className="swipe-quiz-progress-wrapper" style={{ padding: '0 var(--f-brand-space-md) var(--f-brand-space-md)', flexShrink: 0 }}>
           <ProgressDots total={total} current={currentIdx} results={results} />
         </div>
 
         {/* ── Card area ─────────────────────────────────────────── */}
         <div
+          className="swipe-quiz-card-area"
           ref={cardAreaRef}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
@@ -742,6 +765,7 @@ export default function SwipeQuizRoute() {
 
           {/* Active card */}
           <div
+            className="swipe-quiz-card-enter"
             style={{
               position: 'absolute',
               inset: 0,
@@ -763,6 +787,7 @@ export default function SwipeQuizRoute() {
 
         {/* ── Direction labels ──────────────────────────────────── */}
         <div
+          className="swipe-quiz-labels"
           style={{
             display: 'flex',
             justifyContent: 'space-between',
@@ -771,6 +796,7 @@ export default function SwipeQuizRoute() {
           }}
         >
           <span
+            className="swipe-quiz-label-false"
             style={{
               fontFamily: 'var(--f-base-type-family-secondary)',
               fontSize: '11',
@@ -784,6 +810,7 @@ export default function SwipeQuizRoute() {
             {labels.left}
           </span>
           <span
+            className="swipe-quiz-label-true"
             style={{
               fontFamily: 'var(--f-base-type-family-secondary)',
               fontSize: '11',
@@ -800,6 +827,7 @@ export default function SwipeQuizRoute() {
 
         {/* ── Swipe action buttons ─────────────────────────────── */}
         <div
+          className="swipe-quiz-actions-wrapper"
           style={{
             padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)',
             flexShrink: 0,

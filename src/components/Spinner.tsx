@@ -13,8 +13,8 @@ export default function Spinner({ fullScreen = false, size = 32 }: SpinnerProps)
       fill="none"
       aria-label="Loading"
     >
-      <circle cx="12" cy="12" r="10" stroke="var(--f-brand-color-border-default)" strokeWidth="3" />
-      <path
+      <circle className="spinner-track" cx="12" cy="12" r="10" stroke="var(--f-brand-color-border-default)" strokeWidth="3" />
+      <path className="spinner-arc"
         d="M12 2a10 10 0 0 1 10 10"
         stroke="var(--f-brand-color-primary)"
         strokeWidth="3"

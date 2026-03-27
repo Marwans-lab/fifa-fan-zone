@@ -7,6 +7,7 @@ import { WORLD_CUP_TEAMS } from '../data/teams'
 function ProgressBar({ progress }: { progress: number }) {
   return (
     <div
+      className="progress-bar-track"
       style={{
         flex: 1,
         height: 8,
@@ -16,6 +17,7 @@ function ProgressBar({ progress }: { progress: number }) {
       }}
     >
       <div
+        className="progress-bar-fill"
         style={{
           width: `${progress}%`,
           height: '100%',
@@ -69,7 +71,7 @@ export default function TeamSelection() {
 
   return (
     <div
-      className="f-page-enter"
+      className="team-selection-page f-page-enter"
       style={{
         height: '100%',
         width: '100%',
@@ -82,13 +84,14 @@ export default function TeamSelection() {
       }}
     >
       {/* ── Row: Back button + Progress bar ─────────────────────── */}
-      <div style={{
+      <div className="team-selection-top-row" style={{
         display: 'flex',
         alignItems: 'center',
         gap: 'var(--f-brand-space-md)',
         flexShrink: 0,
       }}>
         <button
+          className="team-selection-back-btn"
           onClick={handleBack}
           aria-label="Go back"
           style={{
@@ -105,7 +108,7 @@ export default function TeamSelection() {
             WebkitTapHighlightColor: 'transparent',
           }}
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <svg className="team-selection-back-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M15 19l-7-7 7-7" stroke="var(--f-brand-color-text-default)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
@@ -113,7 +116,7 @@ export default function TeamSelection() {
       </div>
 
       {/* ── Title ───────────────────────────────────────────────── */}
-      <h2 style={{
+      <h2 className="team-selection-title" style={{
         fontFamily: 'var(--f-base-type-family-primary)',
         fontSize: 28,
         lineHeight: '36px',
@@ -127,9 +130,10 @@ export default function TeamSelection() {
       </h2>
 
       {/* ── Dropdown ────────────────────────────────────────────── */}
-      <div ref={dropdownRef} style={{ position: 'relative', flexShrink: 0 }}>
+      <div className="team-selection-dropdown-wrapper" ref={dropdownRef} style={{ position: 'relative', flexShrink: 0 }}>
         {/* Trigger input */}
         <button
+          className="team-selection-dropdown-trigger"
           onClick={() => setOpen(prev => !prev)}
           aria-haspopup="listbox"
           aria-expanded={open}
@@ -150,8 +154,9 @@ export default function TeamSelection() {
             WebkitTapHighlightColor: 'transparent',
           }}
         >
-          <span>{selectedTeam ? selectedTeam.name : 'Select a team'}</span>
+          <span className="team-selection-dropdown-trigger-label">{selectedTeam ? selectedTeam.name : 'Select a team'}</span>
           <svg
+            className="team-selection-dropdown-chevron"
             width="16"
             height="16"
             viewBox="0 0 24 24"
@@ -170,6 +175,7 @@ export default function TeamSelection() {
         {/* Listbox */}
         {open && (
           <ul
+            className="team-selection-dropdown-list"
             role="listbox"
             style={{
               position: 'absolute',
@@ -191,6 +197,7 @@ export default function TeamSelection() {
           >
             {WORLD_CUP_TEAMS.map((team, i) => (
               <li
+                className="team-selection-dropdown-option"
                 key={team.id}
                 role="option"
                 aria-selected={team.id === selectedId}
@@ -215,10 +222,10 @@ export default function TeamSelection() {
       </div>
 
       {/* ── Spacer ──────────────────────────────────────────────── */}
-      <div style={{ flex: 1 }} />
+      <div className="team-selection-spacer" style={{ flex: 1 }} />
 
       {/* ── "Already have a card? Log in" ───────────────────────── */}
-      <p style={{
+      <p className="team-selection-login-hint" style={{
         textAlign: 'center',
         fontSize: 18,
         color: 'var(--f-brand-color-text-default)',
@@ -226,11 +233,12 @@ export default function TeamSelection() {
         flexShrink: 0,
       }}>
         Already have a card?{' '}
-        <span style={{ fontWeight: '500' }}>Log in</span>
+        <span className="team-selection-login-link" style={{ fontWeight: '500' }}>Log in</span>
       </p>
 
       {/* ── Continue button ─────────────────────────────────────── */}
       <button
+        className="team-selection-continue-btn"
         onClick={handleContinue}
         disabled={!selectedId}
         style={{

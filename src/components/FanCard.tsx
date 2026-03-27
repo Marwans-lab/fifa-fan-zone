@@ -360,7 +360,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               {PROFILE_QUESTIONS.map(q => (
                 <div key={q.id} className="f-fan-card__profile-row">
                   <img src={q.iconSrc} width={24} height={24} alt="" className="f-fan-card__profile-icon" />
-                  <div>
+                  <div className="f-fan-card__profile-row-content">
                     <div className="f-fan-card__profile-category">
                       {q.category}
                     </div>

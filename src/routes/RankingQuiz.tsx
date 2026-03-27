@@ -25,7 +25,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
   const offset = circumference * (1 - timeLeft / QUESTION_TIME)
   const cx = size / 2
   return (
-    <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
+    <div className="ranking-timer" style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
       <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
         <circle cx={cx} cy={cx} r={R} fill="none" stroke="var(--c-surface)" strokeWidth={3} />
         <circle
@@ -39,7 +39,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
           style={{ transition: 'stroke-dashoffset 1s linear' }}
         />
       </svg>
-      <div style={{
+      <div className="ranking-timer-label" style={{
         position: 'absolute', inset: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: 14, fontWeight: 500, fontFamily: 'var(--font-body)', color: 'var(--c-white)',
@@ -92,6 +92,7 @@ function RankItem({
 
   return (
     <div
+      className="rank-item"
       onTouchStart={handleTouchStart}
       onMouseDown={handleMouseDown}
       style={{
@@ -115,7 +116,7 @@ function RankItem({
       }}
     >
       {/* Position badge */}
-      <div style={{
+      <div className="rank-item-badge" style={{
         width: 28, height: 28, borderRadius: '50%',
         background: revealed
           ? isCorrectPosition ? 'var(--c-correct)' : 'var(--c-error)'
@@ -131,7 +132,7 @@ function RankItem({
       </div>
 
       {/* Label */}
-      <span style={{
+      <span className="rank-item-label" style={{
         flex: 1, fontSize: 'var(--text-md)', color: 'var(--c-text-1)',
         fontWeight: isDragging ? 600 : 400,
       }}>
@@ -140,19 +141,19 @@ function RankItem({
 
       {/* Drag handle */}
       {!revealed && (
-        <div style={{
+        <div className="rank-item-drag-handle" style={{
           display: 'flex', flexDirection: 'column', gap: 2,
           opacity: 0.3, flexShrink: 0, padding: '0 var(--sp-1)',
         }}>
-          <div style={{ width: 16, height: 2, background: 'var(--c-text-1)', borderRadius: 1 }} />
-          <div style={{ width: 16, height: 2, background: 'var(--c-text-1)', borderRadius: 1 }} />
-          <div style={{ width: 16, height: 2, background: 'var(--c-text-1)', borderRadius: 1 }} />
+          <div className="rank-item-drag-line" style={{ width: 16, height: 2, background: 'var(--c-text-1)', borderRadius: 1 }} />
+          <div className="rank-item-drag-line" style={{ width: 16, height: 2, background: 'var(--c-text-1)', borderRadius: 1 }} />
+          <div className="rank-item-drag-line" style={{ width: 16, height: 2, background: 'var(--c-text-1)', borderRadius: 1 }} />
         </div>
       )}
 
       {/* Correct position hint after reveal */}
       {revealed && !isCorrectPosition && (
-        <span style={{
+        <span className="rank-item-correct-hint" style={{
           fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', flexShrink: 0,
         }}>
           #{correctIndex + 1}
@@ -349,30 +350,30 @@ export default function RankingQuizRoute() {
   return (
     <Screen>
       <div
-        className="page-in"
+        className="ranking-quiz-page page-in"
         style={{
           display: 'flex', flexDirection: 'column',
           minHeight: '100%', maxWidth: 420, margin: '0 auto', width: '100%',
         }}
       >
         {/* Top bar */}
-        <div style={{ padding: 'var(--sp-4)', flexShrink: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
+        <div className="ranking-quiz-top-bar" style={{ padding: 'var(--sp-4)', flexShrink: 0 }}>
+          <div className="ranking-quiz-top-bar-inner" style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
             <button onClick={handleBack} className="btn-icon">
               <img src={chevLeft} width={24} height={24} alt="Back" />
             </button>
-            <div style={{
+            <div className="ranking-quiz-progress-track" style={{
               flex: 1, height: 4, background: 'var(--c-surface-raise)',
               borderRadius: 2, overflow: 'hidden',
             }}>
-              <div style={{
+              <div className="ranking-quiz-progress-fill" style={{
                 height: '100%',
                 width: `${((qIdx + (revealed ? 1 : 0)) / total) * 100}%`,
                 background: 'var(--c-accent)', borderRadius: 2,
                 transition: 'width 300ms ease',
               }} />
             </div>
-            <span style={{
+            <span className="ranking-quiz-counter" style={{
               fontSize: 'var(--text-xs)', color: 'var(--c-text-2)', flexShrink: 0,
             }}>
               {qIdx + 1}/{total}
@@ -381,14 +382,14 @@ export default function RankingQuizRoute() {
         </div>
 
         {/* Animated content */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
+        <div className="ranking-quiz-content" style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
           {/* Timer */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--sp-4)', flexShrink: 0 }}>
+          <div className="ranking-quiz-timer-wrapper" style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--sp-4)', flexShrink: 0 }}>
             <CircularTimer timeLeft={timeLeft} size={64} />
           </div>
 
           {/* Question text */}
-          <div style={{
+          <div className="ranking-quiz-question" style={{
             padding: '0 var(--sp-6)',
             fontFamily: 'var(--font-display)',
             fontSize: 'var(--text-xl)',
@@ -404,7 +405,7 @@ export default function RankingQuizRoute() {
           </div>
 
           {/* Ranking items */}
-          <div style={{
+          <div className="ranking-quiz-items" style={{
             flex: 1, padding: '0 var(--sp-4)',
             display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)',
           }}>
@@ -424,9 +425,9 @@ export default function RankingQuizRoute() {
         </div>
 
         {/* Bottom: feedback + submit/next */}
-        <div style={{ padding: 'var(--sp-5) var(--sp-4) var(--sp-8)', flexShrink: 0 }}>
+        <div className="ranking-quiz-bottom" style={{ padding: 'var(--sp-5) var(--sp-4) var(--sp-8)', flexShrink: 0 }}>
           {revealed && (
-            <div style={{
+            <div className="ranking-quiz-feedback" style={{
               textAlign: 'center',
               fontSize: 'var(--text-sm)',
               color: questionScore === 4 ? 'var(--c-correct)' : questionScore >= 2 ? 'var(--c-warn)' : 'var(--c-error)',
