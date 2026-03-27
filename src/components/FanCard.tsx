@@ -355,7 +355,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                 >
                   {isLast ? (
                     <span className="f-fan-card__wizard-btn-content">
-                      Save <img src={tickBlack} width={24} height={24} alt="" />
+                      Save <img src={tickBlack} width={24} height={24} alt="" className="fan-card-save-icon" />
                     </span>
                   ) : (
                     <span className="f-fan-card__wizard-btn-content">
@@ -373,7 +373,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               {PROFILE_QUESTIONS.map(q => (
                 <div key={q.id} className="f-fan-card__profile-row">
                   <img src={q.iconSrc} width={24} height={24} alt="" className="f-fan-card__profile-icon" />
-                  <div>
+                  <div className="f-fan-card__profile-text">
                     <div className="f-fan-card__profile-category">
                       {q.category}
                     </div>
@@ -406,9 +406,9 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               data-section="action-circles"
               onClick={e => e.stopPropagation()}
             >
-              <ActionCircle icon={<img src={editIcon}  width={24} height={24} alt="" />} label="Edit"  onClick={handleEditTap} dataUi="edit-btn" />
-              <ActionCircle icon={<img src={shareIcon} width={24} height={24} alt="" />} label="Share" onClick={handleShareTap} dataUi="share-btn" />
-              <ActionCircle icon={<img src={saveIcon}  width={24} height={24} alt="" />} label="Save"  onClick={handleSaveTap} dataUi="save-btn" />
+              <ActionCircle icon={<img src={editIcon}  width={24} height={24} alt="" className="fan-card-edit-icon" />} label="Edit"  onClick={handleEditTap} dataUi="edit-btn" />
+              <ActionCircle icon={<img src={shareIcon} width={24} height={24} alt="" className="fan-card-share-icon" />} label="Share" onClick={handleShareTap} dataUi="share-btn" />
+              <ActionCircle icon={<img src={saveIcon}  width={24} height={24} alt="" className="fan-card-save-to-device-icon" />} label="Save"  onClick={handleSaveTap} dataUi="save-btn" />
             </div>
           )}
 

@@ -88,6 +88,7 @@ function OptionButton({
 
   return (
     <button
+      className="quiz-option-btn"
       data-ui="answer-option-btn"
       onClick={revealed ? undefined : onSelect}
       disabled={revealed}
@@ -115,6 +116,7 @@ function OptionButton({
     >
       {/* Percentage fill bar — always rendered so CSS transition fires left→right */}
       <div
+        className="quiz-option-fill-bar"
         style={{
           position: 'absolute',
           inset: 0,
@@ -132,6 +134,7 @@ function OptionButton({
 
       {/* Letter badge */}
       <div
+        className="quiz-option-letter-badge"
         style={{
           width: 28,
           height: 28,
@@ -152,6 +155,7 @@ function OptionButton({
 
       {/* Option label */}
       <span
+        className="quiz-option-label"
         style={{
           flex: 1,
           font: 'var(--f-brand-type-body)',
@@ -168,6 +172,7 @@ function OptionButton({
       {/* Percentage (after reveal) */}
       {revealed && (
         <span
+          className="quiz-option-percentage"
           style={{
             font: 'var(--f-brand-type-caption-medium)',
             color: isCorrect ? 'var(--f-brand-color-border-success)' : isWrong ? 'var(--f-brand-color-status-error)' : 'var(--f-brand-color-text-muted)',
@@ -189,10 +194,11 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
   const offset = circumference * (1 - timeLeft / QUESTION_TIME)
   const cx = size / 2
   return (
-    <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
-      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }} aria-hidden="true">
-        <circle cx={cx} cy={cx} r={R} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={3} />
+    <div className="quiz-timer-wrapper" style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
+      <svg className="quiz-timer-svg" width={size} height={size} style={{ transform: 'rotate(-90deg)' }} aria-hidden="true">
+        <circle className="quiz-timer-track" cx={cx} cy={cx} r={R} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={3} />
         <circle
+          className="quiz-timer-progress"
           cx={cx} cy={cx} r={R}
           fill="none"
           stroke="currentColor"
@@ -203,7 +209,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
           style={{ transition: 'stroke-dashoffset 1s linear', color: 'var(--f-brand-color-text-light)' }}
         />
       </svg>
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', font: 'var(--f-brand-type-subheading-medium)', color: 'var(--f-brand-color-text-light)' }}>
+      <div className="quiz-timer-value" style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', font: 'var(--f-brand-type-subheading-medium)', color: 'var(--f-brand-color-text-light)' }}>
         {timeLeft}
       </div>
     </div>
@@ -249,11 +255,12 @@ function QuestionScreen({
         }}
       >
         {/* ── Top bar (NOT animated — stays fixed) ─────────────── */}
-        <div data-section="header" style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
-            <button data-ui="back-btn" onClick={onBack} className="f-button f-button--ghost"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
-            <div data-section="progress-bar" style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
+        <div className="quiz-header" data-section="header" style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+          <div className="quiz-header-row" style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
+            <button data-ui="back-btn" onClick={onBack} className="f-button f-button--ghost quiz-back-btn"><img className="quiz-back-icon" src={chevLeft} width={24} height={24} alt="Back" /></button>
+            <div className="quiz-progress-bar" data-section="progress-bar" style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
               <div
+                className="quiz-progress-bar-fill"
                 style={{
                   height: '100%',
                   width: `${((qIndex + (revealed ? 1 : 0)) / total) * 100}%`,
@@ -263,16 +270,17 @@ function QuestionScreen({
                 }}
               />
             </div>
-            <span style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
+            <span className="quiz-progress-count" style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
               {qIndex + 1}/{total}
             </span>
           </div>
         </div>
 
         {/* ── Animated content (header + question + options only) ── */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
+        <div className="quiz-slide-content" style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
           {/* Question image header */}
           <div
+            className="quiz-question-card"
             data-section="question-card"
             style={{
               position: 'relative',
@@ -292,7 +300,7 @@ function QuestionScreen({
           >
             {quiz.emoji}
             {/* Depth overlay */}
-            <div style={{
+            <div className="quiz-question-card-overlay" style={{
               position: 'absolute', inset: 0,
               background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 50%, rgba(0,0,0,0.18) 100%)',
               pointerEvents: 'none',
@@ -300,12 +308,13 @@ function QuestionScreen({
           </div>
 
           {/* Timer — between image and question */}
-          <div data-section="timer" style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+          <div className="quiz-timer-container" data-section="timer" style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--f-brand-space-md)', flexShrink: 0 }}>
             <CircularTimer timeLeft={timeLeft} size={64} />
           </div>
 
           {/* Question text */}
           <div
+            className="quiz-question-text"
             data-section="question-text"
             style={{
               padding: '0 var(--f-brand-space-lg)',
@@ -324,6 +333,7 @@ function QuestionScreen({
 
           {/* Options */}
           <div
+            className="quiz-answer-options"
             data-section="answer-options"
             style={{
               flex: 1,
@@ -350,9 +360,10 @@ function QuestionScreen({
         </div>
 
         {/* ── Fixed bottom: score feedback + Next CTA (no slide) ── */}
-        <div data-section="result-overlay" style={{ padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
+        <div className="quiz-result-overlay" data-section="result-overlay" style={{ padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
             {revealed && (
               <div
+                className="quiz-result-feedback"
                 style={{
                   textAlign: 'center',
                   font: 'var(--f-brand-type-caption-medium)',

@@ -7,6 +7,7 @@ import { WORLD_CUP_TEAMS } from '../data/teams'
 function ProgressBar({ progress }: { progress: number }) {
   return (
     <div
+      className="team-selection-progress-track"
       style={{
         flex: 1,
         height: 8,
@@ -16,6 +17,7 @@ function ProgressBar({ progress }: { progress: number }) {
       }}
     >
       <div
+        className="team-selection-progress-fill"
         style={{
           width: `${progress}%`,
           height: '100%',
@@ -70,7 +72,7 @@ export default function TeamSelection() {
   return (
     <div
       data-page="team-selection"
-      className="f-page-enter"
+      className="f-page-enter team-selection-page"
       style={{
         height: '100%',
         width: '100%',
@@ -83,7 +85,7 @@ export default function TeamSelection() {
       }}
     >
       {/* ── Row: Back button + Progress bar ─────────────────────── */}
-      <div data-section="header" style={{
+      <div data-section="header" className="team-selection-header" style={{
         display: 'flex',
         alignItems: 'center',
         gap: 'var(--f-brand-space-md)',
@@ -91,6 +93,7 @@ export default function TeamSelection() {
       }}>
         <button
           data-ui="back-btn"
+          className="team-selection-back-btn"
           onClick={handleBack}
           aria-label="Go back"
           style={{
@@ -107,15 +110,15 @@ export default function TeamSelection() {
             WebkitTapHighlightColor: 'transparent',
           }}
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M15 19l-7-7 7-7" stroke="var(--f-brand-color-text-default)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <svg className="team-selection-back-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path className="team-selection-back-icon-path" d="M15 19l-7-7 7-7" stroke="var(--f-brand-color-text-default)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
         <ProgressBar progress={50} />
       </div>
 
       {/* ── Title ───────────────────────────────────────────────── */}
-      <h2 data-section="title" style={{
+      <h2 data-section="title" className="team-selection-title" style={{
         font: 'var(--f-brand-type-title-3)',
         color: 'var(--f-brand-color-text-default)',
         textAlign: 'center',
@@ -126,10 +129,11 @@ export default function TeamSelection() {
       </h2>
 
       {/* ── Dropdown ────────────────────────────────────────────── */}
-      <div data-section="team-dropdown" ref={dropdownRef} style={{ position: 'relative', flexShrink: 0 }}>
+      <div data-section="team-dropdown" className="team-selection-dropdown" ref={dropdownRef} style={{ position: 'relative', flexShrink: 0 }}>
         {/* Trigger input */}
         <button
           data-ui="team-dropdown-btn"
+          className="team-selection-dropdown-btn"
           onClick={() => setOpen(prev => !prev)}
           aria-haspopup="listbox"
           aria-expanded={open}
@@ -149,8 +153,9 @@ export default function TeamSelection() {
             WebkitTapHighlightColor: 'transparent',
           }}
         >
-          <span>{selectedTeam ? selectedTeam.name : 'Select a team'}</span>
+          <span className="team-selection-dropdown-label">{selectedTeam ? selectedTeam.name : 'Select a team'}</span>
           <svg
+            className="team-selection-dropdown-chevron"
             width="16"
             height="16"
             viewBox="0 0 24 24"
@@ -162,13 +167,14 @@ export default function TeamSelection() {
               transition: `transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)`,
             }}
           >
-            <path d="M6 9l6 6 6-6" stroke="var(--f-brand-color-text-subtle)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path className="team-selection-dropdown-chevron-path" d="M6 9l6 6 6-6" stroke="var(--f-brand-color-text-subtle)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
 
         {/* Listbox */}
         {open && (
           <ul
+            className="team-selection-dropdown-list"
             role="listbox"
             style={{
               position: 'absolute',
@@ -190,6 +196,7 @@ export default function TeamSelection() {
           >
             {WORLD_CUP_TEAMS.map((team, i) => (
               <li
+                className="team-selection-dropdown-item"
                 key={team.id}
                 role="option"
                 aria-selected={team.id === selectedId}
@@ -213,10 +220,10 @@ export default function TeamSelection() {
       </div>
 
       {/* ── Spacer ──────────────────────────────────────────────── */}
-      <div style={{ flex: 1 }} />
+      <div className="team-selection-spacer" style={{ flex: 1 }} />
 
       {/* ── "Already have a card? Log in" ───────────────────────── */}
-      <p style={{
+      <p className="team-selection-login-prompt" style={{
         textAlign: 'center',
         font: 'var(--f-brand-type-headline)',
         color: 'var(--f-brand-color-text-default)',
@@ -224,13 +231,14 @@ export default function TeamSelection() {
         flexShrink: 0,
       }}>
         Already have a card?{' '}
-        <span style={{ fontWeight: 'var(--weight-med)' }}>Log in</span>
+        <span className="team-selection-login-link" style={{ fontWeight: 'var(--weight-med)' }}>Log in</span>
       </p>
 
       {/* ── Continue button ─────────────────────────────────────── */}
       <button
         data-section="confirm-cta"
         data-ui="continue-btn"
+        className="team-selection-continue-btn"
         onClick={handleContinue}
         disabled={!selectedId}
         style={{

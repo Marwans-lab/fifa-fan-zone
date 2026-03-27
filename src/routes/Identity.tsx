@@ -21,6 +21,7 @@ function CardPreview({
 
   return (
     <div
+      className="identity-preview-card"
       style={{
         width: '100%',
         aspectRatio: '300 / 420',
@@ -38,26 +39,27 @@ function CardPreview({
       }}
     >
       {/* Top holographic stripe */}
-      <div style={{
+      <div className="identity-preview-stripe" style={{
         position: 'absolute', top: 0, left: 0, right: 0,
         height: 4,
         background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent)',
       }} />
 
       {/* Header text */}
-      <div style={{ textAlign: 'center', width: '100%', zIndex: 1 }}>
-        <div style={{ fontSize: 'var(--text-2xs)', letterSpacing: 'var(--tracking-display-wide)', color: 'var(--c-text-mid)', textTransform: 'uppercase', marginBottom: 'var(--sp-1)' }}>
+      <div className="identity-preview-header" style={{ textAlign: 'center', width: '100%', zIndex: 1 }}>
+        <div className="identity-preview-title" style={{ fontSize: 'var(--text-2xs)', letterSpacing: 'var(--tracking-display-wide)', color: 'var(--c-text-mid)', textTransform: 'uppercase', marginBottom: 'var(--sp-1)' }}>
           FIFA Fan Zone
         </div>
-        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-dim)', letterSpacing: 'var(--tracking-spaced)' }}>
+        <div className="identity-preview-subtitle" style={{ fontSize: 'var(--text-xs)', color: 'var(--c-text-dim)', letterSpacing: 'var(--tracking-spaced)' }}>
           Collector edition
         </div>
       </div>
 
       {/* Photo or placeholder */}
-      <div style={{ zIndex: 1 }}>
+      <div className="identity-preview-photo-wrap" style={{ zIndex: 1 }}>
         {photoDataUrl ? (
           <img
+            className="identity-preview-photo"
             src={photoDataUrl}
             alt="Your photo"
             style={{
@@ -71,6 +73,7 @@ function CardPreview({
           />
         ) : (
           <div
+            className="identity-preview-photo-placeholder"
             style={{
               width: 120, height: 120,
               borderRadius: '50%',
@@ -86,8 +89,8 @@ function CardPreview({
               WebkitBackdropFilter: 'blur(var(--f-brand-blur-subtle))',
             }}
           >
-            <img src={cameraIcon} width={24} height={24} alt="" />
-            <span style={{ fontSize: 'var(--text-3xs)', letterSpacing: 'var(--tracking-display)', textTransform: 'uppercase', opacity: 0.8, lineHeight: 'var(--leading-close)', textAlign: 'center' }}>
+            <img className="identity-preview-camera-icon" src={cameraIcon} width={24} height={24} alt="" />
+            <span className="identity-preview-camera-label" style={{ fontSize: 'var(--text-3xs)', letterSpacing: 'var(--tracking-display)', textTransform: 'uppercase', opacity: 0.8, lineHeight: 'var(--leading-close)', textAlign: 'center' }}>
               Take<br />picture
             </span>
           </div>
@@ -95,8 +98,8 @@ function CardPreview({
       </div>
 
       {/* Team motto */}
-      <div style={{ textAlign: 'center', zIndex: 1 }}>
-        <div style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: 'var(--c-text-hi)', letterSpacing: 'var(--tracking-spaced)', fontStyle: 'italic' }}>
+      <div className="identity-preview-motto-wrap" style={{ textAlign: 'center', zIndex: 1 }}>
+        <div className="identity-preview-motto" style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-med)', color: 'var(--c-text-hi)', letterSpacing: 'var(--tracking-spaced)', fontStyle: 'italic' }}>
           {team.motto}
         </div>
       </div>
@@ -154,28 +157,28 @@ export default function Identity() {
           padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) var(--f-brand-space-md)',
         }}>
           {/* Header */}
-          <div data-section="header" style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-md)' }}>
-            <h2 style={{
+          <div data-section="header" className="identity-header" style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-md)' }}>
+            <h2 className="identity-heading" style={{
               font: 'var(--f-brand-type-title-3)',
               letterSpacing: 'var(--tracking-tight)',
               marginBottom: 'var(--f-brand-space-2xs)',
             }}>
               Choose your team
             </h2>
-            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--f-brand-color-text-subtle)' }}>
+            <p className="identity-subheading" style={{ fontSize: 'var(--text-sm)', color: 'var(--f-brand-color-text-subtle)' }}>
               Select the country you're supporting
             </p>
           </div>
 
           {/* Search */}
-          <div data-section="search" style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-sm)' }}>
+          <div data-section="search" className="identity-search" style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-sm)' }}>
             <input
               data-ui="team-search-input"
               type="text"
               placeholder="Search teams…"
               value={query}
               onChange={e => setQuery(e.target.value)}
-              className="f-input"
+              className="f-input identity-search-input"
             />
           </div>
 
@@ -201,7 +204,7 @@ export default function Identity() {
                 }}
               >
                 {/* Colour swatch */}
-                <div style={{
+                <div className="identity-team-swatch" style={{
                   width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
                   background: `linear-gradient(135deg, ${team.colors[0]}, ${team.colors[1]})`,
                   border: '1px solid rgba(255,255,255,0.1)',
@@ -210,10 +213,10 @@ export default function Identity() {
                 }}>
                   {team.flag}
                 </div>
-                <span style={{ fontSize: 'var(--text-md)', fontWeight: 'var(--weight-reg)', flex: 1 }}>
+                <span className="identity-team-name" style={{ fontSize: 'var(--text-md)', fontWeight: 'var(--weight-reg)', flex: 1 }}>
                   {team.name}
                 </span>
-                <span style={{ color: 'var(--f-brand-color-text-muted)', fontSize: 'var(--text-base)' }}>›</span>
+                <span className="identity-team-chevron" style={{ color: 'var(--f-brand-color-text-muted)', fontSize: 'var(--text-base)' }}>›</span>
               </button>
             ))}
           </div>
@@ -226,7 +229,7 @@ export default function Identity() {
   return (
     <Screen centered>
       <div data-page="identity" className="f-page-enter" style={{ padding: 'var(--f-brand-space-xl) var(--f-brand-space-md)', textAlign: 'center', maxWidth: 340, width: '100%' }}>
-        <h2 style={{
+        <h2 className="identity-preview-heading" style={{
           font: 'var(--f-brand-type-title-3)',
           fontSize: 'var(--text-xl)',
           letterSpacing: 'var(--tracking-tight)',
@@ -234,15 +237,15 @@ export default function Identity() {
         }}>
           Looking good!
         </h2>
-        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--f-brand-color-text-subtle)', marginBottom: 'var(--f-brand-space-lg)' }}>
+        <p className="identity-preview-subheading" style={{ fontSize: 'var(--text-sm)', color: 'var(--f-brand-color-text-subtle)', marginBottom: 'var(--f-brand-space-lg)' }}>
           Your fan card is ready
         </p>
 
-        <div data-section="card-preview">
+        <div className="identity-card-preview" data-section="card-preview">
           <CardPreview teamId={selectedTeamId!} photoDataUrl={photoDataUrl} />
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-sm)', marginTop: 'var(--f-brand-space-lg)' }}>
+        <div className="identity-preview-actions" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-sm)', marginTop: 'var(--f-brand-space-lg)' }}>
           <button
             data-ui="save-fan-card-btn"
             onClick={handleContinue}
