@@ -531,7 +531,7 @@ export default function Card() {
     if (!cardComplete) {
       track('complete_fan_card_journey_tapped')
       fanCardSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      setTimeout(() => fanCardRef.current?.flipToBack(), 500)
+      setTimeout(() => fanCardRef.current?.startEditing(), 500)
       return
     }
 
@@ -617,7 +617,7 @@ export default function Card() {
               onClick={() => {
                 track('complete_fan_card_tapped')
                 fanCardSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                setTimeout(() => fanCardRef.current?.flipToBack(), 500)
+                setTimeout(() => fanCardRef.current?.startEditing(), 500)
               }}
               style={{
                 width: '100%', height: 'var(--sp-12)',
