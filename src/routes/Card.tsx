@@ -117,7 +117,6 @@ function JourneyCard({
   quizCount,
   totalQuizzes,
   allComplete,
-  cardComplete,
   completedFlows,
   onStartQuiz,
 }: {
@@ -125,7 +124,6 @@ function JourneyCard({
   quizCount: number
   totalQuizzes: number
   allComplete: boolean
-  cardComplete: boolean
   completedFlows: Set<string>
   onStartQuiz: () => void
 }) {
@@ -235,7 +233,7 @@ function JourneyCard({
         style={{
           width: '100%', height: 'var(--sp-12)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: allComplete ? 'rgba(0,212,170,0.1)' : !cardComplete ? 'var(--f-brand-color-background-primary)' : 'var(--f-brand-color-text-default)',
+          background: allComplete ? 'rgba(0,212,170,0.1)' : 'var(--f-brand-color-text-default)',
           color: allComplete ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-text-light)',
           font: 'var(--f-brand-type-body-medium)', fontWeight: 'var(--weight-bold)',
           fontSize: 'var(--text-md)', borderRadius: 9999,
@@ -246,7 +244,7 @@ function JourneyCard({
           WebkitTapHighlightColor: 'transparent',
         }}
       >
-        {allComplete ? 'All quizzes completed!' : !cardComplete ? 'Complete fan card' : 'Start quiz'}
+        {allComplete ? 'All quizzes completed!' : 'Start quiz'}
       </button>
     </section>
   )
@@ -525,13 +523,6 @@ export default function Card() {
   const allQuizzesDone = quizCount >= totalQuizzes
 
   const handleJourneyStart = useCallback(() => {
-    if (!cardComplete) {
-      track('complete_fan_card_journey_tapped')
-      fanCardSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      setTimeout(() => fanCardRef.current?.startEditing(), 500)
-      return
-    }
-
     track('card_start_quiz_tapped')
 
     // Find first unlocked, uncompleted flow
@@ -546,7 +537,7 @@ export default function Card() {
 
     // Fallback: scroll to quiz section
     quizRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, [cardComplete, state.quizResults, isFlowUnlocked])
+  }, [state.quizResults, isFlowUnlocked])
 
   return (
     <Screen>
@@ -577,7 +568,6 @@ export default function Card() {
               quizCount={quizCount}
               totalQuizzes={totalQuizzes}
               allComplete={allQuizzesDone}
-              cardComplete={cardComplete}
               completedFlows={new Set(FLOWS.filter(f => !!state.quizResults[f.id]).map(f => f.id))}
               onStartQuiz={handleJourneyStart}
             />
