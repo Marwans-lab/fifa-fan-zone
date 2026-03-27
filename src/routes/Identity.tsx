@@ -20,8 +20,7 @@ function CardPreview({
   const [c1, c2] = team.colors
 
   return (
-    <div
-      className="identity-preview-card"
+    <div className="identity-preview-card"
       style={{
         width: '100%',
         aspectRatio: '300 / 420',
@@ -58,8 +57,7 @@ function CardPreview({
       {/* Photo or placeholder */}
       <div className="identity-preview-photo-wrap" style={{ zIndex: 1 }}>
         {photoDataUrl ? (
-          <img
-            className="identity-preview-photo"
+          <img className="identity-preview-photo"
             src={photoDataUrl}
             alt="Your photo"
             style={{
@@ -72,8 +70,7 @@ function CardPreview({
             }}
           />
         ) : (
-          <div
-            className="identity-preview-photo-placeholder"
+          <div className="identity-preview-photo-placeholder"
             style={{
               width: 120, height: 120,
               borderRadius: '50%',
@@ -172,24 +169,22 @@ export default function Identity() {
 
           {/* Search */}
           <div data-section="search" className="identity-search" style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-sm)' }}>
-            <input
+            <input className="f-input identity-search-input"
               data-ui="team-search-input"
               type="text"
               placeholder="Search teams…"
               value={query}
               onChange={e => setQuery(e.target.value)}
-              className="f-input identity-search-input"
             />
           </div>
 
           {/* Team list — scrollable */}
           <div data-section="team-grid" className="scroll-y stagger" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-xs)', paddingBottom: 'var(--f-brand-space-md)' }}>
             {filtered.map(team => (
-              <button
+              <button className="f-surface"
                 key={team.id}
                 data-ui="team-option-btn"
                 onClick={() => handleTeamSelect(team.id)}
-                className="f-surface"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -246,18 +241,16 @@ export default function Identity() {
         </div>
 
         <div className="identity-preview-actions" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-sm)', marginTop: 'var(--f-brand-space-lg)' }}>
-          <button
+          <button className="f-button"
             data-ui="save-fan-card-btn"
             onClick={handleContinue}
-            className="f-button"
             style={{ width: '100%' }}
           >
             Save fan card
           </button>
-          <button
+          <button className="f-button f-button--secondary"
             data-ui="retake-photo-btn"
             onClick={handleRetake}
-            className="f-button f-button--secondary"
             style={{ width: '100%' }}
           >
             Retake photo

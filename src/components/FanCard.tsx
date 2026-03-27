@@ -85,8 +85,7 @@ function getFrontInlineStyle(teamId: string | null, isFlipped: boolean): React.C
 // ─── Sub-components ───────────────────────────────────────────────────────────
 function ActionCircle({ icon, label, onClick, disabled, dataUi }: { icon: React.ReactNode; label: string; onClick: (e: React.MouseEvent) => void; disabled?: boolean; dataUi?: string }) {
   return (
-    <button
-      className="f-fan-card__action"
+    <button className="f-fan-card__action"
       onClick={onClick}
       disabled={disabled}
       data-ui={dataUi}
@@ -117,10 +116,9 @@ function HolographicStripe() {
 function FanPhoto({ photoDataUrl }: { photoDataUrl: string | null }) {
   if (photoDataUrl) {
     return (
-      <img
+      <img className="f-fan-card__photo"
         src={photoDataUrl}
         alt="Fan photo"
-        className="f-fan-card__photo"
       />
     )
   }
@@ -240,8 +238,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
   const rootClassName = `f-fan-card${isFlipped ? ' f-fan-card--flipped' : ''}`
 
   return (
-    <div
-      className={rootClassName}
+    <div className={rootClassName}
       data-component="fan-card"
       onClick={isFlipped ? undefined : flipToBack}
       role="button"
@@ -250,8 +247,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
       <div className="f-fan-card__inner">
 
         {/* ── FRONT ─────────────────────────────────────────────── */}
-        <div
-          className="f-fan-card__front"
+        <div className="f-fan-card__front"
           data-section="front-face"
           style={getFrontInlineStyle(fanCard.teamId, isFlipped)}
         >
@@ -330,10 +326,9 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                 {currentQ.options.map(option => {
                   const selected = currentAnswer === option
                   return (
-                    <button
+                    <button className={`f-fan-card__wizard-option${selected ? ' f-fan-card__wizard-option--selected' : ''}`}
                       key={option}
                       onClick={e => { e.stopPropagation(); handleSelect(currentQ.id, option) }}
-                      className={`f-fan-card__wizard-option${selected ? ' f-fan-card__wizard-option--selected' : ''}`}
                     >
                       {option}
                     </button>
@@ -342,16 +337,14 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               </div>
 
               <div className="f-fan-card__wizard-nav">
-                <button
+                <button className="f-fan-card__wizard-btn f-fan-card__wizard-btn--back"
                   onClick={handleBack}
-                  className="f-fan-card__wizard-btn f-fan-card__wizard-btn--back"
                 >
                   Back
                 </button>
-                <button
+                <button className="f-fan-card__wizard-btn f-fan-card__wizard-btn--next"
                   onClick={handleNext}
                   disabled={!currentAnswer}
-                  className="f-fan-card__wizard-btn f-fan-card__wizard-btn--next"
                 >
                   {isLast ? (
                     <span className="f-fan-card__wizard-btn-content">
@@ -389,9 +382,8 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
 
             /* ── Empty CTA ───────────────────────────────────────── */
             <div className="f-fan-card__cta" onClick={e => e.stopPropagation()}>
-              <button
+              <button className="f-fan-card__cta-button"
                 onClick={startWizard}
-                className="f-fan-card__cta-button"
               >
                 Complete your card
               </button>
@@ -401,8 +393,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
 
           {/* ── Action circles (Edit / Share / Save) ─────────────── */}
           {isComplete && !wizardActive && (
-            <div
-              className="f-fan-card__actions"
+            <div className="f-fan-card__actions"
               data-section="action-circles"
               onClick={e => e.stopPropagation()}
             >

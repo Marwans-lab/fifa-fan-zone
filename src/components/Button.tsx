@@ -38,9 +38,8 @@ export default function Button({
   const isDisabled = disabled || loading
 
   return (
-    <button
+    <button className={classes}
       {...props}
-      className={classes}
       data-component="button"
       disabled={isDisabled}
       aria-disabled={isDisabled || undefined}

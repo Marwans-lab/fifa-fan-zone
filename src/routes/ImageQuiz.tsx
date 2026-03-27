@@ -12,8 +12,7 @@ const QUESTION_TIME = 15 // seconds
 function TickIcon() {
   return (
     <svg className="image-quiz-icon-tick-svg" width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-      <path
-        className="image-quiz-icon-tick-path"
+      <path className="image-quiz-icon-tick-path"
         d="M10 20L17 27L30 13"
         stroke="currentColor"
         strokeWidth="3.5"
@@ -28,8 +27,7 @@ function TickIcon() {
 function CloseIcon() {
   return (
     <svg className="image-quiz-icon-close-svg" width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-      <path
-        className="image-quiz-icon-close-path"
+      <path className="image-quiz-icon-close-path"
         d="M12 12L28 28M28 12L12 28"
         stroke="currentColor"
         strokeWidth="3.5"
@@ -100,8 +98,7 @@ function ImageOptionCard({
   }
 
   return (
-    <button
-      className="image-quiz-option-button"
+    <button className="image-quiz-option-button"
       onClick={revealed ? undefined : onSelect}
       disabled={revealed}
       aria-label={option.label}
@@ -121,8 +118,7 @@ function ImageOptionCard({
       }}
     >
       {/* Image */}
-      <img
-        className="image-quiz-option-image"
+      <img className="image-quiz-option-image"
         src={option.imageUrl}
         alt={option.label}
         onLoad={() => setImgLoaded(true)}
@@ -139,8 +135,7 @@ function ImageOptionCard({
 
       {/* Loading placeholder */}
       {!imgLoaded && (
-        <div
-          className="image-quiz-option-placeholder"
+        <div className="image-quiz-option-placeholder"
           style={{
             position: 'absolute',
             inset: 0,
@@ -150,8 +145,7 @@ function ImageOptionCard({
             background: 'var(--f-brand-color-background-light)',
           }}
         >
-          <div
-            className="image-quiz-option-spinner"
+          <div className="image-quiz-option-spinner"
             style={{
               width: 24,
               height: 24,
@@ -166,8 +160,7 @@ function ImageOptionCard({
 
       {/* Feedback overlay — green for correct, red for wrong */}
       {showOverlay && (
-        <div
-          className="image-quiz-option-overlay"
+        <div className="image-quiz-option-overlay"
           style={{
             position: 'absolute',
             inset: 0,
@@ -184,8 +177,7 @@ function ImageOptionCard({
       )}
 
       {/* Label at bottom */}
-      <div
-        className="image-quiz-option-label-wrapper"
+      <div className="image-quiz-option-label-wrapper"
         style={{
           position: 'absolute',
           bottom: 0,
@@ -196,8 +188,7 @@ function ImageOptionCard({
           zIndex: 1,
         }}
       >
-        <span
-          className="image-quiz-option-label"
+        <span className="image-quiz-option-label"
           style={{
             font: 'var(--f-brand-type-caption-medium)',
             fontSize: 'var(--text-sm)',
@@ -241,8 +232,7 @@ function ImageQuestionScreen({
 
   return (
     <Screen>
-      <div
-        className="f-page-enter"
+      <div className="f-page-enter"
         data-page="image-quiz"
         style={{
           display: 'flex',
@@ -260,8 +250,7 @@ function ImageQuestionScreen({
               <img className="image-quiz-back-icon" src={chevLeft} width={24} height={24} alt="Back" />
             </button>
             <div className="image-quiz-progress-track" style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
-              <div
-                className="image-quiz-progress-fill"
+              <div className="image-quiz-progress-fill"
                 style={{
                   height: '100%',
                   width: `${((qIndex + (revealed ? 1 : 0)) / total) * 100}%`,
@@ -285,8 +274,7 @@ function ImageQuestionScreen({
           </div>
 
           {/* Question text */}
-          <div
-            className="image-quiz-question-text"
+          <div className="image-quiz-question-text"
             data-section="question"
             style={{
               padding: '0 var(--f-brand-space-lg)',
@@ -304,8 +292,7 @@ function ImageQuestionScreen({
           </div>
 
           {/* 2×2 Image grid */}
-          <div
-            className="image-quiz-options-grid"
+          <div className="image-quiz-options-grid"
             data-section="image-grid"
             style={{
               padding: '0 var(--f-brand-space-md)',
@@ -331,8 +318,7 @@ function ImageQuestionScreen({
         {/* ── Fixed bottom: feedback + Next CTA ────────── */}
         <div className="image-quiz-footer" style={{ padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
           {revealed && (
-            <div
-              className="image-quiz-feedback-message"
+            <div className="image-quiz-feedback-message"
               style={{
                 textAlign: 'center',
                 fontSize: 'var(--text-sm)',
@@ -349,10 +335,9 @@ function ImageQuestionScreen({
                 : '⏱ Time\'s up!'}
             </div>
           )}
-          <button
+          <button className="f-button"
             onClick={onNext}
             disabled={!revealed}
-            className="f-button"
             data-ui="next-btn"
             style={{
               width: '100%',

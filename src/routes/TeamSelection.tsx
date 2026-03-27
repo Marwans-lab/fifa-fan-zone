@@ -6,8 +6,7 @@ import { WORLD_CUP_TEAMS } from '../data/teams'
 /* ── Progress bar (reused from Picture flow) ──────────────────────────────── */
 function ProgressBar({ progress }: { progress: number }) {
   return (
-    <div
-      className="team-selection-progress-track"
+    <div className="team-selection-progress-track"
       style={{
         flex: 1,
         height: 8,
@@ -16,8 +15,7 @@ function ProgressBar({ progress }: { progress: number }) {
         overflow: 'hidden',
       }}
     >
-      <div
-        className="team-selection-progress-fill"
+      <div className="team-selection-progress-fill"
         style={{
           width: `${progress}%`,
           height: '100%',
@@ -70,9 +68,8 @@ export default function TeamSelection() {
   }
 
   return (
-    <div
+    <div className="f-page-enter team-selection-page"
       data-page="team-selection"
-      className="f-page-enter team-selection-page"
       style={{
         height: '100%',
         width: '100%',
@@ -91,9 +88,8 @@ export default function TeamSelection() {
         gap: 'var(--f-brand-space-md)',
         flexShrink: 0,
       }}>
-        <button
+        <button className="team-selection-back-btn"
           data-ui="back-btn"
-          className="team-selection-back-btn"
           onClick={handleBack}
           aria-label="Go back"
           style={{
@@ -131,9 +127,8 @@ export default function TeamSelection() {
       {/* ── Dropdown ────────────────────────────────────────────── */}
       <div data-section="team-dropdown" className="team-selection-dropdown" ref={dropdownRef} style={{ position: 'relative', flexShrink: 0 }}>
         {/* Trigger input */}
-        <button
+        <button className="team-selection-dropdown-btn"
           data-ui="team-dropdown-btn"
-          className="team-selection-dropdown-btn"
           onClick={() => setOpen(prev => !prev)}
           aria-haspopup="listbox"
           aria-expanded={open}
@@ -154,8 +149,7 @@ export default function TeamSelection() {
           }}
         >
           <span className="team-selection-dropdown-label">{selectedTeam ? selectedTeam.name : 'Select a team'}</span>
-          <svg
-            className="team-selection-dropdown-chevron"
+          <svg className="team-selection-dropdown-chevron"
             width="16"
             height="16"
             viewBox="0 0 24 24"
@@ -173,8 +167,7 @@ export default function TeamSelection() {
 
         {/* Listbox */}
         {open && (
-          <ul
-            className="team-selection-dropdown-list"
+          <ul className="team-selection-dropdown-list"
             role="listbox"
             style={{
               position: 'absolute',
@@ -195,8 +188,7 @@ export default function TeamSelection() {
             }}
           >
             {WORLD_CUP_TEAMS.map((team, i) => (
-              <li
-                className="team-selection-dropdown-item"
+              <li className="team-selection-dropdown-item"
                 key={team.id}
                 role="option"
                 aria-selected={team.id === selectedId}
@@ -235,10 +227,9 @@ export default function TeamSelection() {
       </p>
 
       {/* ── Continue button ─────────────────────────────────────── */}
-      <button
+      <button className="team-selection-continue-btn"
         data-section="confirm-cta"
         data-ui="continue-btn"
-        className="team-selection-continue-btn"
         onClick={handleContinue}
         disabled={!selectedId}
         style={{
