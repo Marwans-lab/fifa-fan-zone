@@ -101,12 +101,14 @@ function JourneyCard({
   quizCount,
   totalQuizzes,
   allComplete,
+  cardComplete,
   onStartQuiz,
 }: {
   completedAt: string | null
   quizCount: number
   totalQuizzes: number
   allComplete: boolean
+  cardComplete: boolean
   onStartQuiz: () => void
 }) {
   const achieved = [
@@ -239,18 +241,18 @@ function JourneyCard({
         style={{
           width: '100%', height: 'var(--sp-12)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: allComplete ? 'rgba(0,212,170,0.1)' : 'var(--f-brand-color-text-default)',
+          background: allComplete ? 'rgba(0,212,170,0.1)' : !cardComplete ? 'var(--f-brand-color-background-primary)' : 'var(--f-brand-color-text-default)',
           color: allComplete ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-text-light)',
           font: 'var(--f-brand-type-body-medium)', fontWeight: 'var(--weight-bold)',
           fontSize: 'var(--text-md)', borderRadius: 9999,
           border: allComplete ? '1px solid rgba(0,212,170,0.25)' : 'none',
           marginTop: 'var(--sp-7)', cursor: allComplete ? 'default' : 'pointer',
-          boxShadow: allComplete ? 'none' : '0 10px 30px rgba(0,0,0,0.12)',
+          boxShadow: allComplete ? 'none' : !cardComplete ? '0 10px 30px rgba(142,33,87,0.3)' : '0 10px 30px rgba(0,0,0,0.12)',
           transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
           WebkitTapHighlightColor: 'transparent',
         }}
       >
-        {allComplete ? 'All quizzes completed!' : 'Start quiz'}
+        {allComplete ? 'All quizzes completed!' : !cardComplete ? 'Complete fan card' : 'Start quiz'}
       </button>
     </section>
   )
@@ -526,12 +528,14 @@ export default function Card() {
   const allQuizzesDone = quizCount >= totalQuizzes
 
   const handleJourneyStart = useCallback(() => {
-    track('card_start_quiz_tapped')
-
     if (!cardComplete) {
-      quizRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      track('complete_fan_card_journey_tapped')
+      fanCardSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      setTimeout(() => fanCardRef.current?.flipToBack(), 500)
       return
     }
+
+    track('card_start_quiz_tapped')
 
     // Find first unlocked, uncompleted flow
     for (const flow of FLOWS) {
@@ -641,6 +645,7 @@ export default function Card() {
             quizCount={quizCount}
             totalQuizzes={totalQuizzes}
             allComplete={allQuizzesDone}
+            cardComplete={cardComplete}
             onStartQuiz={handleJourneyStart}
           />
 
