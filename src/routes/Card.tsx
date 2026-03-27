@@ -685,13 +685,13 @@ export default function Card() {
             <div className="card-quiz-header" style={{ marginBottom: 'var(--f-brand-space-md)' }}>
               <h2 className="card-quiz-heading" style={{
                 font: 'var(--f-brand-type-title-2)',
-                letterSpacing: 'var(--tracking-tighter)', color: 'var(--f-brand-color-text-light)',
+                letterSpacing: 'var(--tracking-tighter)', color: 'var(--f-brand-color-text-default)',
               }}>
                 Earn Avios
               </h2>
               <p className="card-quiz-description" style={{
                 font: 'var(--f-brand-type-subheading)',
-                color: 'var(--c-text-2)', marginTop: 'var(--f-brand-space-2xs)',
+                color: 'var(--f-brand-color-text-default)', marginTop: 'var(--f-brand-space-2xs)',
               }}>
                 Complete quizzes to climb the leaderboard
               </p>
