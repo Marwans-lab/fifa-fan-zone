@@ -83,12 +83,13 @@ function getFrontInlineStyle(teamId: string | null, isFlipped: boolean): React.C
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
-function ActionCircle({ icon, label, onClick, disabled }: { icon: React.ReactNode; label: string; onClick: (e: React.MouseEvent) => void; disabled?: boolean }) {
+function ActionCircle({ icon, label, onClick, disabled, dataUi }: { icon: React.ReactNode; label: string; onClick: (e: React.MouseEvent) => void; disabled?: boolean; dataUi?: string }) {
   return (
     <button
       className="f-fan-card__action"
       onClick={onClick}
       disabled={disabled}
+      data-ui={dataUi}
     >
       <div className="f-fan-card__action-circle">
         {icon}
@@ -241,6 +242,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
   return (
     <div
       className={rootClassName}
+      data-component="fan-card"
       onClick={isFlipped ? undefined : flipToBack}
       role="button"
       aria-label={isFlipped ? 'Fan card back' : 'Fan card – tap to flip'}
@@ -250,12 +252,13 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
         {/* ── FRONT ─────────────────────────────────────────────── */}
         <div
           className="f-fan-card__front"
+          data-section="front-face"
           style={getFrontInlineStyle(fanCard.teamId, isFlipped)}
         >
           <CardTexture />
           <HolographicStripe />
 
-          <div className="f-fan-card__header">
+          <div className="f-fan-card__header" data-section="name">
             <div className="f-fan-card__header-text">
               <div className="f-fan-card__header-title">
                 Your Fan Card
@@ -268,9 +271,9 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           </div>
 
           {/* Photo + motto */}
-          <div className="f-fan-card__photo-section">
+          <div className="f-fan-card__photo-section" data-section="photo">
             <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
-            <div className="f-fan-card__team-badge">
+            <div className="f-fan-card__team-badge" data-section="team">
               {fanCard.teamId ? (() => {
                 const team = getTeam(fanCard.teamId)
                 return (
@@ -293,7 +296,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
         </div>
 
         {/* ── BACK ──────────────────────────────────────────────── */}
-        <div className="f-fan-card__back" onClick={flipToFront}>
+        <div className="f-fan-card__back" data-section="back-face" onClick={flipToFront}>
           <HolographicStripe />
 
           {/* Header */}
@@ -400,11 +403,12 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           {isComplete && !wizardActive && (
             <div
               className="f-fan-card__actions"
+              data-section="action-circles"
               onClick={e => e.stopPropagation()}
             >
-              <ActionCircle icon={<img src={editIcon}  width={24} height={24} alt="" />} label="Edit"  onClick={handleEditTap} />
-              <ActionCircle icon={<img src={shareIcon} width={24} height={24} alt="" />} label="Share" onClick={handleShareTap} />
-              <ActionCircle icon={<img src={saveIcon}  width={24} height={24} alt="" />} label="Save"  onClick={handleSaveTap} />
+              <ActionCircle icon={<img src={editIcon}  width={24} height={24} alt="" />} label="Edit"  onClick={handleEditTap} dataUi="edit-btn" />
+              <ActionCircle icon={<img src={shareIcon} width={24} height={24} alt="" />} label="Share" onClick={handleShareTap} dataUi="share-btn" />
+              <ActionCircle icon={<img src={saveIcon}  width={24} height={24} alt="" />} label="Save"  onClick={handleSaveTap} dataUi="save-btn" />
             </div>
           )}
 

@@ -69,6 +69,7 @@ export default function TeamSelection() {
 
   return (
     <div
+      data-page="team-selection"
       className="f-page-enter"
       style={{
         height: '100%',
@@ -82,13 +83,14 @@ export default function TeamSelection() {
       }}
     >
       {/* ── Row: Back button + Progress bar ─────────────────────── */}
-      <div style={{
+      <div data-section="header" style={{
         display: 'flex',
         alignItems: 'center',
         gap: 'var(--f-brand-space-md)',
         flexShrink: 0,
       }}>
         <button
+          data-ui="back-btn"
           onClick={handleBack}
           aria-label="Go back"
           style={{
@@ -113,7 +115,7 @@ export default function TeamSelection() {
       </div>
 
       {/* ── Title ───────────────────────────────────────────────── */}
-      <h2 style={{
+      <h2 data-section="title" style={{
         font: 'var(--f-brand-type-title-3)',
         color: 'var(--f-brand-color-text-default)',
         textAlign: 'center',
@@ -124,9 +126,10 @@ export default function TeamSelection() {
       </h2>
 
       {/* ── Dropdown ────────────────────────────────────────────── */}
-      <div ref={dropdownRef} style={{ position: 'relative', flexShrink: 0 }}>
+      <div data-section="team-dropdown" ref={dropdownRef} style={{ position: 'relative', flexShrink: 0 }}>
         {/* Trigger input */}
         <button
+          data-ui="team-dropdown-btn"
           onClick={() => setOpen(prev => !prev)}
           aria-haspopup="listbox"
           aria-expanded={open}
@@ -226,6 +229,8 @@ export default function TeamSelection() {
 
       {/* ── Continue button ─────────────────────────────────────── */}
       <button
+        data-section="confirm-cta"
+        data-ui="continue-btn"
         onClick={handleContinue}
         disabled={!selectedId}
         style={{

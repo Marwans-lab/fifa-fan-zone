@@ -148,13 +148,13 @@ export default function Identity() {
   if (step === 'team') {
     return (
       <Screen>
-        <div className="f-page-enter" style={{
+        <div data-page="identity" className="f-page-enter" style={{
           display: 'flex', flexDirection: 'column',
           height: '100%',
           padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) var(--f-brand-space-md)',
         }}>
           {/* Header */}
-          <div style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-md)' }}>
+          <div data-section="header" style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-md)' }}>
             <h2 style={{
               font: 'var(--f-brand-type-title-3)',
               letterSpacing: 'var(--tracking-tight)',
@@ -168,8 +168,9 @@ export default function Identity() {
           </div>
 
           {/* Search */}
-          <div style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-sm)' }}>
+          <div data-section="search" style={{ flexShrink: 0, marginBottom: 'var(--f-brand-space-sm)' }}>
             <input
+              data-ui="team-search-input"
               type="text"
               placeholder="Search teams…"
               value={query}
@@ -179,10 +180,11 @@ export default function Identity() {
           </div>
 
           {/* Team list — scrollable */}
-          <div className="scroll-y stagger" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-xs)', paddingBottom: 'var(--f-brand-space-md)' }}>
+          <div data-section="team-grid" className="scroll-y stagger" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-xs)', paddingBottom: 'var(--f-brand-space-md)' }}>
             {filtered.map(team => (
               <button
                 key={team.id}
+                data-ui="team-option-btn"
                 onClick={() => handleTeamSelect(team.id)}
                 className="f-surface"
                 style={{
@@ -223,7 +225,7 @@ export default function Identity() {
   // ── Step: preview (returned from Picture route) ──────────────────────────
   return (
     <Screen centered>
-      <div className="f-page-enter" style={{ padding: 'var(--f-brand-space-xl) var(--f-brand-space-md)', textAlign: 'center', maxWidth: 340, width: '100%' }}>
+      <div data-page="identity" className="f-page-enter" style={{ padding: 'var(--f-brand-space-xl) var(--f-brand-space-md)', textAlign: 'center', maxWidth: 340, width: '100%' }}>
         <h2 style={{
           font: 'var(--f-brand-type-title-3)',
           fontSize: 'var(--text-xl)',
@@ -236,10 +238,13 @@ export default function Identity() {
           Your fan card is ready
         </p>
 
-        <CardPreview teamId={selectedTeamId!} photoDataUrl={photoDataUrl} />
+        <div data-section="card-preview">
+          <CardPreview teamId={selectedTeamId!} photoDataUrl={photoDataUrl} />
+        </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-sm)', marginTop: 'var(--f-brand-space-lg)' }}>
           <button
+            data-ui="save-fan-card-btn"
             onClick={handleContinue}
             className="f-button"
             style={{ width: '100%' }}
@@ -247,6 +252,7 @@ export default function Identity() {
             Save fan card
           </button>
           <button
+            data-ui="retake-photo-btn"
             onClick={handleRetake}
             className="f-button f-button--secondary"
             style={{ width: '100%' }}

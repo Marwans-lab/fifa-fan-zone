@@ -137,6 +137,7 @@ export default function Landing() {
 
   return (
     <div
+      data-page="landing"
       className="f-page-enter"
       style={{
         display: 'flex',
@@ -150,6 +151,7 @@ export default function Landing() {
     >
       {/* Title */}
       <h1
+        data-section="hero"
         style={{
           font: 'var(--f-brand-type-title-2)',
           color: 'var(--f-brand-color-text-default)',
@@ -162,12 +164,14 @@ export default function Landing() {
       </h1>
 
       {/* Fan Card Stack */}
-      <div style={{ marginTop: 'var(--f-brand-space-lg)', width: '100%' }}>
+      <div data-section="fan-card-stack" style={{ marginTop: 'var(--f-brand-space-lg)', width: '100%' }}>
         <FanCardStack />
       </div>
 
       {/* CTA Button */}
       <button
+        data-section="cta"
+        data-ui="primary-cta-btn"
         onClick={handlePrimary}
         style={{
           marginTop: 'var(--f-brand-space-2xl)',

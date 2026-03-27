@@ -233,6 +233,7 @@ function ImageQuestionScreen({
     <Screen>
       <div
         className="f-page-enter"
+        data-page="image-quiz"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -243,9 +244,9 @@ function ImageQuestionScreen({
         }}
       >
         {/* ── Top bar ─────────────────────────────────── */}
-        <div style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+        <div data-section="header" style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
-            <button onClick={onBack} className="f-button f-button--ghost">
+            <button onClick={onBack} className="f-button f-button--ghost" data-ui="back-btn">
               <img src={chevLeft} width={24} height={24} alt="Back" />
             </button>
             <div style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
@@ -268,12 +269,13 @@ function ImageQuestionScreen({
         {/* ── Animated content ─────────────────────────── */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
           {/* Timer */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+          <div data-section="timer" style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--f-brand-space-md)', flexShrink: 0 }}>
             <CircularTimer timeLeft={timeLeft} size={64} />
           </div>
 
           {/* Question text */}
           <div
+            data-section="question"
             style={{
               padding: '0 var(--f-brand-space-lg)',
               font: 'var(--f-brand-type-title-3)',
@@ -291,6 +293,7 @@ function ImageQuestionScreen({
 
           {/* 2×2 Image grid */}
           <div
+            data-section="image-grid"
             style={{
               padding: '0 var(--f-brand-space-md)',
               display: 'grid',
@@ -336,6 +339,7 @@ function ImageQuestionScreen({
             onClick={onNext}
             disabled={!revealed}
             className="f-button"
+            data-ui="next-btn"
             style={{
               width: '100%',
               padding: 'var(--sp-4) 0',

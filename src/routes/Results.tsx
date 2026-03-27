@@ -71,12 +71,12 @@ export default function Results() {
   if (!result) {
     return (
       <Screen centered>
-        <div className="f-page-enter" style={{ padding: 'var(--f-brand-space-2xl) var(--f-brand-space-lg)', textAlign: 'center', maxWidth: 360, width: '100%' }}>
+        <div data-page="results" className="f-page-enter" style={{ padding: 'var(--f-brand-space-2xl) var(--f-brand-space-lg)', textAlign: 'center', maxWidth: 360, width: '100%' }}>
           <div style={{ marginBottom: 'var(--f-brand-space-md)' }}><img src={trophyIcon} width={24} height={24} alt="" /></div>
-          <h2 style={{ font: 'var(--f-brand-type-title-3)', marginBottom: 'var(--f-brand-space-xs)', letterSpacing: 'var(--tracking-tight)' }}>
+          <h2 data-section="score-label" style={{ font: 'var(--f-brand-type-title-3)', marginBottom: 'var(--f-brand-space-xs)', letterSpacing: 'var(--tracking-tight)' }}>
             Your score
           </h2>
-          <p style={{ font: 'var(--f-brand-type-title-1)', color: 'var(--f-brand-color-accent)', marginBottom: 'var(--f-brand-space-xl)', letterSpacing: 'var(--tracking-tight)', fontWeight: 'var(--weight-med)' }}>
+          <p data-section="score-ring" style={{ font: 'var(--f-brand-type-title-1)', color: 'var(--f-brand-color-accent)', marginBottom: 'var(--f-brand-space-xl)', letterSpacing: 'var(--tracking-tight)', fontWeight: 'var(--weight-med)' }}>
             {appState.points} <span style={{ font: 'var(--f-brand-type-caption)', color: 'var(--f-brand-color-text-subtle)' }}>pts</span>
           </p>
           <Button fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
@@ -96,10 +96,10 @@ export default function Results() {
 
   return (
     <Screen centered>
-      <div className="f-page-enter" style={{ padding: 'var(--f-brand-space-2xl) var(--f-brand-space-lg)', textAlign: 'center', maxWidth: 380, width: '100%' }}>
+      <div data-page="results" className="f-page-enter" style={{ padding: 'var(--f-brand-space-2xl) var(--f-brand-space-lg)', textAlign: 'center', maxWidth: 380, width: '100%' }}>
 
         {/* Status label */}
-        <div style={{
+        <div data-section="score-label" style={{
           font: 'var(--f-brand-type-title-3)',
           letterSpacing: 'var(--tracking-tight)',
           color,
@@ -121,7 +121,7 @@ export default function Results() {
         </div>
 
         {/* Score ring — animated SVG progress, count-up points inside */}
-        <div style={{ position: 'relative', width: RING_SIZE, height: RING_SIZE, margin: '0 auto var(--f-brand-space-xl)' }}>
+        <div data-section="score-ring" style={{ position: 'relative', width: RING_SIZE, height: RING_SIZE, margin: '0 auto var(--f-brand-space-xl)' }}>
           <svg
             width={RING_SIZE}
             height={RING_SIZE}
@@ -165,14 +165,14 @@ export default function Results() {
         </div>
 
         {/* Actions */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-sm)', width: '100%' }}>
-          <Button fullWidth onClick={() => { track('results_leaderboard_tapped'); navigate('/leaderboard') }}>
+        <div data-section="actions" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-sm)', width: '100%' }}>
+          <Button data-ui="view-leaderboard-btn" fullWidth onClick={() => { track('results_leaderboard_tapped'); navigate('/leaderboard') }}>
             View leaderboard
           </Button>
-          <Button variant="secondary" fullWidth onClick={() => { track('results_home_tapped'); navigate(homeRoute) }}>
+          <Button data-ui="return-home-btn" variant="secondary" fullWidth onClick={() => { track('results_home_tapped'); navigate(homeRoute) }}>
             Return home
           </Button>
-          <Button variant="ghost" fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
+          <Button data-ui="play-again-btn" variant="ghost" fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
             Play another quiz
           </Button>
         </div>

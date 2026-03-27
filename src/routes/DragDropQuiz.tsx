@@ -465,6 +465,7 @@ function QuestionView({
     >
       {/* Question header area */}
       <div
+        data-section="question-card"
         style={{
           position: 'relative',
           margin: '0 var(--f-brand-space-md)',
@@ -504,6 +505,7 @@ function QuestionView({
 
       {/* Drop zones */}
       <div
+        data-section="drop-zones"
         style={{
           flex: 1,
           padding: '0 var(--f-brand-space-md)',
@@ -532,6 +534,7 @@ function QuestionView({
 
       {/* Draggable chips tray */}
       <div
+        data-section="draggable-items"
         style={{
           padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-md)',
           flexShrink: 0,
@@ -630,6 +633,7 @@ function QuestionView({
           onClick={() => onComplete(correctCount)}
           disabled={!allCorrect}
           className="f-button"
+          data-ui="next-btn"
           style={{
             width: '100%',
             padding: 'var(--f-brand-space-md) 0',
@@ -734,6 +738,7 @@ export default function DragDropQuizRoute() {
     <Screen>
       <div
         className={slideClass === 'page-in' ? 'f-page-enter' : ''}
+        data-page="drag-drop-quiz"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -744,9 +749,9 @@ export default function DragDropQuizRoute() {
         }}
       >
         {/* Top bar */}
-        <div style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+        <div data-section="header" style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
-            <button onClick={handleBack} className="f-button f-button--ghost" aria-label="Go back">
+            <button onClick={handleBack} className="f-button f-button--ghost" aria-label="Go back" data-ui="back-btn">
               <img src={chevLeft} width={24} height={24} alt="" />
             </button>
             <div style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>

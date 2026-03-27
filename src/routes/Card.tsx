@@ -125,6 +125,7 @@ function JourneyCard({
 
   return (
     <section
+      data-section="journey-card"
       aria-label="Your Journey Progress"
       style={{
         width: '100%',
@@ -236,6 +237,7 @@ function JourneyCard({
 
       {/* Start Quiz CTA */}
       <button
+        data-ui="start-quiz-btn"
         onClick={onStartQuiz}
         disabled={allComplete}
         style={{
@@ -331,6 +333,7 @@ function ExtraQuizCard({
 
   return (
     <button
+      data-ui="quiz-card-btn"
       onClick={locked ? undefined : handleClick}
       disabled={locked || loading}
       style={{
@@ -555,6 +558,7 @@ export default function Card() {
     <Screen>
       {/* ── Content ────────────────────────────────────────── */}
       <div
+        data-page="card"
         className="f-page-enter hide-scrollbar"
         style={{
           flex: 1, position: 'relative',
@@ -563,7 +567,7 @@ export default function Card() {
         }}
       >
           {/* ── Fan Hub Header ─────────────────────────────────── */}
-          <header style={{
+          <header data-section="header" style={{
             textAlign: 'center',
             paddingTop: 'var(--sp-6)',
             paddingBottom: 'var(--sp-6)',
@@ -601,7 +605,7 @@ export default function Card() {
           </header>
 
           {/* ── Fan Card ──────────────────────────────────────── */}
-          <section ref={fanCardSectionRef} aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 'var(--f-brand-space-md)' }}>
+          <section data-section="fan-card" ref={fanCardSectionRef} aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 'var(--f-brand-space-md)' }}>
             <FanCard
               ref={fanCardRef}
               fanCard={state.fanCard}
@@ -614,6 +618,7 @@ export default function Card() {
           {/* ── Complete fan card CTA ────────────────────────────── */}
           {!cardComplete && (
             <button
+              data-ui="complete-fan-card-btn"
               onClick={() => {
                 track('complete_fan_card_tapped')
                 fanCardSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -640,17 +645,19 @@ export default function Card() {
           )}
 
           {/* ── Journey ───────────────────────────────────────── */}
-          <JourneyCard
-            completedAt={state.fanCard.completedAt}
-            quizCount={quizCount}
-            totalQuizzes={totalQuizzes}
-            allComplete={allQuizzesDone}
-            cardComplete={cardComplete}
-            onStartQuiz={handleJourneyStart}
-          />
+          <div data-section="journey-card">
+            <JourneyCard
+              completedAt={state.fanCard.completedAt}
+              quizCount={quizCount}
+              totalQuizzes={totalQuizzes}
+              allComplete={allQuizzesDone}
+              cardComplete={cardComplete}
+              onStartQuiz={handleJourneyStart}
+            />
+          </div>
 
           {/* ── Quizzes ───────────────────────────────────────── */}
-          <section ref={quizRef} style={{ paddingBottom: 'var(--f-brand-space-3xl)' }}>
+          <section data-section="quiz-grid" ref={quizRef} style={{ paddingBottom: 'var(--f-brand-space-3xl)' }}>
             <div style={{ marginBottom: 'var(--f-brand-space-md)' }}>
               <h2 style={{
                 font: 'var(--f-brand-type-title-2)',

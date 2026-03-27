@@ -88,6 +88,7 @@ function OptionButton({
 
   return (
     <button
+      data-ui="answer-option-btn"
       onClick={revealed ? undefined : onSelect}
       disabled={revealed}
       style={{
@@ -236,6 +237,7 @@ function QuestionScreen({
   return (
     <Screen>
       <div
+        data-page="quiz"
         className="f-page-enter"
         style={{
           display: 'flex',
@@ -247,10 +249,10 @@ function QuestionScreen({
         }}
       >
         {/* ── Top bar (NOT animated — stays fixed) ─────────────── */}
-        <div style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+        <div data-section="header" style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
-            <button onClick={onBack} className="f-button f-button--ghost"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
-            <div style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
+            <button data-ui="back-btn" onClick={onBack} className="f-button f-button--ghost"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
+            <div data-section="progress-bar" style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
               <div
                 style={{
                   height: '100%',
@@ -271,6 +273,7 @@ function QuestionScreen({
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
           {/* Question image header */}
           <div
+            data-section="question-card"
             style={{
               position: 'relative',
               margin: '0 var(--f-brand-space-md)',
@@ -297,12 +300,13 @@ function QuestionScreen({
           </div>
 
           {/* Timer — between image and question */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+          <div data-section="timer" style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--f-brand-space-md)', flexShrink: 0 }}>
             <CircularTimer timeLeft={timeLeft} size={64} />
           </div>
 
           {/* Question text */}
           <div
+            data-section="question-text"
             style={{
               padding: '0 var(--f-brand-space-lg)',
               font: 'var(--f-brand-type-title-3)',
@@ -320,6 +324,7 @@ function QuestionScreen({
 
           {/* Options */}
           <div
+            data-section="answer-options"
             style={{
               flex: 1,
               padding: '0 var(--f-brand-space-md)',
@@ -345,7 +350,7 @@ function QuestionScreen({
         </div>
 
         {/* ── Fixed bottom: score feedback + Next CTA (no slide) ── */}
-        <div style={{ padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
+        <div data-section="result-overlay" style={{ padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
             {revealed && (
               <div
                 style={{
@@ -365,6 +370,7 @@ function QuestionScreen({
               </div>
             )}
             <button
+              data-ui="next-question-btn"
               onClick={onNext}
               disabled={!revealed}
               className="f-button"

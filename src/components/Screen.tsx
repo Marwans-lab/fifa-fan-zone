@@ -11,7 +11,7 @@ export default function Screen({ children, className = '', centered = false, sty
   const classes = ['f-screen', centered && 'f-screen--centered', className].filter(Boolean).join(' ')
 
   return (
-    <div className={classes} style={style}>
+    <div className={classes} data-component="screen" style={style}>
       {children}
     </div>
   )
