@@ -36,15 +36,13 @@ const MILESTONES = [
   { iconSrc: globeDark,    label: 'Connector',     key: 'the-connector'    },
   { iconSrc: stadiumDark,  label: 'Architect',     key: 'the-architect'    },
   { iconSrc: historyDark,  label: 'Historian',     key: 'the-historian'    },
-  { iconSrc: refereeDark,  label: 'Referee',       key: 'the-referee'      },
-  { iconSrc: rankingDark,  label: 'Retrospective', key: 'the-retrospective'},
 ] as const
 
 function statusLabel(done: number): string {
   if (done === 0) return 'New arrival'
   if (done === 1) return 'Rising fan'
-  if (done <= 3) return 'Quiz taker'
-  if (done <= 5) return 'Top fan'
+  if (done <= 2) return 'Quiz taker'
+  if (done <= 3) return 'Top fan'
   return 'Quiz champion'
 }
 
@@ -136,8 +134,6 @@ function JourneyCard({
     completedFlows.has('the-connector'),
     completedFlows.has('the-architect'),
     completedFlows.has('the-historian'),
-    completedFlows.has('the-referee'),
-    completedFlows.has('the-retrospective'),
   ]
   const doneCount = achieved.filter(Boolean).length
   const status = statusLabel(doneCount)
