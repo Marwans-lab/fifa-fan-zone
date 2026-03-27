@@ -645,16 +645,14 @@ export default function Card() {
           )}
 
           {/* ── Journey ───────────────────────────────────────── */}
-          <div data-section="journey-card">
-            <JourneyCard
-              completedAt={state.fanCard.completedAt}
-              quizCount={quizCount}
-              totalQuizzes={totalQuizzes}
-              allComplete={allQuizzesDone}
-              cardComplete={cardComplete}
-              onStartQuiz={handleJourneyStart}
-            />
-          </div>
+          <JourneyCard
+            completedAt={state.fanCard.completedAt}
+            quizCount={quizCount}
+            totalQuizzes={totalQuizzes}
+            allComplete={allQuizzesDone}
+            cardComplete={cardComplete}
+            onStartQuiz={handleJourneyStart}
+          />
 
           {/* ── Quizzes ───────────────────────────────────────── */}
           <section data-section="quiz-grid" ref={quizRef} style={{ paddingBottom: 'var(--f-brand-space-3xl)' }}>

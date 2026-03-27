@@ -14,7 +14,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
   if (status === 'loading') {
     return (
-      <div data-component="auth-guard" data-section="loading">
+      <div data-component="auth-guard" data-section="loading" style={{ height: '100%', width: '100%' }}>
         <Spinner fullScreen />
       </div>
     )
