@@ -61,7 +61,7 @@ function JourneyStep({
   isCurrent?: boolean
 }) {
   const nodeStyle: React.CSSProperties = {
-    width: 'var(--sp-14)', height: 'var(--sp-14)', borderRadius: '50%',
+    width: 'var(--sp-11)', height: 'var(--sp-11)', borderRadius: '50%',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
     transition: 'all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
@@ -84,7 +84,7 @@ function JourneyStep({
     <li className="card-journey-step-item" style={{
       position: 'relative', zIndex: 10,
       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--f-brand-space-sm)',
-      width: 'var(--sp-14)', flexShrink: 0,
+      width: 'var(--sp-11)', flexShrink: 0,
     }}>
       <div className="card-journey-step-node" style={nodeStyle}>
         {isCurrent && (
@@ -220,7 +220,7 @@ function JourneyCard({
                     : 'var(--f-brand-color-border-default)'                             // inactive
                   return (
                     <div className="card-journey-connector" style={{
-                      flex: 1, height: 2, marginTop: 'var(--sp-7)',
+                      flex: 1, height: 2, marginTop: 'calc(var(--sp-11) / 2)',
                       background: lineBg,
                       opacity: isInactive ? 0.4 : 1,
                       transition: 'all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
@@ -684,6 +684,7 @@ export default function Card() {
               totalQuizzes={totalQuizzes}
               allComplete={allQuizzesDone}
               cardComplete={cardComplete}
+              completedFlows={new Set(FLOWS.filter(f => !!state.quizResults[f.id]).map(f => f.id))}
               onStartQuiz={handleJourneyStart}
             />
           </div>
@@ -715,7 +716,7 @@ export default function Card() {
                 return (
                   <ExtraQuizCard
                     key={flow.id}
-                    emoji={flow.emoji}
+                    iconSrc={flow.iconSrc}
                     title={flow.title}
                     subtitle={flow.subtitle}
                     result={result ? { score: result.score, total: result.total } : undefined}
