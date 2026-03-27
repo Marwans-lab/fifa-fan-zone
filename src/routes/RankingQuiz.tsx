@@ -92,6 +92,7 @@ function RankItem({
 
   return (
     <div
+      data-section="rank-item"
       onTouchStart={handleTouchStart}
       onMouseDown={handleMouseDown}
       style={{
@@ -350,15 +351,16 @@ export default function RankingQuizRoute() {
     <Screen>
       <div
         className="page-in"
+        data-page="ranking-quiz"
         style={{
           display: 'flex', flexDirection: 'column',
           minHeight: '100%', maxWidth: 420, margin: '0 auto', width: '100%',
         }}
       >
         {/* Top bar */}
-        <div style={{ padding: 'var(--sp-4)', flexShrink: 0 }}>
+        <div data-section="header" style={{ padding: 'var(--sp-4)', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
-            <button onClick={handleBack} className="btn-icon">
+            <button onClick={handleBack} className="btn-icon" data-ui="back-btn">
               <img src={chevLeft} width={24} height={24} alt="Back" />
             </button>
             <div style={{
@@ -383,12 +385,12 @@ export default function RankingQuizRoute() {
         {/* Animated content */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
           {/* Timer */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--sp-4)', flexShrink: 0 }}>
+          <div data-section="timer" style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--sp-4)', flexShrink: 0 }}>
             <CircularTimer timeLeft={timeLeft} size={64} />
           </div>
 
           {/* Question text */}
-          <div style={{
+          <div data-section="question" style={{
             padding: '0 var(--sp-6)',
             font: 'var(--f-brand-type-title-3)',
             fontSize: 'var(--text-xl)',
@@ -403,7 +405,7 @@ export default function RankingQuizRoute() {
           </div>
 
           {/* Ranking items */}
-          <div style={{
+          <div data-section="rank-list" style={{
             flex: 1, padding: '0 var(--sp-4)',
             display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)',
           }}>
@@ -440,6 +442,7 @@ export default function RankingQuizRoute() {
           )}
           <button
             onClick={revealed ? handleNext : handleSubmit}
+            data-ui="submit-btn"
             className="btn"
             style={{
               width: '100%', padding: 'var(--sp-4) 0', borderRadius: 50,

@@ -187,6 +187,7 @@ export default function Picture() {
 
   return (
     <div
+      data-page="picture"
       className="f-page-enter"
       style={{
         display: 'flex',
@@ -199,7 +200,7 @@ export default function Picture() {
       }}
     >
       {/* ── Top bar: back button + progress ──────────────────── */}
-      <div style={{
+      <div data-section="header" style={{
         display: 'flex',
         alignItems: 'center',
         gap: 'var(--f-brand-space-md)',
@@ -207,6 +208,7 @@ export default function Picture() {
         flexShrink: 0,
       }}>
         <button
+          data-ui="back-btn"
           onClick={handleBack}
           aria-label="Go back"
           style={{
@@ -236,7 +238,7 @@ export default function Picture() {
       </div>
 
       {/* ── Title ────────────────────────────────────────────── */}
-      <h2 style={{
+      <h2 data-section="title" style={{
         font: 'var(--f-brand-type-title-2)',
         color: 'var(--f-brand-color-text-default)',
         textAlign: 'center',
@@ -247,7 +249,7 @@ export default function Picture() {
       </h2>
 
       {/* ── Photo card ───────────────────────────────────────── */}
-      <div style={{
+      <div data-section="camera-preview" style={{
         margin: 'var(--f-brand-space-lg) var(--f-brand-space-md) 0',
         background: 'var(--f-brand-color-text-light)',
         borderRadius: 'var(--f-brand-radius-small)',
@@ -282,6 +284,7 @@ export default function Picture() {
             />
             {/* Capture button overlay */}
             <button
+              data-ui="capture-photo-btn"
               onClick={capturePhoto}
               aria-label="Capture photo"
               style={{
@@ -328,6 +331,7 @@ export default function Picture() {
             />
             {/* Retake overlay button */}
             <button
+              data-ui="retake-photo-btn"
               onClick={handleRetake}
               aria-label="Retake photo"
               style={{
@@ -357,6 +361,7 @@ export default function Picture() {
             <SilhouettePlaceholder />
 
             <button
+              data-ui="take-photo-btn"
               onClick={handleTakePhoto}
               style={{
                 position: 'absolute',
@@ -399,6 +404,7 @@ export default function Picture() {
 
       {/* ── Hidden file input fallback ───────────────────────── */}
       <input
+        data-ui="file-upload-input"
         ref={fileInputRef}
         type="file"
         accept="image/*"
@@ -408,11 +414,12 @@ export default function Picture() {
       />
 
       {/* ── Next button ──────────────────────────────────────── */}
-      <div style={{
+      <div data-section="controls" style={{
         padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) var(--f-brand-space-xl)',
         flexShrink: 0,
       }}>
         <button
+          data-ui="confirm-photo-btn"
           onClick={handleNext}
           disabled={!hasPhoto}
           style={{

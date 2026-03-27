@@ -18,11 +18,11 @@ export default function Leaderboard() {
 
   return (
     <Screen>
-      <div className="f-page-enter scroll-y" style={{ display: 'flex', flexDirection: 'column', padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) 100px', width: '100%', maxWidth: 420, margin: '0 auto' }}>
+      <div data-page="leaderboard" className="f-page-enter scroll-y" style={{ display: 'flex', flexDirection: 'column', padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) 100px', width: '100%', maxWidth: 420, margin: '0 auto' }}>
 
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 'var(--f-brand-space-xs)' }}>
-          <button onClick={() => navigate(-1)} className="f-button f-button--ghost"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
+        <div data-section="header" style={{ display: 'flex', alignItems: 'center', marginBottom: 'var(--f-brand-space-xs)' }}>
+          <button data-ui="back-btn" onClick={() => navigate(-1)} className="f-button f-button--ghost"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
           <div style={{ flex: 1, textAlign: 'center' }}>
             <h2 style={{
               font: 'var(--f-brand-type-headline)',
@@ -34,6 +34,7 @@ export default function Leaderboard() {
             </h2>
           </div>
           <button
+            data-ui="refresh-btn"
             onClick={() => { track('leaderboard_refresh_tapped'); refresh() }}
             className="f-button f-button--ghost"
             aria-label="Refresh leaderboard"
@@ -41,13 +42,13 @@ export default function Leaderboard() {
         </div>
 
         {/* Subtitle */}
-        <div style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-muted)', textAlign: 'center', marginBottom: 'var(--f-brand-space-md)', lineHeight: 'var(--leading-normal)', letterSpacing: 'var(--tracking-wide)' }}>
+        <div data-section="subtitle" style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-muted)', textAlign: 'center', marginBottom: 'var(--f-brand-space-md)', lineHeight: 'var(--leading-normal)', letterSpacing: 'var(--tracking-wide)' }}>
           Cumulative score · Updated {formatRefresh(lastRefresh)} · auto-refreshes every {LEADERBOARD_REFRESH_MS / 60_000} min
         </div>
 
         {/* Your rank */}
         {myRank !== null && (
-          <div style={{
+          <div data-section="your-rank" style={{
             textAlign: 'center', marginBottom: 'var(--f-brand-space-md)',
             padding: 'var(--f-brand-space-sm) var(--f-brand-space-md)',
             borderRadius: 'var(--f-brand-radius-small)',
@@ -67,7 +68,7 @@ export default function Leaderboard() {
         )}
 
         {/* Rows */}
-        <div className="f-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-xs)' }}>
+        <div data-section="rank-list" className="f-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-xs)' }}>
           {entries.length === 0 && (
             <div style={{
               textAlign: 'center',
@@ -82,6 +83,7 @@ export default function Leaderboard() {
           )}
           {entries.map(row => (
             <div
+              data-section="rank-row"
               key={row.rank}
               style={{
                 display: 'flex', alignItems: 'center',
@@ -124,6 +126,7 @@ export default function Leaderboard() {
       {/* Sticky CTA */}
       <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: 'var(--f-brand-space-md) var(--f-brand-space-lg) var(--f-brand-space-xl)', background: 'linear-gradient(transparent, var(--f-brand-color-background-dark) 40%)' }}>
         <button
+          data-ui="return-home-btn"
           onClick={() => { track('leaderboard_home_tapped'); navigate(homeRoute) }}
           className="f-button"
           style={{ width: '100%', maxWidth: 420, display: 'block', margin: '0 auto' }}

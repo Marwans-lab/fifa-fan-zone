@@ -215,6 +215,7 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
     <button
       onClick={onFlip}
       disabled={status !== 'hidden'}
+      data-section="card-item"
       aria-label={isFlipped ? card.display : 'Hidden card'}
       style={{
         position: 'relative',
@@ -838,6 +839,7 @@ export default function CardMatch() {
 
   return (
     <div
+      data-page="card-match"
       style={{
         position: 'fixed',
         inset: 0,
@@ -862,10 +864,11 @@ export default function CardMatch() {
         }}
       >
         {/* ── Back button + Progress bar ── */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)', marginBottom: 'var(--f-brand-space-lg)' }}>
+        <div data-section="header" style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)', marginBottom: 'var(--f-brand-space-lg)' }}>
           <button
             onClick={handleBack}
             aria-label="Go back"
+            data-ui="back-btn"
             style={{
               width: 48,
               height: 48,
@@ -913,6 +916,7 @@ export default function CardMatch() {
 
         {/* ── Title ── */}
         <h1
+          data-section="title"
           style={{
             font: 'var(--f-brand-type-title-3)',
             color: 'var(--f-brand-color-text-default)',
@@ -936,6 +940,7 @@ export default function CardMatch() {
 
         {/* ── Card Grid ── */}
         <div
+          data-section="card-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',

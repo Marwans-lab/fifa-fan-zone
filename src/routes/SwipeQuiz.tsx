@@ -397,6 +397,7 @@ function SwipeActions({
     >
       {/* False button */}
       <button
+        data-ui="swipe-false-btn"
         onClick={() => onSwipe('left')}
         disabled={disabled}
         aria-label={labels.left}
@@ -434,6 +435,7 @@ function SwipeActions({
 
       {/* True button */}
       <button
+        data-ui="swipe-true-btn"
         onClick={() => onSwipe('right')}
         disabled={disabled}
         aria-label={labels.right}
@@ -638,6 +640,7 @@ export default function SwipeQuizRoute() {
     <Screen>
       <div
         className="f-page-enter"
+        data-page="swipe-quiz"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -648,7 +651,7 @@ export default function SwipeQuizRoute() {
         }}
       >
         {/* ── Top bar ────────────────────────────────────────────── */}
-        <div style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+        <div data-section="header" style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
           <div
             style={{
               display: 'flex',
@@ -656,7 +659,7 @@ export default function SwipeQuizRoute() {
               gap: 'var(--f-brand-space-sm)',
             }}
           >
-            <button onClick={handleBack} className="f-button f-button--ghost">
+            <button onClick={handleBack} className="f-button f-button--ghost" data-ui="back-btn">
               <img src={chevLeft} width={24} height={24} alt="Back" />
             </button>
 
@@ -712,12 +715,13 @@ export default function SwipeQuizRoute() {
         </div>
 
         {/* ── Progress dots ─────────────────────────────────────── */}
-        <div style={{ padding: '0 var(--f-brand-space-md) var(--f-brand-space-md)', flexShrink: 0 }}>
+        <div data-section="progress-dots" style={{ padding: '0 var(--f-brand-space-md) var(--f-brand-space-md)', flexShrink: 0 }}>
           <ProgressDots total={total} current={currentIdx} results={results} />
         </div>
 
         {/* ── Card area ─────────────────────────────────────────── */}
         <div
+          data-section="swipe-card"
           ref={cardAreaRef}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
@@ -759,6 +763,7 @@ export default function SwipeQuizRoute() {
 
         {/* ── Direction labels ──────────────────────────────────── */}
         <div
+          data-section="swipe-hint"
           style={{
             display: 'flex',
             justifyContent: 'space-between',
@@ -794,6 +799,7 @@ export default function SwipeQuizRoute() {
 
         {/* ── Swipe action buttons ─────────────────────────────── */}
         <div
+          data-section="swipe-actions"
           style={{
             padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)',
             flexShrink: 0,
