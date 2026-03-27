@@ -87,17 +87,18 @@ function OptionButton({
   }
 
   return (
-    <button
+    <button className="quiz-option-btn"
+      data-ui="answer-option-btn"
       onClick={revealed ? undefined : onSelect}
       disabled={revealed}
       style={{
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
-        gap: 14,
+        gap: 'var(--sp-3)',
         width: '100%',
-        padding: '0 20px 0 16px',
-        height: 58,
+        padding: '0 var(--sp-5) 0 var(--sp-4)',
+        height: 'var(--sp-14)',
         borderRadius: 'var(--f-brand-radius-rounded)',
         border: `1.5px solid ${borderColor}`,
         background: revealed && isCorrect
@@ -113,8 +114,7 @@ function OptionButton({
       }}
     >
       {/* Percentage fill bar — always rendered so CSS transition fires left→right */}
-      <div
-        className="quiz-option-fill-bar"
+      <div className="quiz-option-fill-bar"
         style={{
           position: 'absolute',
           inset: 0,
@@ -131,8 +131,7 @@ function OptionButton({
       />
 
       {/* Letter badge */}
-      <div
-        className="quiz-option-letter-badge"
+      <div className="quiz-option-letter-badge"
         style={{
           width: 28,
           height: 28,
@@ -142,8 +141,7 @@ function OptionButton({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: 12,
-          fontWeight: 500,
+          font: 'var(--f-brand-type-caption-medium)',
           flexShrink: 0,
           transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
           zIndex: 1,
@@ -153,13 +151,13 @@ function OptionButton({
       </div>
 
       {/* Option label */}
-      <span
-        className="quiz-option-label"
+      <span className="quiz-option-label"
         style={{
           flex: 1,
-          fontSize: 15,
+          font: 'var(--f-brand-type-body)',
+          fontSize: 'var(--text-md)',
           color: textColor,
-          fontWeight: isChosen ? 600 : 400,
+          fontWeight: isChosen ? 'var(--weight-bold)' : 'var(--weight-reg)',
           transition: 'color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
           zIndex: 1,
         }}
@@ -169,11 +167,9 @@ function OptionButton({
 
       {/* Percentage (after reveal) */}
       {revealed && (
-        <span
-          className="quiz-option-percentage"
+        <span className="quiz-option-percentage"
           style={{
-            fontSize: 12,
-            fontWeight: 500,
+            font: 'var(--f-brand-type-caption-medium)',
             color: isCorrect ? 'var(--f-brand-color-border-success)' : isWrong ? 'var(--f-brand-color-status-error)' : 'var(--f-brand-color-text-muted)',
             flexShrink: 0,
             zIndex: 1,
@@ -193,10 +189,11 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
   const offset = circumference * (1 - timeLeft / QUESTION_TIME)
   const cx = size / 2
   return (
-    <div className="quiz-timer" style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
+    <div className="quiz-timer-wrapper" style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
       <svg className="quiz-timer-svg" width={size} height={size} style={{ transform: 'rotate(-90deg)' }} aria-hidden="true">
-        <circle cx={cx} cy={cx} r={R} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={3} />
+        <circle className="quiz-timer-track" cx={cx} cy={cx} r={R} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={3} />
         <circle
+          className="quiz-timer-progress"
           cx={cx} cy={cx} r={R}
           fill="none"
           stroke="currentColor"
@@ -207,7 +204,7 @@ function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: numbe
           style={{ transition: 'stroke-dashoffset 1s linear', color: 'var(--f-brand-color-text-light)' }}
         />
       </svg>
-      <div className="quiz-timer-count" style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 500, fontFamily: 'var(--f-base-type-family-secondary)', color: 'var(--f-brand-color-text-light)' }}>
+      <div className="quiz-timer-value" style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', font: 'var(--f-brand-type-subheading-medium)', color: 'var(--f-brand-color-text-light)' }}>
         {timeLeft}
       </div>
     </div>
@@ -240,8 +237,8 @@ function QuestionScreen({
 
   return (
     <Screen>
-      <div
-        className="quiz-question-screen f-page-enter"
+      <div className="f-page-enter"
+        data-page="quiz"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -252,12 +249,11 @@ function QuestionScreen({
         }}
       >
         {/* ── Top bar (NOT animated — stays fixed) ─────────────── */}
-        <div className="quiz-top-bar" style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
-          <div className="quiz-top-bar-row" style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
-            <button onClick={onBack} className="f-button f-button--ghost"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
-            <div className="quiz-progress-track" style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
-              <div
-                className="quiz-progress-fill"
+        <div className="quiz-header" data-section="header" style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+          <div className="quiz-header-row" style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
+            <button data-ui="back-btn" onClick={onBack} className="f-button f-button--ghost quiz-back-btn"><img className="quiz-back-icon" src={chevLeft} width={24} height={24} alt="Back" /></button>
+            <div className="quiz-progress-bar" data-section="progress-bar" style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
+              <div className="quiz-progress-bar-fill"
                 style={{
                   height: '100%',
                   width: `${((qIndex + (revealed ? 1 : 0)) / total) * 100}%`,
@@ -267,17 +263,17 @@ function QuestionScreen({
                 }}
               />
             </div>
-            <span className="quiz-counter" style={{ fontSize: '11', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
+            <span className="quiz-progress-count" style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
               {qIndex + 1}/{total}
             </span>
           </div>
         </div>
 
         {/* ── Animated content (header + question + options only) ── */}
-        <div className="quiz-animated-content" style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
+        <div className="quiz-slide-content" style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
           {/* Question image header */}
-          <div
-            className="quiz-question-header"
+          <div className="quiz-question-card"
+            data-section="question-card"
             style={{
               position: 'relative',
               margin: '0 var(--f-brand-space-md)',
@@ -287,7 +283,7 @@ function QuestionScreen({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 64,
+              fontSize: 'var(--text-5xl)',
               marginBottom: 'var(--f-brand-space-md)',
               flexShrink: 0,
               overflow: 'hidden',
@@ -296,7 +292,7 @@ function QuestionScreen({
           >
             {quiz.emoji}
             {/* Depth overlay */}
-            <div className="quiz-question-header-overlay" style={{
+            <div className="quiz-question-card-overlay" style={{
               position: 'absolute', inset: 0,
               background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 50%, rgba(0,0,0,0.18) 100%)',
               pointerEvents: 'none',
@@ -304,21 +300,20 @@ function QuestionScreen({
           </div>
 
           {/* Timer — between image and question */}
-          <div className="quiz-timer-wrapper" style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+          <div className="quiz-timer-container" data-section="timer" style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--f-brand-space-md)', flexShrink: 0 }}>
             <CircularTimer timeLeft={timeLeft} size={64} />
           </div>
 
           {/* Question text */}
-          <div
-            className="quiz-question-text"
+          <div className="quiz-question-text"
+            data-section="question-text"
             style={{
               padding: '0 var(--f-brand-space-lg)',
-              fontFamily: 'var(--f-base-type-family-primary)',
-              fontSize: '22',
-              fontWeight: '300',
+              font: 'var(--f-brand-type-title-3)',
+              fontSize: 'var(--text-xl)',
               color: 'var(--f-brand-color-text-default)',
-              lineHeight: '1.12',
-              letterSpacing: '-0.03em',
+              lineHeight: 'var(--leading-tight)',
+              letterSpacing: 'var(--tracking-tight)',
               textAlign: 'center',
               marginBottom: 'var(--f-brand-space-lg)',
               flexShrink: 0,
@@ -328,8 +323,8 @@ function QuestionScreen({
           </div>
 
           {/* Options */}
-          <div
-            className="quiz-options"
+          <div className="quiz-answer-options"
+            data-section="answer-options"
             style={{
               flex: 1,
               padding: '0 var(--f-brand-space-md)',
@@ -355,17 +350,16 @@ function QuestionScreen({
         </div>
 
         {/* ── Fixed bottom: score feedback + Next CTA (no slide) ── */}
-        <div className="quiz-bottom-bar" style={{ padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
+        <div className="quiz-result-overlay" data-section="result-overlay" style={{ padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
             {revealed && (
-              <div
-                className="quiz-feedback-text"
+              <div className="quiz-result-feedback"
                 style={{
                   textAlign: 'center',
-                  fontSize: '13',
+                  font: 'var(--f-brand-type-caption-medium)',
+                  fontSize: 'var(--text-sm)',
                   color: chosenId === question.correctId ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)',
                   marginBottom: 'var(--f-brand-space-sm)',
-                  fontWeight: '500',
-                  letterSpacing: '0.05em',
+                  letterSpacing: 'var(--tracking-wide)',
                 }}
               >
                 {chosenId === question.correctId
@@ -375,21 +369,20 @@ function QuestionScreen({
                   : '⏱ Time\'s up!'}
               </div>
             )}
-            <button
+            <button className="f-button"
+              data-ui="next-question-btn"
               onClick={onNext}
               disabled={!revealed}
-              className="f-button"
               style={{
                 width: '100%',
-                padding: '16px 0',
+                padding: 'var(--sp-4) 0',
                 borderRadius: 'var(--f-brand-radius-rounded)',
                 border: 'none',
                 background: revealed ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-background-light)',
                 color: revealed ? 'var(--f-brand-color-primary)' : 'var(--f-brand-color-text-muted)',
-                fontSize: '15',
-                fontWeight: '500',
+                font: 'var(--f-brand-type-body-medium)',
+                fontSize: 'var(--text-md)',
                 cursor: revealed ? 'pointer' : 'default',
-                fontFamily: 'inherit',
                 transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
               }}
             >

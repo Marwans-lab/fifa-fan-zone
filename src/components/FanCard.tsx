@@ -20,6 +20,7 @@ import './FanCard.css'
 // ─── Public handle (for Edit button) ─────────────────────────────────────────
 export interface FanCardHandle {
   startEditing: () => void
+  flipToBack: () => void
 }
 
 // ─── Profile questions ────────────────────────────────────────────────────────
@@ -82,12 +83,12 @@ function getFrontInlineStyle(teamId: string | null, isFlipped: boolean): React.C
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
-function ActionCircle({ icon, label, onClick, disabled }: { icon: React.ReactNode; label: string; onClick: (e: React.MouseEvent) => void; disabled?: boolean }) {
+function ActionCircle({ icon, label, onClick, disabled, dataUi }: { icon: React.ReactNode; label: string; onClick: (e: React.MouseEvent) => void; disabled?: boolean; dataUi?: string }) {
   return (
-    <button
-      className="f-fan-card__action"
+    <button className="f-fan-card__action"
       onClick={onClick}
       disabled={disabled}
+      data-ui={dataUi}
     >
       <div className="f-fan-card__action-circle">
         {icon}
@@ -115,10 +116,9 @@ function HolographicStripe() {
 function FanPhoto({ photoDataUrl }: { photoDataUrl: string | null }) {
   if (photoDataUrl) {
     return (
-      <img
+      <img className="f-fan-card__photo"
         src={photoDataUrl}
         alt="Fan photo"
-        className="f-fan-card__photo"
       />
     )
   }
@@ -152,6 +152,10 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
       setIsFlipped(true)
       setWizardActive(true)
       track('card_edit_tapped')
+    },
+    flipToBack() {
+      setIsFlipped(true)
+      track('card_flipped_to_back')
     },
   }))
 
@@ -234,8 +238,8 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
   const rootClassName = `f-fan-card${isFlipped ? ' f-fan-card--flipped' : ''}`
 
   return (
-    <div
-      className={rootClassName}
+    <div className={rootClassName}
+      data-component="fan-card"
       onClick={isFlipped ? undefined : flipToBack}
       role="button"
       aria-label={isFlipped ? 'Fan card back' : 'Fan card – tap to flip'}
@@ -243,14 +247,14 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
       <div className="f-fan-card__inner">
 
         {/* ── FRONT ─────────────────────────────────────────────── */}
-        <div
-          className="f-fan-card__front"
+        <div className="f-fan-card__front"
+          data-section="front-face"
           style={getFrontInlineStyle(fanCard.teamId, isFlipped)}
         >
           <CardTexture />
           <HolographicStripe />
 
-          <div className="f-fan-card__header">
+          <div className="f-fan-card__header" data-section="name">
             <div className="f-fan-card__header-text">
               <div className="f-fan-card__header-title">
                 Your Fan Card
@@ -263,9 +267,9 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           </div>
 
           {/* Photo + motto */}
-          <div className="f-fan-card__photo-section">
+          <div className="f-fan-card__photo-section" data-section="photo">
             <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
-            <div className="f-fan-card__team-badge">
+            <div className="f-fan-card__team-badge" data-section="team">
               {fanCard.teamId ? (() => {
                 const team = getTeam(fanCard.teamId)
                 return (
@@ -288,7 +292,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
         </div>
 
         {/* ── BACK ──────────────────────────────────────────────── */}
-        <div className="f-fan-card__back" onClick={flipToFront}>
+        <div className="f-fan-card__back" data-section="back-face" onClick={flipToFront}>
           <HolographicStripe />
 
           {/* Header */}
@@ -296,6 +300,11 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             <div className="f-fan-card__back-title">
               Fan Profile
             </div>
+          </div>
+
+          {/* Profile photo */}
+          <div className="f-fan-card__back-photo-section">
+            <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
           </div>
 
           {/* Wizard takes priority so Edit works on completed cards */}
@@ -317,10 +326,9 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                 {currentQ.options.map(option => {
                   const selected = currentAnswer === option
                   return (
-                    <button
+                    <button className={`f-fan-card__wizard-option${selected ? ' f-fan-card__wizard-option--selected' : ''}`}
                       key={option}
                       onClick={e => { e.stopPropagation(); handleSelect(currentQ.id, option) }}
-                      className={`f-fan-card__wizard-option${selected ? ' f-fan-card__wizard-option--selected' : ''}`}
                     >
                       {option}
                     </button>
@@ -329,20 +337,18 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               </div>
 
               <div className="f-fan-card__wizard-nav">
-                <button
+                <button className="f-fan-card__wizard-btn f-fan-card__wizard-btn--back"
                   onClick={handleBack}
-                  className="f-fan-card__wizard-btn f-fan-card__wizard-btn--back"
                 >
                   Back
                 </button>
-                <button
+                <button className="f-fan-card__wizard-btn f-fan-card__wizard-btn--next"
                   onClick={handleNext}
                   disabled={!currentAnswer}
-                  className="f-fan-card__wizard-btn f-fan-card__wizard-btn--next"
                 >
                   {isLast ? (
                     <span className="f-fan-card__wizard-btn-content">
-                      Save <img src={tickBlack} width={24} height={24} alt="" />
+                      Save <img src={tickBlack} width={24} height={24} alt="" className="fan-card-save-icon" />
                     </span>
                   ) : (
                     <span className="f-fan-card__wizard-btn-content">
@@ -360,7 +366,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               {PROFILE_QUESTIONS.map(q => (
                 <div key={q.id} className="f-fan-card__profile-row">
                   <img src={q.iconSrc} width={24} height={24} alt="" className="f-fan-card__profile-icon" />
-                  <div className="f-fan-card__profile-row-content">
+                  <div className="f-fan-card__profile-text">
                     <div className="f-fan-card__profile-category">
                       {q.category}
                     </div>
@@ -376,9 +382,8 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
 
             /* ── Empty CTA ───────────────────────────────────────── */
             <div className="f-fan-card__cta" onClick={e => e.stopPropagation()}>
-              <button
+              <button className="f-fan-card__cta-button"
                 onClick={startWizard}
-                className="f-fan-card__cta-button"
               >
                 Complete your card
               </button>
@@ -388,13 +393,13 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
 
           {/* ── Action circles (Edit / Share / Save) ─────────────── */}
           {isComplete && !wizardActive && (
-            <div
-              className="f-fan-card__actions"
+            <div className="f-fan-card__actions"
+              data-section="action-circles"
               onClick={e => e.stopPropagation()}
             >
-              <ActionCircle icon={<img src={editIcon}  width={24} height={24} alt="" />} label="Edit"  onClick={handleEditTap} />
-              <ActionCircle icon={<img src={shareIcon} width={24} height={24} alt="" />} label="Share" onClick={handleShareTap} />
-              <ActionCircle icon={<img src={saveIcon}  width={24} height={24} alt="" />} label="Save"  onClick={handleSaveTap} />
+              <ActionCircle icon={<img src={editIcon}  width={24} height={24} alt="" className="fan-card-edit-icon" />} label="Edit"  onClick={handleEditTap} dataUi="edit-btn" />
+              <ActionCircle icon={<img src={shareIcon} width={24} height={24} alt="" className="fan-card-share-icon" />} label="Share" onClick={handleShareTap} dataUi="share-btn" />
+              <ActionCircle icon={<img src={saveIcon}  width={24} height={24} alt="" className="fan-card-save-to-device-icon" />} label="Save"  onClick={handleSaveTap} dataUi="save-btn" />
             </div>
           )}
 

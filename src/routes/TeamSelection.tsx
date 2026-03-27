@@ -6,8 +6,7 @@ import { WORLD_CUP_TEAMS } from '../data/teams'
 /* ── Progress bar (reused from Picture flow) ──────────────────────────────── */
 function ProgressBar({ progress }: { progress: number }) {
   return (
-    <div
-      className="progress-bar-track"
+    <div className="team-selection-progress-track"
       style={{
         flex: 1,
         height: 8,
@@ -16,8 +15,7 @@ function ProgressBar({ progress }: { progress: number }) {
         overflow: 'hidden',
       }}
     >
-      <div
-        className="progress-bar-fill"
+      <div className="team-selection-progress-fill"
         style={{
           width: `${progress}%`,
           height: '100%',
@@ -70,8 +68,8 @@ export default function TeamSelection() {
   }
 
   return (
-    <div
-      className="team-selection-page f-page-enter"
+    <div className="f-page-enter team-selection-page"
+      data-page="team-selection"
       style={{
         height: '100%',
         width: '100%',
@@ -84,19 +82,19 @@ export default function TeamSelection() {
       }}
     >
       {/* ── Row: Back button + Progress bar ─────────────────────── */}
-      <div className="team-selection-top-row" style={{
+      <div data-section="header" className="team-selection-header" style={{
         display: 'flex',
         alignItems: 'center',
         gap: 'var(--f-brand-space-md)',
         flexShrink: 0,
       }}>
-        <button
-          className="team-selection-back-btn"
+        <button className="team-selection-back-btn"
+          data-ui="back-btn"
           onClick={handleBack}
           aria-label="Go back"
           style={{
-            width: 48,
-            height: 48,
+            width: 'var(--sp-12)',
+            height: 'var(--sp-12)',
             borderRadius: 'var(--f-brand-radius-rounded)',
             border: 'none',
             background: 'var(--f-brand-color-background-light)',
@@ -109,18 +107,15 @@ export default function TeamSelection() {
           }}
         >
           <svg className="team-selection-back-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M15 19l-7-7 7-7" stroke="var(--f-brand-color-text-default)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path className="team-selection-back-icon-path" d="M15 19l-7-7 7-7" stroke="var(--f-brand-color-text-default)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
         <ProgressBar progress={50} />
       </div>
 
       {/* ── Title ───────────────────────────────────────────────── */}
-      <h2 className="team-selection-title" style={{
-        fontFamily: 'var(--f-base-type-family-primary)',
-        fontSize: 28,
-        lineHeight: '36px',
-        fontWeight: '300',
+      <h2 data-section="title" className="team-selection-title" style={{
+        font: 'var(--f-brand-type-title-3)',
         color: 'var(--f-brand-color-text-default)',
         textAlign: 'center',
         marginTop: 'var(--f-brand-space-xl)',
@@ -130,16 +125,16 @@ export default function TeamSelection() {
       </h2>
 
       {/* ── Dropdown ────────────────────────────────────────────── */}
-      <div className="team-selection-dropdown-wrapper" ref={dropdownRef} style={{ position: 'relative', flexShrink: 0 }}>
+      <div data-section="team-dropdown" className="team-selection-dropdown" ref={dropdownRef} style={{ position: 'relative', flexShrink: 0 }}>
         {/* Trigger input */}
-        <button
-          className="team-selection-dropdown-trigger"
+        <button className="team-selection-dropdown-btn"
+          data-ui="team-dropdown-btn"
           onClick={() => setOpen(prev => !prev)}
           aria-haspopup="listbox"
           aria-expanded={open}
           style={{
             width: '100%',
-            height: 48,
+            height: 'var(--sp-12)',
             background: 'var(--f-brand-color-background-light)',
             border: '1px solid var(--f-brand-color-border-default)',
             borderRadius: 'var(--f-brand-radius-base)',
@@ -148,15 +143,13 @@ export default function TeamSelection() {
             alignItems: 'center',
             justifyContent: 'space-between',
             cursor: 'pointer',
-            fontFamily: 'inherit',
-            fontSize: 16,
+            font: 'var(--f-brand-type-body)',
             color: selectedTeam ? 'var(--f-brand-color-text-default)' : 'var(--f-brand-color-text-subtle)',
             WebkitTapHighlightColor: 'transparent',
           }}
         >
-          <span className="team-selection-dropdown-trigger-label">{selectedTeam ? selectedTeam.name : 'Select a team'}</span>
-          <svg
-            className="team-selection-dropdown-chevron"
+          <span className="team-selection-dropdown-label">{selectedTeam ? selectedTeam.name : 'Select a team'}</span>
+          <svg className="team-selection-dropdown-chevron"
             width="16"
             height="16"
             viewBox="0 0 24 24"
@@ -168,14 +161,13 @@ export default function TeamSelection() {
               transition: `transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)`,
             }}
           >
-            <path d="M6 9l6 6 6-6" stroke="var(--f-brand-color-text-subtle)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path className="team-selection-dropdown-chevron-path" d="M6 9l6 6 6-6" stroke="var(--f-brand-color-text-subtle)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
 
         {/* Listbox */}
         {open && (
-          <ul
-            className="team-selection-dropdown-list"
+          <ul className="team-selection-dropdown-list"
             role="listbox"
             style={{
               position: 'absolute',
@@ -196,8 +188,7 @@ export default function TeamSelection() {
             }}
           >
             {WORLD_CUP_TEAMS.map((team, i) => (
-              <li
-                className="team-selection-dropdown-option"
+              <li className="team-selection-dropdown-item"
                 key={team.id}
                 role="option"
                 aria-selected={team.id === selectedId}
@@ -207,10 +198,9 @@ export default function TeamSelection() {
                   borderBottom: i < WORLD_CUP_TEAMS.length - 1
                     ? '1px solid var(--f-brand-color-background-default)'
                     : 'none',
-                  fontSize: 16,
+                  font: 'var(--f-brand-type-body)',
                   color: 'var(--f-brand-color-text-default)',
                   cursor: 'pointer',
-                  fontFamily: 'inherit',
                   WebkitTapHighlightColor: 'transparent',
                 }}
               >
@@ -225,32 +215,31 @@ export default function TeamSelection() {
       <div className="team-selection-spacer" style={{ flex: 1 }} />
 
       {/* ── "Already have a card? Log in" ───────────────────────── */}
-      <p className="team-selection-login-hint" style={{
+      <p className="team-selection-login-prompt" style={{
         textAlign: 'center',
-        fontSize: 18,
+        font: 'var(--f-brand-type-headline)',
         color: 'var(--f-brand-color-text-default)',
         marginBottom: 'var(--f-brand-space-md)',
         flexShrink: 0,
       }}>
         Already have a card?{' '}
-        <span className="team-selection-login-link" style={{ fontWeight: '500' }}>Log in</span>
+        <span className="team-selection-login-link" style={{ fontWeight: 'var(--weight-med)' }}>Log in</span>
       </p>
 
       {/* ── Continue button ─────────────────────────────────────── */}
-      <button
-        className="team-selection-continue-btn"
+      <button className="team-selection-continue-btn"
+        data-section="confirm-cta"
+        data-ui="continue-btn"
         onClick={handleContinue}
         disabled={!selectedId}
         style={{
           width: '100%',
-          height: 56,
+          height: 'var(--sp-14)',
           borderRadius: 'var(--f-brand-radius-rounded)',
           border: 'none',
           background: 'var(--f-brand-color-primary)',
           color: 'var(--f-brand-color-background-light)',
-          fontSize: 16,
-          fontWeight: '500',
-          fontFamily: 'inherit',
+          font: 'var(--f-brand-type-body-medium)',
           cursor: selectedId ? 'pointer' : 'default',
           opacity: selectedId ? 1 : 0.5,
           transition: `opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)`,

@@ -26,15 +26,6 @@ function rrect(
   ctx.closePath()
 }
 
-function loadImage(src: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.onload = () => resolve(img)
-    img.onerror = () => reject(new Error('Failed to load image'))
-    img.src = src
-  })
-}
-
 export async function renderCardToBlob(fanCard: FanCard): Promise<Blob> {
   const W = 300, H = 420, DPR = 2
   const canvas = document.createElement('canvas')
@@ -78,54 +69,8 @@ export async function renderCardToBlob(fanCard: FanCard): Promise<Blob> {
   ctx.font = '11px -apple-system, sans-serif'
   ctx.fillText('Collector Edition', W / 2, 54)
 
-  // ── Profile photo ─────────────────────────────────────────────────────────
-  const PHOTO_R = 36
-  const photoCx = W / 2
-  const photoCy = 90
-  if (fanCard.photoDataUrl) {
-    try {
-      const img = await loadImage(fanCard.photoDataUrl)
-      ctx.save()
-      ctx.beginPath()
-      ctx.arc(photoCx, photoCy, PHOTO_R, 0, Math.PI * 2)
-      ctx.closePath()
-      ctx.clip()
-      // Cover-fit the image into the circle
-      const imgAspect = img.naturalWidth / img.naturalHeight
-      let drawW: number, drawH: number
-      if (imgAspect > 1) {
-        drawH = PHOTO_R * 2
-        drawW = drawH * imgAspect
-      } else {
-        drawW = PHOTO_R * 2
-        drawH = drawW / imgAspect
-      }
-      ctx.drawImage(img, photoCx - drawW / 2, photoCy - drawH / 2, drawW, drawH)
-      ctx.restore()
-      // White border ring
-      ctx.beginPath()
-      ctx.arc(photoCx, photoCy, PHOTO_R, 0, Math.PI * 2)
-      ctx.strokeStyle = 'rgba(255,255,255,0.55)'
-      ctx.lineWidth = 2
-      ctx.stroke()
-    } catch {
-      // Photo failed to load — continue without it
-    }
-  } else {
-    // Placeholder circle
-    ctx.beginPath()
-    ctx.arc(photoCx, photoCy, PHOTO_R, 0, Math.PI * 2)
-    ctx.fillStyle = 'rgba(0,0,0,0.28)'
-    ctx.fill()
-    ctx.strokeStyle = 'rgba(255,255,255,0.35)'
-    ctx.lineWidth = 1
-    ctx.setLineDash([6, 4])
-    ctx.stroke()
-    ctx.setLineDash([])
-  }
-
   // ── Team ──────────────────────────────────────────────────────────────────
-  let curY = 140
+  let curY = 74
   if (fanCard.teamId) {
     ctx.fillStyle = '#00d4aa'
     ctx.font = 'bold 13px -apple-system, sans-serif'

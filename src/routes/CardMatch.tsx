@@ -118,8 +118,7 @@ function initStatuses(deck: MatchCard[]): Record<string, CardStatus> {
 
 function CardBack() {
   return (
-    <div
-      className="card-back-container"
+    <div className="card-match-back-container"
       style={{
         position: 'absolute',
         inset: 0,
@@ -133,8 +132,7 @@ function CardBack() {
       }}
     >
       {/* Geometric overlay pattern */}
-      <svg
-        className="card-back-pattern"
+      <svg className="card-match-back-pattern-svg"
         width="100%"
         height="100%"
         viewBox="0 0 170 160"
@@ -142,21 +140,20 @@ function CardBack() {
         preserveAspectRatio="xMidYMid slice"
         aria-hidden="true"
       >
-        <defs>
-          <pattern id="card-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-            <circle cx="20" cy="20" r="12" fill="none" stroke="white" strokeWidth="0.8" />
-            <circle cx="0" cy="0" r="8" fill="none" stroke="white" strokeWidth="0.5" />
-            <circle cx="40" cy="0" r="8" fill="none" stroke="white" strokeWidth="0.5" />
-            <circle cx="0" cy="40" r="8" fill="none" stroke="white" strokeWidth="0.5" />
-            <circle cx="40" cy="40" r="8" fill="none" stroke="white" strokeWidth="0.5" />
-            <path d="M20 8L20 32M8 20L32 20" stroke="white" strokeWidth="0.4" />
+        <defs className="card-match-back-pattern-defs">
+          <pattern className="card-match-back-pattern" id="card-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+            <circle className="card-match-back-circle-center" cx="20" cy="20" r="12" fill="none" stroke="white" strokeWidth="0.8" />
+            <circle className="card-match-back-circle-tl" cx="0" cy="0" r="8" fill="none" stroke="white" strokeWidth="0.5" />
+            <circle className="card-match-back-circle-tr" cx="40" cy="0" r="8" fill="none" stroke="white" strokeWidth="0.5" />
+            <circle className="card-match-back-circle-bl" cx="0" cy="40" r="8" fill="none" stroke="white" strokeWidth="0.5" />
+            <circle className="card-match-back-circle-br" cx="40" cy="40" r="8" fill="none" stroke="white" strokeWidth="0.5" />
+            <path className="card-match-back-cross" d="M20 8L20 32M8 20L32 20" stroke="white" strokeWidth="0.4" />
           </pattern>
         </defs>
-        <rect width="170" height="160" fill="url(#card-pattern)" />
+        <rect className="card-match-back-fill" width="170" height="160" fill="url(#card-pattern)" />
       </svg>
       {/* Shimmer */}
-      <div
-        className="card-back-shimmer"
+      <div className="card-match-back-shimmer"
         style={{
           position: 'absolute',
           inset: 0,
@@ -172,8 +169,7 @@ function CardBack() {
 
 function MatchRing() {
   return (
-    <div
-      className="match-ring"
+    <div className="card-match-ring-burst"
       style={{
         position: 'absolute',
         inset: -8,
@@ -216,10 +212,10 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
   }, [isMatched])
 
   return (
-    <button
-      className="game-card"
+    <button className="card-match-game-button"
       onClick={onFlip}
       disabled={status !== 'hidden'}
+      data-section="card-item"
       aria-label={isFlipped ? card.display : 'Hidden card'}
       style={{
         position: 'relative',
@@ -236,8 +232,7 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
         transition: 'opacity var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit), transform var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit)',
       }}
     >
-      <div
-        className="game-card-inner"
+      <div className="card-match-card-inner"
         style={{
           position: 'relative',
           width: '100%',
@@ -256,8 +251,7 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
         <CardBack />
 
         {/* Front face (visible when flipped) */}
-        <div
-          className="game-card-front"
+        <div className="card-match-card-front"
           style={{
             position: 'absolute',
             inset: 0,
@@ -290,33 +284,30 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
           }}
         >
           {card.type === 'flag' ? (
-            <span className="game-card-flag" style={{ fontSize: '36', lineHeight: 1 }}>{card.display}</span>
+            <span className="card-match-flag-emoji" style={{ fontSize: 'var(--text-3xl)', lineHeight: 'var(--leading-none)' }}>{card.display}</span>
           ) : card.type === 'clue' ? (
-            <span
-              className="game-card-clue"
+            <span className="card-match-clue-text"
               style={{
-                fontSize: '10',
-                fontWeight: '400',
+                font: 'var(--f-brand-type-caption)',
+                fontSize: 'var(--text-2xs)',
                 color: 'var(--f-brand-color-text-subtle)',
                 textAlign: 'center',
-                lineHeight: '1.4',
-                letterSpacing: '-0.01em',
-                fontFamily: 'var(--f-base-type-family-secondary)',
+                lineHeight: 'var(--leading-relaxed)',
+                letterSpacing: 'var(--tracking-snug)',
               }}
             >
               {card.display}
             </span>
           ) : (
-            <span
-              className="game-card-answer"
+            <span className="card-match-answer-text"
               style={{
-                fontSize: '11',
-                fontWeight: '600',
+                font: 'var(--f-brand-type-caption-medium)',
+                fontSize: 'var(--text-xs)',
+                fontWeight: 'var(--weight-bold)',
                 color: 'var(--f-brand-color-text-default)',
                 textAlign: 'center',
-                lineHeight: '1.28',
-                letterSpacing: '-0.015em',
-                fontFamily: 'var(--f-base-type-family-secondary)',
+                lineHeight: 'var(--leading-snug)',
+                letterSpacing: 'var(--tracking-snug)',
               }}
             >
               {card.display}
@@ -325,8 +316,7 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
 
           {/* Match checkmark */}
           {isMatched && (
-            <div
-              className="game-card-match-badge"
+            <div className="card-match-checkmark"
               style={{
                 position: 'absolute',
                 top: 'var(--f-brand-space-2xs)',
@@ -340,8 +330,8 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
                 justifyContent: 'center',
               }}
             >
-              <svg width="10" height="8" viewBox="0 0 10 8" fill="none" aria-hidden="true">
-                <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <svg className="card-match-checkmark-icon" width="10" height="8" viewBox="0 0 10 8" fill="none" aria-hidden="true">
+                <path className="card-match-checkmark-path" d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           )}
@@ -365,10 +355,11 @@ function TimerRing({ timeLeft, total }: { timeLeft: number; total: number }) {
   const dashOffset = circumference * (1 - progress)
 
   return (
-    <div className="timer-ring" style={{ position: 'relative', width: size, height: size }}>
-      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }} aria-hidden="true">
+    <div className="card-match-timer-ring" style={{ position: 'relative', width: size, height: size }}>
+      <svg className="card-match-timer-svg" width={size} height={size} style={{ transform: 'rotate(-90deg)' }} aria-hidden="true">
         {/* Background track */}
         <circle
+          className="card-match-timer-track"
           cx={size / 2}
           cy={size / 2}
           r={radius}
@@ -378,6 +369,7 @@ function TimerRing({ timeLeft, total }: { timeLeft: number; total: number }) {
         />
         {/* Progress ring */}
         <circle
+          className="card-match-timer-progress"
           cx={size / 2}
           cy={size / 2}
           r={radius}
@@ -390,17 +382,14 @@ function TimerRing({ timeLeft, total }: { timeLeft: number; total: number }) {
           style={{ transition: 'stroke-dashoffset 1s linear' }}
         />
       </svg>
-      <span
-        className="timer-ring-label"
+      <span className="card-match-timer-value"
         style={{
           position: 'absolute',
           inset: 0,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: 16,
-          fontWeight: '500',
-          fontFamily: 'var(--f-base-type-family-secondary)',
+          font: 'var(--f-brand-type-body-medium)',
           color: 'var(--f-brand-color-text-default)',
         }}
       >
@@ -421,13 +410,12 @@ function AnimatedStat({ value, delay }: { value: string; delay: number }) {
   }, [delay])
 
   return (
-    <div
-      className="animated-stat"
+    <div className="card-match-animated-stat"
       style={{
-        fontSize: '22',
-        fontWeight: '600',
+        font: 'var(--f-brand-type-headline-medium)',
+        fontSize: 'var(--text-xl)',
+        fontWeight: 'var(--weight-bold)',
         color: 'var(--f-brand-color-primary)',
-        fontFamily: 'var(--f-base-type-family-secondary)',
         opacity: show ? 1 : 0,
         transform: show ? 'translateY(0)' : 'translateY(8px)',
         transition: 'opacity var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit), transform var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit)',
@@ -455,11 +443,10 @@ function Confetti() {
   }, [])
 
   return (
-    <div className="confetti-container" style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+    <div className="card-match-confetti" style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
       {particles.map(p => (
-        <div
+        <div className="card-match-confetti-particle"
           key={p.id}
-          className="confetti-particle"
           style={{
             position: 'absolute',
             top: -8,
@@ -500,8 +487,7 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
   const label = stars === 3 ? 'Perfect!' : stars === 2 ? 'Great Job!' : 'Well Done!'
 
   return (
-    <div
-      className="completion-overlay"
+    <div className="card-match-completion-overlay"
       style={{
         position: 'fixed',
         inset: 0,
@@ -516,8 +502,7 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
         padding: 'var(--f-brand-space-lg)',
       }}
     >
-      <div
-        className="completion-overlay-panel"
+      <div className="card-match-completion-card"
         style={{
           position: 'relative',
           width: '100%',
@@ -537,11 +522,10 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
         {visible && stars >= 2 && <Confetti />}
 
         {/* Stars */}
-        <div className="completion-overlay-stars" style={{ fontSize: '36', marginBottom: 'var(--f-brand-space-md)', letterSpacing: 8 }}>
+        <div className="card-match-stars" style={{ fontSize: 'var(--text-3xl)', marginBottom: 'var(--f-brand-space-md)', letterSpacing: 'var(--tracking-display-ultra)' }}>
           {[1, 2, 3].map(i => (
-            <span
+            <span className="card-match-star"
               key={i}
-              className="completion-overlay-star"
               style={{
                 opacity: i <= stars ? 1 : 0.2,
                 filter: i <= stars ? 'drop-shadow(0 0 8px var(--c-lt-star-glow))' : 'none',
@@ -555,34 +539,29 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
           ))}
         </div>
 
-        <h2
-          className="completion-overlay-title"
+        <h2 className="card-match-completion-heading"
           style={{
-            fontFamily: 'var(--f-base-type-family-primary)',
-            fontSize: '28',
-            fontWeight: '300',
+            font: 'var(--f-brand-type-title-3)',
             color: 'var(--f-brand-color-text-default)',
             marginBottom: 'var(--f-brand-space-xs)',
-            letterSpacing: '-0.03em',
+            letterSpacing: 'var(--tracking-tight)',
           }}
         >
           {label}
         </h2>
-        <p
-          className="completion-overlay-description"
+        <p className="card-match-completion-description"
           style={{
-            fontSize: '13',
+            fontSize: 'var(--text-sm)',
             color: 'var(--f-brand-color-text-subtle)',
             marginBottom: 'var(--f-brand-space-lg)',
-            lineHeight: '1.52',
+            lineHeight: 'var(--leading-normal)',
           }}
         >
           You matched all {pairCount} pairs{totalRounds > 1 ? ` across ${totalRounds} rounds` : ''}
         </p>
 
         {/* Stats row */}
-        <div
-          className="completion-overlay-stats"
+        <div className="card-match-completion-stats"
           style={{
             display: 'flex',
             justifyContent: 'center',
@@ -590,24 +569,23 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
             marginBottom: 'var(--f-brand-space-xl)',
           }}
         >
-          <div className="completion-overlay-stat-item" style={{ textAlign: 'center' }}>
+          <div className="card-match-stat-moves" style={{ textAlign: 'center' }}>
             <AnimatedStat value={String(totalMoves)} delay={700} />
-            <div className="completion-overlay-stat-label" style={{ fontSize: '10', color: 'var(--f-brand-color-text-subtle)', letterSpacing: '0.09em', textTransform: 'uppercase', marginTop: 2 }}>
+            <div className="card-match-stat-label" style={{ fontSize: 'var(--text-2xs)', color: 'var(--f-brand-color-text-subtle)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginTop: 2 }}>
               Moves
             </div>
           </div>
-          <div className="completion-overlay-stat-divider" style={{ width: 1, background: 'var(--f-brand-color-border-default)' }} />
-          <div className="completion-overlay-stat-item" style={{ textAlign: 'center' }}>
+          <div className="card-match-stat-divider" style={{ width: 1, background: 'var(--f-brand-color-border-default)' }} />
+          <div className="card-match-stat-time" style={{ textAlign: 'center' }}>
             <AnimatedStat value={`${totalTimeUsed}s`} delay={900} />
-            <div className="completion-overlay-stat-label" style={{ fontSize: '10', color: 'var(--f-brand-color-text-subtle)', letterSpacing: '0.09em', textTransform: 'uppercase', marginTop: 2 }}>
+            <div className="card-match-stat-label" style={{ fontSize: 'var(--text-2xs)', color: 'var(--f-brand-color-text-subtle)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginTop: 2 }}>
               Time
             </div>
           </div>
         </div>
 
         {/* Action buttons */}
-        <button
-          className="completion-overlay-results-btn"
+        <button className="card-match-view-results-button"
           onClick={onResults}
           style={{
             width: '100%',
@@ -616,17 +594,14 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
             border: 'none',
             background: 'var(--f-brand-color-primary)',
             color: 'var(--f-brand-color-text-light)',
-            fontSize: 16,
-            fontWeight: '500',
-            fontFamily: 'inherit',
+            font: 'var(--f-brand-type-body-medium)',
             cursor: 'pointer',
             marginBottom: 'var(--f-brand-space-sm)',
           }}
         >
           View Results
         </button>
-        <button
-          className="completion-overlay-play-again-btn"
+        <button className="card-match-play-again-button"
           onClick={onPlayAgain}
           style={{
             width: '100%',
@@ -635,9 +610,7 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
             border: '1.5px solid var(--f-brand-color-border-default)',
             background: 'var(--f-brand-color-background-light)',
             color: 'var(--f-brand-color-text-default)',
-            fontSize: 16,
-            fontWeight: '500',
-            fontFamily: 'inherit',
+            font: 'var(--f-brand-type-body-medium)',
             cursor: 'pointer',
           }}
         >
@@ -867,8 +840,8 @@ export default function CardMatch() {
     : (matchedPairs / pairCount) * 100
 
   return (
-    <div
-      className="card-match-page"
+    <div className="card-match-page"
+      data-page="card-match"
       style={{
         position: 'fixed',
         inset: 0,
@@ -880,8 +853,7 @@ export default function CardMatch() {
       }}
     >
       <style>{KEYFRAMES}</style>
-      <div
-        className="card-match-content f-page-enter"
+      <div className="f-page-enter"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -893,11 +865,11 @@ export default function CardMatch() {
         }}
       >
         {/* ── Back button + Progress bar ── */}
-        <div className="card-match-top-bar" style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)', marginBottom: 'var(--f-brand-space-lg)' }}>
-          <button
-            className="card-match-back-btn"
+        <div className="card-match-header" data-section="header" style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)', marginBottom: 'var(--f-brand-space-lg)' }}>
+          <button className="card-match-back-button"
             onClick={handleBack}
             aria-label="Go back"
+            data-ui="back-btn"
             style={{
               width: 48,
               height: 48,
@@ -915,15 +887,14 @@ export default function CardMatch() {
             }}
           >
             <svg className="card-match-back-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path
+              <path className="card-match-back-icon-path"
                 d="M15 18.5C14.87 18.5 14.74 18.45 14.65 18.35L8.65 12.35C8.55 12.26 8.5 12.13 8.5 12C8.5 11.87 8.55 11.74 8.65 11.65L14.65 5.65C14.84 5.46 15.16 5.46 15.35 5.65C15.54 5.84 15.54 6.16 15.35 6.35L9.71 12L15.35 17.65C15.54 17.84 15.54 18.16 15.35 18.35C15.26 18.45 15.13 18.5 15 18.5Z"
                 fill="var(--f-brand-color-text-default)"
               />
             </svg>
           </button>
           <div className="card-match-progress-wrapper" style={{ flex: 1 }}>
-            <div
-              className="card-match-progress-track"
+            <div className="card-match-progress-track"
               style={{
                 height: 8,
                 background: 'var(--f-brand-color-border-default)',
@@ -931,8 +902,7 @@ export default function CardMatch() {
                 overflow: 'hidden',
               }}
             >
-              <div
-                className="card-match-progress-fill"
+              <div className="card-match-progress-fill"
                 style={{
                   height: '100%',
                   width: `${progressPercent}%`,
@@ -946,14 +916,12 @@ export default function CardMatch() {
         </div>
 
         {/* ── Title ── */}
-        <h1
-          className="card-match-title"
+        <h1 className="card-match-title"
+          data-section="title"
           style={{
-            fontFamily: 'var(--f-base-type-family-primary)',
-            fontSize: '28',
-            fontWeight: '300',
+            font: 'var(--f-brand-type-title-3)',
             color: 'var(--f-brand-color-text-default)',
-            letterSpacing: '-0.03em',
+            letterSpacing: 'var(--tracking-tight)',
             textAlign: 'center',
             marginBottom: quiz ? 'var(--f-brand-space-xs)' : 'var(--f-brand-space-lg)',
           }}
@@ -961,9 +929,8 @@ export default function CardMatch() {
           {quiz ? quiz.title : 'Match the cards'}
         </h1>
         {quiz && (
-          <p className="card-match-round-info" style={{
-            fontFamily: 'var(--f-base-type-family-secondary)',
-            fontSize: '12',
+          <p className="card-match-round-label" style={{
+            font: 'var(--f-brand-type-caption)',
             color: 'var(--f-brand-color-text-subtle)',
             textAlign: 'center',
             marginBottom: 'var(--f-brand-space-md)',
@@ -973,8 +940,8 @@ export default function CardMatch() {
         )}
 
         {/* ── Card Grid ── */}
-        <div
-          className="card-match-grid"
+        <div className="card-match-grid"
+          data-section="card-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
@@ -994,15 +961,76 @@ export default function CardMatch() {
           ))}
         </div>
 
-        {/* ── Timer ring ── */}
-        <div className="card-match-timer-wrapper" style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--f-brand-space-lg)' }}>
+        {/* ── Stats row: matches + timer + moves ── */}
+        <div className="card-match-stats-row"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 'var(--f-brand-space-lg)',
+            marginBottom: 'var(--f-brand-space-lg)',
+          }}
+        >
+          {/* Matched pairs counter */}
+          <div className="card-match-matched-counter" style={{ textAlign: 'center', minWidth: 48 }}>
+            <div className="card-match-matched-value"
+              style={{
+                font: 'var(--f-brand-type-headline-medium)',
+                fontSize: 'var(--text-lg)',
+                fontWeight: 'var(--weight-bold)',
+                color: matchedPairs > 0 ? 'var(--f-brand-color-background-success)' : 'var(--f-brand-color-text-default)',
+                transition: 'color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
+              }}
+            >
+              {matchedPairs}/{pairCount}
+            </div>
+            <div className="card-match-matched-label"
+              style={{
+                font: 'var(--f-brand-type-caption)',
+                fontSize: 'var(--text-2xs)',
+                color: 'var(--f-brand-color-text-subtle)',
+                letterSpacing: 'var(--tracking-wider)',
+                textTransform: 'uppercase',
+                marginTop: 2,
+              }}
+            >
+              Matched
+            </div>
+          </div>
+
+          {/* Timer ring (center) */}
           <TimerRing timeLeft={timeLeft} total={roundTime} />
+
+          {/* Moves counter */}
+          <div className="card-match-moves-counter" style={{ textAlign: 'center', minWidth: 48 }}>
+            <div className="card-match-moves-value"
+              style={{
+                font: 'var(--f-brand-type-headline-medium)',
+                fontSize: 'var(--text-lg)',
+                fontWeight: 'var(--weight-bold)',
+                color: 'var(--f-brand-color-text-default)',
+              }}
+            >
+              {moves}
+            </div>
+            <div className="card-match-moves-label"
+              style={{
+                font: 'var(--f-brand-type-caption)',
+                fontSize: 'var(--text-2xs)',
+                color: 'var(--f-brand-color-text-subtle)',
+                letterSpacing: 'var(--tracking-wider)',
+                textTransform: 'uppercase',
+                marginTop: 2,
+              }}
+            >
+              Moves
+            </div>
+          </div>
         </div>
 
         {/* ── Next button ── */}
         <div className="card-match-next-wrapper" style={{ marginTop: 'auto' }}>
-          <button
-            className="card-match-next-btn"
+          <button className="card-match-next-btn"
             onClick={handleNext}
             style={{
               width: '100%',
@@ -1011,9 +1039,7 @@ export default function CardMatch() {
               border: 'none',
               background: 'var(--f-brand-color-primary)',
               color: 'var(--f-brand-color-text-light)',
-              fontSize: 16,
-              fontWeight: '500',
-              fontFamily: 'inherit',
+              font: 'var(--f-brand-type-body-medium)',
               cursor: 'pointer',
               WebkitTapHighlightColor: 'transparent',
             }}

@@ -5,8 +5,8 @@ interface SpinnerProps {
 
 export default function Spinner({ fullScreen = false, size = 32 }: SpinnerProps) {
   const spinner = (
-    <svg
-      className="f-spinner"
+    <svg className="f-spinner"
+      data-component="spinner"
       width={size}
       height={size}
       viewBox="0 0 24 24"
@@ -26,7 +26,7 @@ export default function Spinner({ fullScreen = false, size = 32 }: SpinnerProps)
   if (!fullScreen) return spinner
 
   return (
-    <div className="f-spinner--fullscreen">
+    <div className="f-spinner--fullscreen" data-component="spinner">
       {spinner}
       <span className="f-spinner__label">
         FIFA Fan Zone

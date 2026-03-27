@@ -16,8 +16,7 @@ function FanCardStack() {
   ]
 
   return (
-    <div
-      className="landing-card-stack"
+    <div className="landing-card-stack-container"
       aria-hidden="true"
       style={{
         display: 'grid',
@@ -31,9 +30,8 @@ function FanCardStack() {
       {cards.map((card, i) => {
         const team = CARD_TEAMS[card.teamIndex]
         return (
-          <div
+          <div className="landing-card-stack-card"
             key={i}
-            className="landing-card-stack-item"
             style={{
               gridArea: '1 / 1',
               width: card.width,
@@ -48,45 +46,45 @@ function FanCardStack() {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '24px 20px 20px',
+              padding: 'var(--sp-6) var(--sp-5) var(--sp-5)',
               border: '1px solid var(--f-brand-color-border-subtle)',
               position: 'relative',
             }}
           >
             {/* Dot-grid halftone texture */}
-            <div className="landing-card-texture-dots" style={{
+            <div className="landing-card-stack-texture-dots" style={{
               position: 'absolute', inset: 0, borderRadius: 'var(--f-brand-radius-inner)', pointerEvents: 'none',
               backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.28) 1.5px, transparent 1.5px)',
               backgroundSize: '16px 16px',
               mixBlendMode: 'overlay',
             }} />
             {/* Diagonal shimmer stripes */}
-            <div className="landing-card-texture-stripes" style={{
+            <div className="landing-card-stack-texture-stripes" style={{
               position: 'absolute', inset: 0, borderRadius: 'var(--f-brand-radius-inner)', pointerEvents: 'none',
               backgroundImage: 'repeating-linear-gradient(-55deg, transparent, transparent 18px, rgba(255,255,255,0.10) 18px, rgba(255,255,255,0.10) 19px)',
               mixBlendMode: 'overlay',
             }} />
             {/* Holographic top stripe */}
-            <div className="landing-card-holographic-stripe" style={{
+            <div className="landing-card-stack-texture-holographic" style={{
               position: 'absolute', top: 0, left: 0, right: 0, height: 4,
               background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent)',
             }} />
 
             {/* Card header */}
-            <div className="landing-card-header" style={{ textAlign: 'left', width: '100%', position: 'relative', zIndex: 1 }}>
-              <div className="landing-card-header-title" style={{
-                fontSize: '13', letterSpacing: 2, color: 'var(--f-brand-color-background-light)',
+            <div className="landing-card-stack-header" style={{ textAlign: 'left', width: '100%', position: 'relative', zIndex: 1 }}>
+              <div className="landing-card-stack-header-title" style={{
+                font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-sm)', letterSpacing: 'var(--tracking-display)', color: 'var(--f-brand-color-background-light)',
                 textTransform: 'uppercase',
               }}>
                 Your fan card
               </div>
-              <div className="landing-card-header-subtitle" style={{ fontSize: '10', color: 'rgba(255,255,255,0.65)', letterSpacing: 1 }}>
+              <div className="landing-card-stack-header-subtitle" style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-2xs)', color: 'var(--c-text-mid)', letterSpacing: 'var(--tracking-spaced)' }}>
                 Collector edition
               </div>
             </div>
 
             {/* Flag emoji as avatar placeholder */}
-            <div className="landing-card-avatar" style={{
+            <div className="landing-card-stack-avatar" style={{
               width: card.width * 0.45,
               height: card.width * 0.45,
               borderRadius: '50%',
@@ -98,17 +96,17 @@ function FanCardStack() {
               position: 'relative',
               zIndex: 1,
             }}>
-              <span className="landing-card-avatar-flag" style={{ fontSize: card.width * 0.18 }}>{team.flag}</span>
+              <span className="landing-card-stack-avatar-flag" style={{ fontSize: card.width * 0.18 }}>{team.flag}</span>
             </div>
 
             {/* Team name */}
-            <div className="landing-card-team-name" style={{
-              fontSize: '18', fontWeight: '500',
-              color: 'rgba(255,255,255,0.88)', letterSpacing: 0.5, fontStyle: 'italic',
-              display: 'flex', alignItems: 'center', gap: 8,
+            <div className="landing-card-stack-team-name" style={{
+              font: 'var(--f-brand-type-headline-medium)',
+              color: 'var(--c-text-hi)', letterSpacing: 'var(--tracking-label)', fontStyle: 'italic',
+              display: 'flex', alignItems: 'center', gap: 'var(--sp-2)',
               position: 'relative', zIndex: 1,
             }}>
-              <span className="landing-card-team-flag" style={{ fontStyle: 'normal', fontSize: '22' }}>{team.flag}</span>
+              <span className="landing-card-stack-team-flag" style={{ fontStyle: 'normal', fontSize: 'var(--text-xl)' }}>{team.flag}</span>
               {team.name}
             </div>
           </div>
@@ -138,26 +136,23 @@ export default function Landing() {
   }
 
   return (
-    <div
-      className="landing-page f-page-enter"
+    <div className="f-page-enter landing-page"
+      data-page="landing"
       style={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         minHeight: '100%',
         background: 'var(--f-brand-color-background-default)',
-        padding: '86px var(--f-brand-space-md) var(--f-brand-space-2xl)',
+        padding: 'var(--sp-20) var(--f-brand-space-md) var(--f-brand-space-2xl)',
         boxSizing: 'border-box',
       }}
     >
       {/* Title */}
-      <h1
-        className="landing-title"
+      <h1 className="landing-title"
+        data-section="hero"
         style={{
-          fontFamily: 'var(--f-base-type-family-primary)',
-          fontSize: '28',
-          fontWeight: '100',
-          lineHeight: '36px',
+          font: 'var(--f-brand-type-title-2)',
           color: 'var(--f-brand-color-text-default)',
           textAlign: 'center',
           margin: 0,
@@ -168,26 +163,25 @@ export default function Landing() {
       </h1>
 
       {/* Fan Card Stack */}
-      <div className="landing-card-stack-wrapper" style={{ marginTop: 'var(--f-brand-space-lg)', width: '100%' }}>
+      <div className="landing-card-stack-wrapper" data-section="fan-card-stack" style={{ marginTop: 'var(--f-brand-space-lg)', width: '100%' }}>
         <FanCardStack />
       </div>
 
       {/* CTA Button */}
-      <button
-        className="landing-cta-btn"
+      <button className="landing-cta-button"
+        data-section="cta"
+        data-ui="primary-cta-btn"
         onClick={handlePrimary}
         style={{
           marginTop: 'var(--f-brand-space-2xl)',
           width: '100%',
           maxWidth: 361,
-          height: 56,
+          height: 'var(--sp-14)',
           borderRadius: 'var(--f-brand-radius-rounded)',
           background: 'var(--f-brand-color-primary)',
           color: 'var(--f-brand-color-background-light)',
-          fontFamily: 'var(--f-base-type-family-secondary)',
-          fontSize: '15',
-          fontWeight: '500',
-          lineHeight: '24px',
+          font: 'var(--f-brand-type-body-medium)',
+          fontSize: 'var(--text-md)',
           border: 'none',
           cursor: 'pointer',
           padding: 'var(--f-brand-space-md) var(--f-brand-space-xl)',
