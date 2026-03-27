@@ -103,6 +103,14 @@
   --c-photo-placeholder-border: 2px dashed rgba(255,255,255,0.45);
   --c-capture-ring: 3px;
 
+  /* ─── Card tokens (FanCard front face) ─────────────────────────────────────── */
+  --c-card-gradient-1:      #1a1a2e;
+  --c-card-gradient-2:      #16213e;
+  --c-card-gradient-3:      #0f3460;
+  --c-card-shadow:          rgba(0,0,0,0.35);
+  --c-card-inset:           rgba(255,255,255,0.12);
+  --c-card-border:          rgba(255,255,255,0.18);
+
   /* ─── Typography ─────────────────────────────────────────────────────────── */
   --font-display: var(--f-base-type-family-primary);
   --font-body:    var(--f-base-type-family-secondary);

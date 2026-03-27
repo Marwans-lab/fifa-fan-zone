@@ -184,7 +184,7 @@ function JourneyCard({
             font: 'var(--f-brand-type-caption)',
             color: allComplete ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-text-default)', lineHeight: 'var(--leading-none)',
           }}>
-            {allComplete ? '✓ Complete' : `Step ${Math.min(doneCount + 1, 6)}/6`}
+            {allComplete ? '✓ Complete' : `Step ${Math.min(doneCount + 1, 4)}/4`}
           </span>
         </div>
       </div>
