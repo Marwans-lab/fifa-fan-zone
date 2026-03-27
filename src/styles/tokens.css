@@ -60,6 +60,28 @@
   --c-lt-overlay-border: rgba(255,255,255,0.20);
   --c-lt-shadow-lg: 0 8px 32px rgba(31,33,43,0.12), 0 2px 8px rgba(31,33,43,0.08);
 
+  /* ─── Card texture & pattern tokens ──────────────────────────────────── */
+  --c-card-dot:           rgba(255,255,255,0.28);
+  --c-card-stripe:        rgba(255,255,255,0.10);
+  --c-card-holo:          rgba(255,255,255,0.45);
+  --c-card-dash:          rgba(255,255,255,0.35);
+  --c-card-photo-border:  rgba(255,255,255,0.55);
+  --c-card-capture-bg:    rgba(255,255,255,0.25);
+  --c-card-overlay:       rgba(0,0,0,0.28);
+  --c-card-overlay-heavy: rgba(0,0,0,0.5);
+  --c-card-glass-bg:      rgba(255,255,255,0.08);
+  --c-card-glass-border:  rgba(255,255,255,0.15);
+  --c-card-glass-shine:   rgba(255,255,255,0.06);
+  --c-card-btn-border:    rgba(255,255,255,0.14);
+  --c-card-muted:         rgba(255,255,255,0.55);
+  --c-card-faint:         rgba(255,255,255,0.05);
+  --c-card-progress-off:  rgba(255,255,255,0.12);
+  --c-card-cta-border:    rgba(255,255,255,0.27);
+  --c-card-overlay-border: rgba(255,255,255,0.2);
+  --c-accent-disabled:    rgba(0,212,170,0.2);
+  --c-card-disabled-text: rgba(0,0,0,0.4);
+  --c-card-photo-shadow:  0 4px 20px rgba(0,0,0,0.5);
+
   /* ─── Glass / elevation (app-specific dark-theme) ──────────────────────── */
   --glass-bg:     rgba(255,255,255,0.10);
   --glass-border: rgba(255,255,255,0.18);

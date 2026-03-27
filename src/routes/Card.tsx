@@ -672,7 +672,8 @@ export default function Card() {
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], title: 'My FIFA Fan Card' })
       } else {
-        await (window as any).QAApp.openNativeShare({
+        const win = window as Window & { QAApp?: { openNativeShare(opts: { title: string; text: string }): Promise<void> } }
+        await win.QAApp?.openNativeShare({
           title: 'My FIFA Fan Card',
           text: buildShareText(state.fanCard),
         })

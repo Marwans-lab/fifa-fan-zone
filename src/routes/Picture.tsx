@@ -231,20 +231,20 @@ export default function Picture() {
         {/* Card textures */}
         <div style={{
           position: 'absolute', inset: 0, borderRadius: 'var(--f-brand-radius-outer)', pointerEvents: 'none',
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.28) 1.5px, transparent 1.5px)',
+          backgroundImage: 'radial-gradient(circle, var(--c-card-dot) 1.5px, transparent 1.5px)',
           backgroundSize: '16px 16px',
           mixBlendMode: 'overlay',
         }} />
         <div style={{
           position: 'absolute', inset: 0, borderRadius: 'var(--f-brand-radius-outer)', pointerEvents: 'none',
-          backgroundImage: 'repeating-linear-gradient(-55deg, transparent, transparent 18px, rgba(255,255,255,0.10) 18px, rgba(255,255,255,0.10) 19px)',
+          backgroundImage: 'repeating-linear-gradient(-55deg, transparent, transparent 18px, var(--c-card-stripe) 18px, var(--c-card-stripe) 19px)',
           mixBlendMode: 'overlay',
         }} />
 
         {/* Holographic stripe */}
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: 4,
-          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent)',
+          background: 'linear-gradient(90deg, transparent, var(--c-card-holo), transparent)',
         }} />
 
         {/* Header */}
@@ -273,7 +273,7 @@ export default function Picture() {
             /* Live camera feed in circular frame */
             <div style={{
               width: 180, height: 180, borderRadius: '50%',
-              border: '2px dashed rgba(255,255,255,0.35)',
+              border: '2px dashed var(--c-card-dash)',
               overflow: 'hidden', position: 'relative',
             }}>
               <video
@@ -295,7 +295,7 @@ export default function Picture() {
                   position: 'absolute', bottom: 8, left: '50%',
                   transform: 'translateX(-50%)',
                   width: 48, height: 48, borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.25)',
+                  background: 'var(--c-card-capture-bg)',
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
                   border: '2px solid var(--f-brand-color-text-light)',
@@ -318,8 +318,8 @@ export default function Picture() {
                 style={{
                   width: 180, height: 180, borderRadius: '50%',
                   objectFit: 'cover', objectPosition: 'center top',
-                  border: '3px solid rgba(255,255,255,0.55)',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+                  border: '3px solid var(--c-card-photo-border)',
+                  boxShadow: 'var(--c-card-photo-shadow)',
                 }}
               />
               {/* Retake overlay */}
@@ -331,10 +331,10 @@ export default function Picture() {
                   transform: 'translateX(-50%)',
                   padding: 'var(--f-brand-space-2xs) var(--f-brand-space-sm)',
                   borderRadius: 'var(--f-brand-radius-rounded)',
-                  background: 'rgba(0,0,0,0.5)',
+                  background: 'var(--c-card-overlay-heavy)',
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
-                  border: '1px solid rgba(255,255,255,0.2)',
+                  border: '1px solid var(--c-card-overlay-border)',
                   color: 'var(--f-brand-color-text-light)',
                   fontFamily: 'var(--f-base-type-family-secondary)',
                   fontSize: 11, fontWeight: 500, cursor: 'pointer',
@@ -350,8 +350,8 @@ export default function Picture() {
             <div
               style={{
                 width: 180, height: 180, borderRadius: '50%',
-                background: 'rgba(0,0,0,0.28)',
-                border: '2px dashed rgba(255,255,255,0.35)',
+                background: 'var(--c-card-overlay)',
+                border: '2px dashed var(--c-card-dash)',
                 display: 'flex', flexDirection: 'column',
                 alignItems: 'center', justifyContent: 'center',
                 gap: 'var(--f-brand-space-xs)',
