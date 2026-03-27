@@ -241,7 +241,7 @@ function JourneyCard({
           fontSize: 'var(--text-md)', borderRadius: 9999,
           border: allComplete ? '1px solid rgba(0,212,170,0.25)' : 'none',
           marginTop: 'var(--sp-7)', cursor: allComplete ? 'default' : 'pointer',
-          boxShadow: allComplete ? 'none' : !cardComplete ? '0 10px 30px rgba(142,33,87,0.3)' : '0 10px 30px rgba(0,0,0,0.12)',
+          boxShadow: 'none',
           transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
           WebkitTapHighlightColor: 'transparent',
         }}
