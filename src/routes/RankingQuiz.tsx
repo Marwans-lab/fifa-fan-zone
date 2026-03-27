@@ -92,8 +92,7 @@ function RankItem({
   }
 
   return (
-    <div
-      className="ranking-quiz-item-row"
+    <div className="ranking-quiz-item-row"
       data-section="rank-item"
       onTouchStart={handleTouchStart}
       onMouseDown={handleMouseDown}
@@ -351,8 +350,7 @@ export default function RankingQuizRoute() {
 
   return (
     <Screen>
-      <div
-        className="page-in"
+      <div className="page-in"
         data-page="ranking-quiz"
         style={{
           display: 'flex', flexDirection: 'column',
@@ -442,10 +440,9 @@ export default function RankingQuizRoute() {
                 : `${questionScore}/4 correct positions`}
             </div>
           )}
-          <button
+          <button className="btn ranking-quiz-submit-btn"
             onClick={revealed ? handleNext : handleSubmit}
             data-ui="submit-btn"
-            className="btn ranking-quiz-submit-btn"
             style={{
               width: '100%', padding: 'var(--sp-4) 0', borderRadius: 50,
               border: 'none',

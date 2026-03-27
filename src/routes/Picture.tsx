@@ -24,8 +24,7 @@ function compressDataUrl(source: HTMLVideoElement | HTMLImageElement, flipX = fa
 // ─── Silhouette SVG (dashed outline of head + shoulders) ─────────────────────
 function SilhouettePlaceholder() {
   return (
-    <svg
-      className="picture-silhouette-svg"
+    <svg className="picture-silhouette-svg"
       width="180"
       height="220"
       viewBox="0 0 180 220"
@@ -45,8 +44,7 @@ function SilhouettePlaceholder() {
         fill="none"
       />
       {/* Shoulders */}
-      <path
-        className="picture-silhouette-shoulders"
+      <path className="picture-silhouette-shoulders"
         d="M20 210 C20 170, 45 145, 90 140 C135 145, 160 170, 160 210"
         stroke="currentColor"
         strokeWidth="2"
@@ -60,8 +58,7 @@ function SilhouettePlaceholder() {
 // ─── Progress bar ─────────────────────────────────────────────────────────────
 function ProgressBar({ progress }: { progress: number }) {
   return (
-    <div
-      className="picture-progress-track"
+    <div className="picture-progress-track"
       style={{
         flex: 1,
         height: 8,
@@ -70,8 +67,7 @@ function ProgressBar({ progress }: { progress: number }) {
         overflow: 'hidden',
       }}
     >
-      <div
-        className="picture-progress-fill"
+      <div className="picture-progress-fill"
         style={{
           width: `${progress}%`,
           height: '100%',
@@ -191,9 +187,8 @@ export default function Picture() {
   const hasPhoto = !!photoDataUrl
 
   return (
-    <div
+    <div className="f-page-enter picture-page"
       data-page="picture"
-      className="f-page-enter picture-page"
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -212,9 +207,8 @@ export default function Picture() {
         padding: 'var(--sp-18) var(--f-brand-space-md) 0 var(--f-brand-space-md)',
         flexShrink: 0,
       }}>
-        <button
+        <button className="picture-back-btn"
           data-ui="back-btn"
-          className="picture-back-btn"
           onClick={handleBack}
           aria-label="Go back"
           style={{
@@ -231,8 +225,7 @@ export default function Picture() {
             boxShadow: 'var(--f-brand-shadow-medium)',
           }}
         >
-          <img
-            className="picture-back-icon"
+          <img className="picture-back-icon"
             src={chevLeft}
             width={24}
             height={24}
@@ -276,8 +269,7 @@ export default function Picture() {
             height: '100%',
             position: 'relative',
           }}>
-            <video
-              className="picture-camera-video"
+            <video className="picture-camera-video"
               ref={videoRef}
               autoPlay
               playsInline
@@ -291,9 +283,8 @@ export default function Picture() {
               }}
             />
             {/* Capture button overlay */}
-            <button
+            <button className="picture-capture-btn"
               data-ui="capture-photo-btn"
-              className="picture-capture-btn"
               onClick={capturePhoto}
               aria-label="Capture photo"
               style={{
@@ -328,8 +319,7 @@ export default function Picture() {
             height: '100%',
             position: 'relative',
           }}>
-            <img
-              className="picture-photo-img"
+            <img className="picture-photo-img"
               src={photoDataUrl!}
               alt="Your photo"
               style={{
@@ -340,9 +330,8 @@ export default function Picture() {
               }}
             />
             {/* Retake overlay button */}
-            <button
+            <button className="picture-retake-btn"
               data-ui="retake-photo-btn"
-              className="picture-retake-btn"
               onClick={handleRetake}
               aria-label="Retake photo"
               style={{
@@ -371,9 +360,8 @@ export default function Picture() {
           <>
             <SilhouettePlaceholder />
 
-            <button
+            <button className="picture-take-photo-btn"
               data-ui="take-photo-btn"
-              className="picture-take-photo-btn"
               onClick={handleTakePhoto}
               style={{
                 position: 'absolute',
@@ -415,8 +403,7 @@ export default function Picture() {
       )}
 
       {/* ── Hidden file input fallback ───────────────────────── */}
-      <input
-        className="picture-file-input"
+      <input className="picture-file-input"
         data-ui="file-upload-input"
         ref={fileInputRef}
         type="file"
@@ -431,8 +418,7 @@ export default function Picture() {
         padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) var(--f-brand-space-xl)',
         flexShrink: 0,
       }}>
-        <button
-          className="picture-confirm-btn"
+        <button className="picture-confirm-btn"
           data-ui="confirm-photo-btn"
           onClick={handleNext}
           disabled={!hasPhoto}

@@ -33,10 +33,9 @@ export default function Leaderboard() {
               Leaderboard
             </h2>
           </div>
-          <button
+          <button className="f-button f-button--ghost leaderboard-refresh-btn"
             data-ui="refresh-btn"
             onClick={() => { track('leaderboard_refresh_tapped'); refresh() }}
-            className="f-button f-button--ghost leaderboard-refresh-btn"
             aria-label="Refresh leaderboard"
           ><img className="leaderboard-refresh-icon" src={flipIcon} width={24} height={24} alt="Refresh" /></button>
         </div>
@@ -82,9 +81,8 @@ export default function Leaderboard() {
             </div>
           )}
           {entries.map(row => (
-            <div
+            <div className="leaderboard-rank-row"
               data-section="rank-row"
-              className="leaderboard-rank-row"
               key={row.rank}
               style={{
                 display: 'flex', alignItems: 'center',
@@ -126,10 +124,9 @@ export default function Leaderboard() {
 
       {/* Sticky CTA */}
       <div className="leaderboard-sticky-cta" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: 'var(--f-brand-space-md) var(--f-brand-space-lg) var(--f-brand-space-xl)', background: 'linear-gradient(transparent, var(--f-brand-color-background-dark) 40%)' }}>
-        <button
+        <button className="f-button"
           data-ui="return-home-btn"
           onClick={() => { track('leaderboard_home_tapped'); navigate(homeRoute) }}
-          className="f-button"
           style={{ width: '100%', maxWidth: 420, display: 'block', margin: '0 auto' }}
         >
           Return home

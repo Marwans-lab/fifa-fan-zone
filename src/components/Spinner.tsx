@@ -5,8 +5,7 @@ interface SpinnerProps {
 
 export default function Spinner({ fullScreen = false, size = 32 }: SpinnerProps) {
   const spinner = (
-    <svg
-      className="f-spinner"
+    <svg className="f-spinner"
       data-component="spinner"
       width={size}
       height={size}
@@ -15,8 +14,7 @@ export default function Spinner({ fullScreen = false, size = 32 }: SpinnerProps)
       aria-label="Loading"
     >
       <circle className="spinner-track" cx="12" cy="12" r="10" stroke="var(--f-brand-color-border-default)" strokeWidth="3" />
-      <path
-        className="spinner-arc"
+      <path className="spinner-arc"
         d="M12 2a10 10 0 0 1 10 10"
         stroke="var(--f-brand-color-primary)"
         strokeWidth="3"

@@ -122,8 +122,7 @@ export default function Results() {
 
         {/* Score ring — animated SVG progress, count-up points inside */}
         <div className="results-ring" data-section="score-ring" style={{ position: 'relative', width: RING_SIZE, height: RING_SIZE, margin: '0 auto var(--f-brand-space-xl)' }}>
-          <svg
-            className="results-ring-svg"
+          <svg className="results-ring-svg"
             width={RING_SIZE}
             height={RING_SIZE}
             style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }}

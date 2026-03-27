@@ -182,8 +182,7 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
       </div>
       {/* Correct/incorrect indicator */}
       {isCorrect !== null && (
-        <div
-          className="drag-drop-zone-result-icon"
+        <div className="drag-drop-zone-result-icon"
           style={{
             width: 24,
             height: 24,
@@ -452,9 +451,8 @@ function QuestionView({
   })
 
   return (
-    <div
+    <div className={slideClass ? `drag-drop-question-view ${slideClass}` : 'drag-drop-question-view'}
       ref={containerRef}
-      className={slideClass ? `drag-drop-question-view ${slideClass}` : 'drag-drop-question-view'}
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -465,8 +463,7 @@ function QuestionView({
       onTouchEnd={onTouchEnd}
     >
       {/* Question header area */}
-      <div
-        className="drag-drop-question-card"
+      <div className="drag-drop-question-card"
         data-section="question-card"
         style={{
           position: 'relative',
@@ -485,8 +482,7 @@ function QuestionView({
         }}
       >
         <span className="drag-drop-question-emoji" style={{ fontSize: 'var(--text-4xl)', marginBottom: 'var(--f-brand-space-xs)' }}>{quiz.emoji}</span>
-        <div
-          className="drag-drop-question-title"
+        <div className="drag-drop-question-title"
           style={{
             font: 'var(--f-brand-type-title-5)',
             fontSize: 'var(--text-lg)',
@@ -507,8 +503,7 @@ function QuestionView({
       </div>
 
       {/* Drop zones */}
-      <div
-        className="drag-drop-zones-container"
+      <div className="drag-drop-zones-container"
         data-section="drop-zones"
         style={{
           flex: 1,
@@ -519,8 +514,7 @@ function QuestionView({
         }}
       >
         {question.pairs.map((pair, i) => (
-          <div
-            className="drag-drop-zone-wrapper"
+          <div className="drag-drop-zone-wrapper"
             key={pair.id}
             ref={el => { dropZoneRefs.current[pair.id] = el }}
             aria-label={`Drop zone for ${pair.prompt}`}
@@ -538,16 +532,14 @@ function QuestionView({
       </div>
 
       {/* Draggable chips tray */}
-      <div
-        className="drag-drop-chips-tray"
+      <div className="drag-drop-chips-tray"
         data-section="draggable-items"
         style={{
           padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-md)',
           flexShrink: 0,
         }}
       >
-        <div
-          className="drag-drop-chips-label"
+        <div className="drag-drop-chips-label"
           style={{
             fontSize: 'var(--text-2xs)',
             fontWeight: 'var(--weight-med)',
@@ -560,8 +552,7 @@ function QuestionView({
         >
           {allCorrect ? '' : 'Drag answers to match'}
         </div>
-        <div
-          className="drag-drop-chips-grid"
+        <div className="drag-drop-chips-grid"
           style={{
             display: 'flex',
             flexWrap: 'wrap',
@@ -573,8 +564,7 @@ function QuestionView({
           {availableAnswers.map((answer, i) => {
             const isBeingDragged = draggedAnswer === answer
             return (
-              <div
-                className="drag-drop-chip-wrapper"
+              <div className="drag-drop-chip-wrapper"
                 key={answer}
                 ref={el => { chipRefs.current[answer] = el }}
                 role="button"
@@ -602,8 +592,7 @@ function QuestionView({
 
       {/* Floating drag ghost */}
       {draggedAnswer && dragPos && (
-        <div
-          className="drag-drop-ghost"
+        <div className="drag-drop-ghost"
           style={{
             position: 'fixed',
             left: dragPos.x - dragOffset.x,
@@ -625,8 +614,7 @@ function QuestionView({
       {/* All correct overlay & next button */}
       <div className="drag-drop-footer" style={{ padding: '0 var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
         {allCorrect && (
-          <div
-            className="drag-drop-success-message"
+          <div className="drag-drop-success-message"
             style={{
               textAlign: 'center',
               fontSize: 'var(--text-sm)',
@@ -640,10 +628,9 @@ function QuestionView({
             ✓ Perfect match!
           </div>
         )}
-        <button
+        <button className="f-button"
           onClick={() => onComplete(correctCount)}
           disabled={!allCorrect}
-          className="f-button"
           data-ui="next-btn"
           style={{
             width: '100%',
@@ -747,8 +734,7 @@ export default function DragDropQuizRoute() {
 
   return (
     <Screen>
-      <div
-        className={slideClass === 'page-in' ? 'drag-drop-page f-page-enter' : 'drag-drop-page'}
+      <div className={slideClass === 'page-in' ? 'drag-drop-page f-page-enter' : 'drag-drop-page'}
         data-page="drag-drop-quiz"
         style={{
           display: 'flex',
@@ -766,8 +752,7 @@ export default function DragDropQuizRoute() {
               <img className="drag-drop-back-icon" src={chevLeft} width={24} height={24} alt="" />
             </button>
             <div className="drag-drop-progress-track" style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
-              <div
-                className="drag-drop-progress-fill"
+              <div className="drag-drop-progress-fill"
                 style={{
                   height: '100%',
                   width: `${((qIdx + 1) / total) * 100}%`,

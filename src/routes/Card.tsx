@@ -88,8 +88,7 @@ function JourneyStep({
     }}>
       <div className="card-journey-step-node" style={nodeStyle}>
         {isCurrent && (
-          <div
-            className="animate-ping-slow card-journey-step-ping"
+          <div className="animate-ping-slow card-journey-step-ping"
             style={{
               position: 'absolute', inset: 0, borderRadius: '50%',
               background: 'rgba(0,0,0,0.1)', pointerEvents: 'none',
@@ -147,8 +146,7 @@ function JourneyCard({
   const currentIdx = achieved.findIndex(v => !v)
 
   return (
-    <section
-      className="card-journey-section"
+    <section className="card-journey-section"
       data-section="journey-card"
       aria-label="Your Journey Progress"
       style={{
@@ -260,8 +258,7 @@ function JourneyCard({
       </div>
 
       {/* Start Quiz CTA */}
-      <button
-        className="card-journey-cta"
+      <button className="card-journey-cta"
         data-ui="start-quiz-btn"
         onClick={onStartQuiz}
         disabled={allComplete}
@@ -304,8 +301,7 @@ function ProgressRing({
   const circ = 2 * Math.PI * norm
   const offset = circ * (1 - progress)
   return (
-    <svg
-      className="card-progress-ring"
+    <svg className="card-progress-ring"
       width={radius * 2}
       height={radius * 2}
       style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }}
@@ -360,8 +356,7 @@ function ExtraQuizCard({
   }
 
   return (
-    <button
-      className="card-quiz-card"
+    <button className="card-quiz-card"
       data-ui="quiz-card-btn"
       onClick={locked ? undefined : handleClick}
       disabled={locked || loading}
@@ -409,7 +404,7 @@ function ExtraQuizCard({
             ) : done ? (
               <img className="card-quiz-card-tick-icon" src={tickBlack} width={24} height={24} alt="" />
             ) : (
-              <img src={iconSrc} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
+              <img className="card-quiz-card-quiz-icon" src={iconSrc} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
             )}
           </div>
         </div>
@@ -443,8 +438,7 @@ function ExtraQuizCard({
           marginRight: 'var(--f-brand-space-2xs)',
         }}>
           {loading ? (
-            <div
-              className="card-quiz-card-spinner"
+            <div className="card-quiz-card-spinner"
               aria-label="Loading"
               style={{
                 width: 20, height: 20, borderRadius: '50%',
@@ -587,9 +581,8 @@ export default function Card() {
   return (
     <Screen>
       {/* ── Content ────────────────────────────────────────── */}
-      <div
+      <div className="f-page-enter hide-scrollbar"
         data-page="card"
-        className="f-page-enter hide-scrollbar"
         style={{
           flex: 1, position: 'relative',
           padding: 'var(--f-brand-space-md) var(--f-brand-space-lg)',
@@ -604,8 +597,7 @@ export default function Card() {
             position: 'relative',
           }}>
             {/* Ambient brand glow */}
-            <div
-              className="card-header-glow"
+            <div className="card-header-glow"
               aria-hidden="true"
               style={{
                 position: 'absolute',
@@ -648,8 +640,7 @@ export default function Card() {
 
           {/* ── Complete fan card CTA ────────────────────────────── */}
           {!cardComplete && (
-            <button
-              className="card-complete-cta"
+            <button className="card-complete-cta"
               data-ui="complete-fan-card-btn"
               onClick={() => {
                 track('complete_fan_card_tapped')

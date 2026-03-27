@@ -118,8 +118,7 @@ function initStatuses(deck: MatchCard[]): Record<string, CardStatus> {
 
 function CardBack() {
   return (
-    <div
-      className="card-match-back-container"
+    <div className="card-match-back-container"
       style={{
         position: 'absolute',
         inset: 0,
@@ -133,8 +132,7 @@ function CardBack() {
       }}
     >
       {/* Geometric overlay pattern */}
-      <svg
-        className="card-match-back-pattern-svg"
+      <svg className="card-match-back-pattern-svg"
         width="100%"
         height="100%"
         viewBox="0 0 170 160"
@@ -155,8 +153,7 @@ function CardBack() {
         <rect className="card-match-back-fill" width="170" height="160" fill="url(#card-pattern)" />
       </svg>
       {/* Shimmer */}
-      <div
-        className="card-match-back-shimmer"
+      <div className="card-match-back-shimmer"
         style={{
           position: 'absolute',
           inset: 0,
@@ -172,8 +169,7 @@ function CardBack() {
 
 function MatchRing() {
   return (
-    <div
-      className="card-match-ring-burst"
+    <div className="card-match-ring-burst"
       style={{
         position: 'absolute',
         inset: -8,
@@ -216,8 +212,7 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
   }, [isMatched])
 
   return (
-    <button
-      className="card-match-game-button"
+    <button className="card-match-game-button"
       onClick={onFlip}
       disabled={status !== 'hidden'}
       data-section="card-item"
@@ -237,8 +232,7 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
         transition: 'opacity var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit), transform var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit)',
       }}
     >
-      <div
-        className="card-match-card-inner"
+      <div className="card-match-card-inner"
         style={{
           position: 'relative',
           width: '100%',
@@ -257,8 +251,7 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
         <CardBack />
 
         {/* Front face (visible when flipped) */}
-        <div
-          className="card-match-card-front"
+        <div className="card-match-card-front"
           style={{
             position: 'absolute',
             inset: 0,
@@ -293,8 +286,7 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
           {card.type === 'flag' ? (
             <span className="card-match-flag-emoji" style={{ fontSize: 'var(--text-3xl)', lineHeight: 'var(--leading-none)' }}>{card.display}</span>
           ) : card.type === 'clue' ? (
-            <span
-              className="card-match-clue-text"
+            <span className="card-match-clue-text"
               style={{
                 font: 'var(--f-brand-type-caption)',
                 fontSize: 'var(--text-2xs)',
@@ -307,8 +299,7 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
               {card.display}
             </span>
           ) : (
-            <span
-              className="card-match-answer-text"
+            <span className="card-match-answer-text"
               style={{
                 font: 'var(--f-brand-type-caption-medium)',
                 fontSize: 'var(--text-xs)',
@@ -325,8 +316,7 @@ function GameCard({ card, status, dealDelay, onFlip }: GameCardProps) {
 
           {/* Match checkmark */}
           {isMatched && (
-            <div
-              className="card-match-checkmark"
+            <div className="card-match-checkmark"
               style={{
                 position: 'absolute',
                 top: 'var(--f-brand-space-2xs)',
@@ -392,8 +382,7 @@ function TimerRing({ timeLeft, total }: { timeLeft: number; total: number }) {
           style={{ transition: 'stroke-dashoffset 1s linear' }}
         />
       </svg>
-      <span
-        className="card-match-timer-value"
+      <span className="card-match-timer-value"
         style={{
           position: 'absolute',
           inset: 0,
@@ -421,8 +410,7 @@ function AnimatedStat({ value, delay }: { value: string; delay: number }) {
   }, [delay])
 
   return (
-    <div
-      className="card-match-animated-stat"
+    <div className="card-match-animated-stat"
       style={{
         font: 'var(--f-brand-type-headline-medium)',
         fontSize: 'var(--text-xl)',
@@ -457,8 +445,7 @@ function Confetti() {
   return (
     <div className="card-match-confetti" style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
       {particles.map(p => (
-        <div
-          className="card-match-confetti-particle"
+        <div className="card-match-confetti-particle"
           key={p.id}
           style={{
             position: 'absolute',
@@ -500,8 +487,7 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
   const label = stars === 3 ? 'Perfect!' : stars === 2 ? 'Great Job!' : 'Well Done!'
 
   return (
-    <div
-      className="card-match-completion-overlay"
+    <div className="card-match-completion-overlay"
       style={{
         position: 'fixed',
         inset: 0,
@@ -516,8 +502,7 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
         padding: 'var(--f-brand-space-lg)',
       }}
     >
-      <div
-        className="card-match-completion-card"
+      <div className="card-match-completion-card"
         style={{
           position: 'relative',
           width: '100%',
@@ -539,8 +524,7 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
         {/* Stars */}
         <div className="card-match-stars" style={{ fontSize: 'var(--text-3xl)', marginBottom: 'var(--f-brand-space-md)', letterSpacing: 'var(--tracking-display-ultra)' }}>
           {[1, 2, 3].map(i => (
-            <span
-              className="card-match-star"
+            <span className="card-match-star"
               key={i}
               style={{
                 opacity: i <= stars ? 1 : 0.2,
@@ -555,8 +539,7 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
           ))}
         </div>
 
-        <h2
-          className="card-match-completion-heading"
+        <h2 className="card-match-completion-heading"
           style={{
             font: 'var(--f-brand-type-title-3)',
             color: 'var(--f-brand-color-text-default)',
@@ -566,8 +549,7 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
         >
           {label}
         </h2>
-        <p
-          className="card-match-completion-description"
+        <p className="card-match-completion-description"
           style={{
             fontSize: 'var(--text-sm)',
             color: 'var(--f-brand-color-text-subtle)',
@@ -579,8 +561,7 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
         </p>
 
         {/* Stats row */}
-        <div
-          className="card-match-completion-stats"
+        <div className="card-match-completion-stats"
           style={{
             display: 'flex',
             justifyContent: 'center',
@@ -604,8 +585,7 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
         </div>
 
         {/* Action buttons */}
-        <button
-          className="card-match-view-results-button"
+        <button className="card-match-view-results-button"
           onClick={onResults}
           style={{
             width: '100%',
@@ -621,8 +601,7 @@ function CompletionOverlay({ totalMoves, totalTimeUsed, stars, pairCount, totalR
         >
           View Results
         </button>
-        <button
-          className="card-match-play-again-button"
+        <button className="card-match-play-again-button"
           onClick={onPlayAgain}
           style={{
             width: '100%',
@@ -861,8 +840,7 @@ export default function CardMatch() {
     : (matchedPairs / pairCount) * 100
 
   return (
-    <div
-      className="card-match-page"
+    <div className="card-match-page"
       data-page="card-match"
       style={{
         position: 'fixed',
@@ -875,8 +853,7 @@ export default function CardMatch() {
       }}
     >
       <style>{KEYFRAMES}</style>
-      <div
-        className="f-page-enter"
+      <div className="f-page-enter"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -889,8 +866,7 @@ export default function CardMatch() {
       >
         {/* ── Back button + Progress bar ── */}
         <div className="card-match-header" data-section="header" style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)', marginBottom: 'var(--f-brand-space-lg)' }}>
-          <button
-            className="card-match-back-button"
+          <button className="card-match-back-button"
             onClick={handleBack}
             aria-label="Go back"
             data-ui="back-btn"
@@ -911,16 +887,14 @@ export default function CardMatch() {
             }}
           >
             <svg className="card-match-back-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path
-                className="card-match-back-icon-path"
+              <path className="card-match-back-icon-path"
                 d="M15 18.5C14.87 18.5 14.74 18.45 14.65 18.35L8.65 12.35C8.55 12.26 8.5 12.13 8.5 12C8.5 11.87 8.55 11.74 8.65 11.65L14.65 5.65C14.84 5.46 15.16 5.46 15.35 5.65C15.54 5.84 15.54 6.16 15.35 6.35L9.71 12L15.35 17.65C15.54 17.84 15.54 18.16 15.35 18.35C15.26 18.45 15.13 18.5 15 18.5Z"
                 fill="var(--f-brand-color-text-default)"
               />
             </svg>
           </button>
           <div className="card-match-progress-wrapper" style={{ flex: 1 }}>
-            <div
-              className="card-match-progress-track"
+            <div className="card-match-progress-track"
               style={{
                 height: 8,
                 background: 'var(--f-brand-color-border-default)',
@@ -928,8 +902,7 @@ export default function CardMatch() {
                 overflow: 'hidden',
               }}
             >
-              <div
-                className="card-match-progress-fill"
+              <div className="card-match-progress-fill"
                 style={{
                   height: '100%',
                   width: `${progressPercent}%`,
@@ -943,8 +916,7 @@ export default function CardMatch() {
         </div>
 
         {/* ── Title ── */}
-        <h1
-          className="card-match-title"
+        <h1 className="card-match-title"
           data-section="title"
           style={{
             font: 'var(--f-brand-type-title-3)',
@@ -968,8 +940,7 @@ export default function CardMatch() {
         )}
 
         {/* ── Card Grid ── */}
-        <div
-          className="card-match-grid"
+        <div className="card-match-grid"
           data-section="card-grid"
           style={{
             display: 'grid',
@@ -991,8 +962,7 @@ export default function CardMatch() {
         </div>
 
         {/* ── Stats row: matches + timer + moves ── */}
-        <div
-          className="card-match-stats-row"
+        <div className="card-match-stats-row"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -1003,8 +973,7 @@ export default function CardMatch() {
         >
           {/* Matched pairs counter */}
           <div className="card-match-matched-counter" style={{ textAlign: 'center', minWidth: 48 }}>
-            <div
-              className="card-match-matched-value"
+            <div className="card-match-matched-value"
               style={{
                 font: 'var(--f-brand-type-headline-medium)',
                 fontSize: 'var(--text-lg)',
@@ -1015,8 +984,7 @@ export default function CardMatch() {
             >
               {matchedPairs}/{pairCount}
             </div>
-            <div
-              className="card-match-matched-label"
+            <div className="card-match-matched-label"
               style={{
                 font: 'var(--f-brand-type-caption)',
                 fontSize: 'var(--text-2xs)',
@@ -1035,8 +1003,7 @@ export default function CardMatch() {
 
           {/* Moves counter */}
           <div className="card-match-moves-counter" style={{ textAlign: 'center', minWidth: 48 }}>
-            <div
-              className="card-match-moves-value"
+            <div className="card-match-moves-value"
               style={{
                 font: 'var(--f-brand-type-headline-medium)',
                 fontSize: 'var(--text-lg)',
@@ -1046,8 +1013,7 @@ export default function CardMatch() {
             >
               {moves}
             </div>
-            <div
-              className="card-match-moves-label"
+            <div className="card-match-moves-label"
               style={{
                 font: 'var(--f-brand-type-caption)',
                 fontSize: 'var(--text-2xs)',
@@ -1064,8 +1030,7 @@ export default function CardMatch() {
 
         {/* ── Next button ── */}
         <div className="card-match-next-wrapper" style={{ marginTop: 'auto' }}>
-          <button
-            className="card-match-next-btn"
+          <button className="card-match-next-btn"
             onClick={handleNext}
             style={{
               width: '100%',

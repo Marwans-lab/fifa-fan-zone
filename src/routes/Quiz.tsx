@@ -87,8 +87,7 @@ function OptionButton({
   }
 
   return (
-    <button
-      className="quiz-option-btn"
+    <button className="quiz-option-btn"
       data-ui="answer-option-btn"
       onClick={revealed ? undefined : onSelect}
       disabled={revealed}
@@ -115,8 +114,7 @@ function OptionButton({
       }}
     >
       {/* Percentage fill bar — always rendered so CSS transition fires left→right */}
-      <div
-        className="quiz-option-fill-bar"
+      <div className="quiz-option-fill-bar"
         style={{
           position: 'absolute',
           inset: 0,
@@ -133,8 +131,7 @@ function OptionButton({
       />
 
       {/* Letter badge */}
-      <div
-        className="quiz-option-letter-badge"
+      <div className="quiz-option-letter-badge"
         style={{
           width: 28,
           height: 28,
@@ -154,8 +151,7 @@ function OptionButton({
       </div>
 
       {/* Option label */}
-      <span
-        className="quiz-option-label"
+      <span className="quiz-option-label"
         style={{
           flex: 1,
           font: 'var(--f-brand-type-body)',
@@ -171,8 +167,7 @@ function OptionButton({
 
       {/* Percentage (after reveal) */}
       {revealed && (
-        <span
-          className="quiz-option-percentage"
+        <span className="quiz-option-percentage"
           style={{
             font: 'var(--f-brand-type-caption-medium)',
             color: isCorrect ? 'var(--f-brand-color-border-success)' : isWrong ? 'var(--f-brand-color-status-error)' : 'var(--f-brand-color-text-muted)',
@@ -242,9 +237,8 @@ function QuestionScreen({
 
   return (
     <Screen>
-      <div
+      <div className="f-page-enter"
         data-page="quiz"
-        className="f-page-enter"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -259,8 +253,7 @@ function QuestionScreen({
           <div className="quiz-header-row" style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
             <button data-ui="back-btn" onClick={onBack} className="f-button f-button--ghost quiz-back-btn"><img className="quiz-back-icon" src={chevLeft} width={24} height={24} alt="Back" /></button>
             <div className="quiz-progress-bar" data-section="progress-bar" style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
-              <div
-                className="quiz-progress-bar-fill"
+              <div className="quiz-progress-bar-fill"
                 style={{
                   height: '100%',
                   width: `${((qIndex + (revealed ? 1 : 0)) / total) * 100}%`,
@@ -279,8 +272,7 @@ function QuestionScreen({
         {/* ── Animated content (header + question + options only) ── */}
         <div className="quiz-slide-content" style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
           {/* Question image header */}
-          <div
-            className="quiz-question-card"
+          <div className="quiz-question-card"
             data-section="question-card"
             style={{
               position: 'relative',
@@ -313,8 +305,7 @@ function QuestionScreen({
           </div>
 
           {/* Question text */}
-          <div
-            className="quiz-question-text"
+          <div className="quiz-question-text"
             data-section="question-text"
             style={{
               padding: '0 var(--f-brand-space-lg)',
@@ -332,8 +323,7 @@ function QuestionScreen({
           </div>
 
           {/* Options */}
-          <div
-            className="quiz-answer-options"
+          <div className="quiz-answer-options"
             data-section="answer-options"
             style={{
               flex: 1,
@@ -362,8 +352,7 @@ function QuestionScreen({
         {/* ── Fixed bottom: score feedback + Next CTA (no slide) ── */}
         <div className="quiz-result-overlay" data-section="result-overlay" style={{ padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
             {revealed && (
-              <div
-                className="quiz-result-feedback"
+              <div className="quiz-result-feedback"
                 style={{
                   textAlign: 'center',
                   font: 'var(--f-brand-type-caption-medium)',
@@ -380,11 +369,10 @@ function QuestionScreen({
                   : '⏱ Time\'s up!'}
               </div>
             )}
-            <button
+            <button className="f-button"
               data-ui="next-question-btn"
               onClick={onNext}
               disabled={!revealed}
-              className="f-button"
               style={{
                 width: '100%',
                 padding: 'var(--sp-4) 0',

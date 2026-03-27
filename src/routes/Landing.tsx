@@ -16,8 +16,7 @@ function FanCardStack() {
   ]
 
   return (
-    <div
-      className="landing-card-stack-container"
+    <div className="landing-card-stack-container"
       aria-hidden="true"
       style={{
         display: 'grid',
@@ -31,8 +30,7 @@ function FanCardStack() {
       {cards.map((card, i) => {
         const team = CARD_TEAMS[card.teamIndex]
         return (
-          <div
-            className="landing-card-stack-card"
+          <div className="landing-card-stack-card"
             key={i}
             style={{
               gridArea: '1 / 1',
@@ -138,9 +136,8 @@ export default function Landing() {
   }
 
   return (
-    <div
+    <div className="f-page-enter landing-page"
       data-page="landing"
-      className="f-page-enter landing-page"
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -152,8 +149,7 @@ export default function Landing() {
       }}
     >
       {/* Title */}
-      <h1
-        className="landing-title"
+      <h1 className="landing-title"
         data-section="hero"
         style={{
           font: 'var(--f-brand-type-title-2)',
@@ -172,8 +168,7 @@ export default function Landing() {
       </div>
 
       {/* CTA Button */}
-      <button
-        className="landing-cta-button"
+      <button className="landing-cta-button"
         data-section="cta"
         data-ui="primary-cta-btn"
         onClick={handlePrimary}
