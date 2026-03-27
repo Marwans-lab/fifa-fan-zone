@@ -12,6 +12,11 @@ import targetIcon  from '../assets/icons/Target-white.svg'
 import fireIcon    from '../assets/icons/Fire-white.svg'
 import trophyIcon  from '../assets/icons/Trophy-white.svg'
 import qrIcon      from '../assets/icons/qr-logo.svg'
+import cardsIcon   from '../assets/icons/cards-white.svg'
+import stadiumIcon from '../assets/icons/stadium-white.svg'
+import historyIcon from '../assets/icons/history-white.svg'
+import refereeIcon from '../assets/icons/referee-white.svg'
+import rankingIcon from '../assets/icons/ranking-white.svg'
 
 // ─── Milestone config ─────────────────────────────────────────────────────────
 const MILESTONES = [
@@ -306,7 +311,7 @@ function ProgressRing({
 
 // ─── Generic quiz card (image, swipe, card-match) ───────────────────────────
 function ExtraQuizCard({
-  emoji,
+  iconSrc,
   title,
   subtitle,
   result,
@@ -314,7 +319,7 @@ function ExtraQuizCard({
   lockMessage,
   onStart,
 }: {
-  emoji: string
+  iconSrc: string
   title: string
   subtitle: string
   result: { score: number; total: number } | undefined
@@ -380,7 +385,7 @@ function ExtraQuizCard({
             ) : done ? (
               <img src={tickBlack} width={24} height={24} alt="" />
             ) : (
-              <span style={{ fontSize: 'var(--text-2xl)' }}>{emoji}</span>
+              <img src={iconSrc} width={24} height={24} alt="" style={{ opacity: 0.85 }} />
             )}
           </div>
         </div>
@@ -483,42 +488,42 @@ export default function Card() {
 
   const FLOWS: Array<{
     id: FlowId
-    emoji: string
+    iconSrc: string
     title: string
     subtitle: string
     start: () => void
   }> = [
     {
       id: 'the-connector',
-      emoji: '✈️',
+      iconSrc: cardsIcon,
       title: 'The Connector',
       subtitle: '5 rounds · Card Match',
       start: () => { track('quiz_card_tapped', { quizId: 'the-connector', type: 'card_match' }); navigate('/card-match', { state: { flowId: 'the-connector' } }) },
     },
     {
       id: 'the-architect',
-      emoji: '🏟',
+      iconSrc: stadiumIcon,
       title: 'The Architect',
       subtitle: '5 rounds · Card Match',
       start: () => { track('quiz_card_tapped', { quizId: 'the-architect', type: 'card_match' }); navigate('/card-match', { state: { flowId: 'the-architect' } }) },
     },
     {
       id: 'the-historian',
-      emoji: '📜',
+      iconSrc: historyIcon,
       title: 'The Historian',
       subtitle: '10 statements · Swipe',
       start: () => { track('quiz_card_tapped', { quizId: 'the-historian', type: 'swipe' }); navigate('/swipe-quiz', { state: { quizId: 'the-historian' } }) },
     },
     {
       id: 'the-referee',
-      emoji: '🟨',
+      iconSrc: refereeIcon,
       title: 'The Referee',
       subtitle: '5 questions · Quiz',
       start: () => { track('quiz_card_tapped', { quizId: 'the-referee', type: 'quiz' }); navigate('/quiz', { state: { quizId: 'the-referee' } }) },
     },
     {
       id: 'the-retrospective',
-      emoji: '📊',
+      iconSrc: rankingIcon,
       title: 'The Retrospective',
       subtitle: '5 questions · Ranking',
       start: () => { track('quiz_card_tapped', { quizId: 'the-retrospective', type: 'ranking' }); navigate('/ranking-quiz', { state: { quizId: 'the-retrospective' } }) },
@@ -683,7 +688,7 @@ export default function Card() {
                 return (
                   <ExtraQuizCard
                     key={flow.id}
-                    emoji={flow.emoji}
+                    iconSrc={flow.iconSrc}
                     title={flow.title}
                     subtitle={flow.subtitle}
                     result={result ? { score: result.score, total: result.total } : undefined}
