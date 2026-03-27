@@ -36,15 +36,13 @@ const MILESTONES = [
   { iconSrc: globeDark,    label: 'Connector',     key: 'the-connector'    },
   { iconSrc: stadiumDark,  label: 'Architect',     key: 'the-architect'    },
   { iconSrc: historyDark,  label: 'Historian',     key: 'the-historian'    },
-  { iconSrc: refereeDark,  label: 'Referee',       key: 'the-referee'      },
-  { iconSrc: rankingDark,  label: 'Retrospective', key: 'the-retrospective'},
 ] as const
 
 function statusLabel(done: number): string {
   if (done === 0) return 'New arrival'
   if (done === 1) return 'Rising fan'
-  if (done <= 3) return 'Quiz taker'
-  if (done <= 5) return 'Top fan'
+  if (done <= 2) return 'Quiz taker'
+  if (done <= 3) return 'Top fan'
   return 'Quiz champion'
 }
 
@@ -136,8 +134,6 @@ function JourneyCard({
     completedFlows.has('the-connector'),
     completedFlows.has('the-architect'),
     completedFlows.has('the-historian'),
-    completedFlows.has('the-referee'),
-    completedFlows.has('the-retrospective'),
   ]
   const doneCount = achieved.filter(Boolean).length
   const status = statusLabel(doneCount)
@@ -563,44 +559,6 @@ export default function Card() {
           overflowY: 'auto', WebkitOverflowScrolling: 'touch',
         }}
       >
-          {/* ── Fan Hub Header ─────────────────────────────────── */}
-          <header className="card-header" data-section="header" style={{
-            textAlign: 'center',
-            paddingTop: 'var(--sp-6)',
-            paddingBottom: 'var(--sp-6)',
-            position: 'relative',
-          }}>
-            {/* Ambient brand glow */}
-            <div className="card-header-glow"
-              aria-hidden="true"
-              style={{
-                position: 'absolute',
-                top: '-40%', left: '50%', transform: 'translateX(-50%)',
-                width: '120%', height: '160%',
-                background: 'radial-gradient(ellipse at center, rgba(200,16,46,0.12) 0%, transparent 70%)',
-                pointerEvents: 'none',
-              }}
-            />
-            <h1 className="card-header-title" style={{
-              font: 'var(--f-brand-type-title-2)',
-              fontStyle: 'italic',
-              letterSpacing: 'var(--tracking-tight)',
-              color: 'var(--c-text-1)',
-              position: 'relative',
-            }}>
-              FIFA Fan Zone
-            </h1>
-            <p className="card-header-subtitle" style={{
-              font: 'var(--f-brand-type-subheading)',
-              fontSize: 'var(--text-sm)',
-              color: 'var(--c-text-2)',
-              marginTop: 'var(--sp-2)',
-              position: 'relative',
-            }}>
-              {cardComplete ? 'Welcome back, fan!' : 'Your fan card is almost ready'}
-            </p>
-          </header>
-
           {/* ── Fan Card ──────────────────────────────────────── */}
           <section className="card-fan-card-section" data-section="fan-card" ref={fanCardSectionRef} aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 'var(--f-brand-space-md)' }}>
             <FanCard
