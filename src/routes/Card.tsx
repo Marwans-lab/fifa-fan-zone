@@ -184,7 +184,7 @@ function JourneyCard({
             font: 'var(--f-brand-type-caption)',
             color: allComplete ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-text-default)', lineHeight: 'var(--leading-none)',
           }}>
-            {allComplete ? '✓ Complete' : `Step ${Math.min(doneCount + 1, 6)}/6`}
+            {allComplete ? '✓ Complete' : `Step ${Math.min(doneCount + 1, 4)}/4`}
           </span>
         </div>
       </div>
@@ -617,7 +617,7 @@ export default function Card() {
             <div className="card-quiz-header" style={{ marginBottom: 'var(--f-brand-space-md)' }}>
               <h2 className="card-quiz-heading" style={{
                 font: 'var(--f-brand-type-title-2)',
-                letterSpacing: 'var(--tracking-tighter)', color: 'var(--f-brand-color-text-light)',
+                letterSpacing: 'var(--tracking-tighter)', color: 'var(--f-brand-color-text-default)',
               }}>
                 Earn Avios
               </h2>
