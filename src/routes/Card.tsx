@@ -563,44 +563,6 @@ export default function Card() {
           overflowY: 'auto', WebkitOverflowScrolling: 'touch',
         }}
       >
-          {/* ── Fan Hub Header ─────────────────────────────────── */}
-          <header className="card-header" data-section="header" style={{
-            textAlign: 'center',
-            paddingTop: 'var(--sp-6)',
-            paddingBottom: 'var(--sp-6)',
-            position: 'relative',
-          }}>
-            {/* Ambient brand glow */}
-            <div className="card-header-glow"
-              aria-hidden="true"
-              style={{
-                position: 'absolute',
-                top: '-40%', left: '50%', transform: 'translateX(-50%)',
-                width: '120%', height: '160%',
-                background: 'radial-gradient(ellipse at center, rgba(200,16,46,0.12) 0%, transparent 70%)',
-                pointerEvents: 'none',
-              }}
-            />
-            <h1 className="card-header-title" style={{
-              font: 'var(--f-brand-type-title-2)',
-              fontStyle: 'italic',
-              letterSpacing: 'var(--tracking-tight)',
-              color: 'var(--c-text-1)',
-              position: 'relative',
-            }}>
-              FIFA Fan Zone
-            </h1>
-            <p className="card-header-subtitle" style={{
-              font: 'var(--f-brand-type-subheading)',
-              fontSize: 'var(--text-sm)',
-              color: 'var(--c-text-2)',
-              marginTop: 'var(--sp-2)',
-              position: 'relative',
-            }}>
-              {cardComplete ? 'Welcome back, fan!' : 'Your fan card is almost ready'}
-            </p>
-          </header>
-
           {/* ── Fan Card ──────────────────────────────────────── */}
           <section className="card-fan-card-section" data-section="fan-card" ref={fanCardSectionRef} aria-label="Your Fan Card" style={{ width: '100%', marginBottom: 'var(--f-brand-space-md)' }}>
             <FanCard
