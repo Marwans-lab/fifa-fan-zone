@@ -19,7 +19,7 @@ import refereeWhite from '../assets/icons/referee-white.svg'
 import refereeDark from '../assets/icons/referee-dark.svg'
 import rankingWhite from '../assets/icons/ranking-white.svg'
 import rankingDark from '../assets/icons/ranking-dark.svg'
-import cardsWhite  from '../assets/icons/cards-white.svg'
+
 
 // ─── Quiz icon mapping ────────────────────────────────────────────────────────
 const QUIZ_ICONS: Record<string, { white: string; dark: string }> = {
