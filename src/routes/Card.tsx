@@ -49,14 +49,14 @@ function JourneyStep({
     flexShrink: 0, position: 'relative',
     ...(isCompleted ? {
       background: 'var(--f-brand-color-text-default)', border: '1px solid var(--f-brand-color-text-default)',
-      boxShadow: '0 0 25px rgba(0,0,0,0.15)',
+      boxShadow: 'var(--c-lt-shadow-glow)',
       transform: 'scale(1.1)', zIndex: 20,
     } : isCurrent ? {
-      background: 'rgba(0,0,0,0.06)', border: '1px solid var(--f-brand-color-border-default)',
+      background: 'var(--c-lt-tint)', border: '1px solid var(--f-brand-color-border-default)',
       transform: 'scale(1.05)', zIndex: 20,
-      boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+      boxShadow: 'var(--c-lt-shadow-md)',
     } : {
-      background: 'rgba(0,0,0,0.02)', border: '1px solid var(--f-brand-color-border-default)',
+      background: 'var(--c-lt-tint-faint)', border: '1px solid var(--f-brand-color-border-default)',
       zIndex: 10,
     }),
   }
@@ -73,7 +73,7 @@ function JourneyStep({
             className="animate-ping-slow"
             style={{
               position: 'absolute', inset: 0, borderRadius: '50%',
-              background: 'rgba(0,0,0,0.1)', pointerEvents: 'none',
+              background: 'var(--c-lt-tint-strong)', pointerEvents: 'none',
             }}
           />
         )}
@@ -133,7 +133,7 @@ function JourneyCard({
         padding: 'var(--f-brand-space-md)',
         border: '1px solid var(--f-brand-color-border-default)',
         marginBottom: 'var(--f-brand-space-md)',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+        boxShadow: 'var(--c-lt-shadow-xs)',
         overflow: 'hidden',
       }}
     >
@@ -157,9 +157,9 @@ function JourneyCard({
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: 'var(--sp-3) var(--sp-4)',
-          background: allComplete ? 'rgba(0,212,170,0.1)' : 'rgba(0,0,0,0.04)',
+          background: allComplete ? 'var(--c-accent-soft)' : 'var(--c-lt-tint-subtle)',
           borderRadius: 9999,
-          border: `1px solid ${allComplete ? 'rgba(0,212,170,0.25)' : 'var(--f-brand-color-border-default)'}`,
+          border: `1px solid ${allComplete ? 'var(--c-accent-border)' : 'var(--f-brand-color-border-default)'}`,
         }}>
           <span style={{
             font: 'var(--f-brand-type-caption)',
@@ -215,7 +215,7 @@ function JourneyCard({
       }}>
         <div style={{
           flex: 1, height: 4, borderRadius: 2,
-          background: 'rgba(0,0,0,0.06)', overflow: 'hidden',
+          background: 'var(--c-lt-tint)', overflow: 'hidden',
         }}>
           <div style={{
             width: totalQuizzes > 0 ? `${(quizCount / totalQuizzes) * 100}%` : '0%',
@@ -241,13 +241,13 @@ function JourneyCard({
         style={{
           width: '100%', height: 'var(--sp-12)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: allComplete ? 'rgba(0,212,170,0.1)' : !cardComplete ? 'var(--f-brand-color-background-primary)' : 'var(--f-brand-color-text-default)',
+          background: allComplete ? 'var(--c-accent-soft)' : !cardComplete ? 'var(--f-brand-color-background-primary)' : 'var(--f-brand-color-text-default)',
           color: allComplete ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-text-light)',
           font: 'var(--f-brand-type-body-medium)', fontWeight: 'var(--weight-bold)',
           fontSize: 'var(--text-md)', borderRadius: 9999,
-          border: allComplete ? '1px solid rgba(0,212,170,0.25)' : 'none',
+          border: allComplete ? '1px solid var(--c-accent-border)' : 'none',
           marginTop: 'var(--sp-7)', cursor: allComplete ? 'default' : 'pointer',
-          boxShadow: allComplete ? 'none' : !cardComplete ? '0 10px 30px rgba(142,33,87,0.3)' : '0 10px 30px rgba(0,0,0,0.12)',
+          boxShadow: allComplete ? 'none' : !cardComplete ? 'var(--c-lt-shadow-brand)' : 'var(--c-lt-shadow-btn)',
           transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
           WebkitTapHighlightColor: 'transparent',
         }}
@@ -338,7 +338,7 @@ function ExtraQuizCard({
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: 'var(--sp-5) var(--sp-4)', borderRadius: 'var(--f-brand-radius-outer)',
         minHeight: 120,
-        border: `1px solid ${locked ? 'var(--f-brand-color-border-disabled)' : done ? 'rgba(0,212,170,0.25)' : 'var(--f-brand-color-border-default)'}`,
+        border: `1px solid ${locked ? 'var(--f-brand-color-border-disabled)' : done ? 'var(--c-accent-border)' : 'var(--f-brand-color-border-default)'}`,
         background: 'var(--f-brand-color-background-light)',
         opacity: locked ? 0.55 : 1,
         cursor: locked ? 'not-allowed' : 'pointer',
@@ -366,11 +366,11 @@ function ExtraQuizCard({
             borderRadius: '50%',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             background: locked
-              ? 'rgba(0,0,0,0.04)'
+              ? 'var(--c-lt-tint-subtle)'
               : done
-              ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
-              : 'linear-gradient(135deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02))',
-            boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.08)',
+              ? 'linear-gradient(135deg, var(--c-accent-glow), var(--c-accent-faint))'
+              : 'linear-gradient(135deg, var(--c-lt-tint-subtle), var(--c-lt-tint-faint))',
+            boxShadow: locked ? 'none' : 'var(--c-lt-shadow-sm)',
           }}>
             {locked ? (
               <img src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4, filter: 'invert(1)' }} />
@@ -406,7 +406,7 @@ function ExtraQuizCard({
       {!locked && !done && (
         <div style={{
           width: 36, height: 36, borderRadius: '50%',
-          background: 'rgba(0,0,0,0.04)', border: '1px solid var(--f-brand-color-border-default)',
+          background: 'var(--c-lt-tint-subtle)', border: '1px solid var(--f-brand-color-border-default)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           marginRight: 'var(--f-brand-space-2xs)',
         }}>
@@ -576,7 +576,7 @@ export default function Card() {
                 position: 'absolute',
                 top: '-40%', left: '50%', transform: 'translateX(-50%)',
                 width: '120%', height: '160%',
-                background: 'radial-gradient(ellipse at center, rgba(200,16,46,0.12) 0%, transparent 70%)',
+                background: 'radial-gradient(ellipse at center, var(--c-brand-glow) 0%, transparent 70%)',
                 pointerEvents: 'none',
               }}
             />
@@ -630,7 +630,7 @@ export default function Card() {
                 borderRadius: 9999, border: 'none',
                 marginBottom: 'var(--f-brand-space-md)',
                 cursor: 'pointer',
-                boxShadow: '0 10px 30px rgba(142,33,87,0.3)',
+                boxShadow: 'var(--c-lt-shadow-brand)',
                 transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
                 WebkitTapHighlightColor: 'transparent',
               }}

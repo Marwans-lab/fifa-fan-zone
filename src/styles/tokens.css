@@ -72,6 +72,7 @@
   --c-lt-shadow-md:     0 10px 25px rgba(0,0,0,0.10);
   --c-lt-shadow-glow:   0 0 25px rgba(0,0,0,0.15);
   --c-lt-shadow-btn:    0 10px 30px rgba(0,0,0,0.12);
+  --c-lt-shadow-brand:  0 10px 30px rgba(142,33,87,0.30);
   --c-lt-shadow-strong: rgba(0,0,0,0.25);
   --c-lt-overlay:       rgba(0,0,0,0.20);
   --c-lt-overlay-heavy: rgba(0,0,0,0.50);
