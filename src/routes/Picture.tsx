@@ -25,6 +25,7 @@ function compressDataUrl(source: HTMLVideoElement | HTMLImageElement, flipX = fa
 function SilhouettePlaceholder() {
   return (
     <svg
+      className="picture-silhouette-svg"
       width="180"
       height="220"
       viewBox="0 0 180 220"
@@ -34,6 +35,7 @@ function SilhouettePlaceholder() {
     >
       {/* Head */}
       <circle
+        className="picture-silhouette-head"
         cx="90"
         cy="70"
         r="42"
@@ -44,6 +46,7 @@ function SilhouettePlaceholder() {
       />
       {/* Shoulders */}
       <path
+        className="picture-silhouette-shoulders"
         d="M20 210 C20 170, 45 145, 90 140 C135 145, 160 170, 160 210"
         stroke="currentColor"
         strokeWidth="2"
@@ -58,6 +61,7 @@ function SilhouettePlaceholder() {
 function ProgressBar({ progress }: { progress: number }) {
   return (
     <div
+      className="picture-progress-track"
       style={{
         flex: 1,
         height: 8,
@@ -67,6 +71,7 @@ function ProgressBar({ progress }: { progress: number }) {
       }}
     >
       <div
+        className="picture-progress-fill"
         style={{
           width: `${progress}%`,
           height: '100%',
@@ -188,7 +193,7 @@ export default function Picture() {
   return (
     <div
       data-page="picture"
-      className="f-page-enter"
+      className="f-page-enter picture-page"
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -200,7 +205,7 @@ export default function Picture() {
       }}
     >
       {/* ── Top bar: back button + progress ──────────────────── */}
-      <div data-section="header" style={{
+      <div data-section="header" className="picture-header" style={{
         display: 'flex',
         alignItems: 'center',
         gap: 'var(--f-brand-space-md)',
@@ -209,6 +214,7 @@ export default function Picture() {
       }}>
         <button
           data-ui="back-btn"
+          className="picture-back-btn"
           onClick={handleBack}
           aria-label="Go back"
           style={{
@@ -226,6 +232,7 @@ export default function Picture() {
           }}
         >
           <img
+            className="picture-back-icon"
             src={chevLeft}
             width={24}
             height={24}
@@ -238,7 +245,7 @@ export default function Picture() {
       </div>
 
       {/* ── Title ────────────────────────────────────────────── */}
-      <h2 data-section="title" style={{
+      <h2 data-section="title" className="picture-title" style={{
         font: 'var(--f-brand-type-title-2)',
         color: 'var(--f-brand-color-text-default)',
         textAlign: 'center',
@@ -249,7 +256,7 @@ export default function Picture() {
       </h2>
 
       {/* ── Photo card ───────────────────────────────────────── */}
-      <div data-section="camera-preview" style={{
+      <div data-section="camera-preview" className="picture-camera-preview" style={{
         margin: 'var(--f-brand-space-lg) var(--f-brand-space-md) 0',
         background: 'var(--f-brand-color-text-light)',
         borderRadius: 'var(--f-brand-radius-small)',
@@ -264,12 +271,13 @@ export default function Picture() {
       }}>
         {cameraActive && !hasPhoto ? (
           /* Live camera feed */
-          <div style={{
+          <div className="picture-camera-feed" style={{
             width: '100%',
             height: '100%',
             position: 'relative',
           }}>
             <video
+              className="picture-camera-video"
               ref={videoRef}
               autoPlay
               playsInline
@@ -285,6 +293,7 @@ export default function Picture() {
             {/* Capture button overlay */}
             <button
               data-ui="capture-photo-btn"
+              className="picture-capture-btn"
               onClick={capturePhoto}
               aria-label="Capture photo"
               style={{
@@ -304,7 +313,7 @@ export default function Picture() {
                 justifyContent: 'center',
               }}
             >
-              <div style={{
+              <div className="picture-capture-btn-inner" style={{
                 width: '100%',
                 height: '100%',
                 borderRadius: 'var(--f-brand-radius-rounded)',
@@ -314,12 +323,13 @@ export default function Picture() {
           </div>
         ) : hasPhoto ? (
           /* Photo preview */
-          <div style={{
+          <div className="picture-photo-preview" style={{
             width: '100%',
             height: '100%',
             position: 'relative',
           }}>
             <img
+              className="picture-photo-img"
               src={photoDataUrl!}
               alt="Your photo"
               style={{
@@ -332,6 +342,7 @@ export default function Picture() {
             {/* Retake overlay button */}
             <button
               data-ui="retake-photo-btn"
+              className="picture-retake-btn"
               onClick={handleRetake}
               aria-label="Retake photo"
               style={{
@@ -362,6 +373,7 @@ export default function Picture() {
 
             <button
               data-ui="take-photo-btn"
+              className="picture-take-photo-btn"
               onClick={handleTakePhoto}
               style={{
                 position: 'absolute',
@@ -381,8 +393,8 @@ export default function Picture() {
                 font: 'var(--f-brand-type-body-medium)',
               }}
             >
-              <span>Take a photo</span>
-              <img src={cameraIcon} width={24} height={24} alt="" />
+              <span className="picture-take-photo-label">Take a photo</span>
+              <img className="picture-take-photo-icon" src={cameraIcon} width={24} height={24} alt="" />
             </button>
           </>
         )}
@@ -390,7 +402,7 @@ export default function Picture() {
 
       {/* ── Camera error ─────────────────────────────────────── */}
       {cameraError && (
-        <p style={{
+        <p className="picture-camera-error" style={{
           font: 'var(--f-brand-type-caption)',
           fontSize: 'var(--text-xs)',
           color: 'var(--f-brand-color-status-error)',
@@ -404,6 +416,7 @@ export default function Picture() {
 
       {/* ── Hidden file input fallback ───────────────────────── */}
       <input
+        className="picture-file-input"
         data-ui="file-upload-input"
         ref={fileInputRef}
         type="file"
@@ -414,11 +427,12 @@ export default function Picture() {
       />
 
       {/* ── Next button ──────────────────────────────────────── */}
-      <div data-section="controls" style={{
+      <div data-section="controls" className="picture-controls" style={{
         padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) var(--f-brand-space-xl)',
         flexShrink: 0,
       }}>
         <button
+          className="picture-confirm-btn"
           data-ui="confirm-photo-btn"
           onClick={handleNext}
           disabled={!hasPhoto}

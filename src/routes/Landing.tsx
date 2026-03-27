@@ -17,6 +17,7 @@ function FanCardStack() {
 
   return (
     <div
+      className="landing-card-stack-container"
       aria-hidden="true"
       style={{
         display: 'grid',
@@ -31,6 +32,7 @@ function FanCardStack() {
         const team = CARD_TEAMS[card.teamIndex]
         return (
           <div
+            className="landing-card-stack-card"
             key={i}
             style={{
               gridArea: '1 / 1',
@@ -52,39 +54,39 @@ function FanCardStack() {
             }}
           >
             {/* Dot-grid halftone texture */}
-            <div style={{
+            <div className="landing-card-stack-texture-dots" style={{
               position: 'absolute', inset: 0, borderRadius: 'var(--f-brand-radius-inner)', pointerEvents: 'none',
               backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.28) 1.5px, transparent 1.5px)',
               backgroundSize: '16px 16px',
               mixBlendMode: 'overlay',
             }} />
             {/* Diagonal shimmer stripes */}
-            <div style={{
+            <div className="landing-card-stack-texture-stripes" style={{
               position: 'absolute', inset: 0, borderRadius: 'var(--f-brand-radius-inner)', pointerEvents: 'none',
               backgroundImage: 'repeating-linear-gradient(-55deg, transparent, transparent 18px, rgba(255,255,255,0.10) 18px, rgba(255,255,255,0.10) 19px)',
               mixBlendMode: 'overlay',
             }} />
             {/* Holographic top stripe */}
-            <div style={{
+            <div className="landing-card-stack-texture-holographic" style={{
               position: 'absolute', top: 0, left: 0, right: 0, height: 4,
               background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent)',
             }} />
 
             {/* Card header */}
-            <div style={{ textAlign: 'left', width: '100%', position: 'relative', zIndex: 1 }}>
-              <div style={{
+            <div className="landing-card-stack-header" style={{ textAlign: 'left', width: '100%', position: 'relative', zIndex: 1 }}>
+              <div className="landing-card-stack-header-title" style={{
                 font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-sm)', letterSpacing: 'var(--tracking-display)', color: 'var(--f-brand-color-background-light)',
                 textTransform: 'uppercase',
               }}>
                 Your fan card
               </div>
-              <div style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-2xs)', color: 'var(--c-text-mid)', letterSpacing: 'var(--tracking-spaced)' }}>
+              <div className="landing-card-stack-header-subtitle" style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-2xs)', color: 'var(--c-text-mid)', letterSpacing: 'var(--tracking-spaced)' }}>
                 Collector edition
               </div>
             </div>
 
             {/* Flag emoji as avatar placeholder */}
-            <div style={{
+            <div className="landing-card-stack-avatar" style={{
               width: card.width * 0.45,
               height: card.width * 0.45,
               borderRadius: '50%',
@@ -96,17 +98,17 @@ function FanCardStack() {
               position: 'relative',
               zIndex: 1,
             }}>
-              <span style={{ fontSize: card.width * 0.18 }}>{team.flag}</span>
+              <span className="landing-card-stack-avatar-flag" style={{ fontSize: card.width * 0.18 }}>{team.flag}</span>
             </div>
 
             {/* Team name */}
-            <div style={{
+            <div className="landing-card-stack-team-name" style={{
               font: 'var(--f-brand-type-headline-medium)',
               color: 'var(--c-text-hi)', letterSpacing: 'var(--tracking-label)', fontStyle: 'italic',
               display: 'flex', alignItems: 'center', gap: 'var(--sp-2)',
               position: 'relative', zIndex: 1,
             }}>
-              <span style={{ fontStyle: 'normal', fontSize: 'var(--text-xl)' }}>{team.flag}</span>
+              <span className="landing-card-stack-team-flag" style={{ fontStyle: 'normal', fontSize: 'var(--text-xl)' }}>{team.flag}</span>
               {team.name}
             </div>
           </div>
@@ -138,7 +140,7 @@ export default function Landing() {
   return (
     <div
       data-page="landing"
-      className="f-page-enter"
+      className="f-page-enter landing-page"
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -151,6 +153,7 @@ export default function Landing() {
     >
       {/* Title */}
       <h1
+        className="landing-title"
         data-section="hero"
         style={{
           font: 'var(--f-brand-type-title-2)',
@@ -164,12 +167,13 @@ export default function Landing() {
       </h1>
 
       {/* Fan Card Stack */}
-      <div data-section="fan-card-stack" style={{ marginTop: 'var(--f-brand-space-lg)', width: '100%' }}>
+      <div className="landing-card-stack-wrapper" data-section="fan-card-stack" style={{ marginTop: 'var(--f-brand-space-lg)', width: '100%' }}>
         <FanCardStack />
       </div>
 
       {/* CTA Button */}
       <button
+        className="landing-cta-button"
         data-section="cta"
         data-ui="primary-cta-btn"
         onClick={handlePrimary}

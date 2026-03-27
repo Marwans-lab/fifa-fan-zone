@@ -21,10 +21,10 @@ export default function Leaderboard() {
       <div data-page="leaderboard" className="f-page-enter scroll-y" style={{ display: 'flex', flexDirection: 'column', padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) 100px', width: '100%', maxWidth: 420, margin: '0 auto' }}>
 
         {/* Header */}
-        <div data-section="header" style={{ display: 'flex', alignItems: 'center', marginBottom: 'var(--f-brand-space-xs)' }}>
-          <button data-ui="back-btn" onClick={() => navigate(-1)} className="f-button f-button--ghost"><img src={chevLeft} width={24} height={24} alt="Back" /></button>
-          <div style={{ flex: 1, textAlign: 'center' }}>
-            <h2 style={{
+        <div data-section="header" className="leaderboard-header" style={{ display: 'flex', alignItems: 'center', marginBottom: 'var(--f-brand-space-xs)' }}>
+          <button data-ui="back-btn" onClick={() => navigate(-1)} className="f-button f-button--ghost leaderboard-back-btn"><img className="leaderboard-back-icon" src={chevLeft} width={24} height={24} alt="Back" /></button>
+          <div className="leaderboard-title-wrapper" style={{ flex: 1, textAlign: 'center' }}>
+            <h2 className="leaderboard-title" style={{
               font: 'var(--f-brand-type-headline)',
               fontWeight: 'var(--weight-light)',
               letterSpacing: 'var(--tracking-tight)',
@@ -36,19 +36,19 @@ export default function Leaderboard() {
           <button
             data-ui="refresh-btn"
             onClick={() => { track('leaderboard_refresh_tapped'); refresh() }}
-            className="f-button f-button--ghost"
+            className="f-button f-button--ghost leaderboard-refresh-btn"
             aria-label="Refresh leaderboard"
-          ><img src={flipIcon} width={24} height={24} alt="Refresh" /></button>
+          ><img className="leaderboard-refresh-icon" src={flipIcon} width={24} height={24} alt="Refresh" /></button>
         </div>
 
         {/* Subtitle */}
-        <div data-section="subtitle" style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-muted)', textAlign: 'center', marginBottom: 'var(--f-brand-space-md)', lineHeight: 'var(--leading-normal)', letterSpacing: 'var(--tracking-wide)' }}>
+        <div data-section="subtitle" className="leaderboard-subtitle" style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-muted)', textAlign: 'center', marginBottom: 'var(--f-brand-space-md)', lineHeight: 'var(--leading-normal)', letterSpacing: 'var(--tracking-wide)' }}>
           Cumulative score · Updated {formatRefresh(lastRefresh)} · auto-refreshes every {LEADERBOARD_REFRESH_MS / 60_000} min
         </div>
 
         {/* Your rank */}
         {myRank !== null && (
-          <div data-section="your-rank" style={{
+          <div data-section="your-rank" className="leaderboard-your-rank" style={{
             textAlign: 'center', marginBottom: 'var(--f-brand-space-md)',
             padding: 'var(--f-brand-space-sm) var(--f-brand-space-md)',
             borderRadius: 'var(--f-brand-radius-small)',
@@ -57,11 +57,11 @@ export default function Leaderboard() {
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
           }}>
-            <span style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-sm)', color: 'var(--f-brand-color-text-subtle)' }}>Your rank: </span>
-            <span style={{ font: 'var(--f-brand-type-body-medium)', fontSize: 'var(--text-md)', color: 'var(--f-brand-color-accent)' }}>#{myRank}</span>
+            <span className="leaderboard-your-rank-label" style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-sm)', color: 'var(--f-brand-color-text-subtle)' }}>Your rank: </span>
+            <span className="leaderboard-your-rank-value" style={{ font: 'var(--f-brand-type-body-medium)', fontSize: 'var(--text-md)', color: 'var(--f-brand-color-accent)' }}>#{myRank}</span>
             {myRank <= 5 && (
-              <span style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-sm)', color: 'var(--f-brand-color-accent)', marginLeft: 'var(--sp-2)', display: 'inline-flex', alignItems: 'center', gap: 'var(--sp-1)' }}>
-                <img src={trophyIcon} width={24} height={24} alt="" /> Top 5 — Avios eligible!
+              <span className="leaderboard-your-rank-badge" style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-sm)', color: 'var(--f-brand-color-accent)', marginLeft: 'var(--sp-2)', display: 'inline-flex', alignItems: 'center', gap: 'var(--sp-1)' }}>
+                <img className="leaderboard-your-rank-trophy" src={trophyIcon} width={24} height={24} alt="" /> Top 5 — Avios eligible!
               </span>
             )}
           </div>
@@ -70,20 +70,21 @@ export default function Leaderboard() {
         {/* Rows */}
         <div data-section="rank-list" className="f-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-xs)' }}>
           {entries.length === 0 && (
-            <div style={{
+            <div className="leaderboard-empty" style={{
               textAlign: 'center',
               padding: 'var(--f-brand-space-2xl) var(--f-brand-space-md)',
               color: 'var(--f-brand-color-text-muted)',
               fontSize: 'var(--text-md)',
               lineHeight: 'var(--leading-body)',
             }}>
-              <img src={trophyIcon} width={32} height={32} alt="" style={{ opacity: 0.4, marginBottom: 'var(--f-brand-space-sm)' }} />
-              <p>No players yet — complete a quiz to appear on the leaderboard</p>
+              <img className="leaderboard-empty-icon" src={trophyIcon} width={32} height={32} alt="" style={{ opacity: 0.4, marginBottom: 'var(--f-brand-space-sm)' }} />
+              <p className="leaderboard-empty-text">No players yet — complete a quiz to appear on the leaderboard</p>
             </div>
           )}
           {entries.map(row => (
             <div
               data-section="rank-row"
+              className="leaderboard-rank-row"
               key={row.rank}
               style={{
                 display: 'flex', alignItems: 'center',
@@ -97,20 +98,20 @@ export default function Leaderboard() {
                 transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
               }}
             >
-              <div style={{ width: 28, font: 'var(--f-brand-type-caption-medium)', fontSize: 'var(--text-sm)', color: row.rank <= 3 ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-text-muted)', flexShrink: 0, lineHeight: 'var(--leading-none)', display: 'flex', alignItems: 'center' }}>
-                {row.rank === 1 ? <img src={trophyIcon} width={24} height={24} alt="1" /> : row.rank}
+              <div className="leaderboard-rank-number" style={{ width: 28, font: 'var(--f-brand-type-caption-medium)', fontSize: 'var(--text-sm)', color: row.rank <= 3 ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-text-muted)', flexShrink: 0, lineHeight: 'var(--leading-none)', display: 'flex', alignItems: 'center' }}>
+                {row.rank === 1 ? <img className="leaderboard-rank-trophy" src={trophyIcon} width={24} height={24} alt="1" /> : row.rank}
               </div>
-              <div style={{ flex: 1, font: 'var(--f-brand-type-body)', fontSize: 'var(--text-md)', color: 'var(--f-brand-color-text-default)', fontWeight: row.isMe ? 'var(--weight-med)' : 'var(--weight-reg)' }}>
+              <div className="leaderboard-rank-name" style={{ flex: 1, font: 'var(--f-brand-type-body)', fontSize: 'var(--text-md)', color: 'var(--f-brand-color-text-default)', fontWeight: row.isMe ? 'var(--weight-med)' : 'var(--weight-reg)' }}>
                 {row.name}
-                {row.isMe && <span style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-accent)', marginLeft: 'var(--sp-2)', letterSpacing: 'var(--tracking-wide)' }}>you</span>}
+                {row.isMe && <span className="leaderboard-rank-you" style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-accent)', marginLeft: 'var(--sp-2)', letterSpacing: 'var(--tracking-wide)' }}>you</span>}
               </div>
               {[
                 { label: 'Score',    value: `${row.pts} pts` },
                 { label: 'Duration', value: `${row.durationMins} min` },
               ].map(col => (
-                <div key={col.label} style={{ textAlign: 'right', marginLeft: 'var(--f-brand-space-sm)', minWidth: 54 }}>
-                  <div style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-2xs)', color: 'var(--f-brand-color-text-muted)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginBottom: 2 }}>{col.label}</div>
-                  <div style={{ font: 'var(--f-brand-type-caption-medium)', fontSize: 'var(--text-sm)', color: 'var(--f-brand-color-text-default)' }}>{col.value}</div>
+                <div className="leaderboard-rank-col" key={col.label} style={{ textAlign: 'right', marginLeft: 'var(--f-brand-space-sm)', minWidth: 54 }}>
+                  <div className="leaderboard-rank-col-label" style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-2xs)', color: 'var(--f-brand-color-text-muted)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginBottom: 2 }}>{col.label}</div>
+                  <div className="leaderboard-rank-col-value" style={{ font: 'var(--f-brand-type-caption-medium)', fontSize: 'var(--text-sm)', color: 'var(--f-brand-color-text-default)' }}>{col.value}</div>
                 </div>
               ))}
             </div>
@@ -118,13 +119,13 @@ export default function Leaderboard() {
         </div>
 
         {/* Disclaimer */}
-        <p style={{ marginTop: 'var(--f-brand-space-lg)', font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-muted)', textAlign: 'center', lineHeight: 'var(--leading-normal)', letterSpacing: 'var(--tracking-wide)' }}>
+        <p className="leaderboard-disclaimer" style={{ marginTop: 'var(--f-brand-space-lg)', font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-muted)', textAlign: 'center', lineHeight: 'var(--leading-normal)', letterSpacing: 'var(--tracking-wide)' }}>
           Top 5 fans win Avios. Rankings are provisional until end-of-event.
         </p>
       </div>
 
       {/* Sticky CTA */}
-      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: 'var(--f-brand-space-md) var(--f-brand-space-lg) var(--f-brand-space-xl)', background: 'linear-gradient(transparent, var(--f-brand-color-background-dark) 40%)' }}>
+      <div className="leaderboard-sticky-cta" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: 'var(--f-brand-space-md) var(--f-brand-space-lg) var(--f-brand-space-xl)', background: 'linear-gradient(transparent, var(--f-brand-color-background-dark) 40%)' }}>
         <button
           data-ui="return-home-btn"
           onClick={() => { track('leaderboard_home_tapped'); navigate(homeRoute) }}

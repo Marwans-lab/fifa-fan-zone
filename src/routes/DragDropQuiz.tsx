@@ -76,7 +76,7 @@ function Chip({ answer, isDragging, isPlaced, isCorrect, style }: ChipProps) {
   }
 
   return (
-    <div style={{ ...baseStyle, ...style }}>
+    <div className="drag-drop-chip" style={{ ...baseStyle, ...style }}>
       {answer}
     </div>
   )
@@ -167,15 +167,15 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
   }
 
   return (
-    <div style={zoneStyle}>
-      <span style={promptStyle}>{prompt}</span>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-xs)' }}>
+    <div className="drag-drop-zone" style={zoneStyle}>
+      <span className="drag-drop-zone-prompt" style={promptStyle}>{prompt}</span>
+      <div className="drag-drop-zone-content" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="drag-drop-zone-inner" style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-xs)' }}>
           {/* Arrow indicator */}
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style={{ opacity: 0.3, flexShrink: 0 }}>
-            <path d="M3 8h10M10 5l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <svg className="drag-drop-zone-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style={{ opacity: 0.3, flexShrink: 0 }}>
+            <path className="drag-drop-zone-arrow-path" d="M3 8h10M10 5l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <div style={slotStyle}>
+          <div className="drag-drop-zone-slot" style={slotStyle}>
             {placedAnswer || '???'}
           </div>
         </div>
@@ -183,6 +183,7 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
       {/* Correct/incorrect indicator */}
       {isCorrect !== null && (
         <div
+          className="drag-drop-zone-result-icon"
           style={{
             width: 24,
             height: 24,
@@ -453,7 +454,7 @@ function QuestionView({
   return (
     <div
       ref={containerRef}
-      className={slideClass}
+      className={slideClass ? `drag-drop-question-view ${slideClass}` : 'drag-drop-question-view'}
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -465,6 +466,7 @@ function QuestionView({
     >
       {/* Question header area */}
       <div
+        className="drag-drop-question-card"
         data-section="question-card"
         style={{
           position: 'relative',
@@ -482,8 +484,9 @@ function QuestionView({
           boxShadow: `0 8px 32px ${question.accentColor}55, inset 0 1px 0 rgba(255,255,255,0.15)`,
         }}
       >
-        <span style={{ fontSize: 'var(--text-4xl)', marginBottom: 'var(--f-brand-space-xs)' }}>{quiz.emoji}</span>
+        <span className="drag-drop-question-emoji" style={{ fontSize: 'var(--text-4xl)', marginBottom: 'var(--f-brand-space-xs)' }}>{quiz.emoji}</span>
         <div
+          className="drag-drop-question-title"
           style={{
             font: 'var(--f-brand-type-title-5)',
             fontSize: 'var(--text-lg)',
@@ -496,7 +499,7 @@ function QuestionView({
           {question.title}
         </div>
         {/* Depth overlay */}
-        <div style={{
+        <div className="drag-drop-question-overlay" style={{
           position: 'absolute', inset: 0,
           background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 50%, rgba(0,0,0,0.18) 100%)',
           pointerEvents: 'none',
@@ -505,6 +508,7 @@ function QuestionView({
 
       {/* Drop zones */}
       <div
+        className="drag-drop-zones-container"
         data-section="drop-zones"
         style={{
           flex: 1,
@@ -516,6 +520,7 @@ function QuestionView({
       >
         {question.pairs.map((pair, i) => (
           <div
+            className="drag-drop-zone-wrapper"
             key={pair.id}
             ref={el => { dropZoneRefs.current[pair.id] = el }}
             aria-label={`Drop zone for ${pair.prompt}`}
@@ -534,6 +539,7 @@ function QuestionView({
 
       {/* Draggable chips tray */}
       <div
+        className="drag-drop-chips-tray"
         data-section="draggable-items"
         style={{
           padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-md)',
@@ -541,6 +547,7 @@ function QuestionView({
         }}
       >
         <div
+          className="drag-drop-chips-label"
           style={{
             fontSize: 'var(--text-2xs)',
             fontWeight: 'var(--weight-med)',
@@ -554,6 +561,7 @@ function QuestionView({
           {allCorrect ? '' : 'Drag answers to match'}
         </div>
         <div
+          className="drag-drop-chips-grid"
           style={{
             display: 'flex',
             flexWrap: 'wrap',
@@ -566,6 +574,7 @@ function QuestionView({
             const isBeingDragged = draggedAnswer === answer
             return (
               <div
+                className="drag-drop-chip-wrapper"
                 key={answer}
                 ref={el => { chipRefs.current[answer] = el }}
                 role="button"
@@ -594,6 +603,7 @@ function QuestionView({
       {/* Floating drag ghost */}
       {draggedAnswer && dragPos && (
         <div
+          className="drag-drop-ghost"
           style={{
             position: 'fixed',
             left: dragPos.x - dragOffset.x,
@@ -613,9 +623,10 @@ function QuestionView({
       )}
 
       {/* All correct overlay & next button */}
-      <div style={{ padding: '0 var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
+      <div className="drag-drop-footer" style={{ padding: '0 var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
         {allCorrect && (
           <div
+            className="drag-drop-success-message"
             style={{
               textAlign: 'center',
               fontSize: 'var(--text-sm)',
@@ -737,7 +748,7 @@ export default function DragDropQuizRoute() {
   return (
     <Screen>
       <div
-        className={slideClass === 'page-in' ? 'f-page-enter' : ''}
+        className={slideClass === 'page-in' ? 'drag-drop-page f-page-enter' : 'drag-drop-page'}
         data-page="drag-drop-quiz"
         style={{
           display: 'flex',
@@ -749,13 +760,14 @@ export default function DragDropQuizRoute() {
         }}
       >
         {/* Top bar */}
-        <div data-section="header" style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
+        <div className="drag-drop-header" data-section="header" style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
+          <div className="drag-drop-header-row" style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
             <button onClick={handleBack} className="f-button f-button--ghost" aria-label="Go back" data-ui="back-btn">
-              <img src={chevLeft} width={24} height={24} alt="" />
+              <img className="drag-drop-back-icon" src={chevLeft} width={24} height={24} alt="" />
             </button>
-            <div style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
+            <div className="drag-drop-progress-track" style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
               <div
+                className="drag-drop-progress-fill"
                 style={{
                   height: '100%',
                   width: `${((qIdx + 1) / total) * 100}%`,
@@ -765,14 +777,14 @@ export default function DragDropQuizRoute() {
                 }}
               />
             </div>
-            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
+            <span className="drag-drop-progress-counter" style={{ fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
               {qIdx + 1}/{total}
             </span>
           </div>
         </div>
 
         {/* Animated question content */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyleMap[slideClass] }}>
+        <div className="drag-drop-question-slide" style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyleMap[slideClass] }}>
           <QuestionView
             key={qIdx}
             quiz={quiz}
