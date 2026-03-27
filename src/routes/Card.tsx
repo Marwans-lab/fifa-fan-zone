@@ -214,7 +214,7 @@ function JourneyCard({
                     : 'var(--f-brand-color-border-default)'                             // inactive
                   return (
                     <div className="card-journey-connector" style={{
-                      flex: 1, height: 2, marginTop: 'calc(var(--sp-11) / 2)',
+                      flex: 1, height: 2, marginTop: 'calc(var(--sp-14) / 2 - 1px)',
                       background: lineBg,
                       opacity: isInactive ? 0.4 : 1,
                       transition: 'all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
