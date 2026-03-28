@@ -151,7 +151,7 @@ function JourneyCard({
         border: 'none',
         borderRadius: 'var(--f-brand-radius-outer)',
         padding: 'var(--f-brand-space-md)',
-        marginBottom: 'var(--f-brand-space-md)',
+        marginBottom: 'var(--f-brand-space-lg)',
         boxShadow: 'var(--f-brand-shadow-medium)',
         overflow: 'hidden',
       }}
