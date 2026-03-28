@@ -1,7 +1,9 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { removeBackground } from '@imgly/background-removal'
 import { track } from '../lib/analytics'
+import { useStore } from '../store/useStore'
+import FanCard from '../components/FanCard'
 import cameraIcon from '../assets/icons/camera-white.svg'
 import chevLeft from '../assets/icons/Chevron-left-white.svg'
 
@@ -91,6 +93,7 @@ export default function Picture() {
   const navigate = useNavigate()
   const location = useLocation()
   const { teamId } = (location.state as { teamId: string } | null) ?? { teamId: '' }
+  const { state, updateFanCard } = useStore()
 
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null)
   const [cameraError, setCameraError] = useState<string | null>(null)
@@ -213,15 +216,23 @@ export default function Picture() {
     track('picture_retake_tapped')
   }, [stopCamera])
 
-  const handleNext = useCallback(() => {
+  const handleConfirm = useCallback(() => {
+    updateFanCard({ photoDataUrl, teamId: teamId || null })
     track('picture_confirmed')
-    navigate('/identity', { state: { teamId, photoDataUrl }, replace: true })
-  }, [navigate, teamId, photoDataUrl])
+    navigate('/card', { replace: true })
+  }, [navigate, updateFanCard, photoDataUrl, teamId])
 
   const handleBack = useCallback(() => {
     stopCamera()
-    navigate('/identity', { replace: true })
+    navigate(-1)
   }, [navigate, stopCamera])
+
+  // Preview fan card — store data + new photo + teamId
+  const previewFanCard = useMemo(() => ({
+    ...state.fanCard,
+    photoDataUrl,
+    teamId: teamId || state.fanCard.teamId,
+  }), [state.fanCard, photoDataUrl, teamId])
 
   const hasPhoto = !!photoDataUrl || removingBg
 
@@ -287,208 +298,115 @@ export default function Picture() {
         Add your picture
       </h2>
 
-      {/* ── Photo card ───────────────────────────────────────── */}
-      <div data-section="camera-preview" className="picture-camera-preview" style={{
-        margin: 'var(--f-brand-space-lg) var(--f-brand-space-md) 0',
-        background: 'var(--f-brand-color-text-light)',
-        borderRadius: 'var(--f-brand-radius-small)',
-        height: 515,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-        flexShrink: 0,
-      }}>
-        {cameraActive && !hasPhoto ? (
-          /* Live camera feed */
-          <div className="picture-camera-feed" style={{
-            width: '100%',
-            height: '100%',
-            position: 'relative',
-          }}>
-            <video className="picture-camera-video"
-              ref={videoRef}
-              autoPlay
-              playsInline
-              muted
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center',
-                transform: 'scaleX(-1)',
-              }}
-            />
-            {/* Capture button overlay */}
-            <button className="picture-capture-btn"
-              data-ui="capture-photo-btn"
-              onClick={capturePhoto}
-              aria-label="Capture photo"
-              style={{
-                position: 'absolute',
-                bottom: 'var(--f-brand-space-xl)',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: 'var(--sp-18)',
-                height: 'var(--sp-18)',
-                borderRadius: 'var(--f-brand-radius-rounded)',
-                background: 'none',
-                border: 'var(--c-capture-ring) solid var(--f-brand-color-text-light)',
-                padding: 'var(--sp-1)',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <div className="picture-capture-btn-inner" style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: 'var(--f-brand-radius-rounded)',
-                background: 'var(--f-brand-color-text-light)',
-              }} />
-            </button>
-          </div>
-        ) : hasPhoto ? (
-          /* Photo preview */
-          <div className="picture-photo-preview" style={{
-            width: '100%',
-            height: '100%',
-            position: 'relative',
-          }}>
-            {removingBg ? (
-              /* Background removal loading state */
-              <div className="picture-bg-removing" style={{
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 'var(--f-brand-space-sm)',
-                background: 'var(--f-brand-color-background-subtle)',
-              }}>
-                <div className="picture-bg-spinner" style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: '50%',
-                  border: '3px solid var(--f-brand-color-border-default)',
-                  borderTopColor: 'var(--f-brand-color-background-primary)',
-                  animation: 'f-spinner-spin var(--dur-gentle) linear infinite',
-                }} />
-                <p style={{
-                  font: 'var(--f-brand-type-caption)',
-                  color: 'var(--f-brand-color-text-subtle)',
-                  margin: 0,
-                }}>
-                  {bgProgress > 0 && bgProgress < 100
-                    ? `Downloading model ${bgProgress}%…`
-                    : 'Removing background…'}
-                </p>
-                {bgProgress > 0 && bgProgress < 100 && (
-                  <ProgressBar progress={bgProgress} />
-                )}
-              </div>
-            ) : (
-              <img className="picture-photo-img"
-                src={photoDataUrl!}
-                alt="Your photo"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'center top',
-                }}
-              />
-            )}
-            {/* Retake overlay button */}
-            {!removingBg && <button className="picture-retake-btn"
-              data-ui="retake-photo-btn"
-              onClick={handleRetake}
-              aria-label="Retake photo"
-              style={{
-                position: 'absolute',
-                bottom: 'var(--f-brand-space-md)',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                padding: 'var(--f-brand-space-xs) var(--f-brand-space-md)',
-                borderRadius: 'var(--f-brand-radius-rounded)',
-                background: 'rgba(0,0,0,0.5)',
-                backdropFilter: 'blur(var(--f-brand-blur-subtle))',
-                WebkitBackdropFilter: 'blur(var(--f-brand-blur-subtle))',
-                border: '1px solid var(--c-lt-overlay-border)',
-                color: 'var(--f-brand-color-text-light)',
-                font: 'var(--f-brand-type-caption-medium)',
-                fontSize: 'var(--text-sm)',
-                cursor: 'pointer',
-                letterSpacing: 'var(--tracking-wide)',
-              }}
-            >
-              Retake photo
-            </button>}
-          </div>
-        ) : (
-          /* Empty state: silhouette + "Take a photo" */
-          <>
-            <SilhouettePlaceholder />
-
-            <button className="picture-take-photo-btn"
-              data-ui="take-photo-btn"
-              onClick={handleTakePhoto}
-              style={{
-                position: 'absolute',
-                top: 209,
-                width: 197,
-                height: 'var(--sp-14)',
-                borderRadius: 'var(--f-brand-radius-rounded)',
-                background: 'var(--f-brand-color-primary)',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 'var(--f-brand-space-sm)',
-                boxShadow: 'var(--f-brand-shadow-large)',
-                color: 'var(--f-brand-color-text-light)',
-                font: 'var(--f-brand-type-body-medium)',
-              }}
-            >
-              <span className="picture-take-photo-label">Take a photo</span>
-              <img className="picture-take-photo-icon" src={cameraIcon} width={24} height={24} alt="" />
-            </button>
-          </>
-        )}
-      </div>
-
-      {/* ── BG removal error (debug) ─────────────────────────── */}
-      {bgError && (
-        <p style={{
-          font: 'var(--f-brand-type-caption)',
-          color: 'var(--f-brand-color-status-error)',
-          margin: 'var(--f-brand-space-xs) var(--f-brand-space-md) 0',
-          wordBreak: 'break-all',
+      {/* ── Camera / Card preview ────────────────────────────── */}
+      {!hasPhoto ? (
+        /* Camera */
+        <div data-section="camera-preview" className="picture-camera-preview" style={{
+          margin: 'var(--f-brand-space-lg) var(--f-brand-space-md) 0',
+          background: 'var(--f-brand-color-text-light)',
+          borderRadius: 'var(--f-brand-radius-small)',
+          height: 515,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
+          overflow: 'hidden',
+          flexShrink: 0,
         }}>
-          BG removal failed: {bgError}
-        </p>
+          {cameraActive ? (
+            <div className="picture-camera-feed" style={{ width: '100%', height: '100%', position: 'relative' }}>
+              <video className="picture-camera-video"
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scaleX(-1)' }}
+              />
+              <button className="picture-capture-btn"
+                data-ui="capture-photo-btn"
+                onClick={capturePhoto}
+                aria-label="Capture photo"
+                style={{
+                  position: 'absolute', bottom: 'var(--f-brand-space-xl)', left: '50%', transform: 'translateX(-50%)',
+                  width: 'var(--sp-18)', height: 'var(--sp-18)', borderRadius: 'var(--f-brand-radius-rounded)',
+                  background: 'none', border: 'var(--c-capture-ring) solid var(--f-brand-color-text-light)',
+                  padding: 'var(--sp-1)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}
+              >
+                <div style={{ width: '100%', height: '100%', borderRadius: 'var(--f-brand-radius-rounded)', background: 'var(--f-brand-color-text-light)' }} />
+              </button>
+            </div>
+          ) : (
+            <>
+              <SilhouettePlaceholder />
+              <button className="picture-take-photo-btn"
+                data-ui="take-photo-btn"
+                onClick={handleTakePhoto}
+                style={{
+                  position: 'absolute', top: 209, width: 197, height: 'var(--sp-14)',
+                  borderRadius: 'var(--f-brand-radius-rounded)', background: 'var(--f-brand-color-primary)',
+                  border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center',
+                  justifyContent: 'center', gap: 'var(--f-brand-space-sm)',
+                  boxShadow: 'var(--f-brand-shadow-large)', color: 'var(--f-brand-color-text-light)',
+                  font: 'var(--f-brand-type-body-medium)',
+                }}
+              >
+                <span>Take a photo</span>
+                <img src={cameraIcon} width={24} height={24} alt="" />
+              </button>
+            </>
+          )}
+        </div>
+      ) : removingBg ? (
+        /* BG removal loading */
+        <div style={{
+          flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
+          justifyContent: 'center', gap: 'var(--f-brand-space-sm)',
+          padding: 'var(--f-brand-space-lg) var(--f-brand-space-md)',
+        }}>
+          <div style={{
+            width: 40, height: 40, borderRadius: '50%',
+            border: '3px solid var(--f-brand-color-border-default)',
+            borderTopColor: 'var(--f-brand-color-background-primary)',
+            animation: 'f-spinner-spin var(--dur-gentle) linear infinite',
+          }} />
+          <p style={{ font: 'var(--f-brand-type-caption)', color: 'var(--f-brand-color-text-subtle)', margin: 0 }}>
+            {bgProgress > 0 && bgProgress < 100 ? `Downloading model ${bgProgress}%…` : 'Removing background…'}
+          </p>
+          {bgProgress > 0 && bgProgress < 100 && <ProgressBar progress={bgProgress} />}
+        </div>
+      ) : (
+        /* Fan card preview */
+        <div data-section="card-preview" style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'var(--f-brand-space-md)',
+          padding: 'var(--f-brand-space-md) var(--f-brand-space-md) 0',
+          overflowY: 'auto',
+          WebkitOverflowScrolling: 'touch',
+        }}>
+          <FanCard
+            fanCard={previewFanCard}
+            onSave={() => {}}
+          />
+        </div>
       )}
 
       {/* ── Camera error ─────────────────────────────────────── */}
       {cameraError && (
         <p className="picture-camera-error" style={{
-          font: 'var(--f-brand-type-caption)',
-          fontSize: 'var(--text-xs)',
+          font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-xs)',
           color: 'var(--f-brand-color-status-error)',
-          marginTop: 'var(--f-brand-space-xs)',
-          textAlign: 'center',
+          marginTop: 'var(--f-brand-space-xs)', textAlign: 'center',
           padding: '0 var(--f-brand-space-md)',
         }}>
           {cameraError}
         </p>
       )}
 
-      {/* ── Hidden file input fallback ───────────────────────── */}
+      {/* ── Hidden file input ────────────────────────────────── */}
       <input className="picture-file-input"
         data-ui="file-upload-input"
         ref={fileInputRef}
@@ -499,30 +417,41 @@ export default function Picture() {
         onChange={handleFileChange}
       />
 
-      {/* ── Next button ──────────────────────────────────────── */}
-      <div data-section="controls" className="picture-controls" style={{
-        padding: 'var(--f-brand-space-lg) var(--f-brand-space-md) var(--f-brand-space-xl)',
-        flexShrink: 0,
-      }}>
-        <button className="picture-confirm-btn"
-          data-ui="confirm-photo-btn"
-          onClick={handleNext}
-          disabled={!photoDataUrl || removingBg}
-          style={{
-            width: '100%',
-            height: 'var(--sp-14)',
-            borderRadius: 'var(--f-brand-radius-rounded)',
-            background: hasPhoto ? 'var(--f-brand-color-primary)' : 'var(--f-brand-color-border-default)',
-            border: 'none',
-            cursor: hasPhoto ? 'pointer' : 'default',
-            color: hasPhoto ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-text-disabled)',
-            font: 'var(--f-brand-type-body-medium)',
-            transition: `background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)`,
-          }}
-        >
-          Confirm photo
-        </button>
-      </div>
+      {/* ── Actions ──────────────────────────────────────────── */}
+      {!removingBg && (
+        <div data-section="controls" style={{
+          display: 'flex', gap: 'var(--f-brand-space-sm)',
+          padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)',
+          flexShrink: 0,
+        }}>
+          {hasPhoto && (
+            <button
+              data-ui="retake-photo-btn"
+              onClick={handleRetake}
+              style={{
+                flex: 1, height: 'var(--sp-14)', borderRadius: 'var(--f-brand-radius-rounded)',
+                background: 'none', border: '1px solid var(--f-brand-color-border-default)',
+                cursor: 'pointer', color: 'var(--f-brand-color-text-default)',
+                font: 'var(--f-brand-type-body-medium)',
+              }}
+            >
+              Retake photo
+            </button>
+          )}
+          <button
+            data-ui={hasPhoto ? 'confirm-card-btn' : 'take-photo-btn'}
+            onClick={hasPhoto ? handleConfirm : handleTakePhoto}
+            style={{
+              flex: 1, height: 'var(--sp-14)', borderRadius: 'var(--f-brand-radius-rounded)',
+              background: 'var(--f-brand-color-primary)', border: 'none',
+              cursor: 'pointer', color: 'var(--f-brand-color-text-light)',
+              font: 'var(--f-brand-type-body-medium)',
+            }}
+          >
+            {hasPhoto ? 'Confirm card' : 'Take a photo'}
+          </button>
+        </div>
+      )}
     </div>
   )
 }
