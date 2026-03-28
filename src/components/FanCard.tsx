@@ -261,27 +261,24 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             />
           )}
 
-          {/* Content stack — sits above photo */}
-          <div className="f-fan-card__front-content" style={{ position: 'relative', zIndex: 1 }}>
-            <div className="f-fan-card__team-badge" data-section="team">
-              {fanCard.teamId ? (() => {
-                const team = getTeam(fanCard.teamId)
-                return (
-                  <div className="f-fan-card__team-motto">
-                    {team && <span className="f-fan-card__team-flag">{team.flag}</span>}
-                    {team ? team.motto : fanCard.teamId}
-                  </div>
-                )
-              })() : (
-                <div className="f-fan-card__team-empty">
-                  No team selected
+          <div className="f-fan-card__team-badge" data-section="team">
+            {fanCard.teamId ? (() => {
+              const team = getTeam(fanCard.teamId)
+              return (
+                <div className="f-fan-card__team-motto">
+                  {team && <span className="f-fan-card__team-flag">{team.flag}</span>}
+                  {team ? team.motto : fanCard.teamId}
                 </div>
-              )}
-            </div>
+              )
+            })() : (
+              <div className="f-fan-card__team-empty">
+                No team selected
+              </div>
+            )}
+          </div>
 
-            <div className="f-fan-card__flip-hint">
-              <img src={flipIconWhite} width={24} height={24} alt="" className="f-fan-card__flip-hint-icon" /> Tap card to flip
-            </div>
+          <div className="f-fan-card__flip-hint">
+            <img src={flipIconWhite} width={24} height={24} alt="" className="f-fan-card__flip-hint-icon" /> Tap card to flip
           </div>
         </div>
 

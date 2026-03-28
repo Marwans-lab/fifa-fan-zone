@@ -92,7 +92,8 @@
 .f-fan-card__front {
   background: var(--f-fan-card-bg);
   align-items: stretch;
-  padding: 0;
+  padding: var(--f-fan-card-padding-sm);
+  gap: var(--f-fan-card-gap);
   box-shadow: none;
 }
 
@@ -169,21 +170,10 @@
   opacity: 0.5;
 }
 
-/* ─── Front content — absolute overlay from top, sits above photo ───────────── */
-.f-fan-card__front-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--f-fan-card-gap);
-  padding: var(--f-fan-card-padding-sm);
-  z-index: 1;
-}
-
 /* ─── Team badge / motto ─────────────────────────────────────────────────────── */
 .f-fan-card__team-badge {
+  position: relative;
+  z-index: 1;
   text-align: center;
 }
 
@@ -216,6 +206,8 @@
 
 /* ─── Flip hint ──────────────────────────────────────────────────────────────── */
 .f-fan-card__flip-hint {
+  position: relative;
+  z-index: 1;
   font: var(--f-fan-card-caption-font);
   color: var(--f-fan-card-text-light);
   opacity: 0.4;
