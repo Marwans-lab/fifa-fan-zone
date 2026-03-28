@@ -250,9 +250,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           <HolographicStripe />
 
           {/* Background photo layer — absolutely pinned to card, behind all content */}
-          <div className="f-fan-card__photo-section" data-section="photo"
-            style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}
-          >
+          <div className="f-fan-card__photo-section" data-section="photo">
             <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
           </div>
 
