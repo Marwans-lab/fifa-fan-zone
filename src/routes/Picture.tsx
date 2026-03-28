@@ -5,10 +5,9 @@ import { track } from '../lib/analytics'
 import cameraIcon from '../assets/icons/camera-white.svg'
 import chevLeft from '../assets/icons/Chevron-left-white.svg'
 
-// WASM + ONNX model files (~30 MB) are fetched from CDN on first use and cached by the browser.
-// To self-host: copy node_modules/@imgly/background-removal/dist/ into public/bg-removal/
-// and change this to '/bg-removal/' (eliminates CDN dependency).
-const BG_REMOVAL_CDN = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/'
+// Model files are self-hosted under /bg-removal/ (generated at build time by scripts/copy-bg-models.mjs).
+// No third-party CDN requests at runtime — all assets served from our own domain.
+const BG_REMOVAL_PUBLIC_PATH = '/bg-removal/'
 
 // ─── Image compression ────────────────────────────────────────────────────────
 function compressDataUrl(source: HTMLVideoElement | HTMLImageElement, flipX = false): string {
@@ -100,7 +99,10 @@ export default function Picture() {
   const processPhoto = useCallback(async (rawDataUrl: string) => {
     setRemovingBg(true)
     try {
-      const blob = await removeBackground(rawDataUrl, { publicPath: BG_REMOVAL_CDN })
+      const blob = await removeBackground(rawDataUrl, {
+        publicPath: BG_REMOVAL_PUBLIC_PATH,
+        model: 'small',
+      })
       const reader = new FileReader()
       reader.onload = () => {
         setPhotoDataUrl(reader.result as string)
