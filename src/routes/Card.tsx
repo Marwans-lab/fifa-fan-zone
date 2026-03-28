@@ -65,7 +65,7 @@ function JourneyStep({
     transition: 'all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
     flexShrink: 0, position: 'relative',
     ...(isCompleted ? {
-      background: 'var(--f-brand-color-text-default)', border: '1px solid var(--f-brand-color-text-default)',
+      background: 'var(--f-brand-color-background-success)', border: '1px solid var(--f-brand-color-background-success)',
       boxShadow: '0 0 25px rgba(0,0,0,0.15)',
       transform: 'scale(1.1)', zIndex: 20,
     } : isCurrent ? {
