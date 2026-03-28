@@ -65,13 +65,15 @@ interface Props {
 }
 
 // ─── Front face dynamic style (team colors require inline) ───────────────────
-function getFrontInlineStyle(teamId: string | null, isFlipped: boolean): React.CSSProperties {
+function getFrontInlineStyle(teamId: string | null, isFlipped: boolean, photoDataUrl: string | null): React.CSSProperties {
   const team = teamId ? getTeam(teamId) : null
-  const bg = team
+  const gradient = team
     ? `linear-gradient(160deg, ${team.colors[0]} 0%, ${team.colors[1]} 100%)`
     : 'linear-gradient(160deg, var(--c-card-gradient-1) 0%, var(--c-card-gradient-2) 50%, var(--c-card-gradient-3) 100%)'
   return {
-    background: bg,
+    background: photoDataUrl
+      ? `${gradient}, url(${photoDataUrl}) bottom center / contain no-repeat`
+      : gradient,
     border: '1px solid var(--c-card-border)',
     pointerEvents: isFlipped ? 'none' : 'auto',
   }
@@ -244,18 +246,13 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
         {/* ── FRONT ─────────────────────────────────────────────── */}
         <div className="f-fan-card__front"
           data-section="front-face"
-          style={getFrontInlineStyle(fanCard.teamId, isFlipped)}
+          style={getFrontInlineStyle(fanCard.teamId, isFlipped, fanCard.photoDataUrl)}
         >
           <CardTexture />
           <HolographicStripe />
 
-          {/* Background photo layer — absolutely pinned to card, behind all content */}
-          <div className="f-fan-card__photo-section" data-section="photo">
-            <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
-          </div>
-
-          {/* Content stack on top */}
-          <div className="f-fan-card__front-content" style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1 }}>
+          {/* Content stack */}
+          <div className="f-fan-card__front-content">
             <div className="f-fan-card__team-badge" data-section="team">
               {fanCard.teamId ? (() => {
                 const team = getTeam(fanCard.teamId)
