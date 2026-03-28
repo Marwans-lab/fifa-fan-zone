@@ -9,7 +9,6 @@ import saveIcon      from '../assets/icons/save-white.svg'
 import flipIconWhite from '../assets/icons/flip-white.svg'
 import flipIconDark  from '../assets/icons/flip-dark.svg'
 import tickBlack     from '../assets/icons/Tick-black.svg'
-import qrLogo        from '../assets/icons/qr-logo.svg'
 import stadiumIcon   from '../assets/icons/stadium-white.svg'
 import styleIcon     from '../assets/icons/style-white.svg'
 import devotionIcon  from '../assets/icons/devotion-white.svg'
@@ -255,20 +254,8 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
           </div>
 
-          {/* Header + team + flip hint */}
+          {/* Team + flip hint */}
           <div className="f-fan-card__front-content">
-            <div className="f-fan-card__header" data-section="name">
-              <div className="f-fan-card__header-text">
-                <div className="f-fan-card__header-title">
-                  Your Fan Card
-                </div>
-                <div className="f-fan-card__header-subtitle">
-                  Collector Edition
-                </div>
-              </div>
-              <img src={qrLogo} width={40} height={35} alt="QR" className="f-fan-card__logo" />
-            </div>
-
             <div className="f-fan-card__team-badge" data-section="team">
               {fanCard.teamId ? (() => {
                 const team = getTeam(fanCard.teamId)

@@ -102,36 +102,6 @@
 
 /* Team-color gradient override (applied via inline style for dynamic team colors) */
 
-/* ─── Front header ───────────────────────────────────────────────────────────── */
-.f-fan-card__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.f-fan-card__header-text {
-  text-align: left;
-}
-
-.f-fan-card__header-title {
-  font: var(--f-fan-card-label-font);
-  color: var(--f-fan-card-text-light);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.f-fan-card__header-subtitle {
-  font: var(--f-fan-card-caption-font);
-  color: var(--f-fan-card-text-light);
-  opacity: 0.67;
-  letter-spacing: 0.06em;
-}
-
-.f-fan-card__logo {
-  opacity: 0.85;
-}
-
 /* ─── Photo section ──────────────────────────────────────────────────────────── */
 .f-fan-card__photo-section {
   display: flex;
