@@ -367,7 +367,6 @@ export default function Picture() {
           ) : (
             <div className="picture-team-placeholder-card" style={{
               width: '100%',
-              maxWidth: 320,
               aspectRatio: '5 / 7',
               borderRadius: 'var(--f-brand-radius-outer)',
               background: teamCardBackground,
