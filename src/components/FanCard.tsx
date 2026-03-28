@@ -68,11 +68,12 @@ interface Props {
 // ─── Front face dynamic style ──────────────────────────────────────────────────
 function getFrontInlineStyle(teamId: string | null, isFlipped: boolean): React.CSSProperties {
   const bg = getTeamCardBackground(teamId)
+  const isImage = bg.startsWith('url(')
   return {
-    background: bg,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
+    ...(isImage
+      ? { backgroundImage: bg, backgroundSize: 'cover', backgroundPosition: 'center' }
+      : { background: bg }
+    ),
     border: '1px solid var(--c-card-border)',
     pointerEvents: isFlipped ? 'none' : 'auto',
   }
