@@ -454,19 +454,6 @@
 
 .f-fan-card__wizard-btn--next {
   flex: 2;
-  border: none;
-  background: var(--f-fan-card-action-bg);
-  color: var(--f-fan-card-text-light);
-}
-
-.f-fan-card__wizard-btn--next:disabled {
-  background: var(--f-brand-color-background-disabled, #DBDEE8);
-  color: var(--f-brand-color-text-disabled, #9099A2);
-  cursor: not-allowed;
-}
-
-.f-fan-card__wizard-btn--next:hover:not(:disabled) {
-  background: var(--f-fan-card-action-bg-hover);
 }
 
 .f-fan-card__wizard-btn-content {
