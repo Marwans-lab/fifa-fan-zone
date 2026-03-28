@@ -5,6 +5,9 @@ import { track } from '../lib/analytics'
 import cameraIcon from '../assets/icons/camera-white.svg'
 import chevLeft from '../assets/icons/Chevron-left-white.svg'
 
+// WASM + ONNX model files (~30 MB) are fetched from CDN on first use and cached by the browser.
+// To self-host: copy node_modules/@imgly/background-removal/dist/ into public/bg-removal/
+// and change this to '/bg-removal/' (eliminates CDN dependency).
 const BG_REMOVAL_CDN = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/'
 
 // ─── Image compression ────────────────────────────────────────────────────────
