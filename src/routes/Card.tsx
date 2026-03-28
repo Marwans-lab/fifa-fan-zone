@@ -150,7 +150,6 @@ function JourneyCard({
         background: 'var(--f-brand-color-background-light)',
         borderRadius: 'var(--f-brand-radius-outer)',
         padding: 'var(--f-brand-space-md)',
-        border: '1px solid var(--f-brand-color-border-default)',
         marginBottom: 'var(--f-brand-space-md)',
         boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
         overflow: 'hidden',
