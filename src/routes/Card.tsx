@@ -403,8 +403,10 @@ function ExtraQuizCard({
       {!locked && !done && (
         <div className="card-quiz-card-action" style={{
           width: 36, height: 36, borderRadius: '50%',
-          background: 'rgba(0,0,0,0.04)',
+          background: 'transparent',
           border: 'none',
+          outline: 'none',
+          boxShadow: 'none',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           marginRight: 'var(--f-brand-space-2xs)',
         }}>
