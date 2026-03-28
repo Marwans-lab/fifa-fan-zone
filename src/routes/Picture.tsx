@@ -95,15 +95,21 @@ export default function Picture() {
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null)
   const [cameraError, setCameraError] = useState<string | null>(null)
   const [removingBg, setRemovingBg] = useState(false)
+  const [bgProgress, setBgProgress] = useState(0)
   const [bgError, setBgError] = useState<string | null>(null)
 
   const processPhoto = useCallback(async (rawDataUrl: string) => {
     setRemovingBg(true)
+    setBgProgress(0)
+    setBgError(null)
     try {
       const blob = await removeBackground(rawDataUrl, {
         publicPath: BG_REMOVAL_PUBLIC_PATH,
         model: 'small',
         proxyToWorker: false,
+        progress: (_key: string, current: number, total: number) => {
+          if (total > 0) setBgProgress(Math.round((current / total) * 100))
+        },
       })
       const dataUrl = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader()
@@ -376,7 +382,14 @@ export default function Picture() {
                   font: 'var(--f-brand-type-caption)',
                   color: 'var(--f-brand-color-text-subtle)',
                   margin: 0,
-                }}>Removing background…</p>
+                }}>
+                  {bgProgress > 0 && bgProgress < 100
+                    ? `Downloading model ${bgProgress}%…`
+                    : 'Removing background…'}
+                </p>
+                {bgProgress > 0 && bgProgress < 100 && (
+                  <ProgressBar progress={bgProgress} />
+                )}
               </div>
             ) : (
               <img className="picture-photo-img"
