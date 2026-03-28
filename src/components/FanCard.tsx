@@ -250,21 +250,25 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           <CardTexture />
           <HolographicStripe />
 
-          <div className="f-fan-card__header" data-section="name">
-            <div className="f-fan-card__header-text">
-              <div className="f-fan-card__header-title">
-                Your Fan Card
-              </div>
-              <div className="f-fan-card__header-subtitle">
-                Collector Edition
-              </div>
-            </div>
-            <img src={qrLogo} width={40} height={35} alt="QR" className="f-fan-card__logo" />
-          </div>
-
-          {/* Photo + motto */}
+          {/* Full-width photo */}
           <div className="f-fan-card__photo-section" data-section="photo">
             <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
+          </div>
+
+          {/* Header + team + flip hint */}
+          <div className="f-fan-card__front-content">
+            <div className="f-fan-card__header" data-section="name">
+              <div className="f-fan-card__header-text">
+                <div className="f-fan-card__header-title">
+                  Your Fan Card
+                </div>
+                <div className="f-fan-card__header-subtitle">
+                  Collector Edition
+                </div>
+              </div>
+              <img src={qrLogo} width={40} height={35} alt="QR" className="f-fan-card__logo" />
+            </div>
+
             <div className="f-fan-card__team-badge" data-section="team">
               {fanCard.teamId ? (() => {
                 const team = getTeam(fanCard.teamId)
@@ -280,10 +284,10 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                 </div>
               )}
             </div>
-          </div>
 
-          <div className="f-fan-card__flip-hint">
-            <img src={flipIconWhite} width={24} height={24} alt="" className="f-fan-card__flip-hint-icon" /> Tap card to flip
+            <div className="f-fan-card__flip-hint">
+              <img src={flipIconWhite} width={24} height={24} alt="" className="f-fan-card__flip-hint-icon" /> Tap card to flip
+            </div>
           </div>
         </div>
 
