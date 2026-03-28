@@ -90,7 +90,6 @@
 /* ─── Front face ─────────────────────────────────────────────────────────────── */
 .f-fan-card__front {
   background: var(--f-fan-card-bg);
-  box-shadow: var(--f-fan-card-shadow);
   align-items: center;
   justify-content: space-between;
   padding: var(--f-fan-card-padding) var(--f-fan-card-padding-sm) var(--f-fan-card-padding-sm);
