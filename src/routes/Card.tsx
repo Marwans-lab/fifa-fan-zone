@@ -419,7 +419,7 @@ function ExtraQuizCard({
               }}
             />
           ) : (
-            <img className="card-quiz-card-chevron" src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.6, filter: 'invert(1)' }} />
+            <img className="card-quiz-card-chevron" src={chevRight} width={24} height={24} alt="" style={{ opacity: 1, filter: 'invert(1)' }} />
           )}
         </div>
       )}
