@@ -131,20 +131,22 @@
   opacity: 0.85;
 }
 
-/* ─── Photo section — absolutely pinned to card bottom, behind content ──────── */
+/* ─── Photo section — fills card face, image bottom-aligned within it ──────── */
 .f-fan-card__photo-section {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  inset: 0;
   z-index: 0;
   pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .f-fan-card__photo {
   width: 100%;
   height: auto;
   display: block;
+  flex-shrink: 0;
 }
 
 .f-fan-card__photo-placeholder {
