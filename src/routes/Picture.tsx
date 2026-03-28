@@ -38,42 +38,26 @@ function getTeamCardBackground(teamId: string): string {
   return 'linear-gradient(160deg, var(--c-card-gradient-1) 0%, var(--c-card-gradient-2) 50%, var(--c-card-gradient-3) 100%)'
 }
 
-// ─── Portrait placeholder SVG ─────────────────────────────────────────────────
-function PortraitPlaceholder() {
+// ─── Silhouette SVG — full body, position absolute, bottom-aligned ────────────
+function SilhouettePlaceholder() {
   return (
-    <svg className="picture-silhouette-svg"
-      width="288"
-      height="300"
-      viewBox="0 0 288 300"
+    <svg
+      className="picture-silhouette-svg"
+      width="364"
+      height="418"
+      viewBox="0 0 364 418"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{
-        position: 'absolute',
-        left: '50%',
-        bottom: 0,
-        transform: 'translateX(-50%)',
-        width: '78%',
-        height: 'auto',
-        opacity: 0.6,
-        color: 'var(--f-brand-color-text-light)',
-        pointerEvents: 'none',
-      }}
+      style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: 'auto', pointerEvents: 'none' }}
     >
-      <circle
-        className="picture-silhouette-head"
-        cx="144"
-        cy="84"
-        r="52"
-        fill="currentColor"
-        opacity="0.6"
-      />
-      <path className="picture-silhouette-shoulders"
-        d="M16 302C16 230 74 176 144 176C214 176 272 230 272 302V334H16V302Z"
-        fill="currentColor"
-      />
       <path
-        d="M56 302C56 252 95 216 144 216C193 216 232 252 232 302V334H56V302Z"
-        fill="var(--f-brand-color-background-dark-30a)"
+        d="M17.6249 416.239H136.57L331.854 415.696C337.969 416.872 351.678 417.65 357.596 411.353C363.514 405.056 362.823 394.796 361.738 390.453C359.174 372.811 348.542 334.594 326.528 322.868C241.018 276.454 244.568 271.84 240.13 266.683C235.692 261.526 229.182 250.126 232.437 227.326C234.955 209.684 251.965 194.484 256.995 162.998C258.369 154.4 262.617 139.113 264.984 124.456C266.869 112.785 259.658 110.07 256.404 103.556C258.475 65.5565 254.628 57.9566 251.078 49.5424C247.527 41.1282 229.774 1.5 180.657 1.5C131.54 1.5 116.746 36.7854 108.461 49.5424C101.834 59.748 104.319 95.2324 106.39 111.699C94.2589 114.142 98.6116 128.305 106.39 162.998C114.971 201.269 127.102 217.284 128.877 227.326C130.016 233.768 131.325 254.359 122.368 266.683C113.491 278.897 83.0153 302.24 56.9775 313.097C29.5619 324.528 13.088 351.187 8.74836 364.125C4.90186 373.896 -1.60759 395.61 3.12656 404.296C7.86071 412.982 14.7647 415.877 17.6249 416.239Z"
+        fill="white"
+        fillOpacity="0.3"
+        stroke="#DBDEE8"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeDasharray="8 8"
       />
     </svg>
   )
@@ -434,7 +418,7 @@ export default function Picture() {
                   </div>
                 </div>
               )}
-              <PortraitPlaceholder />
+              <SilhouettePlaceholder />
               <Button
                 variant="white-filled"
                 className="picture-take-photo-btn"
