@@ -432,24 +432,8 @@
   margin-top: var(--f-fan-card-gap-sm);
 }
 
-.f-fan-card__wizard-btn {
-  border-radius: var(--f-brand-radius-base, 8px);
-  font: var(--f-fan-card-caption-font);
-  cursor: pointer;
-  font-family: inherit;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--f-fan-card-gap-xs);
-  transition: background var(--f-fan-card-transition-duration) var(--f-fan-card-transition-easing);
-}
-
 .f-fan-card__wizard-btn--back {
   flex: 1;
-  border: var(--f-brand-border-size-default, 1px) solid var(--f-fan-card-border-default);
-  background: none;
-  color: var(--f-fan-card-text-subtle);
 }
 
 .f-fan-card__wizard-btn--next {
@@ -512,7 +496,6 @@
 
   .f-fan-card__wizard-bar,
   .f-fan-card__wizard-option,
-  .f-fan-card__wizard-btn,
   .f-fan-card__action-circle,
   .f-fan-card__cta-button {
     transition: none;

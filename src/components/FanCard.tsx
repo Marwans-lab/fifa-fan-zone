@@ -328,11 +328,12 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               </div>
 
               <div className="f-fan-card__wizard-nav">
-                <button className="f-fan-card__wizard-btn f-fan-card__wizard-btn--back"
+                <Button variant="secondary"
+                  className="f-fan-card__wizard-btn--back"
                   onClick={handleBack}
                 >
                   Back
-                </button>
+                </Button>
                 <Button className="f-fan-card__wizard-btn--next"
                   onClick={handleNext}
                   disabled={!currentAnswer}
