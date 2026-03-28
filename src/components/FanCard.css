@@ -138,10 +138,10 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  flex: 0 0 var(--f-fan-card-photo-height);
-  min-height: 0;
+  height: 100%;
   overflow: hidden;
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 1;
 }
 
@@ -179,17 +179,18 @@
   opacity: 0.5;
 }
 
-/* ─── Front content below photo ──────────────────────────────────────────────── */
+/* ─── Front content overlay (full-height) ───────────────────────────────────── */
 .f-fan-card__front-content {
-  flex: 1;
-  min-height: 0;
+  position: absolute;
+  inset: 0;
+  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: var(--f-fan-card-gap);
   padding: var(--f-fan-card-padding-sm);
-  position: relative;
-  z-index: 1;
+  min-height: 0;
+  z-index: 2;
 }
 
 /* ─── Team badge / motto ─────────────────────────────────────────────────────── */
