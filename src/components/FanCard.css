@@ -292,7 +292,7 @@
   padding: var(--f-fan-card-gap-sm) var(--f-fan-card-gap);
   background: var(--f-brand-color-background-default, #F2F3FA);
   border: var(--f-brand-border-size-default, 1px) solid var(--f-brand-color-border-inner, #F2F3FA);
-  border-radius: var(--f-brand-radius-base, 8px);
+  border-radius: var(--r-full);
 }
 
 .f-fan-card__profile-icon {
