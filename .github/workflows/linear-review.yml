@@ -60,11 +60,4 @@ jobs:
             -d "{\"query\": \"mutation { issueUpdate(id: \\\"$ISSUE_UUID\\\", input: { stateId: \\\"$STATE_ID\\\" }) { success } }\"}" \
             | jq .
 
-          # Post QA trigger comment
-          curl -s -X POST https://api.linear.app/graphql \
-            -H "Authorization: $LINEAR_API_KEY" \
-            -H "Content-Type: application/json" \
-            -d "{\"query\": \"mutation { commentCreate(input: { issueId: \\\"$ISSUE_UUID\\\", body: \\\"@Claude [QA REVIEW] PR #$PR_NUMBER is ready for review.\\\" }) { success } }\"}" \
-            | jq .
-
-          echo "Done: $ISSUE_ID → In Review, QA comment posted."
+          echo "Done: $ISSUE_ID → In Review. Pipeline middleware handles In Review → Done automatically."

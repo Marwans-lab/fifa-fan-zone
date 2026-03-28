@@ -86,7 +86,15 @@ PYEOF
 load_linear_token
 if [ "$(check_linear_token)" != "ok" ]; then
   log "Linear token invalid — attempting refresh..."
-  refresh_linear_token || log "WARNING: Token refresh failed, continuing"
+  if ! refresh_linear_token; then
+    log "WARNING: Token refresh failed — falling back to LINEAR_PERSONAL_KEY"
+    export LINEAR_TOKEN="${LINEAR_PERSONAL_KEY}"
+    if [ "$(check_linear_token)" != "ok" ]; then
+      log "ERROR: LINEAR_PERSONAL_KEY is also invalid — pipeline may not work"
+    else
+      log "LINEAR_PERSONAL_KEY is valid — using it"
+    fi
+  fi
 fi
 
 export LINEAR_PERSONAL_KEY="${LINEAR_PERSONAL_KEY:?LINEAR_PERSONAL_KEY must be set in pipeline/.env}"
