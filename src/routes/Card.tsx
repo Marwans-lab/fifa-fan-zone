@@ -84,34 +84,15 @@ function JourneyStep({
       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--f-brand-space-sm)',
       width: 'var(--sp-14)', flexShrink: 0,
     }}>
-      {isCurrent && (
-        <div
-          className="card-journey-step-pulse-layer"
-          style={{
-            position: 'absolute',
-            top: 'calc(var(--sp-2) * -1)',
-            left: 'calc(var(--sp-2) * -1)',
-            width: 'calc(var(--sp-14) + var(--sp-4))',
-            height: 'calc(var(--sp-14) + var(--sp-4))',
-            pointerEvents: 'none',
-            zIndex: 5,
-            WebkitMask: 'radial-gradient(circle, transparent calc(var(--sp-14) / 2), #000 calc(var(--sp-14) / 2))',
-            mask: 'radial-gradient(circle, transparent calc(var(--sp-14) / 2), #000 calc(var(--sp-14) / 2))',
-          }}
-        >
-          <div
-            className="animate-ping-slow card-journey-step-ping"
+      <div className="card-journey-step-node" style={nodeStyle}>
+        {isCurrent && (
+          <div className="animate-ping-slow card-journey-step-ping"
             style={{
-              position: 'absolute',
-              inset: 0,
-              borderRadius: '50%',
-              background: 'var(--f-brand-color-background-success)',
-              opacity: 0.55,
+              position: 'absolute', inset: 0, borderRadius: '50%',
+              background: 'var(--f-brand-color-background-success)', pointerEvents: 'none',
             }}
           />
-        </div>
-      )}
-      <div className="card-journey-step-node" style={nodeStyle}>
+        )}
         {isCompleted ? (
           <img className="card-journey-step-icon-complete" src={tickBlack} width={24} height={24} alt="" style={{ position: 'relative', zIndex: 10, filter: 'invert(1)' }} />
         ) : (
