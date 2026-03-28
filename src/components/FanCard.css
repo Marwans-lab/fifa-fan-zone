@@ -390,7 +390,7 @@
 }
 
 .f-fan-card__wizard-bar--active {
-  background: var(--f-fan-card-accent);
+  background: var(--f-brand-color-background-accent);
 }
 
 .f-fan-card__wizard-question {
