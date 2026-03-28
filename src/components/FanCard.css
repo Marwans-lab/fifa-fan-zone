@@ -253,9 +253,13 @@
 /* ─── Back face ──────────────────────────────────────────────────────────────── */
 .f-fan-card__back {
   background: var(--f-fan-card-bg);
-  box-shadow: var(--f-fan-card-shadow);
+  box-shadow: none;
   transform: rotateY(180deg);
   padding: var(--f-fan-card-padding-sm);
+}
+
+.f-fan-card--flipped .f-fan-card__back {
+  box-shadow: var(--f-fan-card-shadow);
 }
 
 /* ─── Back header ────────────────────────────────────────────────────────────── */
