@@ -71,7 +71,7 @@ function getFrontInlineStyle(teamId: string | null, isFlipped: boolean): React.C
   const isImage = bg.startsWith('url(')
   return {
     ...(isImage
-      ? { backgroundImage: bg, backgroundSize: 'cover', backgroundPosition: 'center' }
+      ? { backgroundImage: bg, backgroundSize: 'cover', backgroundPosition: 'top center' }
       : { background: bg }
     ),
     border: '1px solid var(--c-card-border)',
