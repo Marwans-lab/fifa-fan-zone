@@ -38,6 +38,18 @@ function getTeamCardBackground(teamId: string): string {
   return 'linear-gradient(160deg, var(--c-card-gradient-1) 0%, var(--c-card-gradient-2) 50%, var(--c-card-gradient-3) 100%)'
 }
 
+function getTeamPlaceholderBackgroundLayers(teamId: string): string {
+  const normalizedTeamId = teamId.trim().toLowerCase() || 'default'
+  const basePath = `${import.meta.env.BASE_URL}assets/images/Team-backgrounds`
+
+  return [
+    `url("${basePath}/${normalizedTeamId}.webp")`,
+    `url("${basePath}/${normalizedTeamId}.png")`,
+    `url("${basePath}/default.webp")`,
+    `url("${basePath}/default.png")`,
+  ].join(', ')
+}
+
 // ─── Silhouette SVG — full body, position absolute, bottom-aligned ────────────
 function SilhouettePlaceholder() {
   return (
@@ -242,6 +254,10 @@ export default function Picture() {
     () => getTeamCardBackground(selectedTeam?.id ?? ''),
     [selectedTeam?.id]
   )
+  const teamPlaceholderBackgroundLayers = useMemo(
+    () => getTeamPlaceholderBackgroundLayers(selectedTeam?.id ?? ''),
+    [selectedTeam?.id]
+  )
 
   const hasPhoto = !!photoDataUrl || removingBg
 
@@ -360,7 +376,10 @@ export default function Picture() {
                 maxWidth: '100%',
                 aspectRatio: '5 / 7',
                 borderRadius: 'var(--f-brand-radius-outer)',
-                background: teamCardBackground,
+                backgroundImage: `${teamPlaceholderBackgroundLayers}, ${teamCardBackground}`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
                 border: '1px solid var(--c-card-border)',
                 boxShadow: 'var(--f-brand-shadow-large)',
                 position: 'relative',
