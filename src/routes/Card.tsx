@@ -337,6 +337,7 @@ function ExtraQuizCard({
         minHeight: 120,
         border: 'none',
         background: 'var(--f-brand-color-background-light)',
+        boxShadow: 'var(--f-brand-shadow-medium)',
         opacity: locked ? 0.55 : 1,
         cursor: locked ? 'not-allowed' : 'pointer',
         textAlign: 'left', font: 'var(--f-brand-type-body)', color: 'var(--f-brand-color-text-default)',
