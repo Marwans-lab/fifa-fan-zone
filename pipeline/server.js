@@ -221,6 +221,12 @@ function mergePR(prNumber, identifier) {
     `gh pr merge ${prNumber} -R ${GITHUB_REPO} --squash --delete-branch 2>&1`,
     { encoding: "utf-8" }
   );
+  // Explicitly trigger deploy — gh pr merge via API doesn't always fire push triggers
+  // when multiple merges happen in quick succession (concurrency cancel-in-progress)
+  try {
+    execSync(`gh workflow run deploy.yml -R ${GITHUB_REPO} 2>&1`, { encoding: "utf-8" });
+    console.log(`[Pipeline] Deploy workflow triggered for PR #${prNumber}`);
+  } catch { /* deploy.yml will still run via push event if this fails */ }
 }
 
 // --- Pipeline logic ---
