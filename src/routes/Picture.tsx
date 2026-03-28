@@ -8,6 +8,13 @@ import Button from '../components/Button'
 import { getTeam } from '../data/teams'
 import cameraIcon from '../assets/icons/camera-white.svg'
 import chevLeft from '../assets/icons/Chevron-left-white.svg'
+import teamBgAlgeria from '../assets/images/Team-backgrounds/Algeria.png'
+import teamBgFrance from '../assets/images/Team-backgrounds/France.png'
+
+const TEAM_BG_IMAGES: Record<string, string> = {
+  alg: teamBgAlgeria,
+  fra: teamBgFrance,
+}
 
 // Model files are self-hosted under <origin><base>bg-removal/.
 // publicPath must be absolute — the library calls new URL(hash, publicPath) which requires an absolute base.
@@ -31,6 +38,9 @@ function compressDataUrl(source: HTMLVideoElement | HTMLImageElement, flipX = fa
 }
 
 function getTeamCardBackground(teamId: string): string {
+  if (TEAM_BG_IMAGES[teamId]) {
+    return `url(${TEAM_BG_IMAGES[teamId]})`
+  }
   const team = getTeam(teamId)
   if (team) {
     return `linear-gradient(160deg, ${team.colors[0]} 0%, ${team.colors[1]} 100%)`
@@ -38,17 +48,6 @@ function getTeamCardBackground(teamId: string): string {
   return 'linear-gradient(160deg, var(--c-card-gradient-1) 0%, var(--c-card-gradient-2) 50%, var(--c-card-gradient-3) 100%)'
 }
 
-function getTeamPlaceholderBackgroundLayers(teamId: string): string {
-  const normalizedTeamId = teamId.trim().toLowerCase() || 'default'
-  const basePath = `${import.meta.env.BASE_URL}assets/images/Team-backgrounds`
-
-  return [
-    `url("${basePath}/${normalizedTeamId}.webp")`,
-    `url("${basePath}/${normalizedTeamId}.png")`,
-    `url("${basePath}/default.webp")`,
-    `url("${basePath}/default.png")`,
-  ].join(', ')
-}
 
 // ─── Silhouette SVG — full body, position absolute, bottom-aligned ────────────
 function SilhouettePlaceholder() {
@@ -254,10 +253,7 @@ export default function Picture() {
     () => getTeamCardBackground(selectedTeam?.id ?? ''),
     [selectedTeam?.id]
   )
-  const teamPlaceholderBackgroundLayers = useMemo(
-    () => getTeamPlaceholderBackgroundLayers(selectedTeam?.id ?? ''),
-    [selectedTeam?.id]
-  )
+
 
   const hasPhoto = !!photoDataUrl || removingBg
 
@@ -376,10 +372,9 @@ export default function Picture() {
                 maxWidth: '100%',
                 aspectRatio: '5 / 7',
                 borderRadius: 'var(--f-brand-radius-outer)',
-                backgroundImage: `${teamPlaceholderBackgroundLayers}, ${teamCardBackground}`,
+                background: teamCardBackground,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
                 border: '1px solid var(--c-card-border)',
                 boxShadow: 'var(--f-brand-shadow-large)',
                 position: 'relative',
