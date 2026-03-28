@@ -1,6 +1,7 @@
 import { useState, useCallback, forwardRef, useImperativeHandle } from 'react'
 import Button from './Button'
 import { track } from '../lib/analytics'
+import { getTeamCardBackground } from '../lib/teamCardBackground'
 import type { FanCard as FanCardData } from '../store/useStore'
 import { getTeam } from '../data/teams'
 import editIcon      from '../assets/icons/edit-white.svg'
@@ -64,14 +65,14 @@ interface Props {
   onSaveToDevice?: () => void
 }
 
-// ─── Front face dynamic style (team colors require inline) ───────────────────
+// ─── Front face dynamic style ──────────────────────────────────────────────────
 function getFrontInlineStyle(teamId: string | null, isFlipped: boolean): React.CSSProperties {
-  const team = teamId ? getTeam(teamId) : null
-  const bg = team
-    ? `linear-gradient(160deg, ${team.colors[0]} 0%, ${team.colors[1]} 100%)`
-    : 'linear-gradient(160deg, var(--c-card-gradient-1) 0%, var(--c-card-gradient-2) 50%, var(--c-card-gradient-3) 100%)'
+  const bg = getTeamCardBackground(teamId)
   return {
     background: bg,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
     border: '1px solid var(--c-card-border)',
     pointerEvents: isFlipped ? 'none' : 'auto',
   }
