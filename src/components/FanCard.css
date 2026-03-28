@@ -25,6 +25,7 @@
   --f-fan-card-text-subtle:    var(--f-brand-color-text-subtle, #6E7780);
   --f-fan-card-text-light:     var(--f-brand-color-text-light, #FFFFFF);
   --f-fan-card-text-primary:   var(--f-brand-color-text-primary, #8E2157);
+  --f-fan-card-accent:         var(--c-accent);
 
   /* Action circles */
   --f-fan-card-action-bg:      var(--f-brand-color-background-primary, #8E2157);
@@ -389,7 +390,7 @@
 }
 
 .f-fan-card__wizard-bar--active {
-  background: var(--f-fan-card-text-primary);
+  background: var(--f-fan-card-accent);
 }
 
 .f-fan-card__wizard-question {
