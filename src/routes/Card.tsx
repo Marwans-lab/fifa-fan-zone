@@ -89,7 +89,7 @@ function JourneyStep({
           <div className="animate-ping-slow card-journey-step-ping"
             style={{
               position: 'absolute', inset: 0, borderRadius: '50%',
-              background: 'rgba(0,0,0,0.1)', pointerEvents: 'none',
+              background: 'var(--f-brand-color-background-success)', pointerEvents: 'none',
             }}
           />
         )}
