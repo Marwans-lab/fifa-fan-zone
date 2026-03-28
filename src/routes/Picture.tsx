@@ -102,15 +102,19 @@ export default function Picture() {
       const blob = await removeBackground(rawDataUrl, {
         publicPath: BG_REMOVAL_PUBLIC_PATH,
         model: 'small',
+        proxyToWorker: false,
       })
-      const reader = new FileReader()
-      reader.onload = () => {
-        setPhotoDataUrl(reader.result as string)
-        setRemovingBg(false)
-        track('picture_bg_removed')
-      }
-      reader.readAsDataURL(blob)
-    } catch {
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result as string)
+        reader.onerror = reject
+        reader.readAsDataURL(blob)
+      })
+      setPhotoDataUrl(dataUrl)
+      setRemovingBg(false)
+      track('picture_bg_removed')
+    } catch (err) {
+      console.error('[bg-removal] failed:', err)
       setPhotoDataUrl(rawDataUrl)
       setRemovingBg(false)
     }
