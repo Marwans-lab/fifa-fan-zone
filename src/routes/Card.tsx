@@ -89,24 +89,24 @@ function JourneyStep({
           className="card-journey-step-pulse-layer"
           style={{
             position: 'absolute',
-            top: 0,
-            left: 0,
-            width: 'var(--sp-14)',
-            height: 'var(--sp-14)',
+            top: 'calc(var(--sp-2) * -1)',
+            left: 'calc(var(--sp-2) * -1)',
+            width: 'calc(var(--sp-14) + var(--sp-4))',
+            height: 'calc(var(--sp-14) + var(--sp-4))',
             pointerEvents: 'none',
             zIndex: 5,
+            WebkitMask: 'radial-gradient(circle, transparent calc(var(--sp-14) / 2), #000 calc(var(--sp-14) / 2))',
+            mask: 'radial-gradient(circle, transparent calc(var(--sp-14) / 2), #000 calc(var(--sp-14) / 2))',
           }}
         >
           <div
             className="animate-ping-slow card-journey-step-ping"
             style={{
               position: 'absolute',
-              inset: 'calc(var(--sp-2) * -1)',
+              inset: 0,
               borderRadius: '50%',
               background: 'var(--f-brand-color-background-success)',
               opacity: 0.55,
-              WebkitMask: 'radial-gradient(circle, transparent calc(var(--sp-14) / 2), #000 calc(var(--sp-14) / 2))',
-              mask: 'radial-gradient(circle, transparent calc(var(--sp-14) / 2), #000 calc(var(--sp-14) / 2))',
             }}
           />
         </div>
