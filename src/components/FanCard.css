@@ -432,12 +432,9 @@
   margin-top: var(--f-fan-card-gap-sm);
 }
 
-.f-fan-card__wizard-btn--back {
-  flex: 1;
-}
-
+.f-fan-card__wizard-btn--back,
 .f-fan-card__wizard-btn--next {
-  flex: 2;
+  flex: 1;
 }
 
 .f-fan-card__wizard-btn-content {
