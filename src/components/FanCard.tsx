@@ -249,13 +249,15 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           <CardTexture />
           <HolographicStripe />
 
-          {/* Full-width photo */}
-          <div className="f-fan-card__photo-section" data-section="photo">
+          {/* Background photo layer — absolutely pinned to card, behind all content */}
+          <div className="f-fan-card__photo-section" data-section="photo"
+            style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}
+          >
             <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
           </div>
 
-          {/* Team + flip hint */}
-          <div className="f-fan-card__front-content">
+          {/* Content stack on top */}
+          <div className="f-fan-card__front-content" style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1 }}>
             <div className="f-fan-card__team-badge" data-section="team">
               {fanCard.teamId ? (() => {
                 const team = getTeam(fanCard.teamId)
