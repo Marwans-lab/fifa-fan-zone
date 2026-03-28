@@ -411,7 +411,7 @@
   padding: var(--f-fan-card-padding-sm) var(--f-fan-card-gap);
   border-radius: var(--f-brand-radius-base, 8px);
   border: var(--f-brand-border-size-default, 1px) solid var(--f-fan-card-border-default);
-  background: var(--f-brand-color-background-default, #F2F3FA);
+  background: var(--f-color-background-light, var(--f-brand-color-background-light, #FFFFFF));
   color: var(--f-fan-card-text);
   font: var(--f-fan-card-caption-font);
   text-align: left;
