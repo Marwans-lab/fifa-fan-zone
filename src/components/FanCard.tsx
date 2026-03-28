@@ -1,4 +1,5 @@
 import { useState, useCallback, forwardRef, useImperativeHandle } from 'react'
+import Button from './Button'
 import { track } from '../lib/analytics'
 import type { FanCard as FanCardData } from '../store/useStore'
 import { getTeam } from '../data/teams'
@@ -333,7 +334,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                 >
                   Back
                 </button>
-                <button className="f-fan-card__wizard-btn f-fan-card__wizard-btn--next"
+                <Button className="f-fan-card__wizard-btn--next"
                   onClick={handleNext}
                   disabled={!currentAnswer}
                 >
@@ -346,7 +347,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                       Next <img src={chevRight} width={24} height={24} alt="" className="f-fan-card__wizard-btn-chevron" />
                     </span>
                   )}
-                </button>
+                </Button>
               </div>
             </div>
 
