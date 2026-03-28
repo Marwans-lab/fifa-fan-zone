@@ -71,13 +71,9 @@ function getFrontInlineStyle(teamId: string | null, isFlipped: boolean): React.C
   const bg = team
     ? `linear-gradient(160deg, ${team.colors[0]} 0%, ${team.colors[1]} 100%)`
     : 'linear-gradient(160deg, var(--c-card-gradient-1) 0%, var(--c-card-gradient-2) 50%, var(--c-card-gradient-3) 100%)'
-  const shadow = team
-    ? `0 16px 48px ${team.colors[0]}55, inset 0 1px 0 var(--c-card-inset)`
-    : '0 16px 48px var(--c-card-shadow), inset 0 1px 0 var(--c-card-inset)'
   return {
     background: bg,
     border: '1px solid var(--c-card-border)',
-    boxShadow: shadow,
     pointerEvents: isFlipped ? 'none' : 'auto',
   }
 }
