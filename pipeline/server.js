@@ -201,6 +201,28 @@ async function triggerCursor(issueId, issueIdentifier) {
   }
 }
 
+// --- Merge helper: un-draft if needed, then merge ---
+function mergePR(prNumber, identifier) {
+  // Check if PR is a draft — if so, mark ready first
+  try {
+    const info = JSON.parse(execSync(
+      `gh pr view ${prNumber} -R ${GITHUB_REPO} --json isDraft 2>/dev/null`,
+      { encoding: "utf-8" }
+    ));
+    if (info.isDraft) {
+      console.log(`[Pipeline] ${identifier}: PR #${prNumber} is a draft — marking ready for review`);
+      execSync(`gh pr ready ${prNumber} -R ${GITHUB_REPO} 2>&1`, { encoding: "utf-8" });
+      // Brief pause for GitHub to process the state change
+      execSync("sleep 2");
+    }
+  } catch { /* ignore draft check errors, attempt merge anyway */ }
+
+  execSync(
+    `gh pr merge ${prNumber} -R ${GITHUB_REPO} --squash --delete-branch 2>&1`,
+    { encoding: "utf-8" }
+  );
+}
+
 // --- Pipeline logic ---
 async function handleWebhook(payload) {
   if (payload.type !== "Issue" || payload.action !== "update") return;
@@ -276,10 +298,7 @@ async function handleWebhook(payload) {
       }
 
       console.log(`[Pipeline] ${issueIdentifier}: Merging PR #${pr.number}`);
-      execSync(
-        `gh pr merge ${pr.number} -R ${GITHUB_REPO} --squash --delete-branch 2>&1`,
-        { encoding: "utf-8" }
-      );
+      mergePR(pr.number, issueIdentifier);
 
       console.log(`[Pipeline] ${issueIdentifier}: Waiting for GitHub Pages deploy...`);
       let deployed = false;
@@ -407,7 +426,7 @@ async function checkForStalledIssues() {
             }
 
             try {
-              execSync(`gh pr merge ${pr.number} -R ${GITHUB_REPO} --squash --delete-branch 2>&1`, { encoding: "utf-8" });
+              mergePR(pr.number, issue.identifier);
               console.log(`[Pipeline] ${issue.identifier}: PR #${pr.number} merged by stall detector`);
 
               let deployed = false;
