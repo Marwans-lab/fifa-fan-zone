@@ -403,11 +403,9 @@ function ExtraQuizCard({
       {!locked && !done && (
         <div data-ui="card-quiz-card-action" style={{
           width: 36, height: 36, borderRadius: '50%',
-          background: 'transparent',
-          border: 'none',
-          outline: 'none',
-          boxShadow: 'none',
+          background: 'rgba(0,0,0,0.06)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
+          flexShrink: 0,
           marginRight: 'var(--f-brand-space-2xs)',
         }}>
           {loading ? (
@@ -421,7 +419,7 @@ function ExtraQuizCard({
               }}
             />
           ) : (
-            <img className="card-quiz-card-chevron" src={chevRight} width={24} height={24} alt="" style={{ opacity: 1, filter: 'invert(1)' }} />
+            <img className="card-quiz-card-chevron" src={chevRight} width={24} height={24} alt="" style={{ opacity: 0.6, filter: 'invert(1)' }} />
           )}
         </div>
       )}
