@@ -42,40 +42,38 @@ function getTeamCardBackground(teamId: string): string {
 function PortraitPlaceholder() {
   return (
     <svg className="picture-silhouette-svg"
-      width="200"
-      height="260"
-      viewBox="0 0 200 260"
+      width="288"
+      height="300"
+      viewBox="0 0 288 300"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ opacity: 0.55, color: 'var(--f-brand-color-text-light)' }}
+      style={{
+        position: 'absolute',
+        left: '50%',
+        bottom: 0,
+        transform: 'translateX(-50%)',
+        width: '78%',
+        height: 'auto',
+        opacity: 0.6,
+        color: 'var(--f-brand-color-text-light)',
+        pointerEvents: 'none',
+      }}
     >
-      <rect
-        x="14"
-        y="10"
-        width="172"
-        height="240"
-        rx="86"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeDasharray="8 6"
-        fill="none"
-      />
       <circle
         className="picture-silhouette-head"
-        cx="100"
-        cy="92"
-        r="40"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeDasharray="8 6"
-        fill="none"
+        cx="144"
+        cy="84"
+        r="52"
+        fill="currentColor"
+        opacity="0.6"
       />
       <path className="picture-silhouette-shoulders"
-        d="M42 236C42 188 68 160 100 160C132 160 158 188 158 236"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeDasharray="8 6"
-        fill="none"
+        d="M16 302C16 230 74 176 144 176C214 176 272 230 272 302V334H16V302Z"
+        fill="currentColor"
+      />
+      <path
+        d="M56 302C56 252 95 216 144 216C193 216 232 252 232 302V334H56V302Z"
+        fill="var(--f-brand-color-background-dark-30a)"
       />
     </svg>
   )
