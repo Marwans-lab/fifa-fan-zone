@@ -335,6 +335,7 @@ function ExtraQuizCard({
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: 'var(--sp-5) var(--sp-4)', borderRadius: 'var(--f-brand-radius-outer)',
         minHeight: 120,
+        border: 'none',
         background: 'var(--f-brand-color-background-light)',
         opacity: locked ? 0.55 : 1,
         cursor: locked ? 'not-allowed' : 'pointer',
