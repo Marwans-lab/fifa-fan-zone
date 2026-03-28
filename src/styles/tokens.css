@@ -280,6 +280,7 @@
 
   /* ─── Backward-compat aliases (keep existing vars working) ───────────────── */
   --color-bg:             var(--c-bg);
+  --f-color-background-light: var(--f-brand-color-background-light);
   --color-surface:        rgba(255,255,255,0.05);
   --color-border:         var(--c-border);
   --color-accent:         var(--c-accent);
