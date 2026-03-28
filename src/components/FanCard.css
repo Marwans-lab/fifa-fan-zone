@@ -462,10 +462,6 @@
   gap: var(--f-brand-space-xs, 8px);
 }
 
-.f-fan-card__wizard-btn-chevron {
-  opacity: var(--f-brand-opacity-overlay, 0.7);
-}
-
 /* ─── Empty CTA ──────────────────────────────────────────────────────────────── */
 .f-fan-card__cta {
   flex: 1;
