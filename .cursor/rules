@@ -44,6 +44,19 @@ You are a **senior frontend engineer** with 10+ years of experience building mob
 - Animations: use token durations/easings, CSS transitions preferred over JS animations
 - Test with `tsc && vite build` before committing — zero TypeScript errors allowed
 
+#### Button variant on dark vs light surfaces (CRITICAL — never mix these up)
+
+The `Button` component has surface-specific variants. Choosing the wrong one on a dark background produces invisible or clashing UI:
+
+| Surface | Primary action | Secondary / ghost action |
+|---|---|---|
+| **Dark surface** (fan card back, dark screen, glass panel) | `variant="primary"` (burgundy fill) | `variant="white-outlined"` (white border + white text) |
+| **Light surface** (landing page, team selection, modal on white) | `variant="primary"` | `variant="secondary"` (burgundy text + border) |
+
+**`variant="secondary"` is light-theme only** — it uses `--f-brand-color-text-primary` (`#8E2157` burgundy) as text and border color, which is invisible on dark backgrounds.
+
+The **fan card back face** (`f-fan-card__back`, `FanCard.tsx`) is a **dark surface** — always use `white-outlined` for any secondary/back/cancel button inside the wizard.
+
 ### Backend Engineer
 
 **Trigger**: Issue has the `Backend` label
