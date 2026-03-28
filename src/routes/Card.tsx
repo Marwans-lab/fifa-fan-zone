@@ -210,7 +210,7 @@ function JourneyCard({
                   const lineBg = done && nextDone
                     ? 'var(--f-brand-color-text-default)'                               // fully active
                     : done && !nextDone
-                    ? 'linear-gradient(90deg, var(--f-brand-color-text-default), var(--f-brand-color-border-default))' // half active
+                    ? 'linear-gradient(90deg, var(--f-brand-color-background-success), var(--f-brand-color-border-default))' // half active
                     : 'var(--f-brand-color-border-default)'                             // inactive
                   return (
                     <div className="card-journey-connector" style={{
