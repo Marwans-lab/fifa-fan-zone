@@ -401,7 +401,7 @@ function ExtraQuizCard({
         </div>
       </div>
       {!locked && !done && (
-        <div className="card-quiz-card-action" style={{
+        <div data-ui="card-quiz-card-action" style={{
           width: 36, height: 36, borderRadius: '50%',
           background: 'transparent',
           border: 'none',
