@@ -148,6 +148,7 @@ function JourneyCard({
       style={{
         width: '100%',
         background: 'var(--f-brand-color-background-light)',
+        border: 'none',
         borderRadius: 'var(--f-brand-radius-outer)',
         padding: 'var(--f-brand-space-md)',
         marginBottom: 'var(--f-brand-space-md)',
