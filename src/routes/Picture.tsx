@@ -4,6 +4,7 @@ import { removeBackground } from '@imgly/background-removal'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import FanCard from '../components/FanCard'
+import { getTeam } from '../data/teams'
 import cameraIcon from '../assets/icons/camera-white.svg'
 import chevLeft from '../assets/icons/Chevron-left-white.svg'
 
@@ -28,31 +29,48 @@ function compressDataUrl(source: HTMLVideoElement | HTMLImageElement, flipX = fa
   return canvas.toDataURL('image/jpeg', 0.78)
 }
 
-// ─── Silhouette SVG (dashed outline of head + shoulders) ─────────────────────
-function SilhouettePlaceholder() {
+function getTeamCardBackground(teamId: string): string {
+  const team = getTeam(teamId)
+  if (team) {
+    return `linear-gradient(160deg, ${team.colors[0]} 0%, ${team.colors[1]} 100%)`
+  }
+  return 'linear-gradient(160deg, var(--c-card-gradient-1) 0%, var(--c-card-gradient-2) 50%, var(--c-card-gradient-3) 100%)'
+}
+
+// ─── Portrait placeholder SVG ─────────────────────────────────────────────────
+function PortraitPlaceholder() {
   return (
     <svg className="picture-silhouette-svg"
-      width="180"
-      height="220"
-      viewBox="0 0 180 220"
+      width="200"
+      height="260"
+      viewBox="0 0 200 260"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ opacity: 0.35, color: 'var(--f-brand-color-text-disabled)' }}
+      style={{ opacity: 0.55, color: 'var(--f-brand-color-text-light)' }}
     >
-      {/* Head */}
-      <circle
-        className="picture-silhouette-head"
-        cx="90"
-        cy="70"
-        r="42"
+      <rect
+        x="14"
+        y="10"
+        width="172"
+        height="240"
+        rx="86"
         stroke="currentColor"
         strokeWidth="2"
         strokeDasharray="8 6"
         fill="none"
       />
-      {/* Shoulders */}
+      <circle
+        className="picture-silhouette-head"
+        cx="100"
+        cy="92"
+        r="40"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeDasharray="8 6"
+        fill="none"
+      />
       <path className="picture-silhouette-shoulders"
-        d="M20 210 C20 170, 45 145, 90 140 C135 145, 160 170, 160 210"
+        d="M42 236C42 188 68 160 100 160C132 160 158 188 158 236"
         stroke="currentColor"
         strokeWidth="2"
         strokeDasharray="8 6"
@@ -233,6 +251,14 @@ export default function Picture() {
     photoDataUrl,
     teamId: teamId || state.fanCard.teamId,
   }), [state.fanCard, photoDataUrl, teamId])
+  const selectedTeam = useMemo(
+    () => (teamId ? getTeam(teamId) : state.fanCard.teamId ? getTeam(state.fanCard.teamId) : undefined),
+    [teamId, state.fanCard.teamId]
+  )
+  const teamCardBackground = useMemo(
+    () => getTeamCardBackground(selectedTeam?.id ?? ''),
+    [selectedTeam?.id]
+  )
 
   const hasPhoto = !!photoDataUrl || removingBg
 
@@ -303,7 +329,7 @@ export default function Picture() {
         /* Camera */
         <div data-section="camera-preview" className="picture-camera-preview" style={{
           margin: 'var(--f-brand-space-lg) var(--f-brand-space-md) 0',
-          background: 'var(--f-brand-color-text-light)',
+          background: cameraActive ? 'var(--f-brand-color-text-light)' : 'transparent',
           borderRadius: 'var(--f-brand-radius-small)',
           height: 515,
           display: 'flex',
@@ -338,13 +364,75 @@ export default function Picture() {
               </button>
             </div>
           ) : (
-            <>
-              <SilhouettePlaceholder />
+            <div className="picture-team-placeholder-card" style={{
+              width: '100%',
+              maxWidth: 320,
+              aspectRatio: '5 / 7',
+              borderRadius: 'var(--f-brand-radius-outer)',
+              background: teamCardBackground,
+              border: '1px solid var(--c-card-border)',
+              boxShadow: 'var(--f-brand-shadow-large)',
+              position: 'relative',
+              overflow: 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 'var(--sp-6) var(--sp-4)',
+            }}>
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 'var(--sp-1)',
+                background: 'linear-gradient(90deg, transparent, var(--c-lt-shimmer), transparent)',
+              }} />
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: 'radial-gradient(circle, var(--c-lt-shimmer) 1.5px, transparent 1.5px)',
+                backgroundSize: 'var(--sp-4) var(--sp-4)',
+                mixBlendMode: 'overlay',
+                pointerEvents: 'none',
+              }} />
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: 'repeating-linear-gradient(-55deg, transparent, transparent var(--sp-5), var(--c-lt-shimmer) var(--sp-5), var(--c-lt-shimmer) calc(var(--sp-5) + 1px))',
+                mixBlendMode: 'overlay',
+                pointerEvents: 'none',
+              }} />
+              {selectedTeam && (
+                <div style={{
+                  position: 'absolute',
+                  top: 'var(--sp-4)',
+                  left: 'var(--sp-4)',
+                  right: 'var(--sp-4)',
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}>
+                  <div style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 'var(--sp-2)',
+                    padding: 'var(--sp-1) var(--sp-3)',
+                    borderRadius: 'var(--f-brand-radius-rounded)',
+                    background: 'var(--f-brand-color-background-dark-50a)',
+                    color: 'var(--f-brand-color-text-light)',
+                    font: 'var(--f-brand-type-subheading-medium)',
+                    fontStyle: 'italic',
+                  }}>
+                    <span aria-hidden="true">{selectedTeam.flag}</span>
+                    <span>{selectedTeam.motto}</span>
+                  </div>
+                </div>
+              )}
+              <PortraitPlaceholder />
               <button className="picture-take-photo-btn"
                 data-ui="take-photo-btn"
                 onClick={handleTakePhoto}
                 style={{
-                  position: 'absolute', top: 209, width: 197, height: 'var(--sp-14)',
+                  position: 'absolute', bottom: 'var(--sp-6)', minWidth: 197, height: 'var(--sp-14)',
                   borderRadius: 'var(--f-brand-radius-rounded)', background: 'var(--f-brand-color-primary)',
                   border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center',
                   justifyContent: 'center', gap: 'var(--f-brand-space-sm)',
@@ -355,7 +443,7 @@ export default function Picture() {
                 <span>Take a photo</span>
                 <img src={cameraIcon} width={24} height={24} alt="" />
               </button>
-            </>
+            </div>
           )}
         </div>
       ) : removingBg ? (
