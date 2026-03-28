@@ -21,7 +21,7 @@ type CardStatus = 'hidden' | 'flipped' | 'matched' | 'mismatched'
 
 const LEGACY_PAIR_COUNT = 3
 const LEGACY_ROUND_TIME = 30
-const FLOW_PAIR_COUNT = 4
+const FLOW_PAIR_COUNT = 3
 const FLOW_ROUND_TIME = 45
 const FLIP_DURATION = 400
 const MISMATCH_DELAY = 800
@@ -99,9 +99,10 @@ function buildDeck(): MatchCard[] {
   return shuffle(cards)
 }
 
-function buildFlowDeck(pairs: CardMatchPair[]): MatchCard[] {
+function buildFlowDeck(pairs: CardMatchPair[], pairCount: number): MatchCard[] {
   const cards: MatchCard[] = []
-  pairs.forEach(pair => {
+  const selectedPairs = shuffle(pairs).slice(0, pairCount)
+  selectedPairs.forEach(pair => {
     cards.push({ id: `${pair.id}-clue`, pairId: pair.id, type: 'clue', display: pair.clue })
     cards.push({ id: `${pair.id}-answer`, pairId: pair.id, type: 'answer', display: pair.answer })
   })
@@ -640,7 +641,7 @@ export default function CardMatch() {
   const [accumulatedTimeUsed, setAccumulatedTimeUsed] = useState(0)
 
   const [deck, setDeck] = useState<MatchCard[]>(() =>
-    quiz ? buildFlowDeck(quiz.rounds[0].pairs) : buildDeck()
+    quiz ? buildFlowDeck(quiz.rounds[0].pairs, pairCount) : buildDeck()
   )
   const [statuses, setStatuses] = useState<Record<string, CardStatus>>(() => initStatuses(deck))
   const [flippedIds, setFlippedIds] = useState<string[]>([])
@@ -684,7 +685,7 @@ export default function CardMatch() {
       setAccumulatedTimeUsed(newTotalTimeUsed)
       const nextRound = currentRound + 1
       setTimeout(() => {
-        const newDeck = buildFlowDeck(quiz.rounds[nextRound].pairs)
+        const newDeck = buildFlowDeck(quiz.rounds[nextRound].pairs, pairCount)
         setCurrentRound(nextRound)
         setDeck(newDeck)
         setStatuses(initStatuses(newDeck))
@@ -798,7 +799,7 @@ export default function CardMatch() {
   }, [deck, statuses, flippedIds, started, gameComplete])
 
   const handlePlayAgain = useCallback(() => {
-    const newDeck = quiz ? buildFlowDeck(quiz.rounds[0].pairs) : buildDeck()
+    const newDeck = quiz ? buildFlowDeck(quiz.rounds[0].pairs, pairCount) : buildDeck()
     setCurrentRound(0)
     setAccumulatedScore(0)
     setAccumulatedMoves(0)
@@ -814,7 +815,7 @@ export default function CardMatch() {
     setStarted(false)
     lockRef.current = false
     track('card_match_play_again', { flowId })
-  }, [quiz, roundTime, flowId])
+  }, [quiz, roundTime, flowId, pairCount])
 
   const quizTitle = quiz?.title ?? 'Card Match'
 
