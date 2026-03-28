@@ -5,9 +5,9 @@ import { track } from '../lib/analytics'
 import cameraIcon from '../assets/icons/camera-white.svg'
 import chevLeft from '../assets/icons/Chevron-left-white.svg'
 
-// Model files are self-hosted under <base>/bg-removal/ (generated at build time by scripts/copy-bg-models.mjs).
-// Use import.meta.env.BASE_URL so the path is correct on GitHub Pages (/fifa-fan-zone/bg-removal/).
-const BG_REMOVAL_PUBLIC_PATH = import.meta.env.BASE_URL + 'bg-removal/'
+// Model files are self-hosted under <origin><base>bg-removal/.
+// publicPath must be absolute — the library calls new URL(hash, publicPath) which requires an absolute base.
+const BG_REMOVAL_PUBLIC_PATH = window.location.origin + import.meta.env.BASE_URL + 'bg-removal/'
 
 // ─── Image compression ────────────────────────────────────────────────────────
 function compressDataUrl(source: HTMLVideoElement | HTMLImageElement, flipX = false): string {
