@@ -408,7 +408,7 @@
 }
 
 .f-fan-card__wizard-option {
-  padding: var(--f-fan-card-gap-sm) var(--f-fan-card-gap);
+  padding: var(--f-fan-card-padding-sm) var(--f-fan-card-gap);
   border-radius: var(--f-brand-radius-base, 8px);
   border: var(--f-brand-border-size-default, 1px) solid var(--f-fan-card-border-default);
   background: var(--f-brand-color-background-default, #F2F3FA);
