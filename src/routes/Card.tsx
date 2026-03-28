@@ -214,7 +214,7 @@ function JourneyCard({
                     : 'var(--f-brand-color-border-default)'                             // inactive
                   return (
                     <div className="card-journey-connector" style={{
-                      flex: 1, height: 2, marginTop: 'calc(var(--sp-11) / 2)',
+                      flex: 1, height: 2, marginTop: 'calc(var(--sp-14) / 2 - 1px)',
                       background: lineBg,
                       opacity: isInactive ? 0.4 : 1,
                       transition: 'all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
@@ -241,7 +241,7 @@ function JourneyCard({
           fontSize: 'var(--text-md)', borderRadius: 9999,
           border: allComplete ? '1px solid rgba(0,212,170,0.25)' : 'none',
           marginTop: 'var(--sp-7)', cursor: allComplete ? 'default' : 'pointer',
-          boxShadow: allComplete ? 'none' : !cardComplete ? '0 10px 30px rgba(142,33,87,0.3)' : '0 10px 30px rgba(0,0,0,0.12)',
+          boxShadow: 'none',
           transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
           WebkitTapHighlightColor: 'transparent',
         }}
@@ -569,35 +569,6 @@ export default function Card() {
               onSaveToDevice={handleSaveToDevice}
             />
           </section>
-
-          {/* ── Complete fan card CTA ────────────────────────────── */}
-          {!cardComplete && (
-            <button className="card-complete-cta"
-              data-ui="complete-fan-card-btn"
-              onClick={() => {
-                track('complete_fan_card_tapped')
-                fanCardSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                setTimeout(() => fanCardRef.current?.startEditing(), 500)
-              }}
-              style={{
-                width: '100%', height: 'var(--sp-12)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'var(--f-brand-color-background-primary)',
-                color: 'var(--f-brand-color-text-light)',
-                font: 'var(--f-brand-type-body-medium)',
-                fontWeight: 'var(--weight-bold)',
-                fontSize: 'var(--text-md)',
-                borderRadius: 9999, border: 'none',
-                marginBottom: 'var(--f-brand-space-md)',
-                cursor: 'pointer',
-                boxShadow: '0 10px 30px rgba(142,33,87,0.3)',
-                transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
-                WebkitTapHighlightColor: 'transparent',
-              }}
-            >
-              Complete fan card
-            </button>
-          )}
 
           {/* ── Journey ───────────────────────────────────────── */}
           <div className="card-journey-wrapper" data-section="journey-card">

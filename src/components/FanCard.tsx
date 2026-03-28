@@ -302,11 +302,6 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             </div>
           </div>
 
-          {/* Profile photo */}
-          <div className="f-fan-card__back-photo-section">
-            <FanPhoto photoDataUrl={fanCard.photoDataUrl} />
-          </div>
-
           {/* Wizard takes priority so Edit works on completed cards */}
           {wizardActive ? (
 

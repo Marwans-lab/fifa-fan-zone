@@ -186,7 +186,7 @@ export default function Landing() {
           cursor: 'pointer',
           padding: 'var(--f-brand-space-md) var(--f-brand-space-xl)',
           WebkitTapHighlightColor: 'transparent',
-          boxShadow: '0 8px 16px var(--f-brand-shadow-medium)',
+          boxShadow: 'none',
         }}
       >
         {hasCard ? 'View your fan card' : 'Create your fan card'}
