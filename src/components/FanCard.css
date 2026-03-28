@@ -132,32 +132,23 @@
   opacity: 0.85;
 }
 
-/* ─── Photo section ──────────────────────────────────────────────────────────── */
+/* ─── Photo section — absolute background layer, not part of flex stack ──────── */
 .f-fan-card__photo-section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
   width: 100%;
-  flex: 0 0 var(--f-fan-card-photo-height);
-  min-height: 0;
-  overflow: hidden;
-  position: relative;
-  z-index: 1;
+  height: var(--f-fan-card-photo-height);
+  z-index: 0;
+  pointer-events: none;
 }
 
 .f-fan-card__photo {
   width: 100%;
   height: 100%;
-  border-radius: 0;
   object-fit: contain;
   object-position: center bottom;
-  border: none;
-  box-shadow: none;
   display: block;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  z-index: 1;
 }
 
 .f-fan-card__photo-placeholder {
@@ -179,7 +170,7 @@
   opacity: 0.5;
 }
 
-/* ─── Front content below photo ──────────────────────────────────────────────── */
+/* ─── Front content — floats above the photo background layer ───────────────── */
 .f-fan-card__front-content {
   flex: 1;
   min-height: 0;
