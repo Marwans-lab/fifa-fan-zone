@@ -1,8 +1,11 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { removeBackground } from '@imgly/background-removal'
 import { track } from '../lib/analytics'
 import cameraIcon from '../assets/icons/camera-white.svg'
 import chevLeft from '../assets/icons/Chevron-left-white.svg'
+
+const BG_REMOVAL_CDN = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/'
 
 // ─── Image compression ────────────────────────────────────────────────────────
 function compressDataUrl(source: HTMLVideoElement | HTMLImageElement, flipX = false): string {
@@ -89,6 +92,24 @@ export default function Picture() {
 
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null)
   const [cameraError, setCameraError] = useState<string | null>(null)
+  const [removingBg, setRemovingBg] = useState(false)
+
+  const processPhoto = useCallback(async (rawDataUrl: string) => {
+    setRemovingBg(true)
+    try {
+      const blob = await removeBackground(rawDataUrl, { publicPath: BG_REMOVAL_CDN })
+      const reader = new FileReader()
+      reader.onload = () => {
+        setPhotoDataUrl(reader.result as string)
+        setRemovingBg(false)
+        track('picture_bg_removed')
+      }
+      reader.readAsDataURL(blob)
+    } catch {
+      setPhotoDataUrl(rawDataUrl)
+      setRemovingBg(false)
+    }
+  }, [])
 
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
@@ -139,9 +160,9 @@ export default function Picture() {
     if (!video || video.readyState < 2 || !video.videoWidth) return
     const url = compressDataUrl(video, true)
     stopCamera()
-    setPhotoDataUrl(url)
+    void processPhoto(url)
     track('picture_photo_captured')
-  }, [stopCamera])
+  }, [stopCamera, processPhoto])
 
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -151,7 +172,7 @@ export default function Picture() {
       const img = new Image()
       img.onload = () => {
         const url = compressDataUrl(img)
-        setPhotoDataUrl(url)
+        void processPhoto(url)
         track('picture_photo_picked')
       }
       img.src = ev.target?.result as string
@@ -184,7 +205,7 @@ export default function Picture() {
     navigate('/identity', { replace: true })
   }, [navigate, stopCamera])
 
-  const hasPhoto = !!photoDataUrl
+  const hasPhoto = !!photoDataUrl || removingBg
 
   return (
     <div className="f-page-enter picture-page"
@@ -319,18 +340,46 @@ export default function Picture() {
             height: '100%',
             position: 'relative',
           }}>
-            <img className="picture-photo-img"
-              src={photoDataUrl!}
-              alt="Your photo"
-              style={{
+            {removingBg ? (
+              /* Background removal loading state */
+              <div className="picture-bg-removing" style={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center top',
-              }}
-            />
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'var(--f-brand-space-sm)',
+                background: 'var(--f-brand-color-background-subtle)',
+              }}>
+                <div className="picture-bg-spinner" style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: '50%',
+                  border: '3px solid var(--f-brand-color-border-default)',
+                  borderTopColor: 'var(--f-brand-color-background-primary)',
+                  animation: 'f-spinner-spin var(--dur-gentle) linear infinite',
+                }} />
+                <p style={{
+                  font: 'var(--f-brand-type-caption)',
+                  color: 'var(--f-brand-color-text-subtle)',
+                  margin: 0,
+                }}>Removing background…</p>
+              </div>
+            ) : (
+              <img className="picture-photo-img"
+                src={photoDataUrl!}
+                alt="Your photo"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center top',
+                }}
+              />
+            )}
             {/* Retake overlay button */}
-            <button className="picture-retake-btn"
+            {!removingBg && <button className="picture-retake-btn"
               data-ui="retake-photo-btn"
               onClick={handleRetake}
               aria-label="Retake photo"
@@ -353,7 +402,7 @@ export default function Picture() {
               }}
             >
               Retake photo
-            </button>
+            </button>}
           </div>
         ) : (
           /* Empty state: silhouette + "Take a photo" */
@@ -421,7 +470,7 @@ export default function Picture() {
         <button className="picture-confirm-btn"
           data-ui="confirm-photo-btn"
           onClick={handleNext}
-          disabled={!hasPhoto}
+          disabled={!photoDataUrl || removingBg}
           style={{
             width: '100%',
             height: 'var(--sp-14)',
