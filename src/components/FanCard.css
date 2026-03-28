@@ -421,9 +421,9 @@
 }
 
 .f-fan-card__wizard-option--selected {
-  border-color: var(--f-fan-card-border-primary);
+  border-color: var(--f-brand-color-border-selected);
   background: var(--f-brand-color-background-light, #FFFFFF);
-  color: var(--f-fan-card-text-primary);
+  color: var(--f-brand-color-text-default);
 }
 
 .f-fan-card__wizard-nav {
