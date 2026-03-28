@@ -365,20 +365,29 @@ export default function Picture() {
               </button>
             </div>
           ) : (
-            <div className="picture-team-placeholder-card" style={{
+            <div style={{
               width: '100%',
-              aspectRatio: '5 / 7',
-              borderRadius: 'var(--f-brand-radius-outer)',
-              background: teamCardBackground,
-              border: '1px solid var(--c-card-border)',
-              boxShadow: 'var(--f-brand-shadow-large)',
-              position: 'relative',
-              overflow: 'hidden',
+              height: '100%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: 'var(--sp-6) var(--sp-4)',
             }}>
+              <div className="picture-team-placeholder-card" style={{
+                width: 'auto',
+                height: '100%',
+                maxWidth: '100%',
+                aspectRatio: '5 / 7',
+                borderRadius: 'var(--f-brand-radius-outer)',
+                background: teamCardBackground,
+                border: '1px solid var(--c-card-border)',
+                boxShadow: 'var(--f-brand-shadow-large)',
+                position: 'relative',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 'var(--sp-6) var(--sp-4)',
+              }}>
               <div style={{
                 position: 'absolute',
                 top: 0,
@@ -444,6 +453,7 @@ export default function Picture() {
               >
                 Take a photo
               </Button>
+              </div>
             </div>
           )}
         </div>
