@@ -55,7 +55,8 @@
 
   /* Layout */
   width: 100%;
-  aspect-ratio: 5 / 7;
+  /* 5/7 reduced to 90% height while keeping full width */
+  aspect-ratio: 50 / 63;
   perspective: 1000px;
   cursor: pointer;
 }
