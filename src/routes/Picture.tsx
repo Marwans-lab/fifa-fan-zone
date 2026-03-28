@@ -4,6 +4,7 @@ import { removeBackground } from '@imgly/background-removal'
 import { track } from '../lib/analytics'
 import { useStore } from '../store/useStore'
 import FanCard from '../components/FanCard'
+import Button from '../components/Button'
 import { getTeam } from '../data/teams'
 import cameraIcon from '../assets/icons/camera-white.svg'
 import chevLeft from '../assets/icons/Chevron-left-white.svg'
@@ -428,21 +429,22 @@ export default function Picture() {
                 </div>
               )}
               <PortraitPlaceholder />
-              <button className="picture-take-photo-btn"
+              <Button
+                variant="white-filled"
+                className="picture-take-photo-btn"
                 data-ui="take-photo-btn"
                 onClick={handleTakePhoto}
                 style={{
-                  position: 'absolute', bottom: 'var(--sp-6)', minWidth: 197, height: 'var(--sp-14)',
-                  borderRadius: 'var(--f-brand-radius-rounded)', background: 'var(--f-brand-color-primary)',
-                  border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center',
-                  justifyContent: 'center', gap: 'var(--f-brand-space-sm)',
-                  boxShadow: 'var(--f-brand-shadow-large)', color: 'var(--f-brand-color-text-light)',
-                  font: 'var(--f-brand-type-body-medium)',
+                  position: 'absolute',
+                  bottom: 'var(--sp-6)',
+                  minWidth: 197,
+                  minHeight: 'var(--sp-14)',
+                  boxShadow: 'var(--f-brand-shadow-large)',
                 }}
+                iconRight={<img src={cameraIcon} width={20} height={20} alt="" style={{ filter: 'brightness(0)' }} />}
               >
-                <span>Take a photo</span>
-                <img src={cameraIcon} width={24} height={24} alt="" />
-              </button>
+                Take a photo
+              </Button>
             </div>
           )}
         </div>
