@@ -507,29 +507,27 @@ export default function Picture() {
       />
 
       {/* ── Actions ──────────────────────────────────────────── */}
-      {!removingBg && (
+      {hasPhoto && !removingBg && (
         <div data-section="controls" style={{
           display: 'flex', gap: 'var(--f-brand-space-sm)',
           padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)',
           flexShrink: 0,
         }}>
-          {hasPhoto && (
-            <button
-              data-ui="retake-photo-btn"
-              onClick={handleRetake}
-              style={{
-                flex: 1, height: 'var(--sp-14)', borderRadius: 'var(--f-brand-radius-rounded)',
-                background: 'none', border: '1px solid var(--f-brand-color-border-default)',
-                cursor: 'pointer', color: 'var(--f-brand-color-text-default)',
-                font: 'var(--f-brand-type-body-medium)',
-              }}
-            >
-              Retake photo
-            </button>
-          )}
           <button
-            data-ui={hasPhoto ? 'confirm-card-btn' : 'take-photo-btn'}
-            onClick={hasPhoto ? handleConfirm : handleTakePhoto}
+            data-ui="retake-photo-btn"
+            onClick={handleRetake}
+            style={{
+              flex: 1, height: 'var(--sp-14)', borderRadius: 'var(--f-brand-radius-rounded)',
+              background: 'none', border: '1px solid var(--f-brand-color-border-default)',
+              cursor: 'pointer', color: 'var(--f-brand-color-text-default)',
+              font: 'var(--f-brand-type-body-medium)',
+            }}
+          >
+            Retake photo
+          </button>
+          <button
+            data-ui="confirm-card-btn"
+            onClick={handleConfirm}
             style={{
               flex: 1, height: 'var(--sp-14)', borderRadius: 'var(--f-brand-radius-rounded)',
               background: 'var(--f-brand-color-primary)', border: 'none',
@@ -537,7 +535,7 @@ export default function Picture() {
               font: 'var(--f-brand-type-body-medium)',
             }}
           >
-            {hasPhoto ? 'Confirm card' : 'Take a photo'}
+            Confirm card
           </button>
         </div>
       )}
