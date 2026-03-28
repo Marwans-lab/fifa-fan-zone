@@ -6,15 +6,9 @@ import { useStore } from '../store/useStore'
 import FanCard from '../components/FanCard'
 import Button from '../components/Button'
 import { getTeam } from '../data/teams'
+import { getTeamCardBackground } from '../lib/teamCardBackground'
 import cameraIcon from '../assets/icons/camera-white.svg'
 import chevLeft from '../assets/icons/Chevron-left-white.svg'
-import teamBgAlgeria from '../assets/images/Team-backgrounds/Algeria.png'
-import teamBgFrance from '../assets/images/Team-backgrounds/France.png'
-
-const TEAM_BG_IMAGES: Record<string, string> = {
-  alg: teamBgAlgeria,
-  fra: teamBgFrance,
-}
 
 // Model files are self-hosted under <origin><base>bg-removal/.
 // publicPath must be absolute — the library calls new URL(hash, publicPath) which requires an absolute base.
@@ -36,18 +30,6 @@ function compressDataUrl(source: HTMLVideoElement | HTMLImageElement, flipX = fa
   ctx.drawImage(source, 0, 0, w, h)
   return canvas.toDataURL('image/jpeg', 0.78)
 }
-
-function getTeamCardBackground(teamId: string): string {
-  if (TEAM_BG_IMAGES[teamId]) {
-    return `url(${TEAM_BG_IMAGES[teamId]})`
-  }
-  const team = getTeam(teamId)
-  if (team) {
-    return `linear-gradient(160deg, ${team.colors[0]} 0%, ${team.colors[1]} 100%)`
-  }
-  return 'linear-gradient(160deg, var(--c-card-gradient-1) 0%, var(--c-card-gradient-2) 50%, var(--c-card-gradient-3) 100%)'
-}
-
 
 // ─── Silhouette SVG — full body, position absolute, bottom-aligned ────────────
 function SilhouettePlaceholder() {
