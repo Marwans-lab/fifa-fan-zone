@@ -95,6 +95,7 @@ export default function Picture() {
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null)
   const [cameraError, setCameraError] = useState<string | null>(null)
   const [removingBg, setRemovingBg] = useState(false)
+  const [bgError, setBgError] = useState<string | null>(null)
 
   const processPhoto = useCallback(async (rawDataUrl: string) => {
     setRemovingBg(true)
@@ -114,7 +115,9 @@ export default function Picture() {
       setRemovingBg(false)
       track('picture_bg_removed')
     } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
       console.error('[bg-removal] failed:', err)
+      setBgError(msg)
       setPhotoDataUrl(rawDataUrl)
       setRemovingBg(false)
     }
@@ -445,6 +448,18 @@ export default function Picture() {
           </>
         )}
       </div>
+
+      {/* ── BG removal error (debug) ─────────────────────────── */}
+      {bgError && (
+        <p style={{
+          font: 'var(--f-brand-type-caption)',
+          color: 'var(--f-brand-color-status-error)',
+          margin: 'var(--f-brand-space-xs) var(--f-brand-space-md) 0',
+          wordBreak: 'break-all',
+        }}>
+          BG removal failed: {bgError}
+        </p>
+      )}
 
       {/* ── Camera error ─────────────────────────────────────── */}
       {cameraError && (
