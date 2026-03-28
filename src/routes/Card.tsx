@@ -593,7 +593,7 @@ export default function Card() {
               </h2>
               <p className="card-quiz-description" style={{
                 font: 'var(--f-brand-type-subheading)',
-                color: 'var(--c-text-2)', marginTop: 'var(--f-brand-space-2xs)',
+                color: 'var(--f-brand-color-text-default)', marginTop: 'var(--f-brand-space-2xs)',
               }}>
                 Complete quizzes to climb the leaderboard
               </p>
