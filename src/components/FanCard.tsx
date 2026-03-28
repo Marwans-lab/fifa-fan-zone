@@ -72,7 +72,7 @@ function getFrontInlineStyle(teamId: string | null, isFlipped: boolean, photoDat
     : 'linear-gradient(160deg, var(--c-card-gradient-1) 0%, var(--c-card-gradient-2) 50%, var(--c-card-gradient-3) 100%)'
   return {
     background: photoDataUrl
-      ? `${gradient}, url(${photoDataUrl}) bottom center / contain no-repeat`
+      ? `url(${photoDataUrl}) bottom center / contain no-repeat, ${gradient}`
       : gradient,
     border: '1px solid var(--c-card-border)',
     pointerEvents: isFlipped ? 'none' : 'auto',
