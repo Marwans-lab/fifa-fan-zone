@@ -9,7 +9,6 @@ import saveIcon      from '../assets/icons/save-white.svg'
 import flipIconWhite from '../assets/icons/flip-white.svg'
 import flipIconDark  from '../assets/icons/flip-dark.svg'
 import tickBlack     from '../assets/icons/Tick-black.svg'
-import chevRight     from '../assets/icons/Chevron-right-white.svg'
 import qrLogo        from '../assets/icons/qr-logo.svg'
 import stadiumIcon   from '../assets/icons/stadium-white.svg'
 import styleIcon     from '../assets/icons/style-white.svg'
@@ -344,7 +343,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                     </span>
                   ) : (
                     <span className="f-fan-card__wizard-btn-content">
-                      Next <img src={chevRight} width={24} height={24} alt="" className="f-fan-card__wizard-btn-chevron" />
+                      Next
                     </span>
                   )}
                 </Button>
