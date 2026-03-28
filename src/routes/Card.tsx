@@ -333,7 +333,6 @@ function ExtraQuizCard({
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: 'var(--sp-5) var(--sp-4)', borderRadius: 'var(--f-brand-radius-outer)',
         minHeight: 120,
-        border: `1px solid ${locked ? 'var(--f-brand-color-border-disabled)' : done ? 'rgba(0,212,170,0.25)' : 'var(--f-brand-color-border-default)'}`,
         background: 'var(--f-brand-color-background-light)',
         opacity: locked ? 0.55 : 1,
         cursor: locked ? 'not-allowed' : 'pointer',
