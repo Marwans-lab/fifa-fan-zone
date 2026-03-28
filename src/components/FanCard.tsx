@@ -65,15 +65,13 @@ interface Props {
 }
 
 // ─── Front face dynamic style (team colors require inline) ───────────────────
-function getFrontInlineStyle(teamId: string | null, isFlipped: boolean, photoDataUrl: string | null): React.CSSProperties {
+function getFrontInlineStyle(teamId: string | null, isFlipped: boolean): React.CSSProperties {
   const team = teamId ? getTeam(teamId) : null
-  const gradient = team
+  const bg = team
     ? `linear-gradient(160deg, ${team.colors[0]} 0%, ${team.colors[1]} 100%)`
     : 'linear-gradient(160deg, var(--c-card-gradient-1) 0%, var(--c-card-gradient-2) 50%, var(--c-card-gradient-3) 100%)'
   return {
-    background: photoDataUrl
-      ? `url(${photoDataUrl}) bottom center / contain no-repeat, ${gradient}`
-      : gradient,
+    background: bg,
     border: '1px solid var(--c-card-border)',
     pointerEvents: isFlipped ? 'none' : 'auto',
   }
@@ -246,13 +244,23 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
         {/* ── FRONT ─────────────────────────────────────────────── */}
         <div className="f-fan-card__front"
           data-section="front-face"
-          style={getFrontInlineStyle(fanCard.teamId, isFlipped, fanCard.photoDataUrl)}
+          style={getFrontInlineStyle(fanCard.teamId, isFlipped)}
         >
           <CardTexture />
           <HolographicStripe />
 
-          {/* Content stack */}
-          <div className="f-fan-card__front-content">
+          {/* Photo — absolute background layer, bottom-anchored, behind content */}
+          {fanCard.photoDataUrl && (
+            <img
+              src={fanCard.photoDataUrl}
+              alt=""
+              aria-hidden="true"
+              style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: 'auto', zIndex: 0, pointerEvents: 'none', display: 'block' }}
+            />
+          )}
+
+          {/* Content stack — sits above photo */}
+          <div className="f-fan-card__front-content" style={{ position: 'relative', zIndex: 1 }}>
             <div className="f-fan-card__team-badge" data-section="team">
               {fanCard.teamId ? (() => {
                 const team = getTeam(fanCard.teamId)
