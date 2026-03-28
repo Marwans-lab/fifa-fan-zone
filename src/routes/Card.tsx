@@ -71,7 +71,7 @@ function JourneyStep({
     } : isCurrent ? {
       background: 'rgba(0,0,0,0.06)', border: '1px solid var(--f-brand-color-border-default)',
       transform: 'scale(1.05)', zIndex: 20,
-      boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+      boxShadow: 'none',
     } : {
       background: 'rgba(0,0,0,0.02)', border: '1px solid var(--f-brand-color-border-default)',
       zIndex: 10,
