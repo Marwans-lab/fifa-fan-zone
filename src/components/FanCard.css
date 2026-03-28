@@ -93,6 +93,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--f-fan-card-padding) var(--f-fan-card-padding-sm) var(--f-fan-card-padding-sm);
+  box-shadow: none;
 }
 
 .f-fan-card--flipped .f-fan-card__front {
@@ -146,7 +147,7 @@
   object-fit: cover;
   object-position: center top;
   border: var(--f-fan-card-photo-border);
-  box-shadow: var(--f-fan-card-shadow);
+  box-shadow: none;
   position: relative;
   z-index: 2;
 }
