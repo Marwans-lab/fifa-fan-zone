@@ -51,8 +51,7 @@
   --f-fan-card-transition-easing:   var(--f-brand-motion-easing-default, cubic-bezier(0.4, 0, 0.2, 1));
 
   /* Photo */
-  --f-fan-card-photo-size:     180px;
-  --f-fan-card-photo-border:   3px solid var(--f-fan-card-border-default);
+  --f-fan-card-photo-height:   60%;
 
   /* Layout */
   width: 100%;
@@ -91,9 +90,9 @@
 /* ─── Front face ─────────────────────────────────────────────────────────────── */
 .f-fan-card__front {
   background: var(--f-fan-card-bg);
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--f-fan-card-padding) var(--f-fan-card-padding-sm) var(--f-fan-card-padding-sm);
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 0;
   box-shadow: none;
 }
 
@@ -136,39 +135,61 @@
 /* ─── Photo section ──────────────────────────────────────────────────────────── */
 .f-fan-card__photo-section {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: var(--f-fan-card-padding-sm);
+  justify-content: center;
+  width: 100%;
+  flex: 0 0 var(--f-fan-card-photo-height);
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
 }
 
 .f-fan-card__photo {
-  width: var(--f-fan-card-photo-size);
-  height: var(--f-fan-card-photo-size);
-  border-radius: var(--f-brand-radius-rounded, 64px);
-  object-fit: cover;
-  object-position: center top;
-  border: var(--f-fan-card-photo-border);
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  object-fit: contain;
+  object-position: center bottom;
+  border: none;
   box-shadow: none;
+  display: block;
+  margin: 0;
+  padding: 0;
   position: relative;
-  z-index: 2;
+  z-index: 1;
 }
 
 .f-fan-card__photo-placeholder {
-  width: var(--f-fan-card-photo-size);
-  height: var(--f-fan-card-photo-size);
-  border-radius: var(--f-brand-radius-rounded, 64px);
-  background: rgba(0, 0, 0, 0.28);
-  border: var(--f-brand-border-size-focused, 2px) dashed var(--f-fan-card-text-light);
-  opacity: 0.35;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  background: var(--c-surface-faint);
+  border: var(--c-photo-placeholder-border);
+  box-sizing: border-box;
+  opacity: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  z-index: 2;
+  z-index: 1;
 }
 
 .f-fan-card__photo-placeholder-icon {
   opacity: 0.5;
+}
+
+/* ─── Front content below photo ──────────────────────────────────────────────── */
+.f-fan-card__front-content {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--f-fan-card-gap);
+  padding: var(--f-fan-card-padding-sm);
+  position: relative;
+  z-index: 1;
 }
 
 /* ─── Team badge / motto ─────────────────────────────────────────────────────── */
@@ -210,7 +231,9 @@
   opacity: 0.4;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--f-fan-card-gap-xs);
+  margin-top: auto;
 }
 
 .f-fan-card__flip-hint-icon {
