@@ -91,7 +91,6 @@
 .f-fan-card__front {
   background: var(--f-fan-card-bg);
   align-items: stretch;
-  justify-content: flex-end;
   padding: 0;
   box-shadow: none;
 }
@@ -132,10 +131,12 @@
   opacity: 0.85;
 }
 
-/* ─── Photo section — flex item at bottom, front-content overlays it ────────── */
+/* ─── Photo section — absolutely pinned to card bottom, behind content ──────── */
 .f-fan-card__photo-section {
-  flex-shrink: 0;
-  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 0;
   pointer-events: none;
 }
