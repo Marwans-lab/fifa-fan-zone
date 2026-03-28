@@ -186,9 +186,9 @@
   align-items: center;
   justify-content: center;
   gap: var(--f-fan-card-gap-sm);
-  padding: var(--sp-2);
+  padding: 0 var(--sp-2);
   border-radius: var(--r-full);
-  background: var(--f-brand-color-background-overlay);
+  background: var(--f-brand-color-background-dark-50a);
 }
 
 .f-fan-card__team-flag {
