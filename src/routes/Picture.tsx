@@ -73,7 +73,7 @@ function PortraitPlaceholder() {
       />
       <path
         d="M56 302C56 252 95 216 144 216C193 216 232 252 232 302V334H56V302Z"
-        fill="var(--f-brand-color-background-dark-30a)"
+        fill="var(--f-brand-color-background-dark-40a)"
       />
     </svg>
   )
