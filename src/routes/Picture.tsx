@@ -428,22 +428,27 @@ export default function Picture() {
                 </div>
               )}
               <PortraitPlaceholder />
-              <Button
-                variant="white-filled"
-                className="picture-take-photo-btn"
-                data-ui="take-photo-btn"
-                onClick={handleTakePhoto}
-                style={{
-                  position: 'absolute',
-                  bottom: 'var(--sp-6)',
-                  minWidth: 197,
-                  minHeight: 'var(--sp-14)',
-                  boxShadow: 'var(--f-brand-shadow-large)',
-                }}
-                iconRight={<img src={cameraIcon} width={20} height={20} alt="" style={{ filter: 'brightness(0)' }} />}
-              >
-                Take a photo
-              </Button>
+              <div style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}>
+                <Button
+                  variant="white-filled"
+                  className="picture-take-photo-btn"
+                  data-ui="take-photo-btn"
+                  onClick={handleTakePhoto}
+                  style={{
+                    minWidth: 197,
+                    minHeight: 'var(--sp-14)',
+                    boxShadow: 'var(--f-brand-shadow-large)',
+                  }}
+                  iconRight={<img src={cameraIcon} width={20} height={20} alt="" style={{ filter: 'brightness(0)' }} />}
+                >
+                  Take a photo
+                </Button>
+              </div>
             </div>
           )}
         </div>
