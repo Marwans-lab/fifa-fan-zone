@@ -246,8 +246,8 @@ async function handleWebhook(payload) {
 
   // In Review → Done (Cursor validates its own work before opening PR)
   if (newState === "In Review") {
-    if (recentComments.has(issueId)) return;
-    markOurComment(issueId);
+    if (recentComments.has(`${issueId}-inreview`)) return;
+    markOurComment(`${issueId}-inreview`);
 
     const states = await getStates(teamId);
     const doneState = findState(states, "Done");
@@ -260,8 +260,8 @@ async function handleWebhook(payload) {
 
   // Done → merge PR → deploy → Deployed
   if (newState === "Done") {
-    if (recentComments.has(issueId)) return;
-    markOurComment(issueId);
+    if (recentComments.has(`${issueId}-done`)) return;
+    markOurComment(`${issueId}-done`);
 
     console.log(`[Pipeline] ${issueIdentifier}: Starting deploy`);
     try {
