@@ -124,6 +124,13 @@ jobs:
               PR=$(find_pr "$IDENT")
               if [ -n "$PR" ] && [ "$PR" != "null" ]; then
                 echo "$IDENT: Merging PR #$PR..."
+                # Un-draft first if needed — Cursor always opens draft PRs
+                IS_DRAFT=$(gh pr view "$PR" --repo "$REPO" --json isDraft --jq '.isDraft' 2>/dev/null || echo "false")
+                if [ "$IS_DRAFT" = "true" ]; then
+                  echo "$IDENT: PR #$PR is a draft — marking ready for review"
+                  gh pr ready "$PR" --repo "$REPO" 2>/dev/null || true
+                  sleep 2
+                fi
                 if gh pr merge "$PR" --repo "$REPO" --squash --delete-branch; then
                   echo "$IDENT: PR #$PR merged. linear-deploy.yml will move to Deployed."
                 else
