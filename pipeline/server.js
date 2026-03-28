@@ -289,7 +289,11 @@ async function handleWebhook(payload) {
         );
 
         if (mergedPr) {
-          console.log(`[Pipeline] ${issueIdentifier}: PR #${mergedPr.number} already merged — moving to Deployed`);
+          console.log(`[Pipeline] ${issueIdentifier}: PR #${mergedPr.number} already merged — triggering deploy`);
+          try {
+            execSync(`gh workflow run deploy.yml -R ${GITHUB_REPO} 2>&1`, { encoding: "utf-8" });
+            console.log(`[Pipeline] ${issueIdentifier}: Deploy workflow triggered`);
+          } catch { /* push event may already have fired deploy */ }
           const states = await getStates(teamId);
           const deployedState = findState(states, "Deployed");
           if (deployedState) {
