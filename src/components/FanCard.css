@@ -192,12 +192,14 @@
   z-index: 1;
   font: var(--f-fan-card-caption-font);
   color: var(--f-fan-card-text-light);
-  opacity: 0.4;
+  background: color-mix(in srgb, var(--f-brand-color-background-overlay) 50%, transparent);
+  border-radius: var(--f-brand-radius-base, 8px);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--f-fan-card-gap-xs);
   margin-top: auto;
+  padding: var(--f-brand-space-xs, 8px);
 }
 
 .f-fan-card__flip-hint-icon {
