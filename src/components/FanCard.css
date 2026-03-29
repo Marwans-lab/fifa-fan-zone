@@ -353,7 +353,6 @@
   font: var(--f-fan-card-caption-font);
   color: var(--f-fan-card-text-muted);
   letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 
 /* ─── Wizard ─────────────────────────────────────────────────────────────────── */
