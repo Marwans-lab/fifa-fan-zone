@@ -193,11 +193,13 @@
   font: var(--f-fan-card-caption-font);
   color: var(--f-fan-card-text-light);
   background: color-mix(in srgb, var(--f-brand-color-background-overlay) 50%, transparent);
-  border-radius: var(--f-brand-radius-base, 8px);
-  display: flex;
+  border-radius: var(--r-full);
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--f-fan-card-gap-xs);
+  align-self: center;
+  width: fit-content;
   margin-top: auto;
   padding: var(--f-brand-space-xs, 8px);
 }
