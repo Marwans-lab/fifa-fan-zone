@@ -3,7 +3,6 @@ import Button from './Button'
 import { track } from '../lib/analytics'
 import { getTeamCardBackground } from '../lib/teamCardBackground'
 import type { FanCard as FanCardData } from '../store/useStore'
-import { getTeam } from '../data/teams'
 import editIcon      from '../assets/icons/edit-white.svg'
 import shareIcon     from '../assets/icons/share-white.svg'
 import saveIcon      from '../assets/icons/save-white.svg'
@@ -262,15 +261,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           )}
 
           <div className="f-fan-card__team-badge" data-section="team">
-            {fanCard.teamId ? (() => {
-              const team = getTeam(fanCard.teamId)
-              return (
-                <div className="f-fan-card__team-motto">
-                  {team && <span className="f-fan-card__team-flag">{team.flag}</span>}
-                  {team ? team.motto : fanCard.teamId}
-                </div>
-              )
-            })() : (
+            {!fanCard.teamId && (
               <div className="f-fan-card__team-empty">
                 No team selected
               </div>
