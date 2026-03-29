@@ -357,6 +357,21 @@
   letter-spacing: 0.06em;
 }
 
+.fan-card-save-to-device-icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  background-color: var(--f-brand-color-icon-default);
+  -webkit-mask-image: url('../assets/icons/save-white.svg');
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  mask-image: url('../assets/icons/save-white.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
 /* ─── Wizard ─────────────────────────────────────────────────────────────────── */
 .f-fan-card__wizard {
   flex: 1;
