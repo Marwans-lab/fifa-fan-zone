@@ -30,7 +30,7 @@
   /* Action circles */
   --f-fan-card-action-bg:      var(--f-brand-color-background-light, #FFFFFF);
   --f-fan-card-action-border-color: var(--f-brand-color-border-default, #DBDEE8);
-  --f-fan-card-action-border-size: var(--f-brand-border-size-default, 1px);
+  --f-fan-card-action-border-size: 1px;
   --f-fan-card-action-bg-hover: var(--f-brand-color-background-primary-hover, #5C0931);
   --f-fan-card-action-icon:    var(--f-brand-color-icon-light, #FFFFFF);
   --f-fan-card-action-size:    48px; /* 44px min touch + visual padding */
