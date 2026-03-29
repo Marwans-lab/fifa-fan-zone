@@ -5,7 +5,6 @@ import { getTeamCardBackground } from '../lib/teamCardBackground'
 import type { FanCard as FanCardData } from '../store/useStore'
 import editIcon      from '../assets/icons/edit-white.svg'
 import shareIcon     from '../assets/icons/share-white.svg'
-import saveIcon      from '../assets/icons/save-white.svg'
 import flipIconWhite from '../assets/icons/flip-white.svg'
 import flipIconDark  from '../assets/icons/flip-dark.svg'
 import stadiumIcon   from '../assets/icons/stadium-white.svg'
@@ -370,7 +369,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
             >
               <ActionCircle icon={<img src={editIcon}  width={24} height={24} alt="" className="fan-card-edit-icon" />} label="Edit"  onClick={handleEditTap} dataUi="edit-btn" />
               <ActionCircle icon={<img src={shareIcon} width={24} height={24} alt="" className="fan-card-share-icon" />} label="Share" onClick={handleShareTap} dataUi="share-btn" />
-              <ActionCircle icon={<img src={saveIcon}  width={24} height={24} alt="" className="fan-card-save-to-device-icon" />} label="Save"  onClick={handleSaveTap} dataUi="save-btn" />
+              <ActionCircle icon={<span className="fan-card-save-to-device-icon" aria-hidden="true" />} label="Save"  onClick={handleSaveTap} dataUi="save-btn" />
             </div>
           )}
 
