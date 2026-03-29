@@ -134,7 +134,7 @@ jobs:
                   echo "$IDENT: PR #$PR merged — posting Cursor validation request."
                   PAGES_URL="https://marwans-lab.github.io/fifa-fan-zone/"
                   CURSOR_USER_ID="2117cef0-f13e-4281-8295-cb0b5fa505ea"
-                  VALIDATE_BODY="**[PIPELINE — VALIDATE DEPLOYMENT]** PR #$PR has been merged and GitHub Pages is deploying.\\\\n\\\\nPlease open [$PAGES_URL]($PAGES_URL), verify the changes from this issue are live, then move this issue to **Deployed**."
+                  VALIDATE_BODY="@cursor **[PIPELINE — VALIDATE DEPLOYMENT]** PR #$PR has been merged and GitHub Pages is deploying.\\\\n\\\\nPlease open [$PAGES_URL]($PAGES_URL), verify the changes from this issue are live, then move this issue to **Deployed**."
                   gql "mutation { commentCreate(input: { issueId: \\\"$UUID\\\", body: \\\"$VALIDATE_BODY\\\" }) { success } }" > /dev/null
                   gql "mutation { issueUpdate(id: \\\"$UUID\\\", input: { assigneeId: \\\"$CURSOR_USER_ID\\\" }) { success } }" > /dev/null
                   echo "$IDENT: Cursor notified for deployment validation."

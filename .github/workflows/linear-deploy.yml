@@ -119,9 +119,9 @@ jobs:
           else
             # ── Deploy succeeded or timed out: request Cursor validation ──────
             if [ "$DEPLOYED" = "true" ]; then
-              COMMENT_BODY="**[PIPELINE — VALIDATE DEPLOYMENT]** PR #$PR_NUMBER has been merged and GitHub Pages has finished deploying.\\n\\nPlease open [$PAGES_URL]($PAGES_URL), verify the changes from this issue are live, then move this issue to **Deployed**."
+              COMMENT_BODY="@cursor **[PIPELINE — VALIDATE DEPLOYMENT]** PR #$PR_NUMBER has been merged and GitHub Pages has finished deploying.\\n\\nPlease open [$PAGES_URL]($PAGES_URL), verify the changes from this issue are live, then move this issue to **Deployed**."
             else
-              COMMENT_BODY="**[PIPELINE — VALIDATE DEPLOYMENT]** PR #$PR_NUMBER has been merged. GitHub Pages deployment may still be in progress (timed out waiting).\\n\\nPlease check [$PAGES_URL]($PAGES_URL) once it's live, verify changes are correct, then move this issue to **Deployed**."
+              COMMENT_BODY="@cursor **[PIPELINE — VALIDATE DEPLOYMENT]** PR #$PR_NUMBER has been merged. GitHub Pages deployment may still be in progress (timed out waiting).\\n\\nPlease check [$PAGES_URL]($PAGES_URL) once it's live, verify changes are correct, then move this issue to **Deployed**."
             fi
 
             curl -s -X POST https://api.linear.app/graphql \

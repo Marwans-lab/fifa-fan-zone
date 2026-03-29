@@ -206,7 +206,7 @@ async function triggerCursor(issueId, issueIdentifier) {
 async function triggerDeployValidation(issueId, identifier, prNumber) {
   await postComment(
     issueId,
-    `**[PIPELINE — VALIDATE DEPLOYMENT]** PR #${prNumber} has been merged and GitHub Pages has finished deploying.\n\n` +
+    `@cursor **[PIPELINE — VALIDATE DEPLOYMENT]** PR #${prNumber} has been merged and GitHub Pages has finished deploying.\n\n` +
     `Please open [${GITHUB_PAGES_URL}](${GITHUB_PAGES_URL}), verify the changes from this issue are live, then move this issue to **Deployed**.`
   );
   // Re-assign to Cursor to trigger a new validation session
