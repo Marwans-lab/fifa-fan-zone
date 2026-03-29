@@ -291,7 +291,7 @@
 
 .f-fan-card__profile-category {
   font: var(--f-fan-card-caption-font);
-  color: var(--f-fan-card-text-primary);
+  color: var(--f-brand-color-text-muted, #4A525D);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   margin-bottom: var(--f-fan-card-gap-xs);
