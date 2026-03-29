@@ -96,7 +96,9 @@ function OptionButton({
         flexShrink: 0,
         transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
       }}>
-        {revealed && isCorrect ? '✓' : revealed && isWrong ? '✗' : letter}
+        <span className="f-quiz__option-badge-text">
+          {revealed && isCorrect ? '✓' : revealed && isWrong ? '✗' : letter}
+        </span>
       </div>
 
       {/* Label */}
@@ -154,7 +156,7 @@ function CircularTimer({ timeLeft }: { timeLeft: number }) {
         fontWeight: 'var(--weight-med)',
         transition: 'color var(--f-brand-motion-duration-instant)',
       }}>
-        {String(timeLeft).padStart(2, '0')}
+        <span className="f-quiz__timer-count">{String(timeLeft).padStart(2, '0')}</span>
       </div>
     </div>
   )
@@ -227,7 +229,7 @@ function QuestionScreen({
             }}
           >
             <svg className="f-quiz__close-icon" width={16} height={16} viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 3l10 10M13 3L3 13" stroke="var(--c-lt-text-1)" strokeWidth="2" strokeLinecap="round"/>
+              <path className="f-quiz__close-icon-path" d="M3 3l10 10M13 3L3 13" stroke="var(--c-lt-text-1)" strokeWidth="2" strokeLinecap="round"/>
             </svg>
           </button>
 
@@ -334,11 +336,13 @@ function QuestionScreen({
               marginBottom: 'var(--sp-3)',
               margin: '0 0 var(--sp-3)',
             }}>
-              {chosenId === question.correctId
-                ? '✓ Correct!'
-                : chosenId
-                ? '✗ Not quite'
-                : "⏱ Time's up!"}
+              <span className="f-quiz__feedback-text">
+                {chosenId === question.correctId
+                  ? '✓ Correct!'
+                  : chosenId
+                  ? '✗ Not quite'
+                  : "⏱ Time's up!"}
+              </span>
             </p>
           )}
 
@@ -361,7 +365,9 @@ function QuestionScreen({
               transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
             }}
           >
-            {isLast && revealed ? `Finish · ${score + (chosenId === question.correctId ? 1 : 0)}/${total}` : 'Next'}
+            <span className="f-quiz__next-btn-label">
+              {isLast && revealed ? `Finish · ${score + (chosenId === question.correctId ? 1 : 0)}/${total}` : 'Next'}
+            </span>
           </button>
         </div>
       </div>

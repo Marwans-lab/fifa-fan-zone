@@ -74,15 +74,16 @@ export default function Results() {
         <div data-page="results" className="f-page-enter results-page" style={{ padding: 'var(--f-brand-space-2xl) var(--f-brand-space-lg)', textAlign: 'center', maxWidth: 360, width: '100%' }}>
           <div className="results-trophy" style={{ marginBottom: 'var(--f-brand-space-md)' }}><img className="results-icon" src={trophyIcon} width={24} height={24} alt="" /></div>
           <h2 className="results-score-label" data-section="score-label" style={{ font: 'var(--f-brand-type-title-3)', marginBottom: 'var(--f-brand-space-xs)', letterSpacing: 'var(--tracking-tight)' }}>
-            Your score
+            <span className="results-score-label-text">Your score</span>
           </h2>
           <p className="results-score-value" data-section="score-ring" style={{ font: 'var(--f-brand-type-title-1)', color: 'var(--f-brand-color-accent)', marginBottom: 'var(--f-brand-space-xl)', letterSpacing: 'var(--tracking-tight)', fontWeight: 'var(--weight-med)' }}>
-            {appState.points} <span className="results-score-unit" style={{ font: 'var(--f-brand-type-caption)', color: 'var(--f-brand-color-text-subtle)' }}>pts</span>
+            <span className="results-score-number">{appState.points}</span>{' '}
+            <span className="results-score-unit" style={{ font: 'var(--f-brand-type-caption)', color: 'var(--f-brand-color-text-subtle)' }}>pts</span>
           </p>
-          <Button fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
+          <Button className="results-play-quiz-btn" fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
             Play a quiz
           </Button>
-          <Button variant="ghost" fullWidth style={{ marginTop: 'var(--f-brand-space-sm)' }} onClick={() => navigate(homeRoute)}>
+          <Button className="results-return-home-btn" variant="ghost" fullWidth style={{ marginTop: 'var(--f-brand-space-sm)' }} onClick={() => navigate(homeRoute)}>
             Return home
           </Button>
         </div>
@@ -105,7 +106,7 @@ export default function Results() {
           color,
           marginBottom: 'var(--f-brand-space-xs)',
         }}>
-          {label}
+          <span className="results-status-text">{label}</span>
         </div>
 
         {/* Quiz title */}
@@ -117,7 +118,7 @@ export default function Results() {
           textTransform: 'uppercase',
           fontSize: 'var(--text-sm)',
         }}>
-          {quizTitle}
+          <span className="results-quiz-title-text">{quizTitle}</span>
         </div>
 
         {/* Score ring — animated SVG progress, count-up points inside */}
@@ -157,23 +158,23 @@ export default function Results() {
             justifyContent: 'center',
           }}>
             <span className="results-ring-points" style={{ font: 'var(--f-brand-type-title-1)', letterSpacing: 'var(--tracking-tight)', color, lineHeight: 'var(--leading-none)' }}>
-              {displayPoints}
+              <span className="results-ring-points-text">{displayPoints}</span>
             </span>
             <span className="results-ring-label" style={{ font: 'var(--f-brand-type-caption)', color: 'var(--f-brand-color-text-subtle)', letterSpacing: 'var(--tracking-wider)', textTransform: 'uppercase', marginTop: 'var(--sp-1)', fontSize: 'var(--text-xs)' }}>
-              Points
+              <span className="results-ring-label-text">Points</span>
             </span>
           </div>
         </div>
 
         {/* Actions */}
         <div className="results-actions" data-section="actions" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-sm)', width: '100%' }}>
-          <Button data-ui="view-leaderboard-btn" fullWidth onClick={() => { track('results_leaderboard_tapped'); navigate('/leaderboard') }}>
+          <Button className="results-leaderboard-btn" data-ui="view-leaderboard-btn" fullWidth onClick={() => { track('results_leaderboard_tapped'); navigate('/leaderboard') }}>
             View leaderboard
           </Button>
-          <Button data-ui="return-home-btn" variant="secondary" fullWidth onClick={() => { track('results_home_tapped'); navigate(homeRoute) }}>
+          <Button className="results-home-btn" data-ui="return-home-btn" variant="secondary" fullWidth onClick={() => { track('results_home_tapped'); navigate(homeRoute) }}>
             Return home
           </Button>
-          <Button data-ui="play-again-btn" variant="ghost" fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
+          <Button className="results-play-again-btn" data-ui="play-again-btn" variant="ghost" fullWidth onClick={() => { track('results_play_again'); navigate('/quiz') }}>
             Play another quiz
           </Button>
         </div>

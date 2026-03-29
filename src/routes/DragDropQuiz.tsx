@@ -77,7 +77,7 @@ function Chip({ answer, isDragging, isPlaced, isCorrect, style }: ChipProps) {
 
   return (
     <div className="drag-drop-chip" style={{ ...baseStyle, ...style }}>
-      {answer}
+      <span className="drag-drop-chip-text">{answer}</span>
     </div>
   )
 }
@@ -176,7 +176,7 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
             <path className="drag-drop-zone-arrow-path" d="M3 8h10M10 5l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           <div className="drag-drop-zone-slot" style={slotStyle}>
-            {placedAnswer || '???'}
+            <span className="drag-drop-zone-slot-text">{placedAnswer || '???'}</span>
           </div>
         </div>
       </div>
@@ -198,7 +198,7 @@ function DropZone({ prompt, placedAnswer, isCorrect, isHovered, shaking, index }
             animation: 'popIn var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-entry)',
           }}
         >
-          {isCorrect ? '✓' : '✗'}
+          <span className="drag-drop-zone-result-icon-text">{isCorrect ? '✓' : '✗'}</span>
         </div>
       )}
     </div>
@@ -482,7 +482,7 @@ function QuestionView({
         }}
       >
         <span className="drag-drop-question-emoji" style={{ fontSize: 'var(--text-4xl)', marginBottom: 'var(--f-brand-space-xs)' }}>{quiz.emoji}</span>
-        <div className="drag-drop-question-title"
+        <p className="drag-drop-question-title"
           style={{
             font: 'var(--f-brand-type-title-5)',
             fontSize: 'var(--text-lg)',
@@ -493,7 +493,7 @@ function QuestionView({
           }}
         >
           {question.title}
-        </div>
+        </p>
         {/* Depth overlay */}
         <div className="drag-drop-question-overlay" style={{
           position: 'absolute', inset: 0,
@@ -550,7 +550,7 @@ function QuestionView({
             textAlign: 'center',
           }}
         >
-          {allCorrect ? '' : 'Drag answers to match'}
+          <span className="drag-drop-chips-label-text">{allCorrect ? '' : 'Drag answers to match'}</span>
         </div>
         <div className="drag-drop-chips-grid"
           style={{
@@ -625,7 +625,7 @@ function QuestionView({
               animation: 'popIn var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-entry)',
             }}
           >
-            ✓ Perfect match!
+            <span className="drag-drop-success-message-text">✓ Perfect match!</span>
           </div>
         )}
         <button className="f-button"
@@ -646,9 +646,11 @@ function QuestionView({
             animation: allCorrect ? 'successBounce var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-entry)' : 'none',
           }}
         >
-          {qIndex === total - 1 && allCorrect
-            ? `Finish · ${score + question.pairs.length}/${total * question.pairs.length}`
-            : 'Next'}
+          <span className="drag-drop-next-btn-label">
+            {qIndex === total - 1 && allCorrect
+              ? `Finish · ${score + question.pairs.length}/${total * question.pairs.length}`
+              : 'Next'}
+          </span>
         </button>
       </div>
     </div>
@@ -763,7 +765,7 @@ export default function DragDropQuizRoute() {
               />
             </div>
             <span className="drag-drop-progress-counter" style={{ fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
-              {qIdx + 1}/{total}
+              <span className="drag-drop-progress-counter-text">{qIdx + 1}/{total}</span>
             </span>
           </div>
         </div>
