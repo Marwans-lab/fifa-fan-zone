@@ -1,4 +1,4 @@
-import { useState, useCallback, forwardRef, useImperativeHandle } from 'react'
+import { useState, useCallback, forwardRef, useImperativeHandle, useRef } from 'react'
 import Button from './Button'
 import { track } from '../lib/analytics'
 import { getTeamCardBackground } from '../lib/teamCardBackground'
@@ -16,6 +16,7 @@ import './FanCard.css'
 export interface FanCardHandle {
   startEditing: () => void
   flipToBack: () => void
+  getFrontFaceElement: () => HTMLDivElement | null
 }
 
 // ─── Profile questions ────────────────────────────────────────────────────────
@@ -130,6 +131,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
     () => ({ ...fanCard.answers } as Partial<Record<QuestionId, string>>)
   )
   const [isSaved, setIsSaved] = useState(false)
+  const frontFaceRef = useRef<HTMLDivElement>(null)
 
   const isComplete  = fanCard.completedAt !== null || isSaved
   const currentQ    = PROFILE_QUESTIONS[step]
@@ -148,6 +150,9 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
     flipToBack() {
       setIsFlipped(true)
       track('card_flipped_to_back')
+    },
+    getFrontFaceElement() {
+      return frontFaceRef.current
     },
   }))
 
@@ -241,6 +246,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
         {/* ── FRONT ─────────────────────────────────────────────── */}
         <div className="f-fan-card__front"
           data-section="front-face"
+          ref={frontFaceRef}
           style={getFrontInlineStyle(fanCard.teamId, isFlipped)}
         >
           <CardTexture />

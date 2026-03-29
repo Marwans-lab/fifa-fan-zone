@@ -9,13 +9,89 @@ const FIELD_META: Record<string, { category: string }> = {
   perks:     { category: 'PERKS'     },
 }
 
-function loadImage(src: string): Promise<HTMLImageElement> {
+function loadImage(src: string, errorMessage = 'Failed to load image'): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image()
     img.onload = () => resolve(img)
-    img.onerror = () => reject(new Error('Failed to load fan photo'))
+    img.onerror = () => reject(new Error(errorMessage))
     img.src = src
   })
+}
+
+function inlineComputedStyles(source: HTMLElement, target: HTMLElement): void {
+  const sourceNodes = [source, ...Array.from(source.querySelectorAll<HTMLElement>('*'))]
+  const targetNodes = [target, ...Array.from(target.querySelectorAll<HTMLElement>('*'))]
+
+  sourceNodes.forEach((sourceNode, index) => {
+    const targetNode = targetNodes[index]
+    if (!targetNode) return
+
+    const computed = window.getComputedStyle(sourceNode)
+    let cssText = ''
+    for (let i = 0; i < computed.length; i += 1) {
+      const prop = computed.item(i)
+      cssText += `${prop}:${computed.getPropertyValue(prop)};`
+    }
+
+    const existingInline = targetNode.getAttribute('style')
+    targetNode.setAttribute('style', existingInline ? `${existingInline};${cssText}` : cssText)
+
+    if (sourceNode instanceof HTMLImageElement && targetNode instanceof HTMLImageElement) {
+      targetNode.src = sourceNode.currentSrc || sourceNode.src
+    }
+  })
+}
+
+function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(blob => {
+      if (blob) resolve(blob)
+      else reject(new Error('canvas.toBlob failed'))
+    }, 'image/png')
+  })
+}
+
+export async function renderFrontFaceToBlob(frontFace: HTMLElement): Promise<Blob> {
+  const rect = frontFace.getBoundingClientRect()
+  const width = Math.round(rect.width)
+  const height = Math.round(rect.height)
+
+  if (!width || !height) {
+    throw new Error('Front card face is not ready for export')
+  }
+
+  if ('fonts' in document) {
+    await (document as Document & { fonts: FontFaceSet }).fonts.ready
+  }
+
+  const clone = frontFace.cloneNode(true) as HTMLElement
+  inlineComputedStyles(frontFace, clone)
+  clone.querySelector('.f-fan-card__flip-hint')?.remove()
+
+  clone.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml')
+  clone.style.margin = '0'
+  clone.style.width = `${width}px`
+  clone.style.height = `${height}px`
+
+  const serialized = new XMLSerializer().serializeToString(clone)
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><foreignObject x="0" y="0" width="100%" height="100%">${serialized}</foreignObject></svg>`
+  const svgBlob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' })
+  const svgUrl = URL.createObjectURL(svgBlob)
+
+  try {
+    const snapshot = await loadImage(svgUrl, 'Failed to render card front image')
+    const dpr = Math.max(window.devicePixelRatio || 1, 2)
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.round(width * dpr)
+    canvas.height = Math.round(height * dpr)
+    const ctx = canvas.getContext('2d')
+    if (!ctx) throw new Error('Canvas rendering context unavailable')
+    ctx.scale(dpr, dpr)
+    ctx.drawImage(snapshot, 0, 0, width, height)
+    return canvasToBlob(canvas)
+  } finally {
+    URL.revokeObjectURL(svgUrl)
+  }
 }
 
 function rrect(
@@ -54,7 +130,7 @@ export async function renderCardToBlob(fanCard: FanCard): Promise<Blob> {
   let photoHeight = 0
   if (fanCard.photoDataUrl) {
     try {
-      const img = await loadImage(fanCard.photoDataUrl)
+      const img = await loadImage(fanCard.photoDataUrl, 'Failed to load fan photo')
       const naturalAspect = img.naturalWidth > 0 ? img.naturalHeight / img.naturalWidth : 0.8
       const minAspect = (H * 0.55) / W
       const maxAspect = (H * 0.65) / W
@@ -164,12 +240,7 @@ export async function renderCardToBlob(fanCard: FanCard): Promise<Blob> {
     })
   }
 
-  return new Promise((resolve, reject) => {
-    canvas.toBlob(blob => {
-      if (blob) resolve(blob)
-      else reject(new Error('canvas.toBlob failed'))
-    }, 'image/png')
-  })
+  return canvasToBlob(canvas)
 }
 
 export function buildShareText(fanCard: FanCard): string {
