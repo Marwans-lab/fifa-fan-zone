@@ -374,6 +374,36 @@
   mask-size: contain;
 }
 
+.fan-card-edit-icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  background-color: var(--f-brand-color-icon-default);
+  -webkit-mask-image: url('../assets/icons/edit-white.svg');
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  mask-image: url('../assets/icons/edit-white.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
+.fan-card-share-icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  background-color: var(--f-brand-color-icon-default);
+  -webkit-mask-image: url('../assets/icons/share-white.svg');
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  mask-image: url('../assets/icons/share-white.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
 /* ─── Wizard ─────────────────────────────────────────────────────────────────── */
 .f-fan-card__wizard {
   flex: 1;
