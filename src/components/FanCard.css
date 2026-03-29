@@ -191,7 +191,7 @@
   position: relative;
   z-index: 1;
   font: var(--f-fan-card-caption-font);
-  color: var(--f-fan-card-text-light);
+  color: var(--f-brand-color-text-light, #FFFFFF);
   background: color-mix(in srgb, var(--f-brand-color-background-overlay) 50%, transparent);
   border-radius: var(--r-full);
   display: inline-flex;
@@ -205,7 +205,18 @@
 }
 
 .f-fan-card__flip-hint-icon {
-  opacity: 1;
+  display: block;
+  width: 24px;
+  height: 24px;
+  background-color: var(--f-brand-color-icon-light, #FFFFFF);
+  -webkit-mask-image: url('../assets/icons/flip-white.svg');
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  mask-image: url('../assets/icons/flip-white.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
 }
 
 /* ─── Texture overlays ───────────────────────────────────────────────────────── */
