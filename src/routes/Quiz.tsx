@@ -4,6 +4,8 @@ import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import { useStore, FLOW_IDS, type FlowId } from '../store/useStore'
 import { QUIZZES, type Quiz, type QuizQuestion } from '../data/quizzes'
+import tickWhiteIcon from '../assets/icons/Tick-white.svg'
+import closeWhiteIcon from '../assets/icons/Close-white.svg'
 
 const QUESTION_TIME = 15
 const OPTION_LETTERS = ['A', 'B', 'C', 'D']
@@ -97,13 +99,19 @@ function OptionButton({
       }}>
         <span className="f-quiz__option-badge-text">
           {revealed && isCorrect ? (
-            <svg width={24} height={24} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M5 12.5L10 17.5L19 7.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <img
+              src={tickWhiteIcon}
+              alt=""
+              aria-hidden="true"
+              style={{ width: 24, height: 24, display: 'block' }}
+            />
           ) : revealed && isWrong ? (
-            <svg width={24} height={24} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M7 7L17 17M17 7L7 17" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-            </svg>
+            <img
+              src={closeWhiteIcon}
+              alt=""
+              aria-hidden="true"
+              style={{ width: 24, height: 24, display: 'block' }}
+            />
           ) : (
             letter
           )}
