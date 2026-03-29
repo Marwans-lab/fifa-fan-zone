@@ -244,52 +244,6 @@ function JourneyCard({
   )
 }
 
-const RING_RADIUS = 32
-const RING_STROKE = 4
-
-// ─── Circular progress ring ───────────────────────────────────────────────────
-function ProgressRing({
-  radius,
-  stroke,
-  progress,
-  color,
-}: {
-  radius: number
-  stroke: number
-  progress: number // 0–1
-  color: string
-}) {
-  const norm = radius - stroke / 2
-  const circ = 2 * Math.PI * norm
-  const offset = circ * (1 - progress)
-  return (
-    <svg className="card-progress-ring"
-      width={radius * 2}
-      height={radius * 2}
-      style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }}
-    >
-      {/* background track */}
-      <circle
-        className="card-progress-ring-track"
-        cx={radius} cy={radius} r={norm}
-        fill="none" stroke="var(--f-brand-color-border-default)" strokeWidth={stroke}
-      />
-      {/* progress arc */}
-      {progress > 0 && (
-        <circle
-          className="card-progress-ring-arc"
-          cx={radius} cy={radius} r={norm}
-          fill="none" stroke={color} strokeWidth={stroke}
-          strokeDasharray={circ} strokeDashoffset={offset}
-          strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)' }}
-        />
-      )}
-    </svg>
-  )
-}
-
-
 // ─── Generic quiz card (image, swipe, card-match) ───────────────────────────
 function ExtraQuizCard({
   iconSrc,
@@ -338,38 +292,28 @@ function ExtraQuizCard({
       }}
     >
       <div className="card-quiz-card-content" style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-md)' }}>
-        <div className="card-quiz-card-ring-wrapper" style={{
-          width: RING_RADIUS * 2, height: RING_RADIUS * 2,
-          position: 'relative', flexShrink: 0,
+        <div className="card-quiz-card-icon-circle" style={{
+          width: 'var(--sp-14)',
+          height: 'var(--sp-14)',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+          background: locked
+            ? 'rgba(0,0,0,0.04)'
+            : done
+            ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
+            : 'linear-gradient(135deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02))',
+          boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.08)',
         }}>
-          <ProgressRing
-            radius={RING_RADIUS}
-            stroke={RING_STROKE}
-            progress={done ? 1 : 0}
-            color={done ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-border-default)'}
-          />
-          <div className="card-quiz-card-icon-circle" style={{
-            position: 'absolute',
-            top: RING_STROKE + 2, left: RING_STROKE + 2,
-            width: (RING_RADIUS - RING_STROKE - 2) * 2,
-            height: (RING_RADIUS - RING_STROKE - 2) * 2,
-            borderRadius: '50%',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: locked
-              ? 'rgba(0,0,0,0.04)'
-              : done
-              ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
-              : 'linear-gradient(135deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02))',
-            boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.08)',
-          }}>
-            {locked ? (
-              <img className="card-quiz-card-lock-icon" src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4, filter: 'invert(1)' }} />
-            ) : done ? (
-              <img className="card-quiz-card-tick-icon" src={tickBlack} width={24} height={24} alt="" />
-            ) : (
-              <img className="card-quiz-card-quiz-icon" src={iconSrc} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
-            )}
-          </div>
+          {locked ? (
+            <img className="card-quiz-card-lock-icon" src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4, filter: 'invert(1)' }} />
+          ) : done ? (
+            <img className="card-quiz-card-tick-icon" src={tickBlack} width={24} height={24} alt="" />
+          ) : (
+            <img className="card-quiz-card-quiz-icon" src={iconSrc} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
+          )}
         </div>
         <div className="card-quiz-card-text">
           <h3 className="card-quiz-card-title" style={{
