@@ -218,6 +218,43 @@ async function triggerDeployValidation(issueId, identifier, prNumber) {
   }
 }
 
+// --- Poll deploy.yml until complete or timeout ---
+// Returns: { deployed: bool, failed: bool, timedOut: bool, runUrl: string|null }
+async function pollDeployRun(maxAttempts = 20, intervalMs = 10_000) {
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    await new Promise((r) => setTimeout(r, intervalMs));
+    try {
+      const runJson = execSync(
+        `gh run list -R ${GITHUB_REPO} --workflow deploy.yml --limit 1 --json status,conclusion,url 2>/dev/null`,
+        { encoding: "utf-8" }
+      );
+      const runs = JSON.parse(runJson || "[]");
+      const run = runs[0];
+      if (run?.status === "completed") {
+        return {
+          deployed: run.conclusion === "success",
+          failed: run.conclusion !== "success",
+          timedOut: false,
+          runUrl: run.url || null,
+        };
+      }
+    } catch { /* keep waiting */ }
+  }
+  return { deployed: false, failed: false, timedOut: true, runUrl: null };
+}
+
+// --- Reset issue to Todo with a failure comment ---
+async function resetToTodo(issueId, identifier, teamId, reason) {
+  await postComment(issueId, reason);
+  const states = await getStates(teamId);
+  const todoState = findState(states, "Todo");
+  if (todoState) {
+    markOurComment(issueId);
+    await transitionIssue(issueId, todoState.id);
+    console.log(`[Pipeline] ${identifier}: Reset to Todo — ${reason.slice(0, 80)}`);
+  }
+}
+
 // --- Merge helper: un-draft if needed, then merge ---
 function mergePR(prNumber, identifier) {
   // Check if PR is a draft — if so, mark ready first
@@ -322,32 +359,33 @@ async function handleWebhook(payload) {
       mergePR(pr.number, issueIdentifier);
 
       console.log(`[Pipeline] ${issueIdentifier}: Waiting for GitHub Pages deploy...`);
-      let deployed = false;
-      for (let attempt = 0; attempt < 20; attempt++) {
-        await new Promise((r) => setTimeout(r, 10_000));
-        try {
-          const runJson = execSync(
-            `gh run list -R ${GITHUB_REPO} --workflow deploy.yml --limit 1 --json status,conclusion 2>/dev/null`,
-            { encoding: "utf-8" }
-          );
-          const runs = JSON.parse(runJson || "[]");
-          if (runs[0]?.status === "completed") {
-            if (runs[0].conclusion === "success") deployed = true;
-            break;
-          }
-        } catch { /* keep waiting */ }
-      }
+      const { deployed, failed, timedOut, runUrl } = await pollDeployRun();
 
       if (deployed) {
         console.log(`[Pipeline] ${issueIdentifier}: GitHub Pages deployed — requesting Cursor validation`);
         await triggerDeployValidation(issueId, issueIdentifier, pr.number);
-      } else {
-        console.log(`[Pipeline] ${issueIdentifier}: Deploy not confirmed`);
-        await postComment(issueId, `**[DEPLOY WARNING]** PR #${pr.number} merged but GitHub Pages deploy not confirmed within timeout. Please verify manually at ${GITHUB_PAGES_URL}`);
+      } else if (failed) {
+        console.log(`[Pipeline] ${issueIdentifier}: Deploy workflow FAILED — resetting to Todo`);
+        await resetToTodo(
+          issueId, issueIdentifier, teamId,
+          `**[DEPLOY FAILED]** PR #${pr.number} was merged but the GitHub Pages deployment failed.\n\n` +
+          (runUrl ? `[View failed run](${runUrl})\n\n` : '') +
+          `Resetting to **Todo** — please fix the build error and re-open a PR.`
+        );
+      } else if (timedOut) {
+        console.log(`[Pipeline] ${issueIdentifier}: Deploy timed out — stall detector will retry`);
+        await postComment(
+          issueId,
+          `**[DEPLOY TIMEOUT]** PR #${pr.number} merged but deployment is taking longer than expected.\n\n` +
+          `The pipeline will retry automatically. If this persists, check [GitHub Actions](https://github.com/${GITHUB_REPO}/actions/workflows/deploy.yml).`
+        );
       }
     } catch (e) {
       console.error(`[Pipeline] ${issueIdentifier}: Deploy error: ${e.message}`);
-      await postComment(issueId, `**[DEPLOY FAILED]** Error: ${e.message}`);
+      await resetToTodo(
+        issueId, issueIdentifier, teamId,
+        `**[DEPLOY ERROR]** Unexpected error during deployment: \`${e.message}\`\n\nResetting to **Todo** for retry.`
+      );
     }
     return;
   }
@@ -445,26 +483,23 @@ async function checkForStalledIssues() {
               mergePR(pr.number, issue.identifier);
               console.log(`[Pipeline] ${issue.identifier}: PR #${pr.number} merged by stall detector`);
 
-              let deployed = false;
-              for (let attempt = 0; attempt < 20; attempt++) {
-                await new Promise((r) => setTimeout(r, 10_000));
-                try {
-                  const runJson = execSync(
-                    `gh run list -R ${GITHUB_REPO} --workflow deploy.yml --limit 1 --json status,conclusion 2>/dev/null`,
-                    { encoding: "utf-8" }
-                  );
-                  const runs = JSON.parse(runJson || "[]");
-                  if (runs[0]?.status === "completed") {
-                    if (runs[0].conclusion === "success") deployed = true;
-                    break;
-                  }
-                } catch { /* keep waiting */ }
-              }
+              const { deployed, failed, timedOut, runUrl } = await pollDeployRun();
 
               if (deployed) {
                 await triggerDeployValidation(issue.id, issue.identifier, pr.number);
-              } else {
-                await postComment(issue.id, `**[PIPELINE]** PR #${pr.number} merged but deploy not confirmed.`);
+              } else if (failed) {
+                console.log(`[Pipeline] ${issue.identifier}: Deploy FAILED after stall-detector merge — resetting to Todo`);
+                await resetToTodo(
+                  issue.id, issue.identifier, issue.team.id,
+                  `**[DEPLOY FAILED]** PR #${pr.number} was merged but the GitHub Pages deployment failed.\n\n` +
+                  (runUrl ? `[View failed run](${runUrl})\n\n` : '') +
+                  `Resetting to **Todo** — please fix the build error and re-open a PR.`
+                );
+              } else if (timedOut) {
+                await postComment(issue.id,
+                  `**[DEPLOY TIMEOUT]** PR #${pr.number} merged but deployment is taking longer than expected.\n\n` +
+                  `The pipeline will retry automatically. If this persists, check [GitHub Actions](https://github.com/${GITHUB_REPO}/actions/workflows/deploy.yml).`
+                );
               }
             } catch (mergeErr) {
               console.error(`[Pipeline] ${issue.identifier}: Merge failed: ${mergeErr.message}`);
@@ -483,8 +518,42 @@ async function checkForStalledIssues() {
             );
 
             if (mergedPr) {
-              console.log(`[Pipeline] STALL: ${issue.identifier} (Deploying) merged PR #${mergedPr.number} — requesting validation`);
-              await triggerDeployValidation(issue.id, issue.identifier, mergedPr.number);
+              console.log(`[Pipeline] STALL: ${issue.identifier} (Deploying) merged PR #${mergedPr.number} — checking deploy status`);
+              try {
+                const runJson = execSync(
+                  `gh run list -R ${GITHUB_REPO} --workflow deploy.yml --limit 1 --json status,conclusion,url 2>/dev/null`,
+                  { encoding: "utf-8" }
+                );
+                const runs = JSON.parse(runJson || "[]");
+                const run = runs[0];
+
+                if (!run || run.status === "in_progress" || run.status === "queued") {
+                  // Deploy still running — wait, don't retrigger
+                  console.log(`[Pipeline] ${issue.identifier}: Deploy still in progress — waiting`);
+                } else if (run.status === "completed" && run.conclusion === "success") {
+                  // Deploy succeeded — request Cursor validation
+                  await triggerDeployValidation(issue.id, issue.identifier, mergedPr.number);
+                } else if (run.status === "completed" && run.conclusion !== "success") {
+                  // Deploy failed — re-trigger and notify
+                  console.log(`[Pipeline] ${issue.identifier}: Last deploy failed (${run.conclusion}) — re-triggering`);
+                  try {
+                    execSync(`gh workflow run deploy.yml -R ${GITHUB_REPO} 2>&1`, { encoding: "utf-8" });
+                  } catch { /* ignore, push event will also trigger */ }
+                  await postComment(
+                    issue.id,
+                    `**[DEPLOY RETRY]** Previous deployment failed (${run.conclusion}). Re-triggering deploy workflow.\n\n` +
+                    (run.url ? `[View failed run](${run.url})\n\n` : '') +
+                    `Will validate once the new deploy completes.`
+                  );
+                } else {
+                  // No run or unknown — trigger deploy
+                  execSync(`gh workflow run deploy.yml -R ${GITHUB_REPO} 2>&1`, { encoding: "utf-8" });
+                  await postComment(issue.id, `**[PIPELINE]** No recent deploy found — re-triggering deploy workflow.`);
+                }
+              } catch (e) {
+                // Can't check — fall back to requesting validation
+                await triggerDeployValidation(issue.id, issue.identifier, mergedPr.number);
+              }
             } else {
               // No PR at all — reset to Todo so Cursor picks it up again
               console.log(`[Pipeline] STALL: ${issue.identifier} (Deploying) has no PR — resetting to Todo`);
