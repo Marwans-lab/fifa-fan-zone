@@ -3,8 +3,6 @@ import Button from './Button'
 import { track } from '../lib/analytics'
 import { getTeamCardBackground } from '../lib/teamCardBackground'
 import type { FanCard as FanCardData } from '../store/useStore'
-import editIcon      from '../assets/icons/edit-white.svg'
-import shareIcon     from '../assets/icons/share-white.svg'
 import flipIconWhite from '../assets/icons/flip-white.svg'
 import flipIconDark  from '../assets/icons/flip-dark.svg'
 import stadiumIcon   from '../assets/icons/stadium-white.svg'
@@ -367,8 +365,8 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
               data-section="action-circles"
               onClick={e => e.stopPropagation()}
             >
-              <ActionCircle icon={<img src={editIcon}  width={24} height={24} alt="" className="fan-card-edit-icon" />} label="Edit"  onClick={handleEditTap} dataUi="edit-btn" />
-              <ActionCircle icon={<img src={shareIcon} width={24} height={24} alt="" className="fan-card-share-icon" />} label="Share" onClick={handleShareTap} dataUi="share-btn" />
+              <ActionCircle icon={<span className="fan-card-edit-icon" aria-hidden="true" />} label="Edit"  onClick={handleEditTap} dataUi="edit-btn" />
+              <ActionCircle icon={<span className="fan-card-share-icon" aria-hidden="true" />} label="Share" onClick={handleShareTap} dataUi="share-btn" />
               <ActionCircle icon={<span className="fan-card-save-to-device-icon" aria-hidden="true" />} label="Save"  onClick={handleSaveTap} dataUi="save-btn" />
             </div>
           )}
