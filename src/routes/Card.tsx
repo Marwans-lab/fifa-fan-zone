@@ -19,6 +19,7 @@ import refereeWhite from '../assets/icons/referee-white.svg'
 import refereeDark from '../assets/icons/referee-dark.svg'
 import rankingWhite from '../assets/icons/ranking-white.svg'
 import rankingDark from '../assets/icons/ranking-dark.svg'
+import '../styles/fds-card-hub.css'
 
 
 // ─── Quiz icon mapping ────────────────────────────────────────────────────────
@@ -173,18 +174,9 @@ function JourneyCard({
             {status}
           </p>
         </div>
-        <div className="card-journey-badge" style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: 'var(--sp-3) var(--sp-4)',
-          background: allComplete ? 'rgba(0,212,170,0.1)' : 'rgba(0,0,0,0.04)',
-          borderRadius: 9999,
-          border: `1px solid ${allComplete ? 'rgba(0,212,170,0.25)' : 'var(--f-brand-color-border-default)'}`,
-        }}>
-          <span className="card-journey-badge-text" style={{
-            font: 'var(--f-brand-type-caption)',
-            color: allComplete ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-text-default)', lineHeight: 'var(--leading-none)',
-          }}>
-            {allComplete ? '✓ Complete' : `Step ${Math.min(doneCount + 1, 4)}/4`}
+        <div className="card-journey-badge f-journey-card__step-badge">
+          <span className="card-journey-badge-text">
+            {`Step ${Math.min(doneCount + 1, 4)}/4`}
           </span>
         </div>
       </div>
