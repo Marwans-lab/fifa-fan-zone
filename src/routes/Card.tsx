@@ -488,8 +488,8 @@ export default function Card() {
       id: 'the-connector',
       iconSrc: QUIZ_ICONS['the-connector'].white,
       title: 'The Connector',
-      subtitle: '5 questions · Drag & drop',
-      start: () => { track('quiz_card_tapped', { quizId: 'the-connector', type: 'drag_drop' }); navigate('/drag-drop-quiz', { state: { quizId: 'the-connector' } }) },
+      subtitle: '5 questions · Quiz',
+      start: () => { track('quiz_card_tapped', { quizId: 'the-connector', type: 'quiz' }); navigate('/quiz', { state: { quizId: 'the-connector' } }) },
     },
     {
       id: 'the-architect',

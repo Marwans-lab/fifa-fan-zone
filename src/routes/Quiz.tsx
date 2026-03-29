@@ -4,37 +4,9 @@ import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
 import { useStore, FLOW_IDS, type FlowId } from '../store/useStore'
 import { QUIZZES, type Quiz, type QuizQuestion } from '../data/quizzes'
-import chevLeft from '../assets/icons/Chevron-left-white.svg'
 
-const QUESTION_TIME = 15 // seconds
+const QUESTION_TIME = 15
 const OPTION_LETTERS = ['A', 'B', 'C', 'D']
-
-// ─── Mock answer-percentage distribution ──────────────────────────────────────
-// Generates stable mock percentages per question (seeded by question id).
-// Correct answer always gets the plurality; total sums to 100.
-function getMockPercentages(
-  question: QuizQuestion,
-  revealedChoiceId: string | null,
-): Record<string, number> {
-  // Simple deterministic seed from question id character codes
-  const seed = question.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
-  const n = question.options.length
-  const weights = question.options.map((opt, i) => {
-    const base = ((seed * (i + 7) * 31) % 40) + 5 // 5..44
-    return opt.id === question.correctId ? base + 30 : base
-  })
-  const total = weights.reduce((a, b) => a + b, 0)
-  let remaining = 100
-  const pcts: Record<string, number> = {}
-  question.options.forEach((opt, i) => {
-    const pct = i === n - 1
-      ? remaining
-      : Math.round((weights[i] / total) * 100)
-    pcts[opt.id] = pct
-    remaining -= pct
-  })
-  return pcts
-}
 
 // ─── Option button ─────────────────────────────────────────────────────────────
 function OptionButton({
@@ -44,7 +16,6 @@ function OptionButton({
   chosenId,
   correctId,
   revealed,
-  percentage,
   onSelect,
 }: {
   letter: string
@@ -53,159 +24,136 @@ function OptionButton({
   chosenId: string | null
   correctId: string
   revealed: boolean
-  percentage: number
   onSelect: () => void
 }) {
   const isChosen  = chosenId === optId
   const isCorrect = optId === correctId
   const isWrong   = isChosen && !isCorrect
 
-  // colours
-  let borderColor = 'var(--f-brand-color-border-default)'
-  let badgeBg     = 'var(--f-brand-color-background-light)'
-  let textColor   = 'var(--f-brand-color-text-default)'
-  let badgeColor  = 'var(--f-brand-color-text-muted)'
+  let rowBg      = 'var(--c-lt-surface)'
+  let rowBorder  = 'transparent'
+  let badgeBg    = 'var(--c-lt-bg)'
+  let badgeColor = 'var(--c-lt-text-1)'
+  let textColor  = 'var(--c-lt-text-1)'
 
   if (!revealed && isChosen) {
-    borderColor = 'var(--f-brand-color-accent)'
-    badgeBg     = 'var(--f-brand-color-accent)'
-    badgeColor  = 'var(--f-brand-color-text-default)'
+    rowBorder  = 'var(--c-lt-brand)'
+    badgeBg    = 'var(--c-lt-brand)'
+    badgeColor = '#fff'
   } else if (revealed && isCorrect) {
-    borderColor = 'var(--f-brand-color-border-success)'
-    badgeBg     = 'var(--f-brand-color-border-success)'
-    badgeColor  = 'var(--f-brand-color-text-light)'
-    textColor   = 'var(--f-brand-color-border-success)'
+    rowBg      = 'var(--c-correct-bg)'
+    rowBorder  = 'var(--c-correct-border)'
+    badgeBg    = 'var(--c-correct)'
+    badgeColor = '#fff'
+    textColor  = 'var(--c-lt-correct-dark)'
   } else if (revealed && isWrong) {
-    borderColor = 'var(--f-brand-color-status-error)'
-    badgeBg     = 'var(--f-brand-color-status-error)'
-    badgeColor  = 'var(--f-brand-color-text-light)'
-    textColor   = 'var(--f-brand-color-status-error)'
+    rowBg      = 'var(--c-error-bg)'
+    rowBorder  = 'var(--c-error-border)'
+    badgeBg    = 'var(--c-error)'
+    badgeColor = '#fff'
+    textColor  = 'var(--c-error)'
   } else if (revealed) {
-    borderColor = 'var(--f-brand-color-border-default)'
-    textColor   = 'var(--f-brand-color-text-muted)'
-    badgeColor  = 'var(--f-brand-color-text-muted)'
+    badgeColor = 'var(--c-lt-text-2)'
+    textColor  = 'var(--c-lt-text-2)'
   }
 
   return (
-    <button className="quiz-option-btn"
+    <button
+      className="quiz-option-btn"
       data-ui="answer-option-btn"
       onClick={revealed ? undefined : onSelect}
       disabled={revealed}
       style={{
-        position: 'relative',
         display: 'flex',
         alignItems: 'center',
-        gap: 'var(--sp-3)',
+        gap: 'var(--sp-4)',
         width: '100%',
-        padding: '0 var(--sp-5) 0 var(--sp-4)',
-        height: 'var(--sp-14)',
-        borderRadius: 'var(--f-brand-radius-rounded)',
-        border: `1.5px solid ${borderColor}`,
-        background: revealed && isCorrect
-          ? 'rgba(52,219,128,0.08)'
-          : revealed && isWrong
-          ? 'rgba(217,87,87,0.08)'
-          : 'var(--f-brand-color-background-light)',
+        height: 56,
+        paddingLeft: 'var(--sp-2)',
+        paddingRight: 'var(--sp-6)',
+        borderRadius: 52,
+        border: `1.5px solid ${rowBorder}`,
+        background: rowBg,
+        boxShadow: '0px 2px 4px 0px var(--f-brand-color-shadow-default)',
         cursor: revealed ? 'default' : 'pointer',
-        fontFamily: 'inherit',
         textAlign: 'left',
-        overflow: 'hidden',
-        transition: 'border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
+        transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
       }}
     >
-      {/* Percentage fill bar — always rendered so CSS transition fires left→right */}
-      <div className="quiz-option-fill-bar"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: revealed ? `${percentage}%` : '0%',
-          background: isCorrect
-            ? 'rgba(52,219,128,0.12)'
-            : isWrong
-            ? 'rgba(217,87,87,0.10)'
-            : 'rgba(255,255,255,0.04)',
-          borderRadius: 'var(--f-brand-radius-rounded)',
-          transition: revealed ? 'width var(--f-brand-motion-duration-gentle) var(--f-brand-motion-easing-default)' : 'none',
-          pointerEvents: 'none',
-        }}
-      />
-
       {/* Letter badge */}
-      <div className="quiz-option-letter-badge"
-        style={{
-          width: 28,
-          height: 28,
-          borderRadius: '50%',
-          background: badgeBg,
-          color: badgeColor,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          font: 'var(--f-brand-type-caption-medium)',
-          flexShrink: 0,
-          transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
-          zIndex: 1,
-        }}
-      >
+      <div style={{
+        width: 40,
+        height: 40,
+        borderRadius: '50%',
+        background: badgeBg,
+        border: '1px solid var(--c-lt-surface)',
+        color: badgeColor,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        font: 'var(--f-brand-type-body)',
+        fontSize: 'var(--text-md)',
+        flexShrink: 0,
+        transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
+      }}>
         {revealed && isCorrect ? '✓' : revealed && isWrong ? '✗' : letter}
       </div>
 
-      {/* Option label */}
-      <span className="quiz-option-label"
-        style={{
-          flex: 1,
-          font: 'var(--f-brand-type-body)',
-          fontSize: 'var(--text-md)',
-          color: textColor,
-          fontWeight: isChosen ? 'var(--weight-bold)' : 'var(--weight-reg)',
-          transition: 'color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
-          zIndex: 1,
-        }}
-      >
+      {/* Label */}
+      <span style={{
+        flex: 1,
+        font: 'var(--f-brand-type-body)',
+        fontSize: 'var(--text-md)',
+        color: textColor,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        transition: 'color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
+      }}>
         {label}
       </span>
-
-      {/* Percentage (after reveal) */}
-      {revealed && (
-        <span className="quiz-option-percentage"
-          style={{
-            font: 'var(--f-brand-type-caption-medium)',
-            color: isCorrect ? 'var(--f-brand-color-border-success)' : isWrong ? 'var(--f-brand-color-status-error)' : 'var(--f-brand-color-text-muted)',
-            flexShrink: 0,
-            zIndex: 1,
-          }}
-        >
-          {percentage}%
-        </span>
-      )}
     </button>
   )
 }
 
-// ─── Circular countdown timer ─────────────────────────────────────────────────
-function CircularTimer({ timeLeft, size = 44 }: { timeLeft: number; size?: number }) {
-  const R = (size - 8) / 2
-  const circumference = 2 * Math.PI * R
-  const offset = circumference * (1 - timeLeft / QUESTION_TIME)
+// ─── Circular timer ────────────────────────────────────────────────────────────
+function CircularTimer({ timeLeft }: { timeLeft: number }) {
+  const size = 64
+  const strokeW = 4
+  const R = (size - strokeW) / 2
+  const circ = 2 * Math.PI * R
+  const offset = circ * (1 - timeLeft / QUESTION_TIME)
   const cx = size / 2
+  const urgent = timeLeft <= 5
+
   return (
-    <div className="quiz-timer-wrapper" style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
-      <svg className="quiz-timer-svg" width={size} height={size} style={{ transform: 'rotate(-90deg)' }} aria-hidden="true">
-        <circle className="quiz-timer-track" cx={cx} cy={cx} r={R} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={3} />
+    <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
+      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }} aria-hidden="true">
+        <circle cx={cx} cy={cx} r={R} fill="none" stroke="var(--c-lt-border)" strokeWidth={strokeW} />
         <circle
-          className="quiz-timer-progress"
           cx={cx} cy={cx} r={R}
           fill="none"
-          stroke="currentColor"
-          strokeWidth={3}
-          strokeDasharray={circumference}
+          stroke={urgent ? 'var(--c-error)' : 'var(--c-lt-brand)'}
+          strokeWidth={strokeW}
+          strokeDasharray={circ}
           strokeDashoffset={offset}
           strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 1s linear', color: 'var(--f-brand-color-text-light)' }}
+          style={{ transition: 'stroke-dashoffset 1s linear, stroke var(--f-brand-motion-duration-instant)' }}
         />
       </svg>
-      <div className="quiz-timer-value" style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', font: 'var(--f-brand-type-subheading-medium)', color: 'var(--f-brand-color-text-light)' }}>
-        {timeLeft}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        font: 'var(--f-brand-type-headline)',
+        fontSize: 'var(--text-lg)',
+        color: urgent ? 'var(--c-error)' : 'var(--c-lt-text-1)',
+        fontWeight: 'var(--weight-med)',
+        transition: 'color var(--f-brand-motion-duration-instant)',
+      }}>
+        {String(timeLeft).padStart(2, '0')}
       </div>
     </div>
   )
@@ -233,11 +181,11 @@ function QuestionScreen({
   onSelect, onNext, onBack,
 }: QuestionScreenProps) {
   const isLast = qIndex === total - 1
-  const percentages = revealed ? getMockPercentages(question, chosenId) : {}
+  const progressPct = ((qIndex + (revealed ? 1 : 0)) / total) * 100
 
   return (
     <Screen>
-      <div className="f-page-enter"
+      <div
         data-page="quiz"
         style={{
           display: 'flex',
@@ -246,93 +194,107 @@ function QuestionScreen({
           maxWidth: 420,
           margin: '0 auto',
           width: '100%',
+          background: 'var(--c-lt-bg)',
         }}
       >
-        {/* ── Top bar (NOT animated — stays fixed) ─────────────── */}
-        <div className="quiz-header" data-section="header" style={{ padding: 'var(--f-brand-space-md)', flexShrink: 0 }}>
-          <div className="quiz-header-row" style={{ display: 'flex', alignItems: 'center', gap: 'var(--f-brand-space-sm)' }}>
-            <button data-ui="back-btn" onClick={onBack} className="f-button f-button--ghost quiz-back-btn"><img className="quiz-back-icon" src={chevLeft} width={24} height={24} alt="Back" /></button>
-            <div className="quiz-progress-bar" data-section="progress-bar" style={{ flex: 1, height: 4, background: 'var(--f-brand-color-background-light)', borderRadius: 'var(--f-brand-radius-rounded)', overflow: 'hidden' }}>
-              <div className="quiz-progress-bar-fill"
-                style={{
-                  height: '100%',
-                  width: `${((qIndex + (revealed ? 1 : 0)) / total) * 100}%`,
-                  background: 'var(--f-brand-color-accent)',
-                  borderRadius: 'var(--f-brand-radius-rounded)',
-                  transition: 'width var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
-                }}
-              />
-            </div>
-            <span className="quiz-progress-count" style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-xs)', color: 'var(--f-brand-color-text-subtle)', flexShrink: 0 }}>
-              {qIndex + 1}/{total}
-            </span>
-          </div>
-        </div>
-
-        {/* ── Animated content (header + question + options only) ── */}
-        <div className="quiz-slide-content" style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
-          {/* Question image header */}
-          <div className="quiz-question-card"
-            data-section="question-card"
+        {/* ── Header: close + progress bar ─── */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--sp-4)',
+          padding: 'var(--sp-18) var(--sp-4) 0',
+          flexShrink: 0,
+        }}>
+          <button
+            data-ui="back-btn"
+            onClick={onBack}
+            aria-label="Close quiz"
             style={{
-              position: 'relative',
-              margin: '0 var(--f-brand-space-md)',
-              height: 180,
-              borderRadius: 'var(--f-brand-radius-inner)',
-              background: question.accentColor,
+              width: 48,
+              height: 48,
+              borderRadius: '50%',
+              background: 'var(--c-lt-surface)',
+              border: '1px solid var(--c-lt-surface)',
+              boxShadow: '0px 2px 4px 0px var(--f-brand-color-shadow-default)',
+              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 'var(--text-5xl)',
-              marginBottom: 'var(--f-brand-space-md)',
               flexShrink: 0,
-              overflow: 'hidden',
-              boxShadow: `0 8px 32px ${question.accentColor}55, inset 0 1px 0 rgba(255,255,255,0.15)`,
             }}
           >
-            {quiz.emoji}
-            {/* Depth overlay */}
-            <div className="quiz-question-card-overlay" style={{
-              position: 'absolute', inset: 0,
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 50%, rgba(0,0,0,0.18) 100%)',
-              pointerEvents: 'none',
+            <svg width={16} height={16} viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 3l10 10M13 3L3 13" stroke="var(--c-lt-text-1)" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+          </button>
+
+          <div style={{
+            flex: 1,
+            height: 8,
+            background: 'var(--c-lt-surface)',
+            borderRadius: 64,
+            overflow: 'hidden',
+          }}>
+            <div style={{
+              height: '100%',
+              width: `${progressPct}%`,
+              background: 'linear-gradient(90deg, var(--c-correct) 0%, var(--c-lt-correct-dark) 100%)',
+              borderRadius: 64,
+              transition: 'width var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
             }} />
           </div>
+        </div>
 
-          {/* Timer — between image and question */}
-          <div className="quiz-timer-container" data-section="timer" style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--f-brand-space-md)', flexShrink: 0 }}>
-            <CircularTimer timeLeft={timeLeft} size={64} />
+        {/* ── Animated slide content ───────── */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
+
+          {/* Banner image */}
+          <div style={{
+            margin: 'var(--sp-5) var(--sp-4) 0',
+            height: 196,
+            borderRadius: 'var(--f-brand-radius-inner)',
+            overflow: 'hidden',
+            flexShrink: 0,
+            background: question.accentColor,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            {quiz.bannerImage ? (
+              <img
+                src={quiz.bannerImage}
+                alt=""
+                aria-hidden="true"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scaleX(-1)' }}
+              />
+            ) : (
+              <span style={{ fontSize: 'var(--text-5xl)' }}>{quiz.emoji}</span>
+            )}
           </div>
 
           {/* Question text */}
-          <div className="quiz-question-text"
-            data-section="question-text"
-            style={{
-              padding: '0 var(--f-brand-space-lg)',
-              font: 'var(--f-brand-type-title-3)',
-              fontSize: 'var(--text-xl)',
-              color: 'var(--f-brand-color-text-default)',
-              lineHeight: 'var(--leading-tight)',
-              letterSpacing: 'var(--tracking-tight)',
-              textAlign: 'center',
-              marginBottom: 'var(--f-brand-space-lg)',
-              flexShrink: 0,
-            }}
-          >
+          <p style={{
+            padding: 'var(--sp-6) var(--sp-4) 0',
+            fontFamily: 'var(--font-display)',
+            fontWeight: 'var(--weight-light)',
+            fontSize: 'var(--text-2xl)',
+            lineHeight: 'var(--leading-snug)',
+            color: 'var(--c-lt-text-1)',
+            textAlign: 'center',
+            flexShrink: 0,
+            margin: 0,
+          }}>
             {question.question}
-          </div>
+          </p>
 
           {/* Options */}
-          <div className="quiz-answer-options"
-            data-section="answer-options"
-            style={{
-              flex: 1,
-              padding: '0 var(--f-brand-space-md)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 'var(--f-brand-space-sm)',
-            }}
-          >
+          <div style={{
+            padding: 'var(--sp-6) var(--sp-4) 0',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--sp-4)',
+            flexShrink: 0,
+          }}>
             {question.options.map((opt, i) => (
               <OptionButton
                 key={opt.id}
@@ -342,79 +304,85 @@ function QuestionScreen({
                 chosenId={chosenId}
                 correctId={question.correctId}
                 revealed={revealed}
-                percentage={percentages[opt.id] ?? 0}
                 onSelect={() => onSelect(opt.id)}
               />
             ))}
           </div>
+
         </div>
 
-        {/* ── Fixed bottom: score feedback + Next CTA (no slide) ── */}
-        <div className="quiz-result-overlay" data-section="result-overlay" style={{ padding: 'var(--f-brand-space-md) var(--f-brand-space-md) var(--f-brand-space-xl)', flexShrink: 0 }}>
-            {revealed && (
-              <div className="quiz-result-feedback"
-                style={{
-                  textAlign: 'center',
-                  font: 'var(--f-brand-type-caption-medium)',
-                  fontSize: 'var(--text-sm)',
-                  color: chosenId === question.correctId ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)',
-                  marginBottom: 'var(--f-brand-space-sm)',
-                  letterSpacing: 'var(--tracking-wide)',
-                }}
-              >
-                {chosenId === question.correctId
-                  ? '✓ Correct! +1 point'
-                  : chosenId
-                  ? '✗ Not quite'
-                  : '⏱ Time\'s up!'}
-              </div>
-            )}
-            <button className="f-button"
-              data-ui="next-question-btn"
-              onClick={onNext}
-              disabled={!revealed}
-              style={{
-                width: '100%',
-                padding: 'var(--sp-4) 0',
-                borderRadius: 'var(--f-brand-radius-rounded)',
-                border: 'none',
-                background: revealed ? 'var(--f-brand-color-text-light)' : 'var(--f-brand-color-background-light)',
-                color: revealed ? 'var(--f-brand-color-primary)' : 'var(--f-brand-color-text-muted)',
-                font: 'var(--f-brand-type-body-medium)',
-                fontSize: 'var(--text-md)',
-                cursor: revealed ? 'pointer' : 'default',
-                transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
-              }}
-            >
-              {isLast && revealed ? `Finish · ${score}/${total}` : 'Next question'}
-            </button>
+        {/* ── Fixed bottom: timer + feedback + Next ── */}
+        <div style={{ padding: '0 var(--sp-4) var(--sp-10)', flexShrink: 0 }}>
+
+          {/* Timer */}
+          <div style={{ display: 'flex', justifyContent: 'center', margin: 'var(--sp-6) 0 var(--sp-4)' }}>
+            <CircularTimer timeLeft={timeLeft} />
           </div>
+
+          {/* Feedback */}
+          {revealed && (
+            <p style={{
+              textAlign: 'center',
+              fontFamily: 'var(--font-body)',
+              fontSize: 'var(--text-sm)',
+              fontWeight: 'var(--weight-med)',
+              color: chosenId === question.correctId ? 'var(--c-lt-correct-dark)' : 'var(--c-error)',
+              marginBottom: 'var(--sp-3)',
+              margin: '0 0 var(--sp-3)',
+            }}>
+              {chosenId === question.correctId
+                ? '✓ Correct!'
+                : chosenId
+                ? '✗ Not quite'
+                : "⏱ Time's up!"}
+            </p>
+          )}
+
+          {/* Next button */}
+          <button
+            data-ui="next-question-btn"
+            onClick={revealed ? onNext : undefined}
+            style={{
+              width: '100%',
+              height: 56,
+              borderRadius: 32,
+              border: 'none',
+              background: revealed ? 'var(--c-lt-brand)' : 'var(--c-lt-border)',
+              color: revealed ? '#fff' : 'var(--c-lt-text-2)',
+              fontFamily: 'var(--font-body)',
+              fontWeight: 'var(--weight-med)',
+              fontSize: 'var(--text-md)',
+              cursor: revealed ? 'pointer' : 'default',
+              transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
+            }}
+          >
+            {isLast && revealed ? `Finish · ${score + (chosenId === question.correctId ? 1 : 0)}/${total}` : 'Next'}
+          </button>
         </div>
+      </div>
     </Screen>
   )
 }
 
 // ─── Main quiz route ───────────────────────────────────────────────────────────
 export default function QuizRoute() {
-  const navigate = useNavigate()
-  const location = useLocation()
+  const navigate   = useNavigate()
+  const location   = useLocation()
   const { addPoints, recordQuizResult, completeFlow } = useStore()
 
   const quizId      = (location.state as { quizId?: string } | null)?.quizId
   const quizIdx     = quizId ? QUIZZES.findIndex(q => q.id === quizId) : 0
   const resolvedIdx = quizIdx >= 0 ? quizIdx : 0
 
-  const [qIdx,      setQIdx]      = useState(0)
-  const [score,     setScore]     = useState(0)
-  const [chosenId,  setChosenId]  = useState<string | null>(null)
-  const [revealed,  setRevealed]  = useState(false)
-  const [timeLeft,  setTimeLeft]  = useState(QUESTION_TIME)
+  const [qIdx,     setQIdx]     = useState(0)
+  const [score,    setScore]    = useState(0)
+  const [chosenId, setChosenId] = useState<string | null>(null)
+  const [revealed, setRevealed] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(QUESTION_TIME)
 
-  // ── MAR-39: slide animation state ──────────────────────────────────────────
   const [slideStyle, setSlideStyle] = useState<React.CSSProperties>({
     transform: 'translateX(0)', opacity: 1,
     transition: 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
-    overflow: 'hidden',
   })
   const isAnimating = useRef(false)
 
@@ -423,47 +391,41 @@ export default function QuizRoute() {
   const total    = quiz?.questions.length ?? 0
   const isLast   = qIdx === total - 1
 
-  // Slide-in on question index change
+  // Slide-in on question change
   useEffect(() => {
-    setSlideStyle({
-      transform: 'translateX(60px)', opacity: 0,
-      transition: 'none',
-      overflow: 'hidden',
-    })
+    setSlideStyle({ transform: 'translateX(60px)', opacity: 0, transition: 'none' })
     const raf = requestAnimationFrame(() => {
       setSlideStyle({
         transform: 'translateX(0)', opacity: 1,
         transition: 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
-        overflow: 'hidden',
       })
     })
     return () => cancelAnimationFrame(raf)
   }, [qIdx])
 
-  // ── Timer ──────────────────────────────────────────────────────────────────
+  // Timer
   useEffect(() => {
     if (revealed) return
     if (timeLeft <= 0) {
       setRevealed(true)
-      track('quiz_question_timeout', { quizId: quiz.id, qIdx })
+      track('quiz_question_timeout', { quizId: quiz?.id, qIdx })
       return
     }
     const t = setTimeout(() => setTimeLeft(n => n - 1), 1000)
     return () => clearTimeout(t)
   }, [revealed, timeLeft, quiz?.id, qIdx])
 
-  // ── Handlers ───────────────────────────────────────────────────────────────
   const handleSelect = useCallback((id: string) => {
     if (revealed) return
     setChosenId(id)
     setRevealed(true)
     const correct = id === question.correctId
     if (correct) setScore(s => s + 1)
-    track('quiz_answer', { quizId: quiz.id, qIdx, correct })
+    track('quiz_answer', { quizId: quiz?.id, qIdx, correct })
   }, [revealed, question?.correctId, quiz?.id, qIdx])
 
   const handleNext = useCallback(() => {
-    if (isAnimating.current) return
+    if (isAnimating.current || !revealed) return
     if (isLast) {
       setScore(finalScore => {
         addPoints(finalScore)
@@ -478,12 +440,10 @@ export default function QuizRoute() {
       return
     }
 
-    // Slide out left, then advance
     isAnimating.current = true
     setSlideStyle({
       transform: 'translateX(-60px)', opacity: 0,
       transition: 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
-      overflow: 'hidden',
     })
     setTimeout(() => {
       setQIdx(i => i + 1)
@@ -491,14 +451,15 @@ export default function QuizRoute() {
       setRevealed(false)
       setTimeLeft(QUESTION_TIME)
       isAnimating.current = false
-      // slide-in triggered by qIdx useEffect above
     }, 250)
-  }, [isLast, quiz, total, addPoints, recordQuizResult, completeFlow, navigate])
+  }, [isLast, revealed, quiz, total, addPoints, recordQuizResult, completeFlow, navigate])
 
   const handleBack = useCallback(() => {
     track('quiz_abandoned', { quizId: quiz?.id, qIdx })
     navigate(-1)
   }, [quiz?.id, qIdx, navigate])
+
+  if (!quiz || !question) return null
 
   return (
     <QuestionScreen
