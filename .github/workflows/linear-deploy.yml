@@ -1,4 +1,4 @@
-name: Linear → Deployed on PR merge
+name: Linear → Request Cursor deployment validation on PR merge
 
 on:
   pull_request:
@@ -9,13 +9,16 @@ jobs:
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.title, 'MAR-')
     runs-on: ubuntu-latest
     steps:
-      - name: Move Linear issue to Deployed
+      - name: Request Cursor to validate GitHub Pages deployment
         env:
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
+          CURSOR_USER_ID: "2117cef0-f13e-4281-8295-cb0b5fa505ea"
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           set -euo pipefail
+
+          PAGES_URL="https://marwans-lab.github.io/fifa-fan-zone/"
 
           # Extract MAR-XX from PR title
           ISSUE_ID=$(echo "$PR_TITLE" | grep -oE 'MAR-[0-9]+' | head -1)
@@ -25,46 +28,74 @@ jobs:
           fi
           echo "Found issue: $ISSUE_ID"
 
-          # Find the Linear issue
+          # Find the Linear issue + team
           ISSUE_DATA=$(curl -s -X POST https://api.linear.app/graphql \
             -H "Authorization: $LINEAR_API_KEY" \
             -H "Content-Type: application/json" \
-            -d "{\"query\": \"{ issue(id: \\\"$ISSUE_ID\\\") { id team { id } } }\"}")
+            -d "{\"query\": \"{ issue(id: \\\"$ISSUE_ID\\\") { id team { id } state { name } } }\"}")
 
           ISSUE_UUID=$(echo "$ISSUE_DATA" | jq -r '.data.issue.id // empty')
           TEAM_UUID=$(echo "$ISSUE_DATA" | jq -r '.data.issue.team.id // empty')
+          CURRENT_STATE=$(echo "$ISSUE_DATA" | jq -r '.data.issue.state.name // empty')
 
           if [ -z "$ISSUE_UUID" ] || [ -z "$TEAM_UUID" ]; then
             echo "Issue $ISSUE_ID not found in Linear."
             exit 0
           fi
-          echo "Issue UUID: $ISSUE_UUID, Team UUID: $TEAM_UUID"
+          echo "Issue UUID: $ISSUE_UUID, Current state: $CURRENT_STATE"
 
-          # Get "Deployed" workflow state ID
-          STATE_ID=$(curl -s -X POST https://api.linear.app/graphql \
+          # Ensure issue is in Deploying state (move it if needed)
+          DEPLOYING_ID=$(curl -s -X POST https://api.linear.app/graphql \
             -H "Authorization: $LINEAR_API_KEY" \
             -H "Content-Type: application/json" \
-            -d "{\"query\": \"{ workflowStates(filter: { team: { id: { eq: \\\"$TEAM_UUID\\\" } }, name: { eq: \\\"Deployed\\\" } }) { nodes { id name } } }\"}" \
+            -d "{\"query\": \"{ workflowStates(filter: { team: { id: { eq: \\\"$TEAM_UUID\\\" } }, name: { eq: \\\"Deploying\\\" } }) { nodes { id } } }\"}" \
             | jq -r '.data.workflowStates.nodes[0].id // empty')
 
-          if [ -z "$STATE_ID" ]; then
-            echo "No 'Deployed' state found for team. Skipping."
-            exit 0
+          if [ -n "$DEPLOYING_ID" ] && [ "$CURRENT_STATE" != "Deploying" ] && [ "$CURRENT_STATE" != "Deployed" ]; then
+            echo "Moving $ISSUE_ID to Deploying..."
+            curl -s -X POST https://api.linear.app/graphql \
+              -H "Authorization: $LINEAR_API_KEY" \
+              -H "Content-Type: application/json" \
+              -d "{\"query\": \"mutation { issueUpdate(id: \\\"$ISSUE_UUID\\\", input: { stateId: \\\"$DEPLOYING_ID\\\" }) { success } }\"}" \
+              | jq .
           fi
-          echo "Deployed state ID: $STATE_ID"
 
-          # Transition issue to "Deployed"
+          # Wait for GitHub Pages deploy workflow to finish (up to 5 min)
+          echo "Waiting for GitHub Pages deployment..."
+          DEPLOYED=false
+          for i in $(seq 1 30); do
+            sleep 10
+            STATUS=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow deploy.yml --limit 1 --json status,conclusion \
+              --jq '.[0] | "\(.status) \(.conclusion)"' 2>/dev/null || echo "unknown")
+            echo "Deploy status (attempt $i): $STATUS"
+            if echo "$STATUS" | grep -q "completed success"; then
+              DEPLOYED=true
+              break
+            fi
+            if echo "$STATUS" | grep -q "completed failure"; then
+              break
+            fi
+          done
+          echo "Deploy confirmed: $DEPLOYED"
+
+          # Post validation comment + re-assign to Cursor
+          if [ "$DEPLOYED" = "true" ]; then
+            COMMENT_BODY="**[PIPELINE — VALIDATE DEPLOYMENT]** PR #$PR_NUMBER has been merged and GitHub Pages has finished deploying.\\n\\nPlease open [$PAGES_URL]($PAGES_URL), verify the changes from this issue are live, then move this issue to **Deployed**."
+          else
+            COMMENT_BODY="**[PIPELINE — VALIDATE DEPLOYMENT]** PR #$PR_NUMBER has been merged. GitHub Pages deployment may still be in progress.\\n\\nPlease check [$PAGES_URL]($PAGES_URL) and verify changes are live, then move this issue to **Deployed**."
+          fi
+
           curl -s -X POST https://api.linear.app/graphql \
             -H "Authorization: $LINEAR_API_KEY" \
             -H "Content-Type: application/json" \
-            -d "{\"query\": \"mutation { issueUpdate(id: \\\"$ISSUE_UUID\\\", input: { stateId: \\\"$STATE_ID\\\" }) { success } }\"}" \
+            -d "{\"query\": \"mutation { commentCreate(input: { issueId: \\\"$ISSUE_UUID\\\", body: \\\"$COMMENT_BODY\\\" }) { success } }\"}" \
             | jq .
 
-          # Post deployment comment
+          # Re-assign to Cursor to trigger a validation session
           curl -s -X POST https://api.linear.app/graphql \
             -H "Authorization: $LINEAR_API_KEY" \
             -H "Content-Type: application/json" \
-            -d "{\"query\": \"mutation { commentCreate(input: { issueId: \\\"$ISSUE_UUID\\\", body: \\\"**[DEPLOYED]** PR #$PR_NUMBER merged and deployed to GitHub Pages.\\\" }) { success } }\"}" \
+            -d "{\"query\": \"mutation { issueUpdate(id: \\\"$ISSUE_UUID\\\", input: { assigneeId: \\\"$CURSOR_USER_ID\\\" }) { success } }\"}" \
             | jq .
 
-          echo "Done: $ISSUE_ID → Deployed"
+          echo "Done: $ISSUE_ID — Cursor requested to validate deployment at $PAGES_URL"

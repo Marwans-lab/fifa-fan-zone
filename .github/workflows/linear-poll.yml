@@ -56,10 +56,10 @@ jobs:
 
           IN_PROGRESS_ID=$(get_state_id "In Progress")
           IN_REVIEW_ID=$(get_state_id "In Review")
-          DONE_ID=$(get_state_id "Done")
+          DEPLOYING_ID=$(get_state_id "Deploying")
           DEPLOYED_ID=$(get_state_id "Deployed")
 
-          echo "States: InProgress=$IN_PROGRESS_ID InReview=$IN_REVIEW_ID Done=$DONE_ID Deployed=$DEPLOYED_ID"
+          echo "States: InProgress=$IN_PROGRESS_ID InReview=$IN_REVIEW_ID Deploying=$DEPLOYING_ID Deployed=$DEPLOYED_ID"
 
           # --- Fetch all open PRs once ---
           OPEN_PRS=$(gh pr list --repo "$REPO" --state open --json number,title,headRefName --limit 100)
@@ -82,18 +82,16 @@ jobs:
               if [ -n "$PR" ] && [ "$PR" != "null" ]; then
                 echo "$IDENT: Has open PR #$PR → moving to In Review"
                 transition "$UUID" "$IN_REVIEW_ID"
-                comment "$UUID" "**[PIPELINE]** Open PR #$PR detected. Auto-moving to In Review for QA."
+                comment "$UUID" "**[PIPELINE]** Open PR #$PR detected. Auto-moving to In Review."
               fi
             done
           fi
 
           # ============================================================
-          # STAGE 2: In Review + open PR → move to Done
-          # Cyrus validates internally during full-development procedure.
-          # No separate QA step needed — @Claude comments via API keys
-          # do NOT trigger Cyrus sessions, so the old QA approach was dead.
+          # STAGE 2: In Review + open PR → move to Deploying
+          # Cursor validates internally during development.
           # ============================================================
-          if [ -n "$IN_REVIEW_ID" ] && [ -n "$DONE_ID" ]; then
+          if [ -n "$IN_REVIEW_ID" ] && [ -n "$DEPLOYING_ID" ]; then
             REVIEW_ISSUES=$(gql "{ issues(filter: { team: { id: { eq: \\\"$TEAM_ID\\\" } }, state: { id: { eq: \\\"$IN_REVIEW_ID\\\" } } }) { nodes { id identifier } } }")
             REVIEW_COUNT=$(echo "$REVIEW_ISSUES" | jq '.data.issues.nodes | length')
             echo ""
@@ -102,9 +100,9 @@ jobs:
             echo "$REVIEW_ISSUES" | jq -r '.data.issues.nodes[] | "\(.id) \(.identifier)"' | while read -r UUID IDENT; do
               PR=$(find_pr "$IDENT")
               if [ -n "$PR" ] && [ "$PR" != "null" ]; then
-                echo "$IDENT: Has open PR #$PR → moving to Done (Cyrus validates internally)"
-                transition "$UUID" "$DONE_ID"
-                comment "$UUID" "**[PIPELINE]** PR #$PR ready. Auto-moving to Done for merge."
+                echo "$IDENT: Has open PR #$PR → moving to Deploying"
+                transition "$UUID" "$DEPLOYING_ID"
+                comment "$UUID" "**[PIPELINE]** PR #$PR ready. Auto-moving to Deploying for merge."
               else
                 echo "$IDENT: In Review but no open PR — skipping (middleware stall detector handles)"
               fi
@@ -112,15 +110,16 @@ jobs:
           fi
 
           # ============================================================
-          # STAGE 3: Done + has open PR → merge it
+          # STAGE 3: Deploying + has open PR → merge it
+          # Cursor will validate GitHub Pages before moving to Deployed.
           # ============================================================
-          if [ -n "$DONE_ID" ]; then
-            DONE_ISSUES=$(gql "{ issues(filter: { team: { id: { eq: \\\"$TEAM_ID\\\" } }, state: { id: { eq: \\\"$DONE_ID\\\" } } }) { nodes { id identifier } } }")
-            DONE_COUNT=$(echo "$DONE_ISSUES" | jq '.data.issues.nodes | length')
+          if [ -n "$DEPLOYING_ID" ]; then
+            DEPLOYING_ISSUES=$(gql "{ issues(filter: { team: { id: { eq: \\\"$TEAM_ID\\\" } }, state: { id: { eq: \\\"$DEPLOYING_ID\\\" } } }) { nodes { id identifier } } }")
+            DEPLOYING_COUNT=$(echo "$DEPLOYING_ISSUES" | jq '.data.issues.nodes | length')
             echo ""
-            echo "--- Done: $DONE_COUNT issues ---"
+            echo "--- Deploying: $DEPLOYING_COUNT issues ---"
 
-            echo "$DONE_ISSUES" | jq -r '.data.issues.nodes[] | "\(.id) \(.identifier)"' | while read -r UUID IDENT; do
+            echo "$DEPLOYING_ISSUES" | jq -r '.data.issues.nodes[] | "\(.id) \(.identifier)"' | while read -r UUID IDENT; do
               PR=$(find_pr "$IDENT")
               if [ -n "$PR" ] && [ "$PR" != "null" ]; then
                 echo "$IDENT: Merging PR #$PR..."
@@ -132,7 +131,7 @@ jobs:
                   sleep 2
                 fi
                 if gh pr merge "$PR" --repo "$REPO" --squash --delete-branch; then
-                  echo "$IDENT: PR #$PR merged. linear-deploy.yml will move to Deployed."
+                  echo "$IDENT: PR #$PR merged. Cursor will validate GitHub Pages before Deployed."
                 else
                   echo "$IDENT: Merge failed, trying to update branch first..."
                   if gh api -X PUT "repos/$REPO/pulls/$PR/update-branch" -f update_method=merge 2>/dev/null; then
@@ -143,20 +142,18 @@ jobs:
                   fi
                 fi
               else
-                # No open PR — check if already merged, move to Deployed
+                # No open PR — check if already merged
                 if [ -n "$DEPLOYED_ID" ]; then
                   MERGED_PR=$(gh pr list --repo "$REPO" --state merged --json number,title --limit 20 | \
                     jq -r --arg id "$IDENT" '.[] | select(.title | contains($id)) | .number' | head -1)
                   if [ -n "$MERGED_PR" ] && [ "$MERGED_PR" != "null" ]; then
-                    echo "$IDENT: PR #$MERGED_PR already merged → moving to Deployed"
-                    transition "$UUID" "$DEPLOYED_ID"
-                    comment "$UUID" "**[PIPELINE]** PR #$MERGED_PR already merged. Auto-moving to Deployed."
+                    echo "$IDENT: PR #$MERGED_PR already merged — Cursor will validate deployment"
+                    comment "$UUID" "**[PIPELINE]** PR #$MERGED_PR already merged. Awaiting Cursor deployment validation."
                   else
-                    # No PR at all — might be a sub-issue whose parent PR was merged,
-                    # or work was done in a parent issue's PR. Check if parent is Deployed.
+                    # No PR at all — check if parent is Deployed
                     PARENT_STATE=$(gql "{ issue(id: \\\"$IDENT\\\") { parent { state { name } } } }" | \
                       jq -r '.data.issue.parent.state.name // empty')
-                    if [ "$PARENT_STATE" = "Deployed" ] || [ "$PARENT_STATE" = "Done" ]; then
+                    if [ "$PARENT_STATE" = "Deployed" ] || [ "$PARENT_STATE" = "Deploying" ]; then
                       echo "$IDENT: Sub-issue, parent is $PARENT_STATE → moving to Deployed"
                       transition "$UUID" "$DEPLOYED_ID"
                       comment "$UUID" "**[PIPELINE]** Sub-issue — parent already $PARENT_STATE. Auto-moving to Deployed."

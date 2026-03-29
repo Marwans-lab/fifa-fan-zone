@@ -7,6 +7,7 @@ const PORT = 3457;
 const LINEAR_API = "https://api.linear.app/graphql";
 const LINEAR_TOKEN = process.env.LINEAR_TOKEN;
 const GITHUB_REPO = "Marwans-lab/fifa-fan-zone";
+const GITHUB_PAGES_URL = "https://marwans-lab.github.io/fifa-fan-zone/";
 const LINEAR_PERSONAL_KEY = process.env.LINEAR_PERSONAL_KEY || "";
 
 // Cursor's Linear user ID — assigning an issue to this user triggers Cursor Cloud Agent
@@ -201,6 +202,22 @@ async function triggerCursor(issueId, issueIdentifier) {
   }
 }
 
+// --- Trigger Cursor to validate the GitHub Pages deployment ---
+async function triggerDeployValidation(issueId, identifier, prNumber) {
+  await postComment(
+    issueId,
+    `**[PIPELINE — VALIDATE DEPLOYMENT]** PR #${prNumber} has been merged and GitHub Pages has finished deploying.\n\n` +
+    `Please open [${GITHUB_PAGES_URL}](${GITHUB_PAGES_URL}), verify the changes from this issue are live, then move this issue to **Deployed**.`
+  );
+  // Re-assign to Cursor to trigger a new validation session
+  try {
+    await assignIssue(issueId, CURSOR_USER_ID);
+    console.log(`[Pipeline] ${identifier}: Cursor requested to validate deployment`);
+  } catch (e) {
+    console.warn(`[Pipeline] ${identifier}: Could not re-assign to Cursor for validation: ${e.message}`);
+  }
+}
+
 // --- Merge helper: un-draft if needed, then merge ---
 function mergePR(prNumber, identifier) {
   // Check if PR is a draft — if so, mark ready first
@@ -244,26 +261,26 @@ async function handleWebhook(payload) {
   // Trigger cloud poller on every state change
   triggerPoller(`${issueIdentifier} → ${newState}`);
 
-  // In Review → Done (Cursor validates its own work before opening PR)
+  // In Review → Deploying
   if (newState === "In Review") {
     if (recentComments.has(`${issueId}-inreview`)) return;
     markOurComment(`${issueId}-inreview`);
 
     const states = await getStates(teamId);
-    const doneState = findState(states, "Done");
-    if (doneState) {
-      await transitionIssue(issueId, doneState.id);
-      console.log(`[Pipeline] ${issueIdentifier}: In Review → Done`);
+    const deployingState = findState(states, "Deploying");
+    if (deployingState) {
+      await transitionIssue(issueId, deployingState.id);
+      console.log(`[Pipeline] ${issueIdentifier}: In Review → Deploying`);
     }
     return;
   }
 
-  // Done → merge PR → deploy → Deployed
-  if (newState === "Done") {
-    if (recentComments.has(`${issueId}-done`)) return;
-    markOurComment(`${issueId}-done`);
+  // Deploying → merge PR → wait for GitHub Pages → Cursor validates → Deployed
+  if (newState === "Deploying") {
+    if (recentComments.has(`${issueId}-deploying`)) return;
+    markOurComment(`${issueId}-deploying`);
 
-    console.log(`[Pipeline] ${issueIdentifier}: Starting deploy`);
+    console.log(`[Pipeline] ${issueIdentifier}: Starting merge & deploy`);
     try {
       const prJson = execSync(
         `gh pr list -R ${GITHUB_REPO} --state open --json number,title,headRefName --search "${issueIdentifier}" 2>/dev/null`,
@@ -289,20 +306,14 @@ async function handleWebhook(payload) {
         );
 
         if (mergedPr) {
-          console.log(`[Pipeline] ${issueIdentifier}: PR #${mergedPr.number} already merged — triggering deploy`);
+          console.log(`[Pipeline] ${issueIdentifier}: PR #${mergedPr.number} already merged — requesting validation`);
           try {
             execSync(`gh workflow run deploy.yml -R ${GITHUB_REPO} 2>&1`, { encoding: "utf-8" });
-            console.log(`[Pipeline] ${issueIdentifier}: Deploy workflow triggered`);
           } catch { /* push event may already have fired deploy */ }
-          const states = await getStates(teamId);
-          const deployedState = findState(states, "Deployed");
-          if (deployedState) {
-            await transitionIssue(issueId, deployedState.id);
-            await postComment(issueId, `**[DEPLOYED]** PR #${mergedPr.number} was already merged. Auto-transitioning to Deployed.`);
-          }
+          await triggerDeployValidation(issueId, issueIdentifier, mergedPr.number);
         } else {
           console.log(`[Pipeline] ${issueIdentifier}: No open or merged PR found — skipping deploy`);
-          await postComment(issueId, `**[DEPLOY SKIPPED]** No open or merged PR found for ${issueIdentifier}. Issue stays at Done — stall detector will retry.`);
+          await postComment(issueId, `**[DEPLOY SKIPPED]** No open or merged PR found for ${issueIdentifier}. Stall detector will retry.`);
         }
         return;
       }
@@ -328,16 +339,11 @@ async function handleWebhook(payload) {
       }
 
       if (deployed) {
-        const states = await getStates(teamId);
-        const deployedState = findState(states, "Deployed");
-        if (deployedState) {
-          await transitionIssue(issueId, deployedState.id);
-          console.log(`[Pipeline] ${issueIdentifier}: Deployed successfully`);
-          await postComment(issueId, `**[DEPLOYED]** PR #${pr.number} merged and deployed to GitHub Pages.`);
-        }
+        console.log(`[Pipeline] ${issueIdentifier}: GitHub Pages deployed — requesting Cursor validation`);
+        await triggerDeployValidation(issueId, issueIdentifier, pr.number);
       } else {
         console.log(`[Pipeline] ${issueIdentifier}: Deploy not confirmed`);
-        await postComment(issueId, `**[DEPLOY FAILED]** PR #${pr.number} merged but deploy not confirmed. Issue stays at Done.`);
+        await postComment(issueId, `**[DEPLOY WARNING]** PR #${pr.number} merged but GitHub Pages deploy not confirmed within timeout. Please verify manually at ${GITHUB_PAGES_URL}`);
       }
     } catch (e) {
       console.error(`[Pipeline] ${issueIdentifier}: Deploy error: ${e.message}`);
@@ -357,7 +363,7 @@ async function handleWebhook(payload) {
 
 // --- Stall detector ---
 const STALL_CHECK_INTERVAL = 10 * 60_000;
-const STALL_THRESHOLD = 20 * 60_000; // 20 min (Cursor sessions can take a bit longer)
+const STALL_THRESHOLD = 20 * 60_000; // 20 min
 const retriggeredRecently = new Map();
 
 async function checkForStalledIssues() {
@@ -366,7 +372,7 @@ async function checkForStalledIssues() {
       `query {
         issues(filter: {
           team: { key: { eq: "MAR" } },
-          state: { name: { in: ["Todo", "In Progress", "In Review", "Done"] } }
+          state: { name: { in: ["Todo", "In Progress", "In Review", "Deploying"] } }
         }, first: 50) {
           nodes {
             id identifier title
@@ -393,8 +399,8 @@ async function checkForStalledIssues() {
       const lastRetrigger = retriggeredRecently.get(issue.id);
       if (lastRetrigger && now - lastRetrigger < 30 * 60_000) continue;
 
-      // Done → check for unmerged / already-merged PRs
-      if (stateName === "Done") {
+      // Deploying → check for unmerged / already-merged PRs
+      if (stateName === "Deploying") {
         if (now - lastUpdate < STALL_THRESHOLD) continue;
         try {
           const prJson = execSync(
@@ -409,7 +415,7 @@ async function checkForStalledIssues() {
           );
 
           if (pr) {
-            console.log(`[Pipeline] STALL: ${issue.identifier} (Done) has unmerged PR #${pr.number} — merging`);
+            console.log(`[Pipeline] STALL: ${issue.identifier} (Deploying) has unmerged PR #${pr.number} — merging`);
             retriggeredRecently.set(issue.id, now);
 
             let mergeState = "UNKNOWN";
@@ -455,11 +461,8 @@ async function checkForStalledIssues() {
                 } catch { /* keep waiting */ }
               }
 
-              const states = await getStates(issue.team.id);
-              const deployedState = findState(states, "Deployed");
-              if (deployed && deployedState) {
-                await transitionIssue(issue.id, deployedState.id);
-                await postComment(issue.id, `**[PIPELINE]** Stall detector merged PR #${pr.number} and deployed.`);
+              if (deployed) {
+                await triggerDeployValidation(issue.id, issue.identifier, pr.number);
               } else {
                 await postComment(issue.id, `**[PIPELINE]** PR #${pr.number} merged but deploy not confirmed.`);
               }
@@ -480,16 +483,11 @@ async function checkForStalledIssues() {
             );
 
             if (mergedPr) {
-              console.log(`[Pipeline] STALL: ${issue.identifier} (Done) merged PR #${mergedPr.number} not transitioned — moving to Deployed`);
-              const states = await getStates(issue.team.id);
-              const deployedState = findState(states, "Deployed");
-              if (deployedState) {
-                markOurComment(issue.id);
-                await transitionIssue(issue.id, deployedState.id);
-              }
+              console.log(`[Pipeline] STALL: ${issue.identifier} (Deploying) merged PR #${mergedPr.number} — requesting validation`);
+              await triggerDeployValidation(issue.id, issue.identifier, mergedPr.number);
             } else {
               // No PR at all — reset to Todo so Cursor picks it up again
-              console.log(`[Pipeline] STALL: ${issue.identifier} (Done) has no PR — resetting to Todo`);
+              console.log(`[Pipeline] STALL: ${issue.identifier} (Deploying) has no PR — resetting to Todo`);
               const states = await getStates(issue.team.id);
               const todoState = findState(states, "Todo");
               if (todoState) {
@@ -499,20 +497,20 @@ async function checkForStalledIssues() {
             }
           }
         } catch (e) {
-          console.error(`[Pipeline] ${issue.identifier}: Done stall check error: ${e.message}`);
+          console.error(`[Pipeline] ${issue.identifier}: Deploying stall check error: ${e.message}`);
         }
         continue;
       }
 
-      // In Review → Done if stalled
+      // In Review → Deploying if stalled
       if (stateName === "In Review") {
         if (now - lastUpdate < STALL_THRESHOLD) continue;
-        console.log(`[Pipeline] STALL: ${issue.identifier} (In Review) — ${stalledMinutes}min, moving to Done`);
+        console.log(`[Pipeline] STALL: ${issue.identifier} (In Review) — ${stalledMinutes}min, moving to Deploying`);
         const states = await getStates(issue.team.id);
-        const doneState = findState(states, "Done");
-        if (doneState) {
+        const deployingState = findState(states, "Deploying");
+        if (deployingState) {
           markOurComment(issue.id);
-          await transitionIssue(issue.id, doneState.id);
+          await transitionIssue(issue.id, deployingState.id);
         }
         await new Promise((r) => setTimeout(r, 3000));
         continue;
@@ -615,5 +613,5 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, "127.0.0.1", () => {
   console.log(`[Pipeline] Running on http://127.0.0.1:${PORT}`);
   console.log(`[Pipeline] Agent: Cursor Cloud (user ${CURSOR_USER_ID})`);
-  console.log(`[Pipeline] Flow: Todo → assign Cursor → In Progress → In Review → Done → merge PR → Deployed`);
+  console.log(`[Pipeline] Flow: Todo → In Progress → In Review → Deploying → (GitHub Pages live) → Cursor validates → Deployed`);
 });
