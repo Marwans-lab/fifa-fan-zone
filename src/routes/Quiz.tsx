@@ -290,10 +290,7 @@ function QuestionScreen({
           {/* Question text */}
           <p className="f-quiz__question" style={{
             padding: 'var(--sp-6) var(--sp-4) 0',
-            fontFamily: 'var(--font-display)',
-            fontWeight: 'var(--weight-light)',
-            fontSize: 'var(--text-2xl)',
-            lineHeight: 'var(--leading-snug)',
+            font: 'var(--f-brand-type-title-5)',
             color: 'var(--c-lt-text-1)',
             textAlign: 'center',
             flexShrink: 0,
