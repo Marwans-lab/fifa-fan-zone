@@ -345,7 +345,7 @@ function ExtraQuizCard({
             radius={RING_RADIUS}
             stroke={RING_STROKE}
             progress={done ? 1 : 0}
-            color={done ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-border-default)'}
+            color={done ? 'var(--f-brand-color-flight-status-confirmed)' : 'var(--f-brand-color-border-default)'}
           />
           <div className="card-quiz-card-icon-circle" style={{
             position: 'absolute',
