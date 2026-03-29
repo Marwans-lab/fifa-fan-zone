@@ -260,7 +260,7 @@ function QuestionScreen({
             <div className="f-quiz__progress-fill" style={{
               height: '100%',
               width: `${progressPct}%`,
-              background: 'linear-gradient(90deg, var(--c-correct) 0%, var(--c-lt-correct-dark) 100%)',
+              background: 'var(--f-brand-color-flight-status-confirmed)',
               borderRadius: 64,
               transition: 'width var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
             }} />
