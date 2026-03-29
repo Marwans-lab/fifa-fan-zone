@@ -8,7 +8,6 @@ import shareIcon     from '../assets/icons/share-white.svg'
 import saveIcon      from '../assets/icons/save-white.svg'
 import flipIconWhite from '../assets/icons/flip-white.svg'
 import flipIconDark  from '../assets/icons/flip-dark.svg'
-import tickBlack     from '../assets/icons/Tick-black.svg'
 import stadiumIcon   from '../assets/icons/stadium-white.svg'
 import styleIcon     from '../assets/icons/style-white.svg'
 import devotionIcon  from '../assets/icons/devotion-white.svg'
@@ -324,15 +323,9 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
                   onClick={handleNext}
                   disabled={!currentAnswer}
                 >
-                  {isLast ? (
-                    <span className="f-fan-card__wizard-btn-content">
-                      Save <img src={tickBlack} width={24} height={24} alt="" className="fan-card-save-icon" />
-                    </span>
-                  ) : (
-                    <span className="f-fan-card__wizard-btn-content">
-                      Next
-                    </span>
-                  )}
+                  <span className="f-fan-card__wizard-btn-content">
+                    {isLast ? 'Save' : 'Next'}
+                  </span>
                 </Button>
               </div>
             </div>
