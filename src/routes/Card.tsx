@@ -598,7 +598,7 @@ export default function Card() {
                 font: 'var(--f-brand-type-subheading)',
                 color: 'var(--f-brand-color-text-default)', marginTop: 'var(--f-brand-space-2xs)',
               }}>
-                Complete quizzes to climb the leaderboard
+                Complete quizzes to get a chance to earn Avios rewards
               </p>
             </div>
 
