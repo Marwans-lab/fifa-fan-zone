@@ -305,7 +305,7 @@
   display: flex;
   justify-content: center;
   gap: var(--f-fan-card-padding-sm);
-  padding-top: var(--f-fan-card-gap);
+  padding-top: calc(var(--f-fan-card-gap) * 2);
 }
 
 .f-fan-card__action {
