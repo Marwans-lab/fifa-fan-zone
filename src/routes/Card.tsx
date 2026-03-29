@@ -4,7 +4,7 @@ import Screen from '../components/Screen'
 import FanCard, { type FanCardHandle } from '../components/FanCard'
 import { track } from '../lib/analytics'
 import { useStore, type FlowId } from '../store/useStore'
-import { renderCardToBlob, buildShareText } from '../lib/cardExport'
+import { renderFrontFaceToBlob, renderCardToBlob, buildShareText } from '../lib/cardExport'
 import lockIcon    from '../assets/icons/Lock-white.svg'
 import chevRight   from '../assets/icons/Chevron-right-white.svg'
 import tickBlack   from '../assets/icons/Tick-black.svg'
@@ -436,13 +436,25 @@ export default function Card() {
   const fanCardRef = useRef<FanCardHandle>(null)
   const fanCardSectionRef = useRef<HTMLElement>(null)
 
+  const buildExportBlob = useCallback(async () => {
+    const frontFace = fanCardRef.current?.getFrontFaceElement()
+    if (frontFace) {
+      try {
+        return await renderFrontFaceToBlob(frontFace)
+      } catch {
+        // Fallback keeps share/save functional on browsers that block foreignObject rendering.
+      }
+    }
+    return renderCardToBlob(state.fanCard)
+  }, [state.fanCard])
+
   function handleSave(answers: Record<string, string>) {
     updateFanCard({ answers, completedAt: new Date().toISOString() })
   }
 
   const handleShare = useCallback(async () => {
     try {
-      const blob = await renderCardToBlob(state.fanCard)
+      const blob = await buildExportBlob()
       const file = new File([blob], 'fan-card.png', { type: 'image/png' })
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], title: 'My FIFA Fan Card' })
@@ -456,11 +468,11 @@ export default function Card() {
     } catch {
       // user cancelled
     }
-  }, [state.fanCard])
+  }, [state.fanCard, buildExportBlob])
 
   const handleSaveToDevice = useCallback(async () => {
     try {
-      const blob = await renderCardToBlob(state.fanCard)
+      const blob = await buildExportBlob()
       const url  = URL.createObjectURL(blob)
       const a    = document.createElement('a')
       a.href     = url
@@ -473,7 +485,7 @@ export default function Card() {
     } catch {
       // silently fail
     }
-  }, [state.fanCard])
+  }, [state.fanCard, buildExportBlob])
 
   const cardComplete = state.fanCard.completedAt !== null
 
