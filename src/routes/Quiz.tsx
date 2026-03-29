@@ -97,7 +97,17 @@ function OptionButton({
         transition: 'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
       }}>
         <span className="f-quiz__option-badge-text">
-          {revealed && isCorrect ? '✓' : revealed && isWrong ? '✗' : letter}
+          {revealed && isCorrect ? (
+            <svg width={24} height={24} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12.5L10 17.5L19 7.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          ) : revealed && isWrong ? (
+            <svg width={24} height={24} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M7 7L17 17M17 7L7 17" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+            </svg>
+          ) : (
+            letter
+          )}
         </span>
       </div>
 
