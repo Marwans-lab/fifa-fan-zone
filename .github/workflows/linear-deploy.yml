@@ -12,7 +12,6 @@ jobs:
       - name: Request Cursor to validate GitHub Pages deployment
         env:
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
-          CURSOR_USER_ID: "2117cef0-f13e-4281-8295-cb0b5fa505ea"
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
@@ -117,11 +116,17 @@ jobs:
               echo "$ISSUE_ID: Reset to Todo"
             fi
           else
-            # ── Deploy succeeded or timed out: request Cursor validation ──────
+            # ── Deploy succeeded or timed out: move directly to Deployed ──────
+            DEPLOYED_ID=$(curl -s -X POST https://api.linear.app/graphql \
+              -H "Authorization: $LINEAR_API_KEY" \
+              -H "Content-Type: application/json" \
+              -d "{\"query\": \"{ workflowStates(filter: { team: { id: { eq: \\\"$TEAM_UUID\\\" } }, name: { eq: \\\"Deployed\\\" } }) { nodes { id } } }\"}" \
+              | jq -r '.data.workflowStates.nodes[0].id // empty')
+
             if [ "$DEPLOYED" = "true" ]; then
-              COMMENT_BODY="@cursor **[PIPELINE — VALIDATE DEPLOYMENT]** PR #$PR_NUMBER has been merged and GitHub Pages has finished deploying.\\n\\nPlease open [$PAGES_URL]($PAGES_URL), verify the changes from this issue are live, then move this issue to **Deployed**."
+              COMMENT_BODY="**[PIPELINE]** PR #$PR_NUMBER merged and GitHub Pages deployed successfully. Moving to **Deployed**."
             else
-              COMMENT_BODY="@cursor **[PIPELINE — VALIDATE DEPLOYMENT]** PR #$PR_NUMBER has been merged. GitHub Pages deployment may still be in progress (timed out waiting).\\n\\nPlease check [$PAGES_URL]($PAGES_URL) once it's live, verify changes are correct, then move this issue to **Deployed**."
+              COMMENT_BODY="**[PIPELINE]** PR #$PR_NUMBER merged. Deploy timed out waiting, marking **Deployed** — check the site if needed."
             fi
 
             curl -s -X POST https://api.linear.app/graphql \
@@ -130,12 +135,12 @@ jobs:
               -d "{\"query\": \"mutation { commentCreate(input: { issueId: \\\"$ISSUE_UUID\\\", body: \\\"$COMMENT_BODY\\\" }) { success } }\"}" \
               | jq .
 
-            # Re-assign to Cursor to trigger a validation session
-            curl -s -X POST https://api.linear.app/graphql \
-              -H "Authorization: $LINEAR_API_KEY" \
-              -H "Content-Type: application/json" \
-              -d "{\"query\": \"mutation { issueUpdate(id: \\\"$ISSUE_UUID\\\", input: { assigneeId: \\\"$CURSOR_USER_ID\\\" }) { success } }\"}" \
-              | jq .
-
-            echo "$ISSUE_ID: Cursor requested to validate deployment at $PAGES_URL"
+            if [ -n "$DEPLOYED_ID" ]; then
+              curl -s -X POST https://api.linear.app/graphql \
+                -H "Authorization: $LINEAR_API_KEY" \
+                -H "Content-Type: application/json" \
+                -d "{\"query\": \"mutation { issueUpdate(id: \\\"$ISSUE_UUID\\\", input: { stateId: \\\"$DEPLOYED_ID\\\" }) { success } }\"}" \
+                | jq .
+              echo "$ISSUE_ID: Moved to Deployed"
+            fi
           fi

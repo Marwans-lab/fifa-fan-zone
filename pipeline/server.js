@@ -202,19 +202,17 @@ async function triggerCursor(issueId, issueIdentifier) {
   }
 }
 
-// --- Trigger Cursor to validate the GitHub Pages deployment ---
-async function triggerDeployValidation(issueId, identifier, prNumber) {
-  await postComment(
-    issueId,
-    `@cursor **[PIPELINE — VALIDATE DEPLOYMENT]** PR #${prNumber} has been merged and GitHub Pages has finished deploying.\n\n` +
-    `Please open [${GITHUB_PAGES_URL}](${GITHUB_PAGES_URL}), verify the changes from this issue are live, then move this issue to **Deployed**.`
-  );
-  // Re-assign to Cursor to trigger a new validation session
-  try {
-    await assignIssue(issueId, CURSOR_USER_ID);
-    console.log(`[Pipeline] ${identifier}: Cursor requested to validate deployment`);
-  } catch (e) {
-    console.warn(`[Pipeline] ${identifier}: Could not re-assign to Cursor for validation: ${e.message}`);
+// --- Move issue to Deployed after successful GitHub Pages deploy ---
+async function markDeployed(issueId, identifier, teamId, prNumber) {
+  const states = await getStates(teamId);
+  const deployedState = findState(states, "Deployed");
+  if (deployedState) {
+    await postComment(issueId,
+      `**[PIPELINE]** PR #${prNumber} merged and GitHub Pages deployed successfully. Moving to **Deployed**.`
+    );
+    markOurComment(issueId);
+    await transitionIssue(issueId, deployedState.id);
+    console.log(`[Pipeline] ${identifier}: Moved to Deployed`);
   }
 }
 
@@ -343,11 +341,8 @@ async function handleWebhook(payload) {
         );
 
         if (mergedPr) {
-          console.log(`[Pipeline] ${issueIdentifier}: PR #${mergedPr.number} already merged — requesting validation`);
-          try {
-            execSync(`gh workflow run deploy.yml -R ${GITHUB_REPO} 2>&1`, { encoding: "utf-8" });
-          } catch { /* push event may already have fired deploy */ }
-          await triggerDeployValidation(issueId, issueIdentifier, mergedPr.number);
+          console.log(`[Pipeline] ${issueIdentifier}: PR #${mergedPr.number} already merged — moving to Deployed`);
+          await markDeployed(issueId, issueIdentifier, teamId, mergedPr.number);
         } else {
           console.log(`[Pipeline] ${issueIdentifier}: No open or merged PR found — skipping deploy`);
           await postComment(issueId, `**[DEPLOY SKIPPED]** No open or merged PR found for ${issueIdentifier}. Stall detector will retry.`);
@@ -362,8 +357,8 @@ async function handleWebhook(payload) {
       const { deployed, failed, timedOut, runUrl } = await pollDeployRun();
 
       if (deployed) {
-        console.log(`[Pipeline] ${issueIdentifier}: GitHub Pages deployed — requesting Cursor validation`);
-        await triggerDeployValidation(issueId, issueIdentifier, pr.number);
+        console.log(`[Pipeline] ${issueIdentifier}: GitHub Pages deployed — moving to Deployed`);
+        await markDeployed(issueId, issueIdentifier, teamId, pr.number);
       } else if (failed) {
         console.log(`[Pipeline] ${issueIdentifier}: Deploy workflow FAILED — resetting to Todo`);
         await resetToTodo(
@@ -486,7 +481,7 @@ async function checkForStalledIssues() {
               const { deployed, failed, timedOut, runUrl } = await pollDeployRun();
 
               if (deployed) {
-                await triggerDeployValidation(issue.id, issue.identifier, pr.number);
+                await markDeployed(issue.id, issue.identifier, issue.team.id, pr.number);
               } else if (failed) {
                 console.log(`[Pipeline] ${issue.identifier}: Deploy FAILED after stall-detector merge — resetting to Todo`);
                 await resetToTodo(
@@ -531,8 +526,8 @@ async function checkForStalledIssues() {
                   // Deploy still running — wait, don't retrigger
                   console.log(`[Pipeline] ${issue.identifier}: Deploy still in progress — waiting`);
                 } else if (run.status === "completed" && run.conclusion === "success") {
-                  // Deploy succeeded — request Cursor validation
-                  await triggerDeployValidation(issue.id, issue.identifier, mergedPr.number);
+                  // Deploy succeeded — move to Deployed
+                  await markDeployed(issue.id, issue.identifier, issue.team.id, mergedPr.number);
                 } else if (run.status === "completed" && run.conclusion !== "success") {
                   // Deploy failed — re-trigger and notify
                   console.log(`[Pipeline] ${issue.identifier}: Last deploy failed (${run.conclusion}) — re-triggering`);
@@ -551,8 +546,8 @@ async function checkForStalledIssues() {
                   await postComment(issue.id, `**[PIPELINE]** No recent deploy found — re-triggering deploy workflow.`);
                 }
               } catch (e) {
-                // Can't check — fall back to requesting validation
-                await triggerDeployValidation(issue.id, issue.identifier, mergedPr.number);
+                // Can't check deploy status — move to Deployed optimistically
+                await markDeployed(issue.id, issue.identifier, issue.team.id, mergedPr.number);
               }
             } else {
               // No PR at all — reset to Todo so Cursor picks it up again

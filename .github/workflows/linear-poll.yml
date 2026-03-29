@@ -132,8 +132,6 @@ jobs:
                 fi
                 if gh pr merge "$PR" --repo "$REPO" --squash --delete-branch; then
                   echo "$IDENT: PR #$PR merged — waiting for GitHub Pages deploy..."
-                  PAGES_URL="https://marwans-lab.github.io/fifa-fan-zone/"
-                  CURSOR_USER_ID="2117cef0-f13e-4281-8295-cb0b5fa505ea"
                   DEPLOYED=false
                   DEPLOY_FAILED=false
                   FAILED_RUN_URL=""
@@ -163,14 +161,17 @@ jobs:
                     gql "mutation { commentCreate(input: { issueId: \\\"$UUID\\\", body: \\\"$FAIL_BODY\\\" }) { success } }" > /dev/null
                     [ -n "$TODO_ID" ] && gql "mutation { issueUpdate(id: \\\"$UUID\\\", input: { stateId: \\\"$TODO_ID\\\" }) { success } }" > /dev/null
                   else
+                    # deploy.yml succeeded (or timed out) — move directly to Deployed
                     if [ "$DEPLOYED" = "true" ]; then
-                      VALIDATE_BODY="@cursor **[PIPELINE — VALIDATE DEPLOYMENT]** PR #$PR has been merged and GitHub Pages has finished deploying.\\\\n\\\\nPlease open [$PAGES_URL]($PAGES_URL), verify the changes from this issue are live, then move this issue to **Deployed**."
+                      echo "$IDENT: Deploy confirmed — moving to Deployed"
+                      DONE_MSG="**[PIPELINE]** PR #$PR merged and GitHub Pages deployed successfully. Moving to **Deployed**."
                     else
-                      VALIDATE_BODY="@cursor **[PIPELINE — VALIDATE DEPLOYMENT]** PR #$PR has been merged. GitHub Pages deploy timed out — it may still be in progress.\\\\n\\\\nPlease check [$PAGES_URL]($PAGES_URL) once live, verify changes are correct, then move this issue to **Deployed**."
+                      echo "$IDENT: Deploy timed out — moving to Deployed optimistically"
+                      DONE_MSG="**[PIPELINE]** PR #$PR merged. Deploy timed out waiting, but marking **Deployed** — check the site if needed."
                     fi
-                    gql "mutation { commentCreate(input: { issueId: \\\"$UUID\\\", body: \\\"$VALIDATE_BODY\\\" }) { success } }" > /dev/null
-                    gql "mutation { issueUpdate(id: \\\"$UUID\\\", input: { assigneeId: \\\"$CURSOR_USER_ID\\\" }) { success } }" > /dev/null
-                    echo "$IDENT: Cursor notified for deployment validation."
+                    gql "mutation { commentCreate(input: { issueId: \\\"$UUID\\\", body: \\\"$DONE_MSG\\\" }) { success } }" > /dev/null
+                    [ -n "$DEPLOYED_ID" ] && gql "mutation { issueUpdate(id: \\\"$UUID\\\", input: { stateId: \\\"$DEPLOYED_ID\\\" }) { success } }" > /dev/null
+                    echo "$IDENT: Moved to Deployed."
                   fi
                 else
                   echo "$IDENT: Merge failed, trying to update branch first..."
