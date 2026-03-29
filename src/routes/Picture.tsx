@@ -422,7 +422,9 @@ export default function Picture() {
                 onClick={handleTakePhoto}
                 style={{
                   position: 'absolute',
-                  bottom: 'var(--sp-6)',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
                   minWidth: 197,
                   minHeight: 'var(--sp-14)',
                   boxShadow: 'var(--f-brand-shadow-large)',

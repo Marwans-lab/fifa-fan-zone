@@ -270,8 +270,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           </div>
 
           <div className="f-fan-card__flip-hint">
-            <span className="f-fan-card__flip-hint-icon" aria-hidden="true" />
-            Tap card to flip
+            <span className="f-fan-card__flip-hint-icon" aria-hidden="true" /><span className="f-fan-card__flip-hint-text">Tap card to flip</span>
           </div>
         </div>
 

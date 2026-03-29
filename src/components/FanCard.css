@@ -205,7 +205,8 @@
 }
 
 .f-fan-card__flip-hint-icon {
-  display: block;
+  display: inline-block;
+  flex-shrink: 0;
   width: 24px;
   height: 24px;
   background-color: var(--f-brand-color-icon-light, #FFFFFF);
