@@ -170,31 +170,11 @@
   opacity: 0.5;
 }
 
-/* ─── Team badge / motto ─────────────────────────────────────────────────────── */
+/* ─── Team badge ─────────────────────────────────────────────────────────────── */
 .f-fan-card__team-badge {
   position: relative;
   z-index: 1;
   text-align: center;
-}
-
-.f-fan-card__team-motto {
-  font: var(--f-fan-card-heading-font);
-  color: var(--f-fan-card-text-light);
-  opacity: 0.88;
-  letter-spacing: 0.03em;
-  font-style: italic;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--f-fan-card-gap-sm);
-  padding: 0 var(--sp-2);
-  border-radius: var(--r-full);
-  background: var(--f-brand-color-background-dark-50a);
-}
-
-.f-fan-card__team-flag {
-  font-style: normal;
-  font-size: var(--f-base-type-scale-5, 24px);
 }
 
 .f-fan-card__team-empty {
