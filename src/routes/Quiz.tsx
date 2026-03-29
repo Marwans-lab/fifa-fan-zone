@@ -86,7 +86,6 @@ function OptionButton({
         height: 40,
         borderRadius: '50%',
         background: badgeBg,
-        border: '1px solid var(--c-lt-surface)',
         color: badgeColor,
         display: 'flex',
         alignItems: 'center',
