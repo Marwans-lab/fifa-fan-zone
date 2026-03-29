@@ -6,7 +6,6 @@ import type { FanCard as FanCardData } from '../store/useStore'
 import editIcon      from '../assets/icons/edit-white.svg'
 import shareIcon     from '../assets/icons/share-white.svg'
 import saveIcon      from '../assets/icons/save-white.svg'
-import flipIconWhite from '../assets/icons/flip-white.svg'
 import flipIconDark  from '../assets/icons/flip-dark.svg'
 import stadiumIcon   from '../assets/icons/stadium-white.svg'
 import styleIcon     from '../assets/icons/style-white.svg'
@@ -268,7 +267,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
           </div>
 
           <div className="f-fan-card__flip-hint">
-            <img src={flipIconWhite} width={24} height={24} alt="" className="f-fan-card__flip-hint-icon" /> Tap card to flip
+            <span className="f-fan-card__flip-hint-icon" aria-hidden="true" /> Tap card to flip
           </div>
         </div>
 
