@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useId } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
@@ -144,16 +144,23 @@ function CircularTimer({ timeLeft }: { timeLeft: number }) {
   const offset = circ * (1 - timeLeft / QUESTION_TIME)
   const cx = size / 2
   const urgent = timeLeft <= 5
+  const gradientId = useId()
 
   return (
     <div className="f-quiz__timer" style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
       <svg className="f-quiz__timer-svg" width={size} height={size} style={{ transform: 'rotate(-90deg)' }} aria-hidden="true">
+        <defs>
+          <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="var(--f-brand-color-background-accent)" />
+            <stop offset="100%" stopColor="var(--f-brand-color-background-accent-muted)" />
+          </linearGradient>
+        </defs>
         <circle className="f-quiz__timer-track" cx={cx} cy={cx} r={R} fill="none" stroke="var(--c-lt-border)" strokeWidth={strokeW} />
         <circle
           className="f-quiz__timer-arc"
           cx={cx} cy={cx} r={R}
           fill="none"
-          stroke={urgent ? 'var(--c-error)' : 'var(--c-lt-brand)'}
+          stroke={urgent ? 'var(--c-error)' : `url(#${gradientId})`}
           strokeWidth={strokeW}
           strokeDasharray={circ}
           strokeDashoffset={offset}
