@@ -59,7 +59,7 @@ function OptionButton({
 
   return (
     <button
-      className="quiz-option-btn"
+      className="f-quiz__option"
       data-ui="answer-option-btn"
       onClick={revealed ? undefined : onSelect}
       disabled={revealed}
@@ -81,7 +81,7 @@ function OptionButton({
       }}
     >
       {/* Letter badge */}
-      <div style={{
+      <div className="f-quiz__option-badge" style={{
         width: 40,
         height: 40,
         borderRadius: '50%',
@@ -100,7 +100,7 @@ function OptionButton({
       </div>
 
       {/* Label */}
-      <span style={{
+      <span className="f-quiz__option-label" style={{
         flex: 1,
         font: 'var(--f-brand-type-body)',
         fontSize: 'var(--text-md)',
@@ -127,10 +127,11 @@ function CircularTimer({ timeLeft }: { timeLeft: number }) {
   const urgent = timeLeft <= 5
 
   return (
-    <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
-      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }} aria-hidden="true">
-        <circle cx={cx} cy={cx} r={R} fill="none" stroke="var(--c-lt-border)" strokeWidth={strokeW} />
+    <div className="f-quiz__timer" style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
+      <svg className="f-quiz__timer-svg" width={size} height={size} style={{ transform: 'rotate(-90deg)' }} aria-hidden="true">
+        <circle className="f-quiz__timer-track" cx={cx} cy={cx} r={R} fill="none" stroke="var(--c-lt-border)" strokeWidth={strokeW} />
         <circle
+          className="f-quiz__timer-arc"
           cx={cx} cy={cx} r={R}
           fill="none"
           stroke={urgent ? 'var(--c-error)' : 'var(--c-lt-brand)'}
@@ -141,7 +142,7 @@ function CircularTimer({ timeLeft }: { timeLeft: number }) {
           style={{ transition: 'stroke-dashoffset 1s linear, stroke var(--f-brand-motion-duration-instant)' }}
         />
       </svg>
-      <div style={{
+      <div className="f-quiz__timer-label" style={{
         position: 'absolute',
         inset: 0,
         display: 'flex',
@@ -186,6 +187,7 @@ function QuestionScreen({
   return (
     <Screen>
       <div
+        className="f-quiz"
         data-page="quiz"
         style={{
           display: 'flex',
@@ -198,7 +200,7 @@ function QuestionScreen({
         }}
       >
         {/* ── Header: close + progress bar ─── */}
-        <div style={{
+        <div className="f-quiz__header" style={{
           display: 'flex',
           alignItems: 'center',
           gap: 'var(--sp-4)',
@@ -206,6 +208,7 @@ function QuestionScreen({
           flexShrink: 0,
         }}>
           <button
+            className="f-quiz__close-btn"
             data-ui="back-btn"
             onClick={onBack}
             aria-label="Close quiz"
@@ -223,19 +226,19 @@ function QuestionScreen({
               flexShrink: 0,
             }}
           >
-            <svg width={16} height={16} viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <svg className="f-quiz__close-icon" width={16} height={16} viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M3 3l10 10M13 3L3 13" stroke="var(--c-lt-text-1)" strokeWidth="2" strokeLinecap="round"/>
             </svg>
           </button>
 
-          <div style={{
+          <div className="f-quiz__progress-track" style={{
             flex: 1,
             height: 8,
             background: 'var(--c-lt-surface)',
             borderRadius: 64,
             overflow: 'hidden',
           }}>
-            <div style={{
+            <div className="f-quiz__progress-fill" style={{
               height: '100%',
               width: `${progressPct}%`,
               background: 'linear-gradient(90deg, var(--c-correct) 0%, var(--c-lt-correct-dark) 100%)',
@@ -246,10 +249,10 @@ function QuestionScreen({
         </div>
 
         {/* ── Animated slide content ───────── */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
+        <div className="f-quiz__slide" style={{ flex: 1, display: 'flex', flexDirection: 'column', ...slideStyle, overflow: 'hidden' }}>
 
           {/* Banner image */}
-          <div style={{
+          <div className="f-quiz__banner" style={{
             margin: 'var(--sp-5) var(--sp-4) 0',
             height: 196,
             borderRadius: 'var(--f-brand-radius-inner)',
@@ -262,18 +265,19 @@ function QuestionScreen({
           }}>
             {quiz.bannerImage ? (
               <img
+                className="f-quiz__banner-img"
                 src={quiz.bannerImage}
                 alt=""
                 aria-hidden="true"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scaleX(-1)' }}
               />
             ) : (
-              <span style={{ fontSize: 'var(--text-5xl)' }}>{quiz.emoji}</span>
+              <span className="f-quiz__banner-emoji" style={{ fontSize: 'var(--text-5xl)' }}>{quiz.emoji}</span>
             )}
           </div>
 
           {/* Question text */}
-          <p style={{
+          <p className="f-quiz__question" style={{
             padding: 'var(--sp-6) var(--sp-4) 0',
             fontFamily: 'var(--font-display)',
             fontWeight: 'var(--weight-light)',
@@ -288,7 +292,7 @@ function QuestionScreen({
           </p>
 
           {/* Options */}
-          <div style={{
+          <div className="f-quiz__options" style={{
             padding: 'var(--sp-6) var(--sp-4) 0',
             display: 'flex',
             flexDirection: 'column',
@@ -312,16 +316,16 @@ function QuestionScreen({
         </div>
 
         {/* ── Fixed bottom: timer + feedback + Next ── */}
-        <div style={{ padding: '0 var(--sp-4) var(--sp-10)', flexShrink: 0 }}>
+        <div className="f-quiz__footer" style={{ padding: '0 var(--sp-4) var(--sp-10)', flexShrink: 0 }}>
 
           {/* Timer */}
-          <div style={{ display: 'flex', justifyContent: 'center', margin: 'var(--sp-6) 0 var(--sp-4)' }}>
+          <div className="f-quiz__timer-wrap" style={{ display: 'flex', justifyContent: 'center', margin: 'var(--sp-6) 0 var(--sp-4)' }}>
             <CircularTimer timeLeft={timeLeft} />
           </div>
 
           {/* Feedback */}
           {revealed && (
-            <p style={{
+            <p className="f-quiz__feedback" style={{
               textAlign: 'center',
               fontFamily: 'var(--font-body)',
               fontSize: 'var(--text-sm)',
@@ -340,6 +344,7 @@ function QuestionScreen({
 
           {/* Next button */}
           <button
+            className="f-quiz__next-btn"
             data-ui="next-question-btn"
             onClick={revealed ? onNext : undefined}
             style={{
