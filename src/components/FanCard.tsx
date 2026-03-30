@@ -3,7 +3,6 @@ import Button from './Button'
 import { track } from '../lib/analytics'
 import { getTeamCardBackground } from '../lib/teamCardBackground'
 import type { FanCard as FanCardData } from '../store/useStore'
-import flipIconDark  from '../assets/icons/flip-dark.svg'
 import stadiumIcon   from '../assets/icons/stadium-white.svg'
 import styleIcon     from '../assets/icons/style-white.svg'
 import devotionIcon  from '../assets/icons/devotion-white.svg'
@@ -378,7 +377,7 @@ const FanCard = forwardRef<FanCardHandle, Props>(function FanCard({ fanCard, onS
 
           {/* ── Tap to flip (pinned to bottom) ───────────────────── */}
           <div className="f-fan-card__back-flip-hint">
-            <img src={flipIconDark} width={24} height={24} alt="" className="f-fan-card__back-flip-hint-icon" /> Tap card to flip
+            <span className="f-fan-card__back-flip-hint-icon" aria-hidden="true" /> Tap card to flip
           </div>
         </div>
       </div>
