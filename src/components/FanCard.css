@@ -529,8 +529,19 @@
 }
 
 .f-fan-card__back-flip-hint-icon {
-  opacity: 0.5;
-  filter: brightness(0) saturate(100%);
+  width: 24px;
+  height: 24px;
+  display: block;
+  flex-shrink: 0;
+  background-color: var(--f-brand-color-text-default, #1F212B);
+  -webkit-mask-image: url('../assets/icons/flip-dark.svg');
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  mask-image: url('../assets/icons/flip-dark.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
 }
 
 /* ─── Reduced motion ─────────────────────────────────────────────────────────── */
