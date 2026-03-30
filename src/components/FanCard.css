@@ -519,7 +519,7 @@
 /* ─── Back flip hint (pinned bottom) ─────────────────────────────────────────── */
 .f-fan-card__back-flip-hint {
   font: var(--f-fan-card-caption-font);
-  color: var(--f-fan-card-text-subtle);
+  color: var(--f-brand-color-text-default, #1F212B);
   display: flex;
   align-items: center;
   justify-content: center;
