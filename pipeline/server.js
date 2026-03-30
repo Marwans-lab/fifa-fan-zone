@@ -377,6 +377,25 @@ async function handleWebhook(payload) {
       }
     } catch (e) {
       console.error(`[Pipeline] ${issueIdentifier}: Deploy error: ${e.message}`);
+      // Before resetting to Todo, check if the PR was already merged
+      // (gh pr merge fails on already-merged PRs — don't create duplicate work)
+      try {
+        const mergedJson = execSync(
+          `gh pr list -R ${GITHUB_REPO} --state merged --json number,title,headRefName --search "${issueIdentifier}" 2>/dev/null`,
+          { encoding: "utf-8" }
+        );
+        const mergedPrs = JSON.parse(mergedJson || "[]");
+        const mergedPr = mergedPrs.find(
+          (p) =>
+            p.title.includes(issueIdentifier) ||
+            p.headRefName.toLowerCase().includes(issueIdentifier.toLowerCase())
+        );
+        if (mergedPr) {
+          console.log(`[Pipeline] ${issueIdentifier}: PR #${mergedPr.number} already merged — moving to Deployed instead of Todo`);
+          await markDeployed(issueId, issueIdentifier, teamId, mergedPr.number);
+          return;
+        }
+      } catch { /* fall through to resetToTodo */ }
       await resetToTodo(
         issueId, issueIdentifier, teamId,
         `**[DEPLOY ERROR]** Unexpected error during deployment: \`${e.message}\`\n\nResetting to **Todo** for retry.`
@@ -498,6 +517,18 @@ async function checkForStalledIssues() {
               }
             } catch (mergeErr) {
               console.error(`[Pipeline] ${issue.identifier}: Merge failed: ${mergeErr.message}`);
+              // Check if PR was already merged — move to Deployed instead of leaving stuck
+              try {
+                const checkJson = execSync(
+                  `gh pr view ${pr.number} -R ${GITHUB_REPO} --json state 2>/dev/null`,
+                  { encoding: "utf-8" }
+                );
+                const prState = JSON.parse(checkJson);
+                if (prState.state === "MERGED") {
+                  console.log(`[Pipeline] ${issue.identifier}: PR #${pr.number} already merged — moving to Deployed`);
+                  await markDeployed(issue.id, issue.identifier, issue.team.id, pr.number);
+                }
+              } catch { /* leave for next stall cycle */ }
             }
           } else {
             retriggeredRecently.set(issue.id, now);

@@ -473,6 +473,18 @@ export default function Picture() {
         </div>
       )}
 
+      {/* ── BG removal error ──────────────────────────────────── */}
+      {bgError && (
+        <p style={{
+          font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-xs)',
+          color: 'var(--f-brand-color-status-error)',
+          marginTop: 'var(--f-brand-space-xs)', textAlign: 'center',
+          padding: '0 var(--f-brand-space-md)',
+        }}>
+          Background removal failed: {bgError}
+        </p>
+      )}
+
       {/* ── Camera error ─────────────────────────────────────── */}
       {cameraError && (
         <p className="picture-camera-error" style={{

@@ -88,6 +88,8 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  /* Explicit transform forces GPU layer — required for backface-visibility on mobile WebKit */
+  transform: rotateY(0deg);
 }
 
 /* ─── Front face ─────────────────────────────────────────────────────────────── */
