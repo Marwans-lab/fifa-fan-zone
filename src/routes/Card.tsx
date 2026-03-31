@@ -8,6 +8,9 @@ import { renderFrontFaceToBlob, renderCardToBlob, buildShareText } from '../lib/
 import lockIcon    from '../assets/icons/Lock-white.svg'
 import chevRight   from '../assets/icons/Chevron-right-white.svg'
 import tickBlack   from '../assets/icons/Tick-black.svg'
+import targetIcon  from '../assets/icons/Target-white.svg'
+import fireIcon    from '../assets/icons/Fire-white.svg'
+import trophyIcon  from '../assets/icons/Trophy-white.svg'
 import qrIcon      from '../assets/icons/qr-logo.svg'
 import globeWhite  from '../assets/icons/globe-white.svg'
 import globeDark   from '../assets/icons/globe-dark.svg'
@@ -33,17 +36,17 @@ const QUIZ_ICONS: Record<string, { white: string; dark: string }> = {
 
 // ─── Milestone config ─────────────────────────────────────────────────────────
 const MILESTONES = [
-  { iconSrc: qrIcon,      label: 'Fan card',      key: 'card'     },
-  { iconSrc: globeDark,    label: 'Connector',     key: 'the-connector'    },
-  { iconSrc: stadiumDark,  label: 'Architect',     key: 'the-architect'    },
-  { iconSrc: historyDark,  label: 'Historian',     key: 'the-historian'    },
+  { iconSrc: qrIcon,     label: 'Fan card',    key: 'fan-card' },
+  { iconSrc: targetIcon, label: '1st quiz',    key: 'first-quiz' },
+  { iconSrc: fireIcon,   label: 'All quizzes', key: 'all-quizzes' },
+  { iconSrc: trophyIcon, label: 'Leaderboard', key: 'leaderboard' },
 ] as const
 
 function statusLabel(done: number): string {
   if (done === 0) return 'New arrival'
   if (done === 1) return 'Rising fan'
-  if (done <= 2) return 'Quiz taker'
-  if (done <= 3) return 'Top fan'
+  if (done === 2) return 'Quiz taker'
+  if (done === 3) return 'Top fan'
   return 'Quiz champion'
 }
 
@@ -116,25 +119,25 @@ function JourneyStep({
 function JourneyCard({
   completedAt,
   quizCount,
-  totalQuizzes,
-  allComplete,
+  allQuizzesComplete,
+  leaderboardComplete,
+  allMilestonesComplete,
   cardComplete,
-  completedFlows,
   onStartQuiz,
 }: {
   completedAt: string | null
   quizCount: number
-  totalQuizzes: number
-  allComplete: boolean
+  allQuizzesComplete: boolean
+  leaderboardComplete: boolean
+  allMilestonesComplete: boolean
   cardComplete: boolean
-  completedFlows: Set<string>
   onStartQuiz: () => void
 }) {
   const achieved = [
     completedAt !== null,
-    completedFlows.has('the-connector'),
-    completedFlows.has('the-architect'),
-    completedFlows.has('the-historian'),
+    quizCount >= 1,
+    allQuizzesComplete,
+    leaderboardComplete,
   ]
   const doneCount = achieved.filter(Boolean).length
   const status = statusLabel(doneCount)
@@ -176,7 +179,7 @@ function JourneyCard({
         </div>
         <div className="card-journey-badge f-journey-card__step-badge">
           <span className="card-journey-badge-text">
-            {`Step ${Math.min(doneCount + 1, 4)}/4`}
+            {allMilestonesComplete ? 'Complete' : `Step ${Math.min(doneCount + 1, 4)}/4`}
           </span>
         </div>
       </div>
@@ -223,22 +226,28 @@ function JourneyCard({
       <button className="card-journey-cta"
         data-ui="start-quiz-btn"
         onClick={onStartQuiz}
-        disabled={allComplete}
+        disabled={allMilestonesComplete}
         style={{
           width: '100%', height: 'var(--sp-12)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: allComplete ? 'rgba(0,212,170,0.1)' : !cardComplete ? 'var(--f-brand-color-background-primary)' : 'var(--f-brand-color-background-primary)',
-          color: allComplete ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-text-light)',
+          background: allMilestonesComplete ? 'rgba(0,212,170,0.1)' : 'var(--f-brand-color-background-primary)',
+          color: allMilestonesComplete ? 'var(--f-brand-color-accent)' : 'var(--f-brand-color-text-light)',
           font: 'var(--f-brand-type-body-medium)', fontWeight: 'var(--weight-bold)',
           fontSize: 'var(--text-md)', borderRadius: 9999,
-          border: allComplete ? '1px solid rgba(0,212,170,0.25)' : 'none',
-          marginTop: 'var(--sp-7)', cursor: allComplete ? 'default' : 'pointer',
+          border: allMilestonesComplete ? '1px solid rgba(0,212,170,0.25)' : 'none',
+          marginTop: 'var(--sp-7)', cursor: allMilestonesComplete ? 'default' : 'pointer',
           boxShadow: 'none',
           transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
           WebkitTapHighlightColor: 'transparent',
         }}
       >
-        {allComplete ? 'All quizzes completed!' : !cardComplete ? 'Complete fan card' : 'Start quiz'}
+        {allMilestonesComplete
+          ? 'Journey complete'
+          : !cardComplete
+            ? 'Complete fan card'
+            : !allQuizzesComplete
+              ? 'Start quiz'
+              : 'View leaderboard'}
       </button>
     </section>
   )
@@ -295,6 +304,7 @@ function ExtraQuizCard({
   title,
   subtitle,
   result,
+  completed,
   locked,
   lockMessage,
   onStart,
@@ -303,11 +313,11 @@ function ExtraQuizCard({
   title: string
   subtitle: string
   result: { score: number; total: number } | undefined
+  completed: boolean
   locked: boolean
   lockMessage?: string
   onStart: () => void
 }) {
-  const done = !!result
   const [loading, setLoading] = useState(false)
 
   function handleClick() {
@@ -344,8 +354,8 @@ function ExtraQuizCard({
           <ProgressRing
             radius={RING_RADIUS}
             stroke={RING_STROKE}
-            progress={done ? 1 : 0}
-            color={done ? 'var(--f-brand-color-flight-status-confirmed)' : 'var(--f-brand-color-border-default)'}
+            progress={completed ? 1 : 0}
+            color={completed ? 'var(--f-brand-color-flight-status-confirmed)' : 'var(--f-brand-color-border-default)'}
           />
           <div className="card-quiz-card-icon-circle" style={{
             position: 'absolute',
@@ -356,14 +366,14 @@ function ExtraQuizCard({
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             background: locked
               ? 'rgba(0,0,0,0.04)'
-              : done
+              : completed
               ? 'linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.05))'
               : 'linear-gradient(135deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02))',
             boxShadow: locked ? 'none' : '0 6px 20px rgba(0,0,0,0.08)',
           }}>
             {locked ? (
               <img className="card-quiz-card-lock-icon" src={lockIcon} width={24} height={24} alt="" style={{ opacity: 0.4, filter: 'invert(1)' }} />
-            ) : done ? (
+            ) : completed ? (
               <img className="card-quiz-card-tick-icon" src={tickBlack} width={24} height={24} alt="" />
             ) : (
               <img className="card-quiz-card-quiz-icon" src={iconSrc} width={24} height={24} alt="" style={{ filter: 'invert(1)' }} />
@@ -378,9 +388,9 @@ function ExtraQuizCard({
             {title}
           </h3>
           <p className="card-quiz-card-subtitle" style={{ font: 'var(--f-brand-type-caption)', fontSize: 'var(--text-sm)', color: 'var(--f-brand-color-text-muted)', marginTop: 'var(--f-brand-space-xs)' }}>
-            {done ? (
+            {completed ? (
               <span className="card-quiz-card-result" style={{ color: 'var(--f-brand-color-text-default)', fontWeight: 'var(--weight-med)' }}>
-                Completed · {result.score}/{result.total} correct
+                {result ? `Completed · ${result.score}/${result.total} correct` : 'Completed'}
               </span>
             ) : locked ? (
               lockMessage ?? 'Complete your fan card to unlock'
@@ -392,7 +402,7 @@ function ExtraQuizCard({
           </p>
         </div>
       </div>
-      {!locked && !done && (
+      {!locked && !completed && (
         <div data-ui="card-quiz-card-action" style={{
           width: 36, height: 36, borderRadius: '50%',
           background: 'rgba(0,0,0,0.06)',
@@ -526,8 +536,11 @@ export default function Card() {
 
   // ── Journey card logic: compute total quizzes and find next available quiz ──
   const totalQuizzes = FLOWS.length
-  const quizCount = FLOWS.filter(f => !!state.quizResults[f.id]).length
+  const completedFlows = new Set<FlowId>(state.completedFlows)
+  const quizCount = FLOWS.filter(f => completedFlows.has(f.id)).length
   const allQuizzesDone = quizCount >= totalQuizzes
+  const leaderboardComplete = state.hasVisitedLeaderboard
+  const allMilestonesComplete = cardComplete && quizCount >= 1 && allQuizzesDone && leaderboardComplete
 
   const handleJourneyStart = useCallback(() => {
     if (!cardComplete) {
@@ -537,11 +550,17 @@ export default function Card() {
       return
     }
 
+    if (allQuizzesDone) {
+      track('card_journey_view_leaderboard_tapped')
+      navigate('/leaderboard')
+      return
+    }
+
     track('card_start_quiz_tapped')
 
     // Find first unlocked, uncompleted flow
     for (const flow of FLOWS) {
-      if (state.quizResults[flow.id]) continue
+      if (completedFlows.has(flow.id)) continue
       if (isFlowUnlocked(flow.id)) {
         flow.start()
         return
@@ -551,7 +570,7 @@ export default function Card() {
 
     // Fallback: scroll to quiz section
     quizRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, [cardComplete, state.quizResults, isFlowUnlocked])
+  }, [allQuizzesDone, cardComplete, completedFlows, isFlowUnlocked, navigate])
 
   return (
     <Screen>
@@ -580,10 +599,10 @@ export default function Card() {
             <JourneyCard
               completedAt={state.fanCard.completedAt}
               quizCount={quizCount}
-              totalQuizzes={totalQuizzes}
-              allComplete={allQuizzesDone}
+              allQuizzesComplete={allQuizzesDone}
+              leaderboardComplete={leaderboardComplete}
+              allMilestonesComplete={allMilestonesComplete}
               cardComplete={cardComplete}
-              completedFlows={new Set(FLOWS.filter(f => !!state.quizResults[f.id]).map(f => f.id))}
               onStartQuiz={handleJourneyStart}
             />
           </div>
@@ -608,6 +627,7 @@ export default function Card() {
             <div className="f-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--f-brand-space-md)' }}>
               {FLOWS.map(flow => {
                 const result = state.quizResults[flow.id]
+                const completed = completedFlows.has(flow.id)
                 const locked = !cardComplete || !isFlowUnlocked(flow.id)
                 const lockMessage = !cardComplete
                   ? 'Complete your fan card to unlock'
@@ -619,6 +639,7 @@ export default function Card() {
                     title={flow.title}
                     subtitle={flow.subtitle}
                     result={result ? { score: result.score, total: result.total } : undefined}
+                    completed={completed}
                     locked={locked}
                     lockMessage={locked ? lockMessage : undefined}
                     onStart={flow.start}
