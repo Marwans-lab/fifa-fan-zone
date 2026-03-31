@@ -30,7 +30,6 @@ export interface AppState {
   points: number
   quizResults: Record<string, QuizResult>
   completedFlows: FlowId[]
-  hasVisitedLeaderboard: boolean
 }
 
 const STORAGE_KEY = 'fanzone_state'
@@ -51,7 +50,6 @@ const defaultState: AppState = {
   points: 0,
   quizResults: {},
   completedFlows: [],
-  hasVisitedLeaderboard: false,
 }
 
 function loadState(): AppState {
@@ -144,15 +142,8 @@ export function useStore() {
     localStorage.removeItem(STORAGE_KEY)
   }, [])
 
-  const markLeaderboardVisited = useCallback(() => {
-    _setState(prev => {
-      if (prev.hasVisitedLeaderboard) return prev
-      return { ...prev, hasVisitedLeaderboard: true }
-    })
-  }, [])
-
   return {
     state: _state, updateFanCard, addPoints, recordQuizResult,
-    completeFlow, isFlowUnlocked, isFlowCompleted, resetState, markLeaderboardVisited,
+    completeFlow, isFlowUnlocked, isFlowCompleted, resetState,
   }
 }

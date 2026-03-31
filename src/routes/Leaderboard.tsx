@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Screen from '../components/Screen'
 import { track } from '../lib/analytics'
@@ -13,13 +12,9 @@ function formatRefresh(d: Date) { return `${pad2(d.getHours())}:${pad2(d.getMinu
 
 export default function Leaderboard() {
   const navigate = useNavigate()
-  const { state, markLeaderboardVisited } = useStore()
+  const { state } = useStore()
   const { entries, myRank, lastRefresh, refresh } = useLeaderboard()
   const homeRoute = state.fanCard.teamId ? '/card' : '/'
-
-  useEffect(() => {
-    markLeaderboardVisited()
-  }, [markLeaderboardVisited])
 
   return (
     <Screen>
