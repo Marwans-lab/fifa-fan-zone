@@ -215,19 +215,19 @@ async function markDeployed(issueId, identifier, teamId, prNumber) {
     console.log(`[Pipeline] ${identifier}: Moved to Deployed`);
 
     // Auto-promote next Angular migration step from Backlog → Todo
-    await promoteNextMigrationStep(identifier, teamId);
+    await promoteNextMigrationStep(issueId, identifier, teamId);
   }
 }
 
 // --- Angular migration: sequential step auto-promotion ---
 const MIGRATION_STEP_RE = /^Angular migration: Step (\d+)/;
 
-async function promoteNextMigrationStep(deployedIdentifier, teamId) {
+async function promoteNextMigrationStep(issueId, deployedIdentifier, teamId) {
   try {
     // Check if the deployed issue is a migration step
     const deployedResult = await linearGQL(
       `query($id: String!) { issue(id: $id) { title } }`,
-      { id: deployedIdentifier }
+      { id: issueId }
     );
     const deployedTitle = deployedResult.data?.issue?.title || "";
     const match = deployedTitle.match(MIGRATION_STEP_RE);
@@ -235,7 +235,7 @@ async function promoteNextMigrationStep(deployedIdentifier, teamId) {
 
     const completedStep = parseInt(match[1], 10);
     const nextStep = completedStep + 1;
-    console.log(`[Pipeline] Migration step ${completedStep} deployed — looking for step ${nextStep} in Backlog`);
+    console.log(`[Pipeline] Migration step ${completedStep} (${deployedIdentifier}) deployed — looking for step ${nextStep} in Backlog`);
 
     // Find the next step in Backlog
     const backlogResult = await linearGQL(
