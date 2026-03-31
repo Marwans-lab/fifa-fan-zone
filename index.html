@@ -9,7 +9,7 @@
   <body>
     <script>
       // GitHub Pages SPA redirect receiver — restores the real path
-      // from the query param set by 404.html before React mounts.
+      // from the query param set by 404.html before Angular bootstraps.
       (function () {
         var base = '/fifa-fan-zone'
         var p = new URLSearchParams(location.search).get('p')
@@ -18,7 +18,7 @@
         }
       })()
     </script>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <app-root></app-root>
+    <script type="module" src="/src/main.angular.ts"></script>
   </body>
 </html>
