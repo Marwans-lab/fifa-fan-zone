@@ -38,7 +38,6 @@ describe('StoreService', () => {
       points: 0,
       quizResults: {},
       completedFlows: [],
-      hasVisitedLeaderboard: false,
     })
   })
 

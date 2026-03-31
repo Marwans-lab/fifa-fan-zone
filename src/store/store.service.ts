@@ -28,7 +28,6 @@ export interface AppState {
   points: number
   quizResults: Record<string, QuizResult>
   completedFlows: FlowId[]
-  hasVisitedLeaderboard: boolean
 }
 
 export const STORE_STORAGE_KEY = 'fanzone_state'
@@ -44,7 +43,6 @@ function buildDefaultState(): AppState {
     points: 0,
     quizResults: {},
     completedFlows: [],
-    hasVisitedLeaderboard: false,
   }
 }
 
@@ -190,18 +188,6 @@ export class StoreService {
 
   isFlowCompleted(flowId: FlowId): boolean {
     return this._state().completedFlows.includes(flowId)
-  }
-
-  markLeaderboardVisited(): void {
-    this.setState(prev => {
-      if (prev.hasVisitedLeaderboard) {
-        return prev
-      }
-      return {
-        ...prev,
-        hasVisitedLeaderboard: true,
-      }
-    })
   }
 
   resetState(): void {
