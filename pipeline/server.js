@@ -213,6 +213,69 @@ async function markDeployed(issueId, identifier, teamId, prNumber) {
     markOurComment(issueId);
     await transitionIssue(issueId, deployedState.id);
     console.log(`[Pipeline] ${identifier}: Moved to Deployed`);
+
+    // Auto-promote next Angular migration step from Backlog → Todo
+    await promoteNextMigrationStep(identifier, teamId);
+  }
+}
+
+// --- Angular migration: sequential step auto-promotion ---
+const MIGRATION_STEP_RE = /^Angular migration: Step (\d+)/;
+
+async function promoteNextMigrationStep(deployedIdentifier, teamId) {
+  try {
+    // Check if the deployed issue is a migration step
+    const deployedResult = await linearGQL(
+      `query($id: String!) { issue(id: $id) { title } }`,
+      { id: deployedIdentifier }
+    );
+    const deployedTitle = deployedResult.data?.issue?.title || "";
+    const match = deployedTitle.match(MIGRATION_STEP_RE);
+    if (!match) return; // Not a migration step — skip
+
+    const completedStep = parseInt(match[1], 10);
+    const nextStep = completedStep + 1;
+    console.log(`[Pipeline] Migration step ${completedStep} deployed — looking for step ${nextStep} in Backlog`);
+
+    // Find the next step in Backlog
+    const backlogResult = await linearGQL(
+      `query {
+        issues(filter: {
+          team: { key: { eq: "MAR" } },
+          project: { id: { eq: "978662f2-57f8-44e3-9a5b-1e8059819bd8" } },
+          state: { name: { eq: "Backlog" } },
+          archivedAt: { null: true }
+        }, first: 50) {
+          nodes { id identifier title team { id } }
+        }
+      }`,
+      {}
+    );
+
+    const backlogIssues = backlogResult.data?.issues?.nodes || [];
+    const nextIssue = backlogIssues.find((i) => {
+      const m = i.title.match(MIGRATION_STEP_RE);
+      return m && parseInt(m[1], 10) === nextStep;
+    });
+
+    if (!nextIssue) {
+      console.log(`[Pipeline] No migration step ${nextStep} found in Backlog — migration sequence complete or paused`);
+      return;
+    }
+
+    // Move to Todo
+    const states = await getStates(nextIssue.team.id);
+    const todoState = findState(states, "Todo");
+    if (todoState) {
+      await postComment(nextIssue.id,
+        `**[PIPELINE]** Step ${completedStep} (${deployedIdentifier}) deployed successfully. Auto-promoting **Step ${nextStep}** to Todo.`
+      );
+      markOurComment(nextIssue.id);
+      await transitionIssue(nextIssue.id, todoState.id);
+      console.log(`[Pipeline] Migration: auto-promoted ${nextIssue.identifier} (Step ${nextStep}) to Todo`);
+    }
+  } catch (e) {
+    console.error(`[Pipeline] Migration auto-promote error: ${e.message}`);
   }
 }
 
