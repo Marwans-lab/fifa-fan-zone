@@ -8,3 +8,5 @@ venv/
 .mcp.json
 pipeline/.env
 public/bg-removal/
+.angular/
+dist-angular/
