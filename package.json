@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "^2.4.0",
+    "@angular/build": "^21.2.5",
     "@angular/compiler-cli": "^21.2.6",
     "@imgly/background-removal-data": "^1.4.5",
     "@types/react": "^18.3.12",
