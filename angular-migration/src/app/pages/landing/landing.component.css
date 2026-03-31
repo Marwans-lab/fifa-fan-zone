@@ -1,0 +1,148 @@
+.landing-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100%;
+  padding: var(--sp-20) var(--f-brand-space-md) var(--f-brand-space-2xl);
+  background: var(--c-lt-bg);
+}
+
+.landing-title {
+  margin: 0;
+  max-width: 361px;
+  text-align: center;
+  color: var(--c-lt-text-1);
+  font: var(--f-brand-type-title-2);
+}
+
+.landing-card-stack-wrapper {
+  width: 100%;
+  margin-top: var(--f-brand-space-lg);
+}
+
+.landing-card-stack-container {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 340 / 440;
+  margin: 0 auto;
+}
+
+.landing-card-stack-card {
+  grid-area: 1 / 1;
+  border-radius: var(--f-brand-radius-inner);
+  box-shadow: var(--f-brand-shadow-large);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-6) var(--sp-5) var(--sp-5);
+  border: 1px solid var(--f-brand-color-border-subtle);
+  position: relative;
+}
+
+.landing-card-stack-texture-dots {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--f-brand-radius-inner);
+  pointer-events: none;
+  background-image: radial-gradient(circle, var(--c-lt-overlay-border) 1.5px, transparent 1.5px);
+  background-size: var(--sp-4) var(--sp-4);
+  mix-blend-mode: overlay;
+}
+
+.landing-card-stack-texture-stripes {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--f-brand-radius-inner);
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    -55deg,
+    transparent,
+    transparent var(--sp-5),
+    var(--c-lt-shimmer) var(--sp-5),
+    var(--c-lt-shimmer) calc(var(--sp-5) + 1px)
+  );
+  mix-blend-mode: overlay;
+}
+
+.landing-card-stack-texture-holographic {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--sp-1);
+  background: linear-gradient(90deg, transparent, var(--c-lt-overlay-border), transparent);
+}
+
+.landing-card-stack-header {
+  width: 100%;
+  text-align: left;
+  position: relative;
+  z-index: 1;
+}
+
+.landing-card-stack-header-title {
+  color: var(--f-brand-color-text-light);
+  font: var(--f-brand-type-caption);
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+}
+
+.landing-card-stack-header-subtitle {
+  color: var(--c-text-mid);
+  font: var(--f-brand-type-caption);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-spaced);
+}
+
+.landing-card-stack-avatar {
+  border-radius: 50%;
+  background: var(--f-brand-color-background-dark-40a);
+  border: var(--f-brand-border-size-focused) solid var(--c-lt-overlay-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.landing-card-stack-team-name {
+  color: var(--f-brand-color-text-light);
+  font: var(--f-brand-type-headline-medium);
+  letter-spacing: var(--tracking-label);
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  position: relative;
+  z-index: 1;
+}
+
+.landing-card-stack-team-flag {
+  font-size: var(--text-xl);
+  font-style: normal;
+}
+
+.landing-cta-button {
+  margin-top: var(--f-brand-space-2xl);
+  width: 100%;
+  max-width: 361px;
+  height: var(--sp-14);
+  border-radius: var(--f-brand-radius-rounded);
+  border: none;
+  background: var(--c-lt-brand);
+  color: var(--f-brand-color-text-light);
+  font: var(--f-brand-type-body-medium);
+  cursor: pointer;
+  padding: var(--f-brand-space-md) var(--f-brand-space-xl);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.landing-cta-button:disabled {
+  background: var(--f-brand-color-background-disabled);
+  color: var(--f-brand-color-text-disabled);
+  cursor: default;
+}

@@ -1,0 +1,92 @@
+<div class="team-selection-page" data-page="team-selection">
+  <div class="team-selection-header" data-section="header">
+    <button
+      class="team-selection-back-btn"
+      data-ui="back-btn"
+      type="button"
+      aria-label="Go back"
+      (click)="onBack()"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M15 19l-7-7 7-7"
+          stroke="var(--f-brand-color-text-default)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+    <div class="team-selection-progress-track">
+      <div class="team-selection-progress-fill"></div>
+    </div>
+  </div>
+
+  <h2 class="team-selection-title" data-section="title">Select your team</h2>
+
+  <div
+    class="team-selection-dropdown"
+    data-section="team-dropdown"
+    #dropdownRoot
+  >
+    <button
+      class="team-selection-dropdown-btn"
+      data-ui="team-dropdown-btn"
+      type="button"
+      [attr.aria-expanded]="open"
+      aria-haspopup="listbox"
+      (click)="toggleDropdown()"
+      [class.has-value]="selectedTeam"
+    >
+      <span>{{ selectedTeam?.name ?? 'Select a team' }}</span>
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        [style.transform]="open ? 'rotate(180deg)' : 'rotate(0deg)'"
+      >
+        <path
+          d="M6 9l6 6 6-6"
+          stroke="var(--f-brand-color-text-subtle)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+    @if (open) {
+      <ul class="team-selection-dropdown-list" role="listbox">
+        @for (team of teams; track team.id) {
+          <li
+            class="team-selection-dropdown-item"
+            role="option"
+            [attr.aria-selected]="team.id === selectedId"
+            (click)="onTeamSelect(team.id)"
+          >
+            {{ team.name }}
+          </li>
+        }
+      </ul>
+    }
+  </div>
+
+  <div class="team-selection-spacer"></div>
+
+  <p class="team-selection-login-prompt">
+    Already have a card? <span class="team-selection-login-link">Log in</span>
+  </p>
+
+  <button
+    class="team-selection-continue-btn"
+    data-section="confirm-cta"
+    data-ui="continue-btn"
+    type="button"
+    [disabled]="!selectedId"
+    (click)="onContinue()"
+  >
+    Add your photo
+  </button>
+</div>

@@ -1,0 +1,52 @@
+<div class="landing-page" data-page="landing">
+  <h1 class="landing-title" data-section="hero">
+    You could win tickets to FIFA World Cup 2026
+  </h1>
+
+  <div class="landing-card-stack-wrapper" data-section="fan-card-stack">
+    <div class="landing-card-stack-container" aria-hidden="true">
+      <div
+        class="landing-card-stack-card"
+        *ngFor="let card of cards"
+        [style.width.px]="card.width"
+        [style.height.px]="card.height"
+        [style.transform]="'rotate(' + card.rotateDeg + 'deg)'"
+        [style.zIndex]="card.zIndex"
+        [style.background]="'linear-gradient(160deg, ' + card.team.colors[0] + ', ' + card.team.colors[1] + ')'"
+      >
+        <div class="landing-card-stack-texture-dots"></div>
+        <div class="landing-card-stack-texture-stripes"></div>
+        <div class="landing-card-stack-texture-holographic"></div>
+
+        <div class="landing-card-stack-header">
+          <div class="landing-card-stack-header-title">Your fan card</div>
+          <div class="landing-card-stack-header-subtitle">Collector edition</div>
+        </div>
+
+        <div class="landing-card-stack-avatar">
+          <span
+            class="landing-card-stack-avatar-flag"
+            [style.fontSize.px]="card.width * 0.18"
+          >
+            {{ card.team.flag }}
+          </span>
+        </div>
+
+        <div class="landing-card-stack-team-name">
+          <span class="landing-card-stack-team-flag">{{ card.team.flag }}</span>
+          {{ card.team.name }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button
+    class="landing-cta-button"
+    data-section="cta"
+    data-ui="primary-cta-btn"
+    type="button"
+    (click)="onPrimaryTap()"
+  >
+    {{ ctaLabel }}
+  </button>
+</div>

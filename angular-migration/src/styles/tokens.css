@@ -1,0 +1,395 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   App Token Layer
+   Imports FDS brand tokens, then defines app-specific tokens and
+   backward-compat aliases so existing components keep working.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@import './fds-tokens.css';
+
+:root {
+  /* ─── Dark-theme color roles (app-specific, no FDS equivalent) ─────────── */
+  --c-bg:            #05050a;
+  --c-surface:       rgba(255,255,255,0.09);
+  --c-surface-raise: rgba(255,255,255,0.14);
+  --c-surface-press: rgba(255,255,255,0.20);
+  --c-border:        rgba(255,255,255,0.18);
+  --c-border-raise:  rgba(255,255,255,0.30);
+  --c-border-accent: rgba(0,212,170,0.32);
+  --c-border-brand:  rgba(200,16,46,0.32);
+
+  --c-text-1: rgba(255,255,255,0.94);
+  --c-text-hi: rgba(255,255,255,0.88);
+  --c-text-mid: rgba(255,255,255,0.65);
+  --c-text-2: rgba(255,255,255,0.48);
+  --c-text-dim: rgba(255,255,255,0.35);
+  --c-text-3: rgba(255,255,255,0.24);
+
+  --c-accent:        #00d4aa;
+  --c-accent-bg:     rgba(0,212,170,0.08);
+  --c-accent-faint:  rgba(0,212,170,0.05);
+  --c-accent-soft:   rgba(0,212,170,0.10);
+  --c-accent-glow:   rgba(0,212,170,0.15);
+  --c-accent-border: rgba(0,212,170,0.25);
+  --c-brand:         #c8102e;
+  --c-brand-glow:    rgba(200,16,46,0.12);
+  --c-correct:  #34DB80;
+  --c-error:    #D95757;
+  --c-warn:     #ffb800;
+
+  /* correct / error alpha variants */
+  --c-correct-bg:     rgba(52,219,128,0.10);
+  --c-correct-border: rgba(52,219,128,0.15);
+  --c-correct-glow:   rgba(52,219,128,0.40);
+  --c-error-bg:       rgba(217,87,87,0.10);
+  --c-error-border:   rgba(217,87,87,0.15);
+  --c-error-glow:     rgba(217,87,87,0.40);
+  --c-surface-faint:  rgba(255,255,255,0.04);
+  --c-white:          #ffffff;
+
+  /* ─── Light-theme roles → aliased to FDS brand tokens ──────────────────── */
+  --c-lt-bg:            var(--f-brand-color-background-default);    /* #f2f3fa */
+  --c-lt-surface:       var(--f-brand-color-background-light);      /* #ffffff */
+  --c-lt-border:        var(--f-brand-color-border-default);        /* #dbdee8 */
+  --c-lt-text-1:        var(--f-brand-color-text-default);          /* #1f212b */
+  --c-lt-text-2:        var(--f-brand-color-text-subtle);           /* #6e7780 */
+  --c-lt-text-3:        var(--f-brand-color-text-muted);            /* #4a525d */
+  --c-lt-brand:         var(--f-brand-color-primary);               /* #8e2157 */
+  --c-lt-correct-dark:  #1C7544;
+  --c-lt-correct-bg:    rgba(28,117,68,0.08);
+  --c-lt-correct-glow:  rgba(28,117,68,0.20);
+  --c-lt-error-glow:    rgba(217,87,87,0.20);
+  --c-lt-shimmer:       rgba(255,255,255,0.10);
+  --c-lt-star-glow:     rgba(255,184,0,0.60);
+  --c-lt-white:         var(--f-brand-color-text-light);            /* #ffffff */
+  --c-lt-tint-faint:    rgba(0,0,0,0.02);
+  --c-lt-tint-subtle:   rgba(0,0,0,0.04);
+  --c-lt-tint:          rgba(0,0,0,0.06);
+  --c-lt-tint-strong:   rgba(0,0,0,0.10);
+  --c-lt-tint-heavy:    rgba(0,0,0,0.12);
+  --c-lt-tint-intense:  rgba(0,0,0,0.15);
+  --c-lt-shadow:        var(--f-brand-color-shadow-default);        /* rgba(31,33,43,0.08) */
+  --c-lt-shadow-xs:     0 1px 3px rgba(0,0,0,0.06);
+  --c-lt-shadow-sm:     0 6px 20px rgba(0,0,0,0.08);
+  --c-lt-shadow-md:     0 10px 25px rgba(0,0,0,0.10);
+  --c-lt-shadow-glow:   0 0 25px rgba(0,0,0,0.15);
+  --c-lt-shadow-btn:    0 10px 30px rgba(0,0,0,0.12);
+  --c-lt-shadow-strong: rgba(0,0,0,0.25);
+  --c-lt-overlay:       rgba(0,0,0,0.20);
+  --c-lt-overlay-heavy: rgba(0,0,0,0.50);
+  --c-lt-overlay-border: rgba(255,255,255,0.20);
+  --c-lt-shadow-lg: 0 8px 32px rgba(31,33,43,0.12), 0 2px 8px rgba(31,33,43,0.08);
+
+  /* ─── Interaction tints (no direct FDS equivalent) ────────────────────── */
+  --c-brand-tint-6:    rgba(142, 33, 87, 0.06);
+  --c-brand-tint-12:   rgba(142, 33, 87, 0.12);
+  --c-brand-tint-20:   rgba(142, 33, 87, 0.20);
+  --c-brand-tint-30:   rgba(142, 33, 87, 0.30);
+  --c-dark-tint-6:     rgba(31, 33, 43, 0.06);
+  --c-white-92:        rgba(255, 255, 255, 0.92);
+  --c-brand-selection:  rgba(142, 33, 87, 0.20);
+  --c-brand-focus-ring: rgba(142, 33, 87, 0.16);
+  --c-lt-correct-border: rgba(50, 130, 86, 0.20);
+
+  /* ─── Glass / elevation (app-specific dark-theme) ──────────────────────── */
+  --glass-bg:     rgba(255,255,255,0.10);
+  --glass-border: rgba(255,255,255,0.18);
+  --glass-blur:   blur(16px);
+  --glass-shine:  inset 0 1px 0 rgba(255,255,255,0.14);
+
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.45);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.55), var(--glass-shine);
+  --shadow-lg: 0 8px 48px rgba(0,0,0,0.70), var(--glass-shine);
+
+  /* ─── Component-specific tokens ────────────────────────────────────────────── */
+  --c-photo-placeholder-border: 2px dashed rgba(255,255,255,0.45);
+  --c-capture-ring: 3px;
+
+  /* ─── Card tokens (FanCard front face) ─────────────────────────────────────── */
+  --c-card-gradient-1:      #1a1a2e;
+  --c-card-gradient-2:      #16213e;
+  --c-card-gradient-3:      #0f3460;
+  --c-card-shadow:          rgba(0,0,0,0.35);
+  --c-card-inset:           rgba(255,255,255,0.12);
+  --c-card-border:          rgba(255,255,255,0.18);
+
+  /* ─── Typography ─────────────────────────────────────────────────────────── */
+  --font-display: var(--f-base-type-family-primary);
+  --font-body:    var(--f-base-type-family-secondary);
+
+  --text-3xs: 9px;
+  --text-2xs: 10px;
+  --text-xs:  11px;
+  --text-sm:  13px;
+  --text-md:   15px;
+  --text-base: 16px;
+  --text-lg:   18px;
+  --text-xl:  22px;
+  --text-2xl: 28px;
+  --text-3xl: 36px;
+  --text-4xl: 40px;
+  --text-5xl: 64px;
+
+  --weight-thin:  100;
+  --weight-light: 300;
+  --weight-reg:   400;
+  --weight-med:   500;
+  --weight-bold:  600;
+
+  --leading-none:    1;
+  --leading-close:   1.2;
+  --leading-tight:   1.12;
+  --leading-snug:    1.28;
+  --leading-relaxed: 1.4;
+  --leading-body:    1.5;
+  --leading-normal:  1.52;
+
+  --tracking-tighter: -0.04em;
+  --tracking-tight:  -0.03em;
+  --tracking-semi:   -0.02em;
+  --tracking-snug:   -0.015em;
+  --tracking-normal: -0.005em;
+  --tracking-label:  0.5px;
+  --tracking-wide:   0.05em;
+  --tracking-wider:  0.09em;
+  --tracking-spaced: 1px;
+  --tracking-display: 2px;
+  --tracking-display-wide: 3px;
+  --tracking-display-ultra: 8px;
+
+  /* ─── Spacing (8pt grid) ─────────────────────────────────────────────────── */
+  --sp-1:  var(--f-brand-space-2xs);   /* 4px */
+  --sp-2:  var(--f-brand-space-xs);    /* 8px */
+  --sp-3:  var(--f-brand-space-sm);    /* 12px */
+  --sp-4:  var(--f-brand-space-md);    /* 16px */
+  --sp-5:  20px;
+  --sp-6:  var(--f-brand-space-lg);    /* 24px */
+  --sp-7:  28px;
+  --sp-8:  var(--f-brand-space-xl);    /* 32px */
+  --sp-9:  36px;
+  --sp-10: var(--f-brand-space-2xl);   /* 40px */
+  --sp-11: 44px;
+  --sp-12: var(--f-brand-space-3xl);   /* 48px */
+  --sp-14: 56px;
+  --sp-16: var(--f-brand-space-4xl);   /* 64px */
+  --sp-18: var(--f-brand-space-5xl);   /* 72px */
+  --sp-20: var(--f-brand-space-6xl);   /* 80px */
+
+  /* ─── Radii ──────────────────────────────────────────────────────────────── */
+  --r-xs:   4px;
+  --r-sm:   var(--f-brand-radius-base);    /* 8px */
+  --r-md:   var(--f-brand-radius-small);   /* 12px */
+  --r-lg:   var(--f-brand-radius-inner);   /* 16px */
+  --r-xl:   var(--f-brand-radius-outer);   /* 20px */
+  --r-2xl:  28px;
+  --r-full: 9999px;
+
+  /* ─── Motion ─────────────────────────────────────────────────────────────── */
+  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-sharp: cubic-bezier(0.2, 0, 0, 1);
+
+  --dur-fast:   100ms;
+  --dur-base:   180ms;
+  --dur-slow:   320ms;
+  --dur-enter:  260ms;
+  --dur-exit:   160ms;
+  --dur-gentle: 960ms;
+
+  /* ─── FDS Brand Tokens ────────────────────────────────────────────────────── */
+  /* Colors — core brand */
+  --f-brand-color-primary:                  #8E2157;
+  --f-brand-color-primary-hover:            #5C0931;
+
+  /* Colors — background */
+  --f-brand-color-background-default:       #F2F3FA;
+  --f-brand-color-background-light:         #FFFFFF;
+  --f-brand-color-background-primary:       #8E2157;
+  --f-brand-color-background-primary-hover: #5C0931;
+  --f-brand-color-background-disabled:      #DBDEE8;
+
+  /* Colors — text */
+  --f-brand-color-text-default:   #1F212B;
+  --f-brand-color-text-heading:   #1F212B;
+  --f-brand-color-text-muted:     #4A525D;
+  --f-brand-color-text-subtle:    #6E7780;
+  --f-brand-color-text-light:     #FFFFFF;
+  --f-brand-color-text-primary:   #8E2157;
+  --f-brand-color-text-disabled:  #9099A2;
+
+  /* Colors — border */
+  --f-brand-color-border-default: #DBDEE8;
+  --f-brand-color-border-primary: #8E2157;
+  --f-brand-color-border-disabled:#9099A2;
+
+  /* Colors — shadow */
+  --f-brand-color-shadow-default: #1F212B14;
+
+  /* Spacing */
+  --f-brand-space-none: 0px;
+  --f-brand-space-2xs:  4px;
+  --f-brand-space-xs:   8px;
+  --f-brand-space-sm:   12px;
+  --f-brand-space-md:   16px;
+  --f-brand-space-lg:   24px;
+  --f-brand-space-xl:   32px;
+  --f-brand-space-2xl:  40px;
+  --f-brand-space-3xl:  48px;
+  --f-brand-space-4xl:  64px;
+  --f-brand-space-5xl:  72px;
+  --f-brand-space-6xl:  80px;
+
+  /* Border & Radius */
+  --f-brand-border-size-none:    0px;
+  --f-brand-border-size-default: 1px;
+  --f-brand-border-size-focused: 2px;
+  --f-brand-radius-none:    0px;
+  --f-brand-radius-base:    8px;
+  --f-brand-radius-small:   12px;
+  --f-brand-radius-inner:   16px;
+  --f-brand-radius-outer:   20px;
+  --f-brand-radius-rounded: 64px;
+
+  /* Blur */
+  --f-brand-blur-subtle: 8px;
+
+  /* Shadows */
+  --f-brand-shadow-none:     0 0 0 0 transparent;
+  --f-brand-shadow-medium:   0 2px 8px var(--f-brand-color-shadow-default);
+  --f-brand-shadow-large:    0 8px 20px var(--f-brand-color-shadow-default);
+  --f-brand-color-focus-glow: rgba(142, 33, 87, 0.16);
+
+  /* Typography composites (font shorthand: weight size/line-height family) */
+  --f-brand-type-page-title-thin: 100 48px/56px 'Jotia', Verdana, Geneva, sans-serif;
+  --f-brand-type-page-title:      300 48px/56px 'Jotia', Verdana, Geneva, sans-serif;
+  --f-brand-type-title-1:         100 36px/44px 'Jotia', Verdana, Geneva, sans-serif;
+  --f-brand-type-title-2:         100 28px/36px 'Jotia', Verdana, Geneva, sans-serif;
+  --f-brand-type-headline:        400 18px/24px 'Graphik', 'Graphik Web', Arial, sans-serif;
+  --f-brand-type-headline-medium: 500 18px/24px 'Graphik', 'Graphik Web', Arial, sans-serif;
+  --f-brand-type-body:            400 16px/24px 'Graphik', 'Graphik Web', Arial, sans-serif;
+  --f-brand-type-body-medium:     500 16px/24px 'Graphik', 'Graphik Web', Arial, sans-serif;
+  --f-brand-type-subheading:      400 14px/20px 'Graphik', 'Graphik Web', Arial, sans-serif;
+  --f-brand-type-caption:         400 12px/16px 'Graphik', 'Graphik Web', Arial, sans-serif;
+
+  /* Motion */
+  --f-brand-motion-duration-instant:  240ms;
+  --f-brand-motion-duration-quick:    480ms;
+  --f-brand-motion-duration-gentle:   960ms;
+  --f-brand-motion-duration-generous: 1200ms;
+  --f-brand-motion-easing-entry:      cubic-bezier(0.4, 0, 1, 1);
+  --f-brand-motion-easing-exit:       cubic-bezier(0, 0, 0.2, 1);
+  --f-brand-motion-easing-default:    cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ─── Backward-compat aliases (keep existing vars working) ───────────────── */
+  --color-bg:             var(--c-bg);
+  --f-color-background-light: var(--f-brand-color-background-light);
+  --color-surface:        rgba(255,255,255,0.05);
+  --color-border:         var(--c-border);
+  --color-accent:         var(--c-accent);
+  --color-brand:          var(--c-brand);
+  --color-accent-dark:    #009e7e;
+  --color-text-primary:   var(--c-text-1);
+  --color-text-secondary: var(--c-text-2);
+  --color-error:          var(--c-error);
+  --color-warning:        var(--c-warn);
+  --color-success:        var(--c-accent);
+
+  --space-1:  var(--sp-1);
+  --space-2:  var(--sp-2);
+  --space-3:  var(--sp-3);
+  --space-4:  var(--sp-4);
+  --space-5:  var(--sp-5);
+  --space-6:  var(--sp-6);
+  --space-8:  var(--sp-8);
+  --space-10: var(--sp-10);
+  --space-12: var(--sp-12);
+
+  --font-family:         var(--font-body);
+  --font-size-xs:        var(--text-xs);
+  --font-size-sm:        var(--text-sm);
+  --font-size-md:        var(--text-md);
+  --font-size-lg:        var(--text-lg);
+  --font-size-xl:        var(--text-xl);
+  --font-size-2xl:       var(--text-2xl);
+  --font-weight-regular: var(--weight-reg);
+  --font-weight-medium:  var(--weight-med);
+  --font-weight-bold:    var(--weight-bold);
+  --line-height-tight:   var(--leading-tight);
+  --line-height-normal:  var(--leading-normal);
+
+  --radius-sm:   var(--r-sm);
+  --radius-md:   var(--r-md);
+  --radius-lg:   var(--r-xl);
+  --radius-full: var(--r-full);
+
+  --transition-fast:   var(--dur-fast) var(--ease-out);
+  --transition-normal: var(--dur-base) var(--ease-out);
+  --transition-slow:   var(--dur-slow) var(--ease-out);
+
+  --z-base:    0;
+  --z-overlay: 100;
+  --z-modal:   200;
+
+  /* ─── Glass variants ────────────────────────────────────────────────────── */
+  --glass-bg-strong: rgba(255,255,255,0.14);
+  --glass-bg-subtle: rgba(255,255,255,0.05);
+
+  /* ─── Focus ring ────────────────────────────────────────────────────────── */
+  --focus-ring: 0 0 0 2px var(--c-bg), 0 0 0 4px var(--c-accent);
+
+  /* ─── Scrollbar ─────────────────────────────────────────────────────────── */
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: rgba(255,255,255,0.12);
+  --scrollbar-thumb-hover: rgba(255,255,255,0.22);
+  --scrollbar-width: 4px;
+
+  /* ─── FDS Brand Tokens ─────────────────────────────────────────────────── */
+  /* Colors */
+  --f-brand-color-primary:              #8E2157;
+  --f-brand-color-primary-hover:        #7A1C4B;
+  --f-brand-color-primary-active:       #6B1841;
+  --f-brand-color-background-default:   #F2F3FA;
+  --f-brand-color-background-disabled:  #E5E7F0;
+  --f-brand-color-surface-default:      #FFFFFF;
+  --f-brand-color-surface-neutral:      #F2F3FA;
+  --f-brand-color-text-default:         #1F212B;
+  --f-brand-color-text-inverse:         #FFFFFF;
+  --f-brand-color-text-disabled:        #A0A4B0;
+  --f-brand-color-border-default:       #DBDEE8;
+  --f-brand-color-border-focused:       #8E2157;
+
+  /* Typography */
+  --f-brand-font-family-body:    'Graphik', 'SF Pro Text', ui-rounded, -apple-system, system-ui, sans-serif;
+  --f-brand-font-family-display: 'Jotia', 'SF Pro Display', ui-rounded, -apple-system, system-ui, sans-serif;
+  --f-brand-font-size-sm:        13px;
+  --f-brand-font-size-md:        15px;
+  --f-brand-font-size-lg:        18px;
+  --f-brand-font-weight-regular: 400;
+  --f-brand-font-weight-medium:  500;
+
+  /* Spacing (4pt grid) */
+  --f-brand-space-1:  4px;
+  --f-brand-space-2:  8px;
+  --f-brand-space-3:  12px;
+  --f-brand-space-4:  16px;
+  --f-brand-space-5:  20px;
+  --f-brand-space-6:  24px;
+
+  /* Radii */
+  --f-brand-radius-base:    8px;
+  --f-brand-radius-inner:   16px;
+  --f-brand-radius-rounded: 64px;
+
+  /* Motion */
+  --f-brand-motion-duration-fast:     100ms;
+  --f-brand-motion-duration-base:     180ms;
+  --f-brand-motion-duration-generous: 1200ms;
+  --f-brand-motion-easing-entry:      cubic-bezier(0.16, 1, 0.3, 1);
+  --f-brand-motion-easing-standard:   cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Elevation */
+  --f-brand-shadow-medium: 0 2px 8px rgba(31,33,43,0.08), 0 1px 2px rgba(31,33,43,0.04);
+  --f-brand-shadow-large:  0 8px 24px rgba(31,33,43,0.12), 0 2px 4px rgba(31,33,43,0.04);
+
+  /* Focus */
+  --f-brand-border-size-focused: 2px;
+  --f-brand-focus-ring: 0 0 0 2px var(--f-brand-color-background-default), 0 0 0 4px var(--f-brand-color-primary);
+}
