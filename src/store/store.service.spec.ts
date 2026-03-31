@@ -3,8 +3,40 @@ import { StoreService, STORE_STORAGE_KEY } from './store.service'
 
 describe('StoreService', () => {
   const originalPerformance = globalThis.performance
+  const originalLocalStorage = Object.getOwnPropertyDescriptor(globalThis, 'localStorage')
+
+  const createStorageMock = (): Storage => {
+    let store = new Map<string, string>()
+    return {
+      get length() {
+        return store.size
+      },
+      clear() {
+        store = new Map<string, string>()
+      },
+      getItem(key: string) {
+        return store.has(key) ? store.get(key)! : null
+      },
+      key(index: number) {
+        const keys = Array.from(store.keys())
+        return keys[index] ?? null
+      },
+      removeItem(key: string) {
+        store.delete(key)
+      },
+      setItem(key: string, value: string) {
+        store.set(key, String(value))
+      },
+    }
+  }
 
   beforeEach(() => {
+    Object.defineProperty(globalThis, 'localStorage', {
+      configurable: true,
+      writable: true,
+      value: createStorageMock(),
+    })
+
     localStorage.clear()
     vi.restoreAllMocks()
 
@@ -18,6 +50,10 @@ describe('StoreService', () => {
   })
 
   afterEach(() => {
+    if (originalLocalStorage) {
+      Object.defineProperty(globalThis, 'localStorage', originalLocalStorage)
+    }
+
     Object.defineProperty(globalThis, 'performance', {
       configurable: true,
       writable: true,
@@ -42,7 +78,7 @@ describe('StoreService', () => {
   })
 
   it('updates fan card and persists the state', () => {
-    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem')
+    const setItemSpy = vi.spyOn(localStorage, 'setItem')
     const store = new StoreService()
 
     store.updateFanCard({
@@ -89,7 +125,7 @@ describe('StoreService', () => {
   })
 
   it('resetState clears localStorage and restores defaults', () => {
-    const removeSpy = vi.spyOn(Storage.prototype, 'removeItem')
+    const removeSpy = vi.spyOn(localStorage, 'removeItem')
     const store = new StoreService()
 
     store.addPoints(5)
