@@ -263,7 +263,7 @@ async function promoteNextMigrationStep(deployedIdentifier, teamId) {
       return;
     }
 
-    // Move to Todo
+    // Move to Todo and trigger Cursor
     const states = await getStates(nextIssue.team.id);
     const todoState = findState(states, "Todo");
     if (todoState) {
@@ -273,6 +273,9 @@ async function promoteNextMigrationStep(deployedIdentifier, teamId) {
       markOurComment(nextIssue.id);
       await transitionIssue(nextIssue.id, todoState.id);
       console.log(`[Pipeline] Migration: auto-promoted ${nextIssue.identifier} (Step ${nextStep}) to Todo`);
+
+      // Trigger Cursor to pick it up immediately
+      await triggerCursor(nextIssue.id, nextIssue.identifier);
     }
   } catch (e) {
     console.error(`[Pipeline] Migration auto-promote error: ${e.message}`);
