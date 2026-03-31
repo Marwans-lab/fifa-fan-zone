@@ -1,12 +1,8 @@
 import { defineConfig } from 'vite'
-import angular from '@analogjs/vite-plugin-angular'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  resolve: {
-    mainFields: ['module'],
-  },
-  plugins: [angular(), react()],
+  plugins: [react()],
   base: '/fifa-fan-zone/',
   optimizeDeps: {
     exclude: ['onnxruntime-web'],
