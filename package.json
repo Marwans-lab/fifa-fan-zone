@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@angular/common": "^21.2.6",
+    "@angular/core": "^21.2.6",
     "@imgly/background-removal": "1.4.5",
     "firebase": "^12.10.0",
     "react": "^18.3.1",

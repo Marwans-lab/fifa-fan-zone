@@ -1,0 +1,15 @@
+<button
+  [class]="classes.join(' ')"
+  [type]="type"
+  [disabled]="disabled"
+  [attr.aria-label]="ariaLabel"
+  data-component="button"
+  (click)="onClick($event)"
+>
+  <ng-content select="[icon-left]"></ng-content>
+  <ng-content></ng-content>
+  <span *ngIf="iconRight" class="f-button__icon" [attr.aria-hidden]="iconRightAlt ? null : 'true'">
+    <img [src]="iconRight" [alt]="iconRightAlt" />
+  </span>
+  <ng-content select="[icon-right]"></ng-content>
+</button>
