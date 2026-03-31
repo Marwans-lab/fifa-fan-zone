@@ -274,6 +274,12 @@ async function promoteNextMigrationStep(issueId, deployedIdentifier, teamId) {
       await transitionIssue(nextIssue.id, todoState.id);
       console.log(`[Pipeline] Migration: auto-promoted ${nextIssue.identifier} (Step ${nextStep}) to Todo`);
 
+      // Post @cursor comment to trigger a fresh Cloud Agent session
+      // (just assigning isn't enough if there's an old completed session)
+      await postComment(nextIssue.id,
+        `@cursor Step ${completedStep} is deployed. Please start Step ${nextStep}. Do NOT modify index.html, vite.config.ts, or delete any React files. Angular code goes alongside React — additive only. Branch from latest main.`
+      );
+
       // Trigger Cursor to pick it up immediately
       await triggerCursor(nextIssue.id, nextIssue.identifier);
     }
