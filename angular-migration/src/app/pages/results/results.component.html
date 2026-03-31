@@ -1,0 +1,78 @@
+<div class="results-page" data-page="results">
+  <div class="results-container">
+    <div class="results-status" data-section="score-label" [style.color]="status().color">
+      {{ status().label }}
+    </div>
+
+    <div class="results-title">
+      {{ quizTitle() }}
+    </div>
+
+    <div class="results-ring" data-section="score-ring" [style.width.px]="ringSize" [style.height.px]="ringSize">
+      <svg class="results-ring-svg" [attr.width]="ringSize" [attr.height]="ringSize" [attr.viewBox]="'0 0 ' + ringSize + ' ' + ringSize">
+        <circle
+          class="results-ring-track"
+          fill="none"
+          [attr.stroke-width]="ringStroke"
+          [attr.cx]="ringCenter"
+          [attr.cy]="ringCenter"
+          [attr.r]="ringRadius"
+        />
+        <circle
+          class="results-ring-arc"
+          fill="none"
+          [attr.stroke-width]="ringStroke"
+          stroke-linecap="round"
+          [style.stroke]="status().color"
+          [style.strokeDasharray]="ringCircumference"
+          [style.strokeDashoffset]="ringDashOffset()"
+          [attr.cx]="ringCenter"
+          [attr.cy]="ringCenter"
+          [attr.r]="ringRadius"
+        />
+      </svg>
+
+      <div
+        class="results-ring-inner"
+        [style.top.px]="ringStroke * 2"
+        [style.right.px]="ringStroke * 2"
+        [style.bottom.px]="ringStroke * 2"
+        [style.left.px]="ringStroke * 2"
+      >
+        <span class="results-ring-points" [style.color]="status().color">{{ displayPoints() }}</span>
+        <span class="results-ring-label">Points</span>
+      </div>
+    </div>
+
+    <div class="results-score-summary">
+      {{ score() }} / {{ total() }} correct
+    </div>
+
+    <div class="results-actions" data-section="actions">
+      <button
+        type="button"
+        class="results-btn results-btn--primary"
+        data-ui="view-leaderboard-btn"
+        (click)="onViewLeaderboard()"
+      >
+        View leaderboard
+      </button>
+      <button
+        type="button"
+        class="results-btn results-btn--secondary"
+        data-ui="return-home-btn"
+        (click)="onReturnHome()"
+      >
+        Return home
+      </button>
+      <button
+        type="button"
+        class="results-btn results-btn--ghost"
+        data-ui="play-again-btn"
+        (click)="onPlayAgain()"
+      >
+        Play another quiz
+      </button>
+    </div>
+  </div>
+</div>

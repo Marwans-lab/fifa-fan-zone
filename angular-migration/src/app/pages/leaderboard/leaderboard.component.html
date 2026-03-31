@@ -1,0 +1,98 @@
+<div class="leaderboard-page" data-page="leaderboard">
+  <div class="leaderboard-content">
+    <div class="leaderboard-header" data-section="header">
+      <button
+        class="leaderboard-icon-btn"
+        data-ui="back-btn"
+        type="button"
+        aria-label="Go back"
+        (click)="onBack()"
+      >
+        <img src="assets/icons/Chevron-left-white.svg" width="24" height="24" alt="" />
+      </button>
+
+      <h2 class="leaderboard-title">Leaderboard</h2>
+
+      <button
+        class="leaderboard-icon-btn"
+        data-ui="refresh-btn"
+        type="button"
+        aria-label="Refresh leaderboard"
+        (click)="onRefresh()"
+      >
+        <img src="assets/icons/flip-white.svg" width="24" height="24" alt="" />
+      </button>
+    </div>
+
+    <p class="leaderboard-subtitle" data-section="subtitle">
+      {{ subtitle() }}
+    </p>
+
+    @if (myRank() !== null) {
+      <div class="leaderboard-your-rank" data-section="your-rank">
+        <span class="leaderboard-your-rank-label">Your rank: </span>
+        <span class="leaderboard-your-rank-value">#{{ myRank() }}</span>
+        @if (isTopFive()) {
+          <span class="leaderboard-top-five-badge">
+            <img src="assets/icons/Trophy-white.svg" width="24" height="24" alt="" />
+            Top 5 — Avios eligible
+          </span>
+        }
+      </div>
+    }
+
+    <div class="leaderboard-rank-list" data-section="rank-list">
+      @if (entries().length === 0) {
+        <div class="leaderboard-empty">
+          <img src="assets/icons/Trophy-white.svg" width="32" height="32" alt="" />
+          <p>No players yet — complete a quiz to appear on the leaderboard</p>
+        </div>
+      }
+
+      @for (row of rows(); track row.rank) {
+        <div class="leaderboard-rank-row" [class.is-me]="row.isMe" data-section="rank-row">
+          <div class="leaderboard-rank-position">
+            @if (row.rank === 1) {
+              <img src="assets/icons/Trophy-white.svg" width="24" height="24" alt="1" />
+            } @else {
+              {{ row.rank }}
+            }
+          </div>
+
+          <div class="leaderboard-rank-player">
+            <span class="leaderboard-rank-team-badge">{{ row.teamFlag }}</span>
+            <span class="leaderboard-rank-name">{{ row.name }}</span>
+            @if (row.isMe) {
+              <span class="leaderboard-rank-you">you</span>
+            }
+          </div>
+
+          <div class="leaderboard-rank-metric">
+            <span class="leaderboard-rank-metric-label">Score</span>
+            <span class="leaderboard-rank-metric-value">{{ row.scoreLabel }}</span>
+          </div>
+
+          <div class="leaderboard-rank-metric">
+            <span class="leaderboard-rank-metric-label">Duration</span>
+            <span class="leaderboard-rank-metric-value">{{ row.durationLabel }}</span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <p class="leaderboard-disclaimer">
+      Top 5 fans win Avios. Rankings are provisional until end-of-event.
+    </p>
+  </div>
+
+  <div class="leaderboard-sticky-cta">
+    <button
+      type="button"
+      class="leaderboard-home-btn"
+      data-ui="return-home-btn"
+      (click)="onReturnHome()"
+    >
+      Return home
+    </button>
+  </div>
+</div>

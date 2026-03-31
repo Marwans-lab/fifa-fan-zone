@@ -24,6 +24,18 @@ export const routes: Routes = [
       import('./pages/identity/identity.component').then((m) => m.IdentityComponent),
   },
   {
+    path: 'results',
+    loadComponent: () =>
+      import('./pages/results/results.component').then((m) => m.ResultsComponent),
+  },
+  {
+    path: 'leaderboard',
+    loadComponent: () =>
+      import('./pages/leaderboard/leaderboard.component').then(
+        (m) => m.LeaderboardComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },
