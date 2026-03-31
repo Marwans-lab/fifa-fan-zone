@@ -112,7 +112,7 @@ export const appRoutes: Routes = [
     import('./routes/leaderboard-page.component').then(
       (component) => component.LeaderboardPageComponent,
     ),
-  },
+  ),
   {
     path: '**',
     redirectTo: '',
