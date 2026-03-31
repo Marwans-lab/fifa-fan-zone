@@ -1,0 +1,5 @@
+.f-button__icon {
+  width: var(--sp-5);
+  height: var(--sp-5);
+  object-fit: contain;
+}
