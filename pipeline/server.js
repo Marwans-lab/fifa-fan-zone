@@ -424,7 +424,9 @@ async function checkForStalledIssues() {
       `query {
         issues(filter: {
           team: { key: { eq: "MAR" } },
-          state: { name: { in: ["Todo", "In Progress", "In Review", "Deploying"] } }
+          project: { id: { eq: "978662f2-57f8-44e3-9a5b-1e8059819bd8" } },
+          state: { name: { in: ["Todo", "In Progress", "In Review", "Deploying"] } },
+          archivedAt: { null: true }
         }, first: 50) {
           nodes {
             id identifier title
