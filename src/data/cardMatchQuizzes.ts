@@ -1,4 +1,4 @@
-import type { FlowId } from '../store/useStore'
+import type { FlowId } from '../store/store.service'
 
 export interface CardMatchPair {
   id: string
