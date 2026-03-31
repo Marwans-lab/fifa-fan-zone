@@ -1,0 +1,37 @@
+<div class="ranking-page" data-page="ranking-quiz">
+  <div class="ranking-header">
+    <button class="back-btn" type="button" data-ui="back-btn" aria-label="Go back" (click)="onBack()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M15 19l-7-7 7-7"
+          stroke="var(--f-brand-color-text-default)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+    <div class="progress-track">
+      <div class="progress-fill" style="width: 100%"></div>
+    </div>
+  </div>
+
+  <h2 class="question">{{ question.question }}</h2>
+  <p class="hint">Move items to match the correct ranking order.</p>
+
+  <div class="list">
+    @for (item of orderedItems(); track item.id; let i = $index) {
+      <div class="item">
+        <span class="item-text">{{ item.label }}</span>
+        <div class="item-controls">
+          <button class="ctrl" type="button" [disabled]="submitted()" (click)="moveUp(i)">↑</button>
+          <button class="ctrl" type="button" [disabled]="submitted()" (click)="moveDown(i)">↓</button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <button class="next-btn enabled" type="button" data-ui="next-btn" [disabled]="submitted()" (click)="submit()">
+    Finish
+  </button>
+</div>

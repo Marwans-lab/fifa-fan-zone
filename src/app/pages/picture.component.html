@@ -1,0 +1,98 @@
+<div class="picture-page" data-page="picture">
+  <div class="picture-header" data-section="header">
+    <button
+      class="picture-back-btn"
+      type="button"
+      data-ui="back-btn"
+      aria-label="Go back"
+      (click)="onBack()"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M15 19l-7-7 7-7"
+          stroke="var(--f-brand-color-text-default)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+    <div class="picture-progress-track">
+      <div class="picture-progress-fill"></div>
+    </div>
+  </div>
+
+  <h2 class="picture-title">Add your picture</h2>
+
+  @if (!hasPhoto()) {
+    <div class="picture-camera-preview">
+      @if (cameraActive()) {
+        <div class="picture-camera-feed">
+          <video #cameraVideo autoplay playsinline muted class="picture-camera-video"></video>
+          <button
+            type="button"
+            class="picture-capture-btn"
+            aria-label="Capture photo"
+            (click)="onCapturePhoto()"
+          >
+            <span class="picture-capture-inner"></span>
+          </button>
+        </div>
+      } @else {
+        <div class="picture-placeholder-card" [style.background]="teamCardBackground()">
+          <button type="button" class="picture-take-photo-btn" data-ui="take-photo-btn" (click)="onTakePhoto()">
+            Take a photo
+          </button>
+        </div>
+      }
+    </div>
+  } @else if (removingBg()) {
+    <div class="picture-loading">
+      <div class="picture-spinner"></div>
+      <p class="picture-loading-text">Removing background...</p>
+    </div>
+  } @else {
+    <div class="picture-preview">
+      <img class="picture-preview-image" [src]="photoDataUrl()" alt="Your photo preview" />
+    </div>
+  }
+
+  @if (cameraError()) {
+    <p class="picture-error">{{ cameraError() }}</p>
+  }
+
+  @if (bgError()) {
+    <p class="picture-error">Background removal failed: {{ bgError() }}</p>
+  }
+
+  <input
+    #fileInput
+    type="file"
+    accept="image/*"
+    capture="user"
+    class="hidden-input"
+    data-ui="file-upload-input"
+    (change)="onFileSelected($event)"
+  />
+
+  @if (hasPhoto() && !removingBg()) {
+    <div class="picture-actions">
+      <button
+        type="button"
+        class="picture-btn picture-btn-secondary"
+        data-ui="retake-photo-btn"
+        (click)="onRetake()"
+      >
+        Retake photo
+      </button>
+      <button
+        type="button"
+        class="picture-btn picture-btn-primary"
+        data-ui="confirm-card-btn"
+        (click)="onConfirm()"
+      >
+        Confirm card
+      </button>
+    </div>
+  }
+</div>
