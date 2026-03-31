@@ -1,0 +1,16 @@
+<button
+  [type]="type"
+  [disabled]="disabled"
+  [class]="classes.join(' ')"
+  (click)="onClick($event)"
+>
+  <ng-content></ng-content>
+  <img
+    *ngIf="iconRight"
+    class="f-button__icon"
+    [src]="iconRight!"
+    [attr.alt]="iconRightAlt"
+    width="20"
+    height="20"
+  />
+</button>
