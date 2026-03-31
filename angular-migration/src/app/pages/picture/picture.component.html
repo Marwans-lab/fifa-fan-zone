@@ -1,0 +1,148 @@
+<div class="picture-page" data-page="picture">
+  <div class="picture-header" data-section="header">
+    <button
+      class="picture-back-btn"
+      data-ui="back-btn"
+      type="button"
+      aria-label="Go back"
+      (click)="onBack()"
+    >
+      <img class="picture-back-icon" src="assets/icons/Chevron-left-white.svg" width="24" height="24" alt="" />
+    </button>
+    <div class="picture-progress-track">
+      <div class="picture-progress-fill" style="width: 50%"></div>
+    </div>
+  </div>
+
+  <h2 class="picture-title" data-section="title">Add your picture</h2>
+
+  @if (!hasPhoto()) {
+    <div class="picture-camera-preview" data-section="camera-preview">
+      @if (cameraActive()) {
+        <div class="picture-camera-feed">
+          <video
+            #cameraVideo
+            autoplay
+            playsinline
+            muted
+            class="picture-camera-video"
+          ></video>
+          <button
+            type="button"
+            class="picture-capture-btn"
+            data-ui="capture-photo-btn"
+            aria-label="Capture photo"
+            (click)="onCapturePhoto()"
+          >
+            <span class="picture-capture-btn-inner"></span>
+          </button>
+        </div>
+      } @else {
+        <div class="picture-placeholder-card" [style.background]="teamCardBackground()">
+          <div class="picture-placeholder-stripe"></div>
+          <div class="picture-placeholder-dots"></div>
+          <div class="picture-placeholder-lines"></div>
+
+          @if (selectedTeam()) {
+            <div class="picture-team-motto-wrap">
+              <div class="picture-team-motto">
+                <span aria-hidden="true">{{ selectedTeam()!.flag }}</span>
+                <span>{{ selectedTeam()!.motto }}</span>
+              </div>
+            </div>
+          }
+
+          <svg
+            class="picture-silhouette"
+            viewBox="0 0 364 418"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M17.6249 416.239H136.57L331.854 415.696C337.969 416.872 351.678 417.65 357.596 411.353C363.514 405.056 362.823 394.796 361.738 390.453C359.174 372.811 348.542 334.594 326.528 322.868C241.018 276.454 244.568 271.84 240.13 266.683C235.692 261.526 229.182 250.126 232.437 227.326C234.955 209.684 251.965 194.484 256.995 162.998C258.369 154.4 262.617 139.113 264.984 124.456C266.869 112.785 259.658 110.07 256.404 103.556C258.475 65.5565 254.628 57.9566 251.078 49.5424C247.527 41.1282 229.774 1.5 180.657 1.5C131.54 1.5 116.746 36.7854 108.461 49.5424C101.834 59.748 104.319 95.2324 106.39 111.699C94.2589 114.142 98.6116 128.305 106.39 162.998C114.971 201.269 127.102 217.284 128.877 227.326C130.016 233.768 131.325 254.359 122.368 266.683C113.491 278.897 83.0153 302.24 56.9775 313.097C29.5619 324.528 13.088 351.187 8.74836 364.125C4.90186 373.896 -1.60759 395.61 3.12656 404.296C7.86071 412.982 14.7647 415.877 17.6249 416.239Z"
+              fill="white"
+              fill-opacity="0.5"
+              stroke="#DBDEE8"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-dasharray="8 8"
+            />
+          </svg>
+
+          <button
+            type="button"
+            class="picture-take-photo-btn"
+            data-ui="take-photo-btn"
+            (click)="onTakePhoto()"
+          >
+            Take a photo
+            <img class="picture-camera-icon" src="assets/icons/camera-white.svg" width="20" height="20" alt="" />
+          </button>
+        </div>
+      }
+    </div>
+  } @else if (removingBg()) {
+    <div class="picture-loading">
+      <div class="picture-spinner"></div>
+      <p class="picture-loading-text">
+        @if (bgProgress() > 0 && bgProgress() < 100) {
+          Downloading model {{ bgProgress() }}%...
+        } @else {
+          Removing background...
+        }
+      </p>
+      @if (bgProgress() > 0 && bgProgress() < 100) {
+        <div class="picture-progress-track">
+          <div class="picture-progress-fill" [style.width.%]="bgProgress()"></div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="picture-preview" data-section="card-preview">
+      <app-fan-card-preview
+        [photoDataUrl]="photoDataUrl()"
+        [teamId]="teamId()"
+      />
+    </div>
+  }
+
+  @if (bgError()) {
+    <p class="picture-error">Background removal failed: {{ bgError() }}</p>
+  }
+
+  @if (cameraError()) {
+    <p class="picture-error">{{ cameraError() }}</p>
+  }
+
+  <input
+    #fileInput
+    class="sr-only-input"
+    data-ui="file-upload-input"
+    type="file"
+    accept="image/*"
+    capture="user"
+    (change)="onFileSelected($event)"
+  />
+
+  @if (hasPhoto() && !removingBg()) {
+    <div class="picture-actions" data-section="controls">
+      <button
+        type="button"
+        class="picture-btn picture-btn--secondary"
+        data-ui="retake-photo-btn"
+        (click)="onRetake()"
+      >
+        Retake photo
+      </button>
+      <button
+        type="button"
+        class="picture-btn picture-btn--primary"
+        data-ui="confirm-card-btn"
+        (click)="onConfirm()"
+      >
+        Confirm card
+      </button>
+    </div>
+  }
+</div>
