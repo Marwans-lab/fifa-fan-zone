@@ -10,11 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@angular/core": "^21.2.6",
+    "@angular/router": "^21.2.6",
     "@imgly/background-removal": "1.4.5",
     "firebase": "^12.10.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.28.0"
+    "react-router-dom": "^6.28.0",
+    "rxjs": "^7.8.2"
   },
   "devDependencies": {
     "@imgly/background-removal-data": "^1.4.5",

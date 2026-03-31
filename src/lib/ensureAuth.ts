@@ -1,18 +1,5 @@
-import { onAuthStateChanged, signInAnonymously } from "firebase/auth";
-import { auth } from "./firebase";
+import { authService } from '../app/services/service-instances';
 
 export function ensureAuth(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const unsub = onAuthStateChanged(auth, async (user) => {
-      try {
-        if (!user) await signInAnonymously(auth);
-
-        unsub();
-        resolve();
-      } catch (err) {
-        unsub();
-        reject(err);
-      }
-    });
-  });
+  return authService.ensureAuth();
 }
