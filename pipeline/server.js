@@ -476,6 +476,12 @@ async function handleWebhook(payload) {
     return;
   }
 
+  // Deployed → auto-promote next migration step (catches deploys from GitHub Actions)
+  if (newState === "Deployed") {
+    await promoteNextMigrationStep(issueId, issueIdentifier, teamId);
+    return;
+  }
+
   // Todo → assign to Cursor Cloud Agent
   if (newState === "Todo") {
     if (recentComments.has(issueId)) return;
