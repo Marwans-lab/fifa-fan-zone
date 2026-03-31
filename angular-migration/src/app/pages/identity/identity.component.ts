@@ -75,11 +75,8 @@ export class IdentityComponent {
     this.store.updateFanCard({
       teamId,
       photoDataUrl: this.photoDataUrl(),
-      answers: this.store.state().fanCard.answers,
-      completedAt: new Date().toISOString(),
     });
     this.analytics.track('identity_continue_tapped', { teamId });
     this.confirmed.set(true);
-    void this.router.navigateByUrl('/card');
   }
 }

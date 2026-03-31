@@ -24,11 +24,6 @@ export const routes: Routes = [
       import('./pages/identity/identity.component').then((m) => m.IdentityComponent),
   },
   {
-    path: 'card',
-    loadComponent: () =>
-      import('./pages/card/card-page.component').then((m) => m.CardPageComponent),
-  },
-  {
     path: '**',
     redirectTo: '',
   },
