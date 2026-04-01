@@ -3,7 +3,7 @@
     <header class="f-leaderboard-header" data-section="header">
       <button
         type="button"
-        class="f-button f-button--ghost f-leaderboard-icon-btn"
+        class="f-button f-button--ghost"
         data-ui="back-btn"
         aria-label="Go back"
         (click)="goBack()"
@@ -17,7 +17,7 @@
 
       <button
         type="button"
-        class="f-button f-button--ghost f-leaderboard-icon-btn"
+        class="f-button f-button--ghost"
         data-ui="refresh-btn"
         aria-label="Refresh leaderboard"
         (click)="refresh()"
@@ -37,8 +37,8 @@
         <span class="f-leaderboard-your-rank-value">#{{ myRank() }}</span>
         @if ((myRank() ?? 99) <= 5) {
           <span class="f-leaderboard-top-five-badge">
-            <img [src]="trophyIcon" width="20" height="20" alt="Trophy" />
-            Top 5 — Avios eligible
+            <img [src]="trophyIcon" width="24" height="24" alt="Trophy" />
+            Top 5 — Avios eligible!
           </span>
         }
       </section>
@@ -56,7 +56,7 @@
         <article class="f-leaderboard-row" data-section="rank-row" [class.f-leaderboard-row--me]="row.isMe">
           <div class="f-leaderboard-rank" [class.f-leaderboard-rank--top]="row.rank <= 3">
             @if (row.rank === 1) {
-              <img [src]="trophyIcon" width="20" height="20" alt="First place" />
+              <img [src]="trophyIcon" width="24" height="24" alt="First place" />
             } @else {
               {{ row.rank }}
             }
