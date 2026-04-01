@@ -41,7 +41,11 @@ interface LandingCardVisual {
               <p class="landing-page__card-caption">Collector edition</p>
             </div>
 
-            <div class="landing-page__card-avatar">
+            <div
+              class="landing-page__card-avatar"
+              [style.width.px]="card.width * 0.45"
+              [style.height.px]="card.width * 0.45"
+            >
               <span
                 class="landing-page__card-avatar-flag"
                 aria-hidden="true"
@@ -125,7 +129,7 @@ interface LandingCardVisual {
         margin: 0;
         font: var(--f-brand-type-caption);
         font-size: var(--text-sm);
-        color: var(--f-brand-color-text-light);
+        color: var(--f-brand-color-background-light);
         text-transform: uppercase;
         letter-spacing: var(--tracking-display);
       }
@@ -140,8 +144,6 @@ interface LandingCardVisual {
 
       .landing-page__card-avatar {
         border-radius: 50%;
-        width: 45%;
-        aspect-ratio: 1 / 1;
         background: var(--f-brand-color-background-dark-40a);
         border: 3px solid rgba(255, 255, 255, 0.45);
         display: flex;
@@ -213,7 +215,7 @@ interface LandingCardVisual {
         border: none;
         border-radius: var(--f-brand-radius-rounded);
         background: var(--f-brand-color-primary);
-        color: var(--f-brand-color-text-light);
+        color: var(--f-brand-color-background-light);
         font: var(--f-brand-type-body-medium);
         font-size: var(--text-md);
         cursor: pointer;
