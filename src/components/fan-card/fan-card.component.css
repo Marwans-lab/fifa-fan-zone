@@ -1,6 +1,6 @@
 .f-fan-card {
   width: 100%;
-  aspect-ratio: 5 / 7;
+  aspect-ratio: 50 / 63;
   perspective: 1000px;
   cursor: pointer;
 }
@@ -45,6 +45,18 @@
   padding: var(--sp-4);
   border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
   background: var(--f-brand-color-background-light);
+  box-shadow: none;
+}
+
+.f-fan-card--flipped .f-fan-card__back {
+  box-shadow: var(--f-brand-shadow-large);
+}
+
+.f-fan-card__back-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--sp-4);
 }
 
 .f-fan-card__texture-dots,
@@ -56,26 +68,28 @@
 }
 
 .f-fan-card__texture-dots {
-  background-image: radial-gradient(circle, var(--c-lt-shimmer) var(--sp-1), transparent var(--sp-1));
-  background-size: var(--sp-4) var(--sp-4);
+  border-radius: var(--f-brand-radius-outer);
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.28) 1.5px, transparent 1.5px);
+  background-size: var(--f-brand-space-md) var(--f-brand-space-md);
+  mix-blend-mode: overlay;
 }
 
 .f-fan-card__texture-stripes {
-  background-image: linear-gradient(
-    135deg,
-    transparent 0,
-    transparent var(--sp-2),
-    var(--c-lt-shimmer) var(--sp-2),
-    var(--c-lt-shimmer) var(--sp-3),
-    transparent var(--sp-3),
-    transparent var(--sp-6)
+  border-radius: var(--f-brand-radius-outer);
+  background-image: repeating-linear-gradient(
+    -55deg,
+    transparent,
+    transparent 18px,
+    rgba(255, 255, 255, 0.1) 18px,
+    rgba(255, 255, 255, 0.1) 19px
   );
+  mix-blend-mode: overlay;
 }
 
 .f-fan-card__holographic {
-  inset: auto 0 0;
-  height: var(--sp-1);
-  background: linear-gradient(90deg, transparent, var(--f-brand-color-text-light), transparent);
+  inset: 0 0 auto;
+  height: var(--f-brand-space-2xs);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
 }
 
 .f-fan-card__team-empty {
@@ -85,8 +99,10 @@
 }
 
 .f-fan-card__back-title {
-  color: var(--f-brand-color-text-default);
-  font: var(--f-brand-type-headline-medium);
+  color: var(--f-brand-color-text-primary);
+  font: var(--f-brand-type-caption-medium);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .f-fan-card__flip-hint,
@@ -103,11 +119,18 @@
 .f-fan-card__flip-hint {
   margin-top: auto;
   color: var(--f-brand-color-text-light);
-  background: var(--c-surface);
+  justify-content: center;
+  align-self: center;
+  width: fit-content;
+  background: color-mix(in srgb, var(--f-brand-color-background-overlay) 50%, transparent);
 }
 
 .f-fan-card__back-flip-hint {
+  display: flex;
+  justify-content: center;
   color: var(--f-brand-color-text-subtle);
+  margin-top: auto;
+  padding-top: var(--sp-3);
 }
 
 .f-fan-card__flip-hint-icon,
@@ -141,18 +164,20 @@
 }
 
 .f-fan-card__wizard-bar {
-  height: var(--sp-1);
+  height: 3px;
   border-radius: var(--r-full);
   background: var(--f-brand-color-border-default);
+  transition: background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
 }
 
 .f-fan-card__wizard-bar--active {
-  background: var(--f-brand-color-background-primary);
+  background: var(--f-brand-color-background-accent);
 }
 
 .f-fan-card__wizard-question {
   color: var(--f-brand-color-text-default);
   font: var(--f-brand-type-subheading);
+  line-height: 1.43;
 }
 
 .f-fan-card__wizard-options {
@@ -162,19 +187,20 @@
 
 .f-fan-card__wizard-option {
   width: 100%;
-  min-height: var(--sp-11);
+  min-height: 44px;
   border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
   border-radius: var(--f-brand-radius-base);
   background: var(--f-brand-color-background-light);
   color: var(--f-brand-color-text-default);
   font: var(--f-brand-type-caption);
   text-align: left;
-  padding: 0 var(--sp-3);
+  padding: var(--sp-4) var(--sp-3);
+  transition: all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
 }
 
 .f-fan-card__wizard-option--selected {
-  border-color: var(--f-brand-color-border-primary);
-  background: var(--c-brand-tint-6);
+  border-color: var(--f-brand-color-border-selected);
+  background: var(--f-brand-color-background-light);
 }
 
 .f-fan-card__wizard-nav {
@@ -195,20 +221,29 @@
 .f-fan-card__profile-row {
   display: flex;
   align-items: center;
-  gap: var(--sp-2);
-  padding: var(--sp-2);
-  border-radius: var(--f-brand-radius-base);
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
+  border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-inner);
+  border-radius: var(--r-full);
   background: var(--f-brand-color-background-default);
 }
 
+.f-fan-card__profile-icon {
+  opacity: 0.55;
+  filter: brightness(0) saturate(100%);
+}
+
 .f-fan-card__profile-category {
-  color: var(--f-brand-color-text-subtle);
+  color: var(--f-brand-color-text-muted);
   font: var(--f-brand-type-caption);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: var(--sp-1);
 }
 
 .f-fan-card__profile-answer {
   color: var(--f-brand-color-text-default);
-  font: var(--f-brand-type-subheading);
+  font: var(--f-brand-type-body);
 }
 
 .f-fan-card__cta {
@@ -232,6 +267,7 @@
   display: flex;
   justify-content: center;
   gap: var(--sp-4);
+  padding-top: calc(var(--sp-3) * 2);
 }
 
 .f-fan-card__action {
@@ -241,6 +277,13 @@
   flex-direction: column;
   align-items: center;
   gap: var(--sp-1);
+  cursor: pointer;
+  padding: 0;
+}
+
+.f-fan-card__action:disabled {
+  cursor: not-allowed;
+  opacity: var(--f-brand-opacity-disabled);
 }
 
 .f-fan-card__action-circle {
@@ -252,11 +295,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
+}
+
+.f-fan-card__action:hover:not(:disabled) .f-fan-card__action-circle {
+  background: var(--f-brand-color-background-primary-hover);
+}
+
+.f-fan-card__action:focus-visible .f-fan-card__action-circle {
+  outline: var(--f-brand-border-size-focused) solid var(--f-brand-color-background-default);
+  outline-offset: var(--f-brand-space-xs);
 }
 
 .f-fan-card__action-label {
-  color: var(--f-brand-color-text-subtle);
+  color: var(--f-brand-color-text-muted);
   font: var(--f-brand-type-caption);
+  letter-spacing: 0.06em;
 }
 
 .fan-card-edit-icon,
@@ -264,7 +318,7 @@
 .fan-card-save-to-device-icon {
   width: var(--sp-6);
   min-height: var(--sp-6);
-  background-color: var(--f-brand-color-text-default);
+  background-color: var(--f-brand-color-icon-default);
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
   -webkit-mask-size: contain;

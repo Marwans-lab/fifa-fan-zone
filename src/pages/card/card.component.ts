@@ -45,9 +45,9 @@ interface QuizFlowCard {
           <div class="f-card-page__journey-header">
             <div>
               <p class="f-card-page__journey-label">Your journey</p>
-              <h2 class="f-card-page__journey-title">Step {{ currentStep() }}/4</h2>
+              <h2 class="f-card-page__journey-title">{{ journeyStatusTitle() }}</h2>
             </div>
-            <span class="f-card-page__journey-pill">{{ completedMilestones() }} completed</span>
+            <span class="f-card-page__journey-pill">Step {{ currentStep() }}/4</span>
           </div>
 
           <div class="f-card-page__journey-track">
@@ -58,6 +58,9 @@ interface QuizFlowCard {
                   [class.f-card-page__journey-node--completed]="milestone.completed"
                   [class.f-card-page__journey-node--current]="idx === currentMilestoneIndex()"
                 >
+                  @if (idx === currentMilestoneIndex()) {
+                    <div class="animate-ping-slow f-card-page__journey-ping"></div>
+                  }
                   @if (milestone.completed) {
                     <img
                       class="f-card-page__journey-icon f-card-page__journey-icon--tick"
@@ -82,7 +85,9 @@ interface QuizFlowCard {
               @if (!last) {
                 <div
                   class="f-card-page__journey-line"
-                  [class.f-card-page__journey-line--completed]="milestone.completed"
+                  [class.f-card-page__journey-line--completed]="isConnectorCompleted(idx)"
+                  [class.f-card-page__journey-line--half]="isConnectorHalfCompleted(idx)"
+                  [class.f-card-page__journey-line--inactive]="!isConnectorCompleted(idx) && !isConnectorHalfCompleted(idx)"
                 ></div>
               }
             }
@@ -91,6 +96,7 @@ interface QuizFlowCard {
           <button
             type="button"
             class="f-card-page__journey-cta"
+            [class.f-card-page__journey-cta--all-complete]="allQuizzesCompleted()"
             data-ui="journey-cta"
             [disabled]="isJourneyCtaDisabled()"
             (click)="handleJourneyCta()"
@@ -107,7 +113,7 @@ interface QuizFlowCard {
         >
           <h2 class="f-card-page__quiz-heading">Earn Avios</h2>
           <p class="f-card-page__quiz-description">
-            Complete quizzes to get a chance to earn Avios rewards.
+            Complete quizzes to get a chance to earn Avios rewards
           </p>
 
           <div class="f-card-page__quiz-grid f-stagger">
@@ -121,19 +127,49 @@ interface QuizFlowCard {
                 (click)="handleStartFlow(flow)"
               >
                 <div class="f-card-page__quiz-card-content">
-                  <div class="f-card-page__quiz-icon-wrap">
-                    @if (isFlowLocked(flow)) {
-                      <img class="f-card-page__quiz-icon" src="assets/icons/Lock-white.svg" alt="" />
-                    } @else if (isFlowCompleted(flow.id)) {
-                      <img class="f-card-page__quiz-icon" src="assets/icons/Tick-black.svg" alt="" />
-                    } @else {
-                      <img class="f-card-page__quiz-icon" [src]="flow.iconSrc" alt="" />
-                    }
+                  <div class="f-card-page__quiz-ring-wrap">
+                    <svg
+                      class="f-card-page__quiz-ring"
+                      [attr.width]="quizRingRadius * 2"
+                      [attr.height]="quizRingRadius * 2"
+                      aria-hidden="true"
+                    >
+                      <circle
+                        class="f-card-page__quiz-ring-track"
+                        [attr.cx]="quizRingRadius"
+                        [attr.cy]="quizRingRadius"
+                        [attr.r]="quizRingNormRadius"
+                        [attr.stroke-width]="quizRingStroke"
+                      />
+                      @if (isFlowCompleted(flow.id)) {
+                        <circle
+                          class="f-card-page__quiz-ring-arc"
+                          [attr.cx]="quizRingRadius"
+                          [attr.cy]="quizRingRadius"
+                          [attr.r]="quizRingNormRadius"
+                          [attr.stroke-width]="quizRingStroke"
+                          [attr.stroke-dasharray]="quizRingCircumference"
+                          [attr.stroke-dashoffset]="0"
+                        />
+                      }
+                    </svg>
+                    <div class="f-card-page__quiz-icon-wrap">
+                      @if (isFlowLocked(flow)) {
+                        <img class="f-card-page__quiz-icon f-card-page__quiz-icon--locked" src="assets/icons/Lock-white.svg" alt="" />
+                      } @else if (isFlowCompleted(flow.id)) {
+                        <img class="f-card-page__quiz-icon" src="assets/icons/Tick-black.svg" alt="" />
+                      } @else {
+                        <img class="f-card-page__quiz-icon f-card-page__quiz-icon--quiz" [src]="flow.iconSrc" alt="" />
+                      }
+                    </div>
                   </div>
 
                   <div class="f-card-page__quiz-copy">
                     <h3 class="f-card-page__quiz-title">{{ flow.title }}</h3>
-                    <p class="f-card-page__quiz-subtitle">
+                    <p
+                      class="f-card-page__quiz-subtitle"
+                      [class.f-card-page__quiz-subtitle--default]="!isFlowLocked(flow)"
+                    >
                       {{ getFlowStatusLabel(flow) }}
                     </p>
                   </div>
@@ -161,7 +197,7 @@ interface QuizFlowCard {
         display: flex;
         flex-direction: column;
         min-height: 100%;
-        padding: var(--sp-4);
+        padding: var(--sp-4) var(--sp-6);
         gap: var(--sp-4);
       }
 
@@ -188,13 +224,15 @@ interface QuizFlowCard {
 
       .f-card-page__journey-label {
         margin: 0;
-        font: var(--f-brand-type-caption);
-        color: var(--f-brand-color-text-subtle);
+        font: var(--f-brand-type-caption-medium);
+        letter-spacing: var(--tracking-wide);
+        color: var(--f-brand-color-text-muted);
       }
 
       .f-card-page__journey-title {
         margin: 0;
         font: var(--f-brand-type-headline-medium);
+        letter-spacing: var(--tracking-semi);
         color: var(--f-brand-color-text-default);
       }
 
@@ -202,13 +240,11 @@ interface QuizFlowCard {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-height: var(--sp-11);
         border-radius: var(--f-brand-radius-rounded);
-        padding: 0 var(--sp-3);
+        padding: 10px var(--f-brand-space-md);
         font: var(--f-brand-type-caption);
         color: var(--f-brand-color-text-subtle);
         background: var(--f-brand-color-background-default);
-        border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
       }
 
       .f-card-page__journey-track {
@@ -233,24 +269,48 @@ interface QuizFlowCard {
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--f-brand-color-background-default);
+        position: relative;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        background: var(--c-lt-tint-faint);
         border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
-        transition: transform var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default);
+        transition: all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default);
       }
 
       .f-card-page__journey-node--completed {
         background: var(--f-brand-color-background-success);
         border-color: var(--f-brand-color-background-success);
+        box-shadow: var(--c-lt-shadow-glow);
+        transform: scale(1.1);
+        z-index: 20;
       }
 
       .f-card-page__journey-node--current {
         transform: scale(1.05);
-        border-color: var(--f-brand-color-border-primary);
+        z-index: 20;
+        background: var(--c-lt-tint);
+        border-color: var(--f-brand-color-border-default);
+      }
+
+      .f-card-page__journey-ping {
+        position: absolute;
+        inset: 0;
+        border-radius: var(--r-full);
+        background: var(--f-brand-color-background-success);
+        pointer-events: none;
       }
 
       .f-card-page__journey-icon {
         width: var(--sp-6);
         height: var(--sp-6);
+        filter: invert(1);
+        position: relative;
+        z-index: 1;
+      }
+
+      .f-card-page__journey-node:not(.f-card-page__journey-node--current):not(.f-card-page__journey-node--completed)
+        .f-card-page__journey-icon {
+        opacity: 0.6;
       }
 
       .f-card-page__journey-icon--tick {
@@ -261,6 +321,7 @@ interface QuizFlowCard {
         margin: 0;
         text-align: center;
         font: var(--f-brand-type-caption);
+        letter-spacing: var(--tracking-semi);
         color: var(--f-brand-color-text-default);
       }
 
@@ -270,13 +331,26 @@ interface QuizFlowCard {
 
       .f-card-page__journey-line {
         flex: 1;
-        height: var(--f-brand-border-size-focused);
-        margin-top: calc(var(--sp-14) / 2 - var(--f-brand-border-size-default));
+        height: 2px;
+        margin-top: calc(var(--sp-14) / 2 - 1px);
         background: var(--f-brand-color-border-default);
+        transition: all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default);
       }
 
       .f-card-page__journey-line--completed {
         background: var(--f-brand-color-background-success);
+      }
+
+      .f-card-page__journey-line--half {
+        background: linear-gradient(
+          90deg,
+          var(--f-brand-color-background-success),
+          var(--f-brand-color-border-default)
+        );
+      }
+
+      .f-card-page__journey-line--inactive {
+        opacity: 0.4;
       }
 
       .f-card-page__journey-cta {
@@ -291,13 +365,21 @@ interface QuizFlowCard {
         transition: background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
       }
 
+      .f-card-page__journey-cta--all-complete {
+        background: var(--c-accent-soft);
+        color: var(--c-accent);
+        border: var(--f-brand-border-size-default) solid var(--c-accent-border);
+      }
+
       .f-card-page__journey-cta:hover {
         background: var(--f-brand-color-background-primary-hover);
       }
 
+      .f-card-page__journey-cta--all-complete:hover {
+        background: var(--c-accent-soft);
+      }
+
       .f-card-page__journey-cta:disabled {
-        background: var(--f-brand-color-background-disabled);
-        color: var(--f-brand-color-text-disabled);
         cursor: default;
       }
 
@@ -313,35 +395,37 @@ interface QuizFlowCard {
       .f-card-page__quiz-heading {
         margin: 0;
         font: var(--f-brand-type-title-2);
+        letter-spacing: var(--tracking-tighter);
         color: var(--f-brand-color-text-default);
       }
 
       .f-card-page__quiz-description {
         margin: var(--sp-1) 0 0;
         font: var(--f-brand-type-subheading);
-        color: var(--f-brand-color-text-subtle);
+        color: var(--f-brand-color-text-default);
       }
 
       .f-card-page__quiz-grid {
         margin-top: var(--sp-4);
         display: grid;
-        gap: var(--sp-3);
+        gap: var(--f-brand-space-md);
       }
 
       .f-card-page__quiz-card {
         width: 100%;
-        min-height: calc(var(--sp-20) + var(--sp-10));
-        border: var(--f-brand-border-size-default) solid transparent;
-        border-radius: var(--f-brand-radius-inner);
+        min-height: 120px;
+        border: none;
+        border-radius: var(--f-brand-radius-outer);
         background: var(--f-brand-color-background-light);
         box-shadow: var(--f-brand-shadow-medium);
-        padding: var(--sp-4);
+        padding: var(--sp-5) var(--sp-4);
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: var(--sp-3);
+        gap: var(--f-brand-space-md);
         text-align: left;
         cursor: pointer;
+        transition: all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default);
       }
 
       .f-card-page__quiz-card:focus-visible {
@@ -350,47 +434,84 @@ interface QuizFlowCard {
       }
 
       .f-card-page__quiz-card--completed {
-        border-color: var(--f-brand-color-background-success);
-        background: var(--f-brand-color-background-success-accent);
+        background: var(--f-brand-color-background-light);
       }
 
       .f-card-page__quiz-card--locked {
-        background: var(--f-brand-color-background-default);
-        border-color: var(--f-brand-color-border-default);
+        background: var(--f-brand-color-background-light);
+        opacity: 0.55;
         cursor: not-allowed;
       }
 
       .f-card-page__quiz-card-content {
         display: flex;
         align-items: center;
-        gap: var(--sp-3);
+        gap: var(--f-brand-space-md);
         min-width: 0;
       }
 
+      .f-card-page__quiz-ring-wrap {
+        width: 64px;
+        height: 64px;
+        position: relative;
+        flex-shrink: 0;
+      }
+
+      .f-card-page__quiz-ring {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: rotate(-90deg);
+      }
+
+      .f-card-page__quiz-ring-track {
+        fill: none;
+        stroke: var(--f-brand-color-border-default);
+      }
+
+      .f-card-page__quiz-ring-arc {
+        fill: none;
+        stroke: var(--f-brand-color-flight-status-confirmed);
+        stroke-linecap: round;
+        transition: stroke-dashoffset var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default);
+      }
+
       .f-card-page__quiz-icon-wrap {
-        width: var(--sp-16);
-        min-height: var(--sp-16);
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 52px;
+        min-height: 52px;
         border-radius: var(--r-full);
-        background: var(--f-brand-color-background-default);
-        border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
+        background: linear-gradient(135deg, var(--c-lt-tint-subtle), var(--c-lt-tint-faint));
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        box-shadow: var(--c-lt-shadow-sm);
       }
 
       .f-card-page__quiz-card--completed .f-card-page__quiz-icon-wrap {
-        border-color: var(--f-brand-color-background-success);
+        background: linear-gradient(135deg, var(--c-accent-soft), var(--c-accent-faint));
       }
 
       .f-card-page__quiz-card--locked .f-card-page__quiz-icon-wrap {
-        background: var(--f-brand-color-background-disabled);
-        border-color: var(--f-brand-color-border-disabled);
+        background: var(--c-lt-tint-subtle);
+        box-shadow: none;
       }
 
       .f-card-page__quiz-icon {
         width: var(--sp-6);
         height: var(--sp-6);
+      }
+
+      .f-card-page__quiz-icon--quiz,
+      .f-card-page__quiz-icon--locked {
+        filter: invert(1);
+      }
+
+      .f-card-page__quiz-icon--locked {
+        opacity: 0.4;
       }
 
       .f-card-page__quiz-copy {
@@ -413,12 +534,12 @@ interface QuizFlowCard {
         color: var(--f-brand-color-text-subtle);
       }
 
-      .f-card-page__quiz-card--completed .f-card-page__quiz-subtitle {
-        color: var(--f-brand-color-text-success);
+      .f-card-page__quiz-subtitle--default {
+        color: var(--f-brand-color-text-default);
       }
 
       .f-card-page__quiz-card--locked .f-card-page__quiz-subtitle {
-        color: var(--f-brand-color-text-disabled);
+        color: var(--f-brand-color-text-subtle);
       }
 
       .f-card-page__quiz-action {
@@ -428,13 +549,14 @@ interface QuizFlowCard {
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--f-brand-color-background-default);
+        background: var(--c-lt-tint);
         flex-shrink: 0;
       }
 
       .f-card-page__quiz-action img {
         width: var(--sp-6);
         height: var(--sp-6);
+        filter: invert(1);
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -459,11 +581,15 @@ export class CardComponent {
   @ViewChild(FanCardComponent) private readonly fanCardComponent?: FanCardComponent;
 
   readonly state = this.store.state;
+  readonly quizRingRadius = 32;
+  readonly quizRingStroke = 4;
+  readonly quizRingNormRadius = this.quizRingRadius - this.quizRingStroke / 2;
+  readonly quizRingCircumference = 2 * Math.PI * this.quizRingNormRadius;
 
   readonly flowCards: ReadonlyArray<QuizFlowCard> = [
     {
       id: 'the-connector',
-      title: 'The connector',
+      title: 'The Connector',
       subtitle: '5 questions · Quiz',
       iconSrc: 'assets/icons/globe-white.svg',
       route: '/quiz',
@@ -472,8 +598,8 @@ export class CardComponent {
     },
     {
       id: 'the-architect',
-      title: 'The architect',
-      subtitle: '5 rounds · Card match',
+      title: 'The Architect',
+      subtitle: '5 rounds · Card Match',
       iconSrc: 'assets/icons/stadium-white.svg',
       route: '/card-match',
       routeState: { flowId: 'the-architect' },
@@ -481,7 +607,7 @@ export class CardComponent {
     },
     {
       id: 'the-historian',
-      title: 'The historian',
+      title: 'The Historian',
       subtitle: '10 statements · Swipe',
       iconSrc: 'assets/icons/history-white.svg',
       route: '/swipe-quiz',
@@ -490,7 +616,7 @@ export class CardComponent {
     },
     {
       id: 'the-referee',
-      title: 'The referee',
+      title: 'The Referee',
       subtitle: '5 questions · Quiz',
       iconSrc: 'assets/icons/referee-white.svg',
       route: '/quiz',
@@ -499,7 +625,7 @@ export class CardComponent {
     },
     {
       id: 'the-retrospective',
-      title: 'The retrospective',
+      title: 'The Retrospective',
       subtitle: '5 questions · Ranking',
       iconSrc: 'assets/icons/ranking-white.svg',
       route: '/ranking-quiz',
@@ -509,7 +635,6 @@ export class CardComponent {
   ];
 
   readonly milestones = computed<JourneyMilestone[]>(() => {
-    const completedFlows = this.state().completedFlows;
     return [
       {
         iconSrc: 'assets/icons/qr-logo.svg',
@@ -518,18 +643,18 @@ export class CardComponent {
       },
       {
         iconSrc: 'assets/icons/globe-dark.svg',
-        label: '1st quiz',
-        completed: completedFlows.length > 0,
+        label: 'Connector',
+        completed: this.isFlowCompleted('the-connector'),
       },
       {
-        iconSrc: 'assets/icons/ranking-dark.svg',
-        label: 'All quizzes',
-        completed: completedFlows.length >= this.flowCards.length,
+        iconSrc: 'assets/icons/stadium-dark.svg',
+        label: 'Architect',
+        completed: this.isFlowCompleted('the-architect'),
       },
       {
-        iconSrc: 'assets/icons/Trophy-dark.svg',
-        label: 'Leaderboard',
-        completed: this.state().hasVisitedLeaderboard,
+        iconSrc: 'assets/icons/history-dark.svg',
+        label: 'Historian',
+        completed: this.isFlowCompleted('the-historian'),
       },
     ];
   });
@@ -543,21 +668,34 @@ export class CardComponent {
   );
 
   readonly currentMilestoneIndex = computed(() => {
-    const firstIncomplete = this.milestones().findIndex(milestone => !milestone.completed);
-    return firstIncomplete === -1 ? this.milestones().length - 1 : firstIncomplete;
+    return this.milestones().findIndex(milestone => !milestone.completed);
   });
 
   readonly journeyCtaLabel = computed(() => {
+    if (this.allQuizzesCompleted()) {
+      return 'All quizzes completed!';
+    }
     if (!this.isCardComplete()) {
       return 'Complete fan card';
     }
-    if (this.state().hasVisitedLeaderboard) {
-      return 'Journey complete';
-    }
-    if (this.allQuizzesCompleted()) {
-      return 'View leaderboard';
-    }
     return 'Start quiz';
+  });
+
+  readonly journeyStatusTitle = computed(() => {
+    const done = this.completedMilestones();
+    if (done === 0) {
+      return 'New arrival';
+    }
+    if (done === 1) {
+      return 'Rising fan';
+    }
+    if (done <= 2) {
+      return 'Quiz taker';
+    }
+    if (done <= 3) {
+      return 'Top fan';
+    }
+    return 'Quiz champion';
   });
 
   handleFanCardSave(answers: Record<string, string>): void {
@@ -618,12 +756,6 @@ export class CardComponent {
       return;
     }
 
-    if (this.allQuizzesCompleted()) {
-      this.analytics.track('card_view_leaderboard_tapped');
-      void this.router.navigateByUrl('/leaderboard');
-      return;
-    }
-
     this.analytics.track('card_start_quiz_tapped');
     const nextFlow = this.flowCards.find(flow => !this.isFlowCompleted(flow.id) && !this.isFlowLocked(flow));
     if (nextFlow) {
@@ -670,12 +802,24 @@ export class CardComponent {
     return this.state().fanCard.completedAt !== null;
   }
 
-  private allQuizzesCompleted(): boolean {
+  allQuizzesCompleted(): boolean {
     return this.state().completedFlows.length >= this.flowCards.length;
   }
 
   isJourneyCtaDisabled(): boolean {
-    return this.state().hasVisitedLeaderboard;
+    return this.allQuizzesCompleted();
+  }
+
+  isConnectorCompleted(index: number): boolean {
+    const current = this.milestones()[index]?.completed ?? false;
+    const next = this.milestones()[index + 1]?.completed ?? false;
+    return current && next;
+  }
+
+  isConnectorHalfCompleted(index: number): boolean {
+    const current = this.milestones()[index]?.completed ?? false;
+    const next = this.milestones()[index + 1]?.completed ?? false;
+    return current && !next;
   }
 
   private scrollToElement(target?: ElementRef<HTMLElement>): void {
