@@ -299,6 +299,7 @@ const JPG_QUALITY = 0.78;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PicturePage implements OnInit, OnDestroy {
+  private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly analytics = inject(AnalyticsService);
@@ -326,6 +327,7 @@ export class PicturePage implements OnInit, OnDestroy {
     const routeTeamId = this.route.snapshot.paramMap.get('teamId');
     const stateTeamId = this.getIncomingState('teamId');
     this.teamId.set(routeTeamId ?? stateTeamId);
+    this.restartPageEnterAnimation();
   }
 
   async handleTakePhoto(): Promise<void> {
@@ -397,6 +399,18 @@ export class PicturePage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopCamera();
+  }
+
+  private restartPageEnterAnimation(): void {
+    const main = this.elementRef.nativeElement.querySelector<HTMLElement>('.f-page-enter');
+    if (!main) {
+      return;
+    }
+
+    main.classList.remove('f-page-enter');
+    requestAnimationFrame(() => {
+      main.classList.add('f-page-enter');
+    });
   }
 
   private async startCamera(): Promise<void> {
