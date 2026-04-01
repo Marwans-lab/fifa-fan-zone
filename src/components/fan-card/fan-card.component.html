@@ -79,12 +79,14 @@
           <div class="f-fan-card__wizard-nav">
             <app-button
               variant="secondary"
+              fullWidth
               className="f-fan-card__wizard-btn--back"
               (clicked)="handleBack($event)"
             >
               Back
             </app-button>
             <app-button
+              fullWidth
               className="f-fan-card__wizard-btn--next"
               [disabled]="!currentAnswer"
               (clicked)="handleNext($event)"
