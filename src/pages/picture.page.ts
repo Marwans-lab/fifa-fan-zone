@@ -402,7 +402,8 @@ export class PicturePage implements OnInit, OnDestroy {
   }
 
   private restartPageEnterAnimation(): void {
-    const main = this.elementRef.nativeElement.querySelector<HTMLElement>('.f-page-enter');
+    const host = this.elementRef.nativeElement as HTMLElement;
+    const main = host.querySelector('.f-page-enter') as HTMLElement | null;
     if (!main) {
       return;
     }
