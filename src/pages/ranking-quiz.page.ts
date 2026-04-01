@@ -17,6 +17,10 @@ import { StoreService } from '../services/store.service';
 
 const QUESTION_TIME = 15;
 const ITEM_HEIGHT = 70;
+const SLIDE_TRANSITION = 'transform 280ms ease, opacity 280ms ease';
+const SLIDE_EXIT_TRANSITION = 'transform 240ms ease, opacity 240ms ease';
+const SLIDE_EXIT_MS = 250;
+const CHEVRON_LEFT_WHITE_ICON = new URL('../assets/icons/Chevron-left-white.svg', import.meta.url).href;
 
 @Component({
   standalone: true,
@@ -34,157 +38,178 @@ const ITEM_HEIGHT = 70;
     >
       <section
         style="
-          width: 100%;
-          max-width: 420px;
-          min-height: 100dvh;
           display: flex;
           flex-direction: column;
-          padding: var(--sp-4);
-          gap: var(--sp-4);
+          min-height: 100dvh;
+          max-width: 420px;
+          margin: 0 auto;
+          width: 100%;
         "
       >
-        <header style="display: flex; align-items: center; gap: var(--sp-3)">
-          <button
-            type="button"
-            data-ui="back-btn"
-            aria-label="Go back"
-            (click)="handleBack()"
-            style="
-              width: var(--sp-12);
-              min-height: var(--sp-12);
-              border-radius: var(--r-full);
-              border: var(--f-brand-border-size-default) solid var(--c-border);
-              background: var(--c-surface);
-              color: var(--c-text-1);
-              font: var(--f-brand-type-headline);
-              cursor: pointer;
-            "
-          >
-            &lt;
-          </button>
-          <div
-            style="
-              flex: 1;
-              height: var(--sp-2);
-              border-radius: var(--r-full);
-              overflow: hidden;
-              background: var(--c-surface-raise);
-            "
-          >
+        <header data-section="header" style="padding: var(--sp-4); flex-shrink: 0">
+          <div style="display: flex; align-items: center; gap: var(--sp-3)">
+            <button
+              type="button"
+              class="btn-icon"
+              data-ui="back-btn"
+              aria-label="Go back"
+              (click)="handleBack()"
+            >
+              <img [src]="chevronLeftWhiteIcon" width="24" height="24" alt="Back" />
+            </button>
             <div
-              [style.width.%]="progressPercent()"
               style="
-                height: 100%;
-                border-radius: var(--r-full);
-                background: var(--c-accent);
-                transition: width var(--f-brand-motion-duration-instant)
-                  var(--f-brand-motion-easing-default);
-              "
-            ></div>
-          </div>
-          <span style="font: var(--f-brand-type-caption); color: var(--c-text-2)">
-            {{ questionIndex() + 1 }}/{{ totalQuestions() }}
-          </span>
-        </header>
-
-        <div style="display: flex; justify-content: center">
-          <div style="position: relative; width: 64px; height: 64px">
-            <svg width="64" height="64" viewBox="0 0 64 64" style="transform: rotate(-90deg)" aria-hidden="true">
-              <circle cx="32" cy="32" r="28" fill="none" stroke="var(--c-surface-raise)" stroke-width="4"></circle>
-              <circle
-                cx="32"
-                cy="32"
-                r="28"
-                fill="none"
-                [attr.stroke]="timeLeft() <= 5 ? 'var(--c-error)' : 'var(--c-accent)'"
-                stroke-width="4"
-                [attr.stroke-dasharray]="timerCircumference"
-                [attr.stroke-dashoffset]="timerOffset()"
-                stroke-linecap="round"
-                style="transition: stroke-dashoffset 1s linear"
-              ></circle>
-            </svg>
-            <span
-              style="
-                position: absolute;
-                inset: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font: var(--f-brand-type-headline-medium);
+                flex: 1;
+                height: var(--sp-1);
+                background: var(--c-surface-raise);
+                border-radius: calc(var(--sp-1) / 2);
+                overflow: hidden;
               "
             >
-              {{ timeLeft() }}
+              <div
+                [style.width.%]="progressPercent()"
+                style="
+                  height: 100%;
+                  background: var(--c-accent);
+                  border-radius: calc(var(--sp-1) / 2);
+                  transition: width 300ms ease;
+                "
+              ></div>
+            </div>
+            <span style="font-size: var(--text-xs); color: var(--c-text-2); flex-shrink: 0">
+              {{ questionIndex() + 1 }}/{{ totalQuestions() }}
             </span>
           </div>
-        </div>
+        </header>
 
-        <h1
-          style="
-            margin: 0;
-            text-align: center;
-            font: var(--f-brand-type-title-4);
-            color: var(--c-text-1);
-          "
-        >
-          {{ currentQuestion().question }}
-        </h1>
-
-        <div style="display: flex; flex-direction: column; gap: var(--sp-3)">
-          @for (item of items(); track item.id; let idx = $index) {
-            <div
-              (pointerdown)="startDrag(idx, $event)"
-              [ngStyle]="rankItemStyle(idx, item)"
-              data-section="rank-item"
-              style="
-                min-height: var(--sp-14);
-                border-radius: var(--r-full);
-                border: var(--f-brand-border-size-default) solid var(--c-border);
-                background: var(--c-surface);
-                display: flex;
-                align-items: center;
-                gap: var(--sp-3);
-                padding: 0 var(--sp-4);
-                user-select: none;
-                touch-action: none;
-              "
-            >
+        <div [ngStyle]="slideStyle()" style="flex: 1; display: flex; flex-direction: column; overflow: hidden">
+          <div data-section="timer" style="display: flex; justify-content: center; margin-bottom: var(--sp-4); flex-shrink: 0">
+            <div style="position: relative; width: 64px; height: 64px; flex-shrink: 0">
+              <svg width="64" height="64" viewBox="0 0 64 64" style="transform: rotate(-90deg)" aria-hidden="true">
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--c-surface)" stroke-width="3"></circle>
+                <circle
+                  cx="32"
+                  cy="32"
+                  r="28"
+                  fill="none"
+                  stroke="var(--c-white)"
+                  stroke-width="3"
+                  [attr.stroke-dasharray]="timerCircumference"
+                  [attr.stroke-dashoffset]="timerOffset()"
+                  stroke-linecap="round"
+                  style="transition: stroke-dashoffset 1s linear"
+                ></circle>
+              </svg>
               <span
-                [ngStyle]="rankBadgeStyle(idx, item)"
                 style="
-                  width: var(--sp-7);
-                  min-width: var(--sp-7);
-                  min-height: var(--sp-7);
-                  border-radius: var(--r-full);
-                  display: inline-flex;
+                  position: absolute;
+                  inset: 0;
+                  display: flex;
                   align-items: center;
                   justify-content: center;
-                  font: var(--f-brand-type-caption-medium);
+                  color: var(--c-white);
+                  font: var(--f-brand-type-subheading-medium);
                 "
               >
-                {{ badgeLabel(idx, item) }}
+                {{ timeLeft() }}
               </span>
-              <span style="flex: 1; font: var(--f-brand-type-body-medium); color: var(--c-text-1)">
-                {{ item.label }}
-              </span>
-              @if (revealed() && !isCorrectPosition(item, idx)) {
-                <span style="font: var(--f-brand-type-caption); color: var(--c-text-2)">
-                  #{{ correctIndex(item) + 1 }}
-                </span>
-              } @else if (!revealed()) {
-                <span style="font: var(--f-brand-type-caption); color: var(--c-text-2)">::</span>
-              }
             </div>
-          }
+          </div>
+
+          <h1
+            data-section="question"
+            style="
+              margin: 0;
+              padding: 0 var(--sp-6);
+              font: var(--f-brand-type-title-3);
+              font-size: var(--text-xl);
+              color: var(--c-text-1);
+              line-height: var(--leading-tight);
+              letter-spacing: var(--tracking-tight);
+              text-align: center;
+              margin-bottom: var(--sp-6);
+              flex-shrink: 0;
+            "
+          >
+            {{ currentQuestion().question }}
+          </h1>
+
+          <div style="flex: 1; padding: 0 var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-3)">
+            @for (item of items(); track item.id; let idx = $index) {
+              <div
+                (pointerdown)="startDrag(idx, $event)"
+                [ngStyle]="rankItemStyle(idx, item)"
+                [style.cursor]="revealed() ? 'default' : 'grab'"
+                data-section="rank-item"
+                style="
+                  height: 58px;
+                  border-radius: var(--r-full);
+                  border: 1.5px solid var(--c-border);
+                  background: var(--c-surface);
+                  display: flex;
+                  align-items: center;
+                  gap: var(--sp-3);
+                  padding: 0 var(--sp-4);
+                  user-select: none;
+                  touch-action: none;
+                "
+              >
+                <span
+                  [ngStyle]="rankBadgeStyle(idx, item)"
+                  style="
+                    width: var(--sp-7);
+                    min-width: var(--sp-7);
+                    min-height: var(--sp-7);
+                    border-radius: var(--r-full);
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    font: var(--f-brand-type-caption-medium);
+                  "
+                >
+                  {{ badgeLabel(idx, item) }}
+                </span>
+                <span
+                  style="flex: 1; font-size: var(--text-md); color: var(--c-text-1)"
+                  [style.font-weight]="dragIndex() === idx ? '600' : '400'"
+                >
+                  {{ item.label }}
+                </span>
+                @if (!revealed()) {
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      gap: 2px;
+                      opacity: 0.3;
+                      flex-shrink: 0;
+                      padding: 0 var(--sp-1);
+                    "
+                  >
+                    <div style="width: 16px; height: 2px; background: var(--c-text-1); border-radius: 1px"></div>
+                    <div style="width: 16px; height: 2px; background: var(--c-text-1); border-radius: 1px"></div>
+                    <div style="width: 16px; height: 2px; background: var(--c-text-1); border-radius: 1px"></div>
+                  </div>
+                }
+                @if (revealed() && !isCorrectPosition(item, idx)) {
+                  <span style="font-size: var(--text-xs); color: var(--c-text-2); flex-shrink: 0">
+                    #{{ correctIndex(item) + 1 }}
+                  </span>
+                }
+              </div>
+            }
+          </div>
         </div>
 
-        <div style="margin-top: auto">
+        <div style="padding: var(--sp-5) var(--sp-4) var(--sp-8); flex-shrink: 0">
           @if (revealed()) {
             <p
               style="
                 margin: 0 0 var(--sp-3);
                 text-align: center;
-                font: var(--f-brand-type-caption-medium);
+                font-size: var(--text-sm);
+                font-weight: var(--weight-med);
+                letter-spacing: var(--tracking-wide);
               "
               [style.color]="feedbackColor()"
             >
@@ -193,17 +218,22 @@ const ITEM_HEIGHT = 70;
           }
           <button
             type="button"
+            class="btn"
             data-ui="submit-btn"
             (click)="revealed() ? handleNext() : handleSubmit()"
             style="
               width: 100%;
               min-height: var(--sp-14);
-              border-radius: var(--f-brand-radius-rounded);
+              border-radius: 50px;
               border: none;
-              background: var(--f-brand-color-background-primary);
-              color: var(--f-brand-color-text-light);
+              background: var(--c-white);
+              color: var(--c-brand);
               font: var(--f-brand-type-body-medium);
+              font-size: var(--text-md);
               cursor: pointer;
+              transition:
+                background var(--dur-base) var(--ease-out),
+                color var(--dur-base) var(--ease-out);
             "
           >
             {{ buttonLabel() }}
@@ -220,6 +250,7 @@ export class RankingQuizPage implements OnInit, OnDestroy {
   private readonly store = inject(StoreService);
   private readonly analytics = inject(AnalyticsService);
 
+  readonly chevronLeftWhiteIcon = CHEVRON_LEFT_WHITE_ICON;
   readonly quiz = signal<RankingQuiz>(RANKING_QUIZZES[0]);
   readonly questionIndex = signal(0);
   readonly score = signal(0);
@@ -228,6 +259,11 @@ export class RankingQuizPage implements OnInit, OnDestroy {
   readonly items = signal<RankingItem[]>([]);
   readonly dragIndex = signal<number | null>(null);
   readonly dragOffset = signal(0);
+  readonly slideStyle = signal<Record<string, string>>({
+    transform: 'translateX(0)',
+    opacity: '1',
+    transition: SLIDE_TRANSITION,
+  });
 
   readonly totalQuestions = computed(() => this.quiz().questions.length);
   readonly currentQuestion = computed(() => this.quiz().questions[this.questionIndex()]);
@@ -245,6 +281,10 @@ export class RankingQuizPage implements OnInit, OnDestroy {
   private dragStartY = 0;
   private dragBaseIndex = 0;
   private timerId: number | null = null;
+  private slideEnterFrameId: number | null = null;
+  private slideExitTimeoutId: number | null = null;
+  private readonly prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  private isAnimating = false;
 
   ngOnInit(): void {
     const routeQuizId = this.route.snapshot.paramMap.get('quizId');
@@ -253,6 +293,7 @@ export class RankingQuizPage implements OnInit, OnDestroy {
     const quiz = RANKING_QUIZZES.find(entry => entry.id === quizId) ?? RANKING_QUIZZES[0];
     this.quiz.set(quiz);
     this.prepareQuestion();
+    this.triggerSlideIn();
     this.analytics.track('ranking_quiz_viewed', { quizId: quiz.id });
     window.addEventListener('pointermove', this.onPointerMove, { passive: false });
     window.addEventListener('pointerup', this.onPointerUp);
@@ -260,6 +301,12 @@ export class RankingQuizPage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopTimer();
+    if (this.slideEnterFrameId !== null) {
+      window.cancelAnimationFrame(this.slideEnterFrameId);
+    }
+    if (this.slideExitTimeoutId !== null) {
+      window.clearTimeout(this.slideExitTimeoutId);
+    }
     window.removeEventListener('pointermove', this.onPointerMove);
     window.removeEventListener('pointerup', this.onPointerUp);
   }
@@ -286,13 +333,33 @@ export class RankingQuizPage implements OnInit, OnDestroy {
   }
 
   handleNext(): void {
+    if (this.isAnimating) return;
     const isLast = this.questionIndex() >= this.totalQuestions() - 1;
     if (isLast) {
       this.finishQuiz();
       return;
     }
-    this.questionIndex.update(value => value + 1);
-    this.prepareQuestion();
+    if (this.prefersReducedMotion) {
+      this.advanceToNextQuestion();
+      return;
+    }
+
+    this.isAnimating = true;
+    this.slideStyle.set({
+      transform: 'translateX(-60px)',
+      opacity: '0',
+      transition: SLIDE_EXIT_TRANSITION,
+    });
+
+    if (this.slideExitTimeoutId !== null) {
+      window.clearTimeout(this.slideExitTimeoutId);
+    }
+    this.slideExitTimeoutId = window.setTimeout(() => {
+      this.advanceToNextQuestion();
+      this.isAnimating = false;
+      this.triggerSlideIn();
+      this.slideExitTimeoutId = null;
+    }, SLIDE_EXIT_MS);
   }
 
   handleBack(): void {
@@ -310,6 +377,8 @@ export class RankingQuizPage implements OnInit, OnDestroy {
         background: 'var(--c-accent-bg)',
         zIndex: '10',
         position: 'relative',
+        boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+        transition: 'none',
       };
     }
     if (this.revealed() && correct) {
@@ -325,7 +394,8 @@ export class RankingQuizPage implements OnInit, OnDestroy {
       };
     }
     return {
-      transition: 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
+      transition: 'transform 200ms ease, border-color 200ms ease, background 200ms ease',
+      boxShadow: 'none',
     };
   }
 
@@ -353,19 +423,19 @@ export class RankingQuizPage implements OnInit, OnDestroy {
     if (!this.revealed()) {
       return String(index + 1);
     }
-    return this.isCorrectPosition(item, index) ? 'OK' : 'NO';
+    return this.isCorrectPosition(item, index) ? '✓' : '✗';
   }
 
   buttonLabel(): string {
     if (!this.revealed()) return 'Lock in order';
     const isLast = this.questionIndex() >= this.totalQuestions() - 1;
     if (!isLast) return 'Next';
-    return `Finish - ${this.score()}/${this.totalQuestions() * 4}`;
+    return `Finish · ${this.score()}/${this.totalQuestions() * 4}`;
   }
 
   feedbackText(): string {
     const value = this.questionScore();
-    if (value === 4) return 'Perfect order! +4 points';
+    if (value === 4) return '✓ Perfect order! +4 points';
     return `${value}/4 correct positions`;
   }
 
@@ -421,6 +491,39 @@ export class RankingQuizPage implements OnInit, OnDestroy {
     this.dragOffset.set(0);
     this.items.set(this.shuffle(this.currentQuestion().items));
     this.startTimer();
+  }
+
+  private advanceToNextQuestion(): void {
+    this.questionIndex.update(value => value + 1);
+    this.prepareQuestion();
+  }
+
+  private triggerSlideIn(): void {
+    if (this.prefersReducedMotion) {
+      this.slideStyle.set({
+        transform: 'translateX(0)',
+        opacity: '1',
+        transition: 'none',
+      });
+      return;
+    }
+
+    if (this.slideEnterFrameId !== null) {
+      window.cancelAnimationFrame(this.slideEnterFrameId);
+    }
+    this.slideStyle.set({
+      transform: 'translateX(60px)',
+      opacity: '0',
+      transition: 'none',
+    });
+    this.slideEnterFrameId = window.requestAnimationFrame(() => {
+      this.slideStyle.set({
+        transform: 'translateX(0)',
+        opacity: '1',
+        transition: SLIDE_TRANSITION,
+      });
+      this.slideEnterFrameId = null;
+    });
   }
 
   private startTimer(): void {
