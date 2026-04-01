@@ -655,8 +655,9 @@ export class DragDropQuizPage implements OnInit, OnDestroy {
         score: nextScore,
         total,
       });
-      const homeRoute = this.store.state().fanCard.teamId ? '/card' : '/';
-    void this.router.navigateByUrl(homeRoute);
+      void this.router.navigate(['/results'], {
+        state: { score: nextScore, total, quizTitle: quiz.title },
+      });
       return;
     }
 

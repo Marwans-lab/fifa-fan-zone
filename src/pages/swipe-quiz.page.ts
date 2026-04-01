@@ -759,8 +759,9 @@ export class SwipeQuizPage implements OnInit {
         score: finalScore,
         total,
       });
-      const homeRoute = this.store.state().fanCard.teamId ? '/card' : '/';
-    void this.router.navigateByUrl(homeRoute);
+      void this.router.navigate(['/results'], {
+        state: { score: finalScore, total, quizTitle: quiz.title },
+      });
       return;
     }
 

@@ -618,8 +618,9 @@ export class QuizPage implements OnInit, OnDestroy {
       this.store.completeFlow(quiz.id);
     }
     this.analytics.track('quiz_completed', { quizId: quiz.id, score: finalScore, total });
-    const homeRoute = this.store.state().fanCard.teamId ? '/card' : '/';
-    void this.router.navigateByUrl(homeRoute);
+    void this.router.navigate(['/results'], {
+      state: { score: finalScore, total, quizTitle: quiz.title },
+    });
   }
 
   private isFlowId(value: string): value is FlowId {
