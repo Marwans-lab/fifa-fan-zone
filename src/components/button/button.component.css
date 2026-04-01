@@ -1,1 +1,9 @@
 @import '../../styles/fds-button.css';
+
+:host {
+  display: contents;
+}
+
+.f-button__icon:empty {
+  display: none;
+}
