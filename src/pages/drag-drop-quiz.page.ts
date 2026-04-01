@@ -980,7 +980,7 @@ export class DragDropQuizPage implements OnInit, OnDestroy {
 
   private refreshElementCaches(): void {
     this.dropZoneElements.clear();
-    for (const ref of this.dropZoneRefs?.toArray?.() ?? []) {
+    for (const ref of this.dropZoneRefs ?? []) {
       const element = ref.nativeElement;
       const pairId = element.dataset['pairId'];
       if (pairId) {
@@ -989,7 +989,7 @@ export class DragDropQuizPage implements OnInit, OnDestroy {
     }
 
     this.chipElements.clear();
-    for (const ref of this.chipRefs?.toArray?.() ?? []) {
+    for (const ref of this.chipRefs ?? []) {
       const element = ref.nativeElement;
       const answer = element.dataset['answer'];
       if (answer) {

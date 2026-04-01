@@ -518,8 +518,6 @@ export class PicturePage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly analytics = inject(AnalyticsService);
   private readonly store = inject(StoreService);
-  private hasTriggeredTakePhotoOnEnter = false;
-
   private readonly videoRef = viewChild<ElementRef<HTMLVideoElement>>('videoRef');
   private readonly fileInputRef = viewChild<ElementRef<HTMLInputElement>>('fileInputRef');
   private stream: MediaStream | null = null;
@@ -559,7 +557,6 @@ export class PicturePage implements OnInit, OnDestroy {
     if (event.animationName !== 'f-page-enter-kf') {
       return;
     }
-    this.triggerTakePhotoOnPageEnter();
   }
 
   async handleTakePhoto(): Promise<void> {
@@ -643,22 +640,6 @@ export class PicturePage implements OnInit, OnDestroy {
     main.classList.remove('f-page-enter');
     requestAnimationFrame(() => {
       main.classList.add('f-page-enter');
-    });
-  }
-
-  private triggerTakePhotoOnPageEnter(): void {
-    if (
-      this.hasTriggeredTakePhotoOnEnter ||
-      this.hasPhoto() ||
-      this.isRemovingBg() ||
-      this.cameraActive()
-    ) {
-      return;
-    }
-
-    this.hasTriggeredTakePhotoOnEnter = true;
-    queueMicrotask(() => {
-      void this.handleTakePhoto();
     });
   }
 
