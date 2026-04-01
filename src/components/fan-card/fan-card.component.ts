@@ -153,7 +153,8 @@ export class FanCardComponent implements OnChanges {
     this.analytics.track('card_flipped_to_back');
   }
 
-  flipToFront(): void {
+  flipToFront(event?: MouseEvent): void {
+    event?.stopPropagation();
     this.isFlipped = false;
     this.wizardActive = false;
     this.analytics.track('card_flipped_to_front');
