@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { CARD_MATCH_QUIZZES, type CardMatchPair } from '../../data/cardMatchQuizzes';
-import { WORLD_CUP_TEAMS } from '../../data/teams';
+import { CARD_MATCH_QUIZZES, type CardMatchPair } from '../data/cardMatchQuizzes';
+import { WORLD_CUP_TEAMS } from '../data/teams';
 import { FLOW_IDS, type FlowId } from '../models/flow-id.model';
 import { AnalyticsService } from '../services/analytics.service';
 import { StoreService } from '../services/store.service';

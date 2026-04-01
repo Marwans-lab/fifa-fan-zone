@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { WORLD_CUP_TEAMS } from '../../data/teams';
+import { WORLD_CUP_TEAMS } from '../data/teams';
 import { AnalyticsService } from '../services/analytics.service';
 import { StoreService } from '../services/store.service';
 

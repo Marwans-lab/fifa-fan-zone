@@ -120,11 +120,11 @@
 }
 
 .f-fan-card__flip-hint-icon {
-  background-image: url('../../../assets/icons/flip-white.svg');
+  background-image: url('../../assets/icons/flip-white.svg');
 }
 
 .f-fan-card__back-flip-hint-icon {
-  background-image: url('../../../assets/icons/flip-dark.svg');
+  background-image: url('../../assets/icons/flip-dark.svg');
 }
 
 .f-fan-card__wizard {
@@ -274,16 +274,16 @@
 }
 
 .fan-card-edit-icon {
-  -webkit-mask-image: url('../../../assets/icons/edit-white.svg');
-  mask-image: url('../../../assets/icons/edit-white.svg');
+  -webkit-mask-image: url('../../assets/icons/edit-white.svg');
+  mask-image: url('../../assets/icons/edit-white.svg');
 }
 
 .fan-card-share-icon {
-  -webkit-mask-image: url('../../../assets/icons/share-white.svg');
-  mask-image: url('../../../assets/icons/share-white.svg');
+  -webkit-mask-image: url('../../assets/icons/share-white.svg');
+  mask-image: url('../../assets/icons/share-white.svg');
 }
 
 .fan-card-save-to-device-icon {
-  -webkit-mask-image: url('../../../assets/icons/save-white.svg');
-  mask-image: url('../../../assets/icons/save-white.svg');
+  -webkit-mask-image: url('../../assets/icons/save-white.svg');
+  mask-image: url('../../assets/icons/save-white.svg');
 }

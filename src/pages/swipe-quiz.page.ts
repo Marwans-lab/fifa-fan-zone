@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { SWIPE_QUIZZES, type SwipeQuiz } from '../../data/swipeQuizzes';
+import { SWIPE_QUIZZES, type SwipeQuiz } from '../data/swipeQuizzes';
 import { FLOW_IDS, type FlowId } from '../models/flow-id.model';
 import { AnalyticsService } from '../services/analytics.service';
 import { StoreService } from '../services/store.service';
