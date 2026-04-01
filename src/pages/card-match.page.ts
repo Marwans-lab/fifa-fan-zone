@@ -990,9 +990,8 @@ export class CardMatchPage implements OnInit, OnDestroy {
     const total = this.pairCount() * this.totalRounds();
     const score = this.accumulatedScore();
     const title = quiz?.title ?? 'Card match';
-    void this.router.navigate(['/results'], {
-      state: { score, total, quizTitle: title, quizId },
-    });
+    const homeRoute = this.store.state().fanCard.teamId ? '/card' : '/';
+    void this.router.navigateByUrl(homeRoute);
   }
 
   private setupRound(roundIndex: number): void {
