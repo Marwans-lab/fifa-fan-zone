@@ -115,6 +115,8 @@ const JPG_QUALITY = 0.78;
         background: var(--c-lt-bg);
         padding: var(--sp-4);
         gap: var(--sp-4);
+        animation: f-page-enter-kf var(--f-brand-motion-duration-generous, 1200ms)
+          var(--f-brand-motion-easing-entry, cubic-bezier(0.16, 1, 0.3, 1)) both;
       }
 
       .picture-page__header {
@@ -293,6 +295,23 @@ const JPG_QUALITY = 0.78;
         border: none;
         color: var(--f-brand-color-text-light);
         background: var(--f-brand-color-background-primary);
+      }
+
+      @keyframes f-page-enter-kf {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .picture-page {
+          animation-duration: 0.01ms !important;
+        }
       }
     `,
   ],
