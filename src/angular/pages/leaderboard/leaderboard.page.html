@@ -1,0 +1,101 @@
+<app-screen>
+  <div class="f-leaderboard-page f-page-enter scroll-y" data-page="leaderboard">
+    <header class="f-leaderboard-header" data-section="header">
+      <button
+        type="button"
+        class="f-button f-button--ghost f-leaderboard-icon-btn"
+        data-ui="back-btn"
+        aria-label="Go back"
+        (click)="goBack()"
+      >
+        <img [src]="backIcon" width="24" height="24" alt="Back" />
+      </button>
+
+      <div class="f-leaderboard-header-title">
+        <h1 class="f-leaderboard-title">Leaderboard</h1>
+      </div>
+
+      <button
+        type="button"
+        class="f-button f-button--ghost f-leaderboard-icon-btn"
+        data-ui="refresh-btn"
+        aria-label="Refresh leaderboard"
+        (click)="refresh()"
+      >
+        <img [src]="refreshIcon" width="24" height="24" alt="Refresh" />
+      </button>
+    </header>
+
+    <p class="f-leaderboard-subtitle" data-section="subtitle">
+      Cumulative score · Updated {{ formatRefresh(lastRefresh()) }} · auto-refreshes every
+      {{ refreshMinutes }} min
+    </p>
+
+    @if (myRank() !== null) {
+      <section class="f-leaderboard-your-rank" data-section="your-rank">
+        <span class="f-leaderboard-your-rank-label">Your rank:</span>
+        <span class="f-leaderboard-your-rank-value">#{{ myRank() }}</span>
+        @if ((myRank() ?? 99) <= 5) {
+          <span class="f-leaderboard-top-five-badge">
+            <img [src]="trophyIcon" width="20" height="20" alt="Trophy" />
+            Top 5 — Avios eligible
+          </span>
+        }
+      </section>
+    }
+
+    <section class="f-leaderboard-list f-stagger" data-section="rank-list">
+      @if (entries().length === 0) {
+        <div class="f-leaderboard-empty">
+          <img [src]="trophyIcon" width="32" height="32" alt="Trophy" />
+          <p>No players yet — complete a quiz to appear on the leaderboard</p>
+        </div>
+      }
+
+      @for (row of entries(); track trackByRank($index, row)) {
+        <article class="f-leaderboard-row" data-section="rank-row" [class.f-leaderboard-row--me]="row.isMe">
+          <div class="f-leaderboard-rank" [class.f-leaderboard-rank--top]="row.rank <= 3">
+            @if (row.rank === 1) {
+              <img [src]="trophyIcon" width="20" height="20" alt="First place" />
+            } @else {
+              {{ row.rank }}
+            }
+          </div>
+
+          <div class="f-leaderboard-name" [class.f-leaderboard-name--me]="row.isMe">
+            <span>{{ row.name }}</span>
+            @if (row.isMe) {
+              <span class="f-leaderboard-you-chip">you</span>
+            }
+          </div>
+
+          <div class="f-leaderboard-metrics">
+            <div class="f-leaderboard-metric">
+              <span class="f-leaderboard-metric-label">Score</span>
+              <span class="f-leaderboard-metric-value">{{ row.pts }} pts</span>
+            </div>
+            <div class="f-leaderboard-metric">
+              <span class="f-leaderboard-metric-label">Duration</span>
+              <span class="f-leaderboard-metric-value">{{ row.durationMins }} min</span>
+            </div>
+          </div>
+        </article>
+      }
+    </section>
+
+    <p class="f-leaderboard-disclaimer">
+      Top 5 fans win Avios. Rankings are provisional until end-of-event.
+    </p>
+  </div>
+
+  <div class="f-leaderboard-sticky-cta">
+    <app-button
+      className="f-leaderboard-home-btn"
+      [fullWidth]="true"
+      data-ui="return-home-btn"
+      (clicked)="returnHome()"
+    >
+      Return home
+    </app-button>
+  </div>
+</app-screen>

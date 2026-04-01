@@ -1,0 +1,85 @@
+<app-screen [centered]="true">
+  <div class="results-page f-page-enter" data-page="results">
+    @if (result()) {
+      <p class="results-status" [style.color]="status().tone">
+        {{ status().label }}
+      </p>
+
+      <p class="results-quiz-title">{{ result()!.quizTitle }}</p>
+
+      <div
+        class="results-ring"
+        data-section="score-ring"
+        [style.color]="status().tone"
+        [style.width.px]="ringSize"
+        [style.height.px]="ringSize"
+      >
+        <svg
+          class="results-ring-svg"
+          [attr.width]="ringSize"
+          [attr.height]="ringSize"
+          aria-hidden="true"
+        >
+          <circle
+            class="results-ring-track"
+            [attr.cx]="ringCenter"
+            [attr.cy]="ringCenter"
+            [attr.r]="ringRadius"
+            fill="none"
+            [attr.stroke-width]="ringStroke"
+          ></circle>
+          <circle
+            class="results-ring-arc"
+            [attr.cx]="ringCenter"
+            [attr.cy]="ringCenter"
+            [attr.r]="ringRadius"
+            fill="none"
+            [attr.stroke]="status().tone"
+            [attr.stroke-width]="ringStroke"
+            stroke-linecap="round"
+            [attr.stroke-dasharray]="ringCircumference"
+            [attr.stroke-dashoffset]="ringOffset()"
+          ></circle>
+        </svg>
+        <div class="results-ring-inner">
+          <span class="results-ring-points" [style.color]="status().tone">
+            {{ displayPoints() }}
+          </span>
+          <span class="results-ring-label">Points</span>
+        </div>
+      </div>
+    } @else {
+      <p class="results-status" style="color: var(--f-brand-color-text-default)">Your score</p>
+      <p class="results-fallback-points">
+        {{ store.state().points }}
+        <span>pts</span>
+      </p>
+    }
+
+    <div class="results-actions" data-section="actions">
+      @if (result()) {
+        <app-button [fullWidth]="true" className="results-action-btn" (clicked)="goToLeaderboard()">
+          View leaderboard
+        </app-button>
+        <app-button
+          variant="secondary"
+          [fullWidth]="true"
+          className="results-action-btn"
+          (clicked)="goHome()"
+        >
+          Return home
+        </app-button>
+        <app-button variant="ghost" [fullWidth]="true" className="results-action-btn" (clicked)="playAgain()">
+          Play another quiz
+        </app-button>
+      } @else {
+        <app-button [fullWidth]="true" className="results-action-btn" (clicked)="playAgain()">
+          Play a quiz
+        </app-button>
+        <app-button variant="ghost" [fullWidth]="true" className="results-action-btn" (clicked)="goHome()">
+          Return home
+        </app-button>
+      }
+    </div>
+  </div>
+</app-screen>

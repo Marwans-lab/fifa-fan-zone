@@ -97,12 +97,13 @@ export const appRoutes: Routes = [
   {
     path: 'results',
     canActivate: [authGuard],
-    loadComponent: () => import('./pages/results.page').then(m => m.ResultsPage),
+    loadComponent: () => import('./pages/results/results.page').then(m => m.ResultsPage),
   },
   {
     path: 'leaderboard',
     canActivate: [authGuard],
-    loadComponent: () => import('./pages/leaderboard.page').then(m => m.LeaderboardPage),
+    loadComponent: () =>
+      import('./pages/leaderboard/leaderboard.page').then(m => m.LeaderboardPage),
   },
   {
     path: '**',
