@@ -26,12 +26,19 @@ jobs:
           cache: npm
 
       - run: npm ci
+      - name: Generate Firebase environment config
+        run: |
+          cat > src/environments/environment.ts << 'ENVEOF'
+          export const environment = {
+            firebase: {
+              apiKey: '${{ secrets.VITE_FIREBASE_API_KEY }}',
+              authDomain: '${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}',
+              projectId: '${{ secrets.VITE_FIREBASE_PROJECT_ID }}',
+              appId: '${{ secrets.VITE_FIREBASE_APP_ID }}',
+            },
+          };
+          ENVEOF
       - run: npm run build
-        env:
-          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
-          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
-          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
-          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
 
       - uses: actions/upload-pages-artifact@v3
         with:
