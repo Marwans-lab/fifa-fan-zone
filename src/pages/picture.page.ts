@@ -80,7 +80,7 @@ const JPG_QUALITY = 0.78;
             </div>
           } @else {
             <div class="picture-page__placeholder-wrap">
-              <div class="picture-page__placeholder" [style.background]="teamCardBackground()">
+              <div class="picture-page__placeholder" [ngStyle]="placeholderStyle()">
                 <div class="picture-page__placeholder-shimmer"></div>
                 <div class="picture-page__placeholder-dots"></div>
                 <div class="picture-page__placeholder-stripes"></div>
@@ -539,6 +539,19 @@ export class PicturePage implements OnInit, OnDestroy {
 
   readonly teamCardBackground = computed(() => {
     return getTeamCardBackground(this.selectedTeam()?.id ?? '');
+  });
+
+  readonly placeholderStyle = computed(() => {
+    const bg = this.teamCardBackground();
+    const style: Record<string, string> = {};
+    if (bg.startsWith('url(')) {
+      style['background-image'] = bg;
+      style['background-size'] = 'cover';
+      style['background-position'] = 'center';
+    } else {
+      style['background'] = bg;
+    }
+    return style;
   });
 
   readonly previewFanCard = computed<FanCard>(() => ({
