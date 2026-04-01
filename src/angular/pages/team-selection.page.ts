@@ -1,0 +1,13 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+@Component({
+  standalone: true,
+  template: `
+    <main class="angular-page">
+      <h1 class="angular-page__title">Team selection</h1>
+      <p class="angular-page__description">Angular migration placeholder for the team selection route.</p>
+    </main>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TeamSelectionPage {}
