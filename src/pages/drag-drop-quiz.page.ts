@@ -10,7 +10,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { DRAG_DROP_QUIZZES, type DragDropQuestion, type DragDropQuiz } from '../../data/dragDropQuizzes';
+import { DRAG_DROP_QUIZZES, type DragDropQuestion, type DragDropQuiz } from '../data/dragDropQuizzes';
 import { AnalyticsService } from '../services/analytics.service';
 import { StoreService } from '../services/store.service';
 

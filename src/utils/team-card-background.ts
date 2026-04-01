@@ -1,4 +1,4 @@
-import { getTeam } from '../../data/teams';
+import { getTeam } from '../data/teams';
 
 const TEAM_BG_IMAGES: Record<string, string> = {
   alg: 'assets/images/Team-backgrounds/Algeria.png',

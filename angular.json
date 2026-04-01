@@ -6,19 +6,32 @@
     "angular-migration": {
       "projectType": "application",
       "root": "",
-      "sourceRoot": "src/angular",
+      "sourceRoot": "src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist-angular",
-            "index": "src/angular/index.html",
-            "browser": "src/angular/main.ts",
+            "outputPath": {
+              "base": "dist",
+              "browser": ""
+            },
+            "index": "index.html",
+            "browser": "src/main.ts",
             "tsConfig": "tsconfig.angular.json",
             "polyfills": ["zone.js"],
-            "assets": [],
-            "styles": ["src/angular/styles.css"],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "assets"
+              }
+            ],
+            "styles": ["src/styles/angular.css"],
             "scripts": []
           },
           "configurations": {

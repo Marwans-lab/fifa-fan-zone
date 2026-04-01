@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { RANKING_QUIZZES, type RankingItem, type RankingQuiz } from '../../data/rankingQuizzes';
+import { RANKING_QUIZZES, type RankingItem, type RankingQuiz } from '../data/rankingQuizzes';
 import { FLOW_IDS, type FlowId } from '../models/flow-id.model';
 import { AnalyticsService } from '../services/analytics.service';
 import { StoreService } from '../services/store.service';

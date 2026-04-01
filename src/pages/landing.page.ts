@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { WORLD_CUP_TEAMS, type WorldCupTeam } from '../../data/teams';
+import { WORLD_CUP_TEAMS, type WorldCupTeam } from '../data/teams';
 import { AnalyticsService } from '../services/analytics.service';
 import { AuthService } from '../services/auth.service';
 import { StoreService } from '../services/store.service';
