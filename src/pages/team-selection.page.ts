@@ -25,7 +25,7 @@ import { StoreService } from '../services/store.service';
           (click)="handleBack()"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M15 19L8 12L15 5"></path>
+            <path d="M15 19l-7-7 7-7"></path>
           </svg>
         </button>
         <div class="team-selection-page__progress-track" aria-hidden="true">
@@ -33,11 +33,12 @@ import { StoreService } from '../services/store.service';
         </div>
       </header>
 
-      <h1 class="team-selection-page__title">Select your team</h1>
+      <h1 class="team-selection-page__title" data-section="title">Select your team</h1>
 
-      <section class="team-selection-page__dropdown-wrap">
+      <section class="team-selection-page__dropdown-wrap" data-section="team-dropdown">
         <button
           class="team-selection-page__dropdown-trigger"
+          [class.team-selection-page__dropdown-trigger--placeholder]="!selectedId()"
           type="button"
           data-ui="team-dropdown-btn"
           [attr.aria-expanded]="dropdownOpen()"
@@ -45,25 +46,27 @@ import { StoreService } from '../services/store.service';
           (click)="toggleDropdown()"
         >
           <span>{{ selectedTeamName() ?? 'Select a team' }}</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 9L12 15L18 9"></path>
+          <svg
+            class="team-selection-page__dropdown-chevron"
+            [class.team-selection-page__dropdown-chevron--open]="dropdownOpen()"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path d="M6 9l6 6 6-6"></path>
           </svg>
         </button>
 
         @if (dropdownOpen()) {
           <ul class="team-selection-page__list" role="listbox">
-            @for (team of dropdownTeams; track team.id) {
-              <li>
-                <button
-                  class="team-selection-page__option"
-                  type="button"
-                  role="option"
-                  [attr.aria-selected]="selectedId() === team.id"
-                  (click)="selectTeam(team.id)"
-                >
-                  <span aria-hidden="true">{{ team.flag }}</span>
-                  {{ team.name }}
-                </button>
+            @for (team of dropdownTeams; track team.id; let isLast = $last) {
+              <li
+                class="team-selection-page__option"
+                role="option"
+                [attr.aria-selected]="selectedId() === team.id"
+                [class.team-selection-page__option--with-divider]="!isLast"
+                (click)="selectTeam(team.id)"
+              >
+                {{ team.name }}
               </li>
             }
           </ul>
@@ -72,9 +75,15 @@ import { StoreService } from '../services/store.service';
 
       <div class="team-selection-page__spacer"></div>
 
+      <p class="team-selection-page__login-prompt">
+        Already have a card?
+        <span class="team-selection-page__login-link">Log in</span>
+      </p>
+
       <button
         class="team-selection-page__continue"
         type="button"
+        data-section="confirm-cta"
         data-ui="continue-btn"
         [disabled]="!selectedId()"
         (click)="handleContinue()"
@@ -87,36 +96,39 @@ import { StoreService } from '../services/store.service';
     `
       .team-selection-page {
         min-height: 100dvh;
-        background: var(--c-lt-bg);
+        width: 100%;
+        background: var(--f-brand-color-background-default);
         display: flex;
         flex-direction: column;
-        gap: var(--sp-6);
-        padding: var(--sp-4);
+        padding: var(--f-brand-space-md);
+        box-sizing: border-box;
+        overflow: hidden;
       }
 
       .team-selection-page__header {
         display: flex;
         align-items: center;
-        gap: var(--sp-4);
-        margin-top: var(--sp-2);
+        gap: var(--f-brand-space-md);
+        flex-shrink: 0;
       }
 
       .team-selection-page__back {
         width: var(--sp-12);
-        min-height: var(--sp-12);
-        border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
+        height: var(--sp-12);
+        border: none;
         border-radius: var(--f-brand-radius-rounded);
         background: var(--f-brand-color-background-light);
         display: grid;
         place-items: center;
         cursor: pointer;
+        flex-shrink: 0;
       }
 
       .team-selection-page__back svg {
         width: var(--sp-5);
         height: var(--sp-5);
         stroke: var(--f-brand-color-text-default);
-        stroke-width: var(--f-brand-border-size-focused);
+        stroke-width: 2;
         fill: none;
         stroke-linecap: round;
         stroke-linejoin: round;
@@ -133,28 +145,39 @@ import { StoreService } from '../services/store.service';
       .team-selection-page__progress-fill {
         width: 50%;
         height: 100%;
-        background: var(--f-brand-color-background-primary);
+        border-radius: var(--f-brand-radius-rounded);
+        background: linear-gradient(
+          -90deg,
+          var(--f-brand-color-border-success) 61.5%,
+          var(--f-brand-color-background-success) 100%
+        );
+        box-shadow: 1px 0px 6px var(--f-brand-shadow-large);
+        transition: width var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit);
       }
 
       .team-selection-page__title {
         margin: 0;
+        margin-top: var(--f-brand-space-xl);
+        margin-bottom: var(--f-brand-space-xl);
         text-align: center;
-        color: var(--c-lt-text-1);
-        font: var(--f-brand-type-title-2);
+        color: var(--f-brand-color-text-default);
+        font: var(--f-brand-type-title-3);
+        flex-shrink: 0;
       }
 
       .team-selection-page__dropdown-wrap {
         position: relative;
+        flex-shrink: 0;
       }
 
       .team-selection-page__dropdown-trigger {
         width: 100%;
-        min-height: var(--sp-12);
+        height: var(--sp-12);
         border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
         border-radius: var(--f-brand-radius-base);
         background: var(--f-brand-color-background-light);
         color: var(--f-brand-color-text-default);
-        padding: var(--sp-3) var(--sp-4);
+        padding: 0 var(--f-brand-space-md);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -162,72 +185,95 @@ import { StoreService } from '../services/store.service';
         cursor: pointer;
       }
 
-      .team-selection-page__dropdown-trigger svg {
+      .team-selection-page__dropdown-trigger--placeholder {
+        color: var(--f-brand-color-text-subtle);
+      }
+
+      .team-selection-page__dropdown-chevron {
         width: var(--sp-4);
         height: var(--sp-4);
         stroke: var(--f-brand-color-text-subtle);
-        stroke-width: var(--f-brand-border-size-focused);
+        stroke-width: 2;
         fill: none;
         stroke-linecap: round;
         stroke-linejoin: round;
+        transform: rotate(0deg);
+        transition: transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit);
+      }
+
+      .team-selection-page__dropdown-chevron--open {
+        transform: rotate(180deg);
       }
 
       .team-selection-page__list {
         position: absolute;
-        top: calc(100% + var(--sp-1));
+        top: calc(100% + var(--f-brand-space-xs));
         left: 0;
         right: 0;
         list-style: none;
         margin: 0;
-        padding: var(--sp-2);
-        max-height: calc(var(--sp-20) * 3);
+        padding: 0 var(--f-brand-space-md);
+        max-height: 280px;
         overflow-y: auto;
-        border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
+        scrollbar-width: thin;
+        scrollbar-color: var(--f-brand-color-text-muted) transparent;
+        border: none;
         border-radius: var(--f-brand-radius-base);
         background: var(--f-brand-color-background-light);
-        box-shadow: var(--f-brand-shadow-medium);
-        z-index: 1;
+        box-shadow: 0px 2px 4px 2px var(--f-brand-shadow-medium);
+        z-index: 10;
       }
 
       .team-selection-page__option {
         width: 100%;
-        min-height: var(--sp-12);
         border: none;
-        border-radius: var(--f-brand-radius-base);
         background: transparent;
         color: var(--f-brand-color-text-default);
-        padding: var(--sp-2) var(--sp-3);
-        display: flex;
-        align-items: center;
-        gap: var(--sp-2);
+        padding: var(--f-brand-space-md) 0;
+        display: block;
         font: var(--f-brand-type-body);
         text-align: left;
         cursor: pointer;
       }
 
-      .team-selection-page__option[aria-selected='true'] {
-        background: var(--c-brand-tint-12);
+      .team-selection-page__option--with-divider {
+        border-bottom: var(--f-brand-border-size-default) solid var(--f-brand-color-background-default);
       }
 
       .team-selection-page__spacer {
         flex: 1;
       }
 
+      .team-selection-page__login-prompt {
+        margin: 0;
+        margin-bottom: var(--f-brand-space-md);
+        text-align: center;
+        color: var(--f-brand-color-text-default);
+        font: var(--f-brand-type-headline);
+        flex-shrink: 0;
+      }
+
+      .team-selection-page__login-link {
+        font-weight: var(--weight-med);
+      }
+
       .team-selection-page__continue {
         width: 100%;
-        min-height: var(--sp-14);
+        height: var(--sp-14);
         border: none;
         border-radius: var(--f-brand-radius-rounded);
-        background: var(--f-brand-color-background-primary);
-        color: var(--f-brand-color-text-light);
+        background: var(--f-brand-color-primary);
+        color: var(--f-brand-color-background-light);
         font: var(--f-brand-type-body-medium);
         cursor: pointer;
+        opacity: 1;
+        transition: opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit);
+        flex-shrink: 0;
       }
 
       .team-selection-page__continue:disabled {
-        background: var(--f-brand-color-background-disabled);
-        color: var(--f-brand-color-text-disabled);
-        cursor: not-allowed;
+        opacity: 0.5;
+        cursor: default;
       }
     `,
   ],
@@ -239,7 +285,7 @@ export class TeamSelectionPage {
   private readonly analytics = inject(AnalyticsService);
   private readonly hostElement = inject(ElementRef<HTMLElement>);
 
-  readonly dropdownTeams = WORLD_CUP_TEAMS.slice(0, 48);
+  readonly dropdownTeams = WORLD_CUP_TEAMS;
 
   readonly dropdownOpen = signal(false);
   readonly selectedId = signal<string | null>(this.store.state().fanCard.teamId);
