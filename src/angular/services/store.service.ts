@@ -65,6 +65,15 @@ export class StoreService {
     });
   }
 
+  markLeaderboardVisited(): void {
+    this._setState(prev => {
+      if (prev.hasVisitedLeaderboard) {
+        return prev;
+      }
+      return { ...prev, hasVisitedLeaderboard: true };
+    });
+  }
+
   isFlowUnlocked(flowId: FlowId): boolean {
     const index = FLOW_IDS.indexOf(flowId);
     if (index === 0) return true;

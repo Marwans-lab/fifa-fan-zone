@@ -7,6 +7,7 @@ export interface AppState {
   points: number;
   quizResults: Record<string, QuizResult>;
   completedFlows: FlowId[];
+  hasVisitedLeaderboard: boolean;
 }
 
 export const defaultAppState: AppState = {
@@ -19,4 +20,5 @@ export const defaultAppState: AppState = {
   points: 0,
   quizResults: {},
   completedFlows: [],
+  hasVisitedLeaderboard: false,
 };

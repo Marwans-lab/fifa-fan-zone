@@ -51,6 +51,7 @@ describe('StoreService', () => {
     });
     expect(state.quizResults).toEqual({});
     expect(state.completedFlows).toEqual([]);
+    expect(state.hasVisitedLeaderboard).toBeFalse();
   });
 
   it('deep-merges saved fanCard fields with defaults', () => {
@@ -159,5 +160,15 @@ describe('StoreService', () => {
 
     expect(service.state()).toEqual(defaultAppState);
     expect(removeItemSpy).toHaveBeenCalledOnceWith(STORAGE_KEY);
+  });
+
+  it('markLeaderboardVisited only persists once', () => {
+    service = createService();
+
+    service.markLeaderboardVisited();
+    service.markLeaderboardVisited();
+
+    expect(service.state().hasVisitedLeaderboard).toBeTrue();
+    expect(setItemSpy).toHaveBeenCalledTimes(1);
   });
 });

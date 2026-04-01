@@ -1,4 +1,4 @@
-import { NgClass, NgStyle } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -56,7 +56,7 @@ type QuestionId = Question['id'];
 @Component({
   selector: 'app-fan-card',
   standalone: true,
-  imports: [NgClass, NgStyle, ButtonComponent],
+  imports: [NgStyle, ButtonComponent],
   templateUrl: './fan-card.component.html',
   styleUrl: './fan-card.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

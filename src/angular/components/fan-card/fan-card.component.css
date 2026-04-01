@@ -1,1 +1,289 @@
-@import '../../../components/FanCard.css';
+.f-fan-card {
+  width: 100%;
+  aspect-ratio: 5 / 7;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.f-fan-card__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform var(--f-brand-motion-duration-gentle) var(--f-brand-motion-easing-default);
+}
+
+.f-fan-card--flipped .f-fan-card__inner {
+  transform: rotateY(180deg);
+}
+
+.f-fan-card__front,
+.f-fan-card__back {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--f-brand-radius-outer);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+
+.f-fan-card__front {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
+  background: var(--f-brand-color-background-light);
+}
+
+.f-fan-card__back {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
+  background: var(--f-brand-color-background-light);
+}
+
+.f-fan-card__texture-dots,
+.f-fan-card__texture-stripes,
+.f-fan-card__holographic {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.f-fan-card__texture-dots {
+  background-image: radial-gradient(circle, var(--c-lt-shimmer) var(--sp-1), transparent var(--sp-1));
+  background-size: var(--sp-4) var(--sp-4);
+}
+
+.f-fan-card__texture-stripes {
+  background-image: linear-gradient(
+    135deg,
+    transparent 0,
+    transparent var(--sp-2),
+    var(--c-lt-shimmer) var(--sp-2),
+    var(--c-lt-shimmer) var(--sp-3),
+    transparent var(--sp-3),
+    transparent var(--sp-6)
+  );
+}
+
+.f-fan-card__holographic {
+  inset: auto 0 0;
+  height: var(--sp-1);
+  background: linear-gradient(90deg, transparent, var(--f-brand-color-text-light), transparent);
+}
+
+.f-fan-card__team-empty {
+  text-align: center;
+  color: var(--f-brand-color-text-light);
+  font: var(--f-brand-type-caption);
+}
+
+.f-fan-card__back-title {
+  color: var(--f-brand-color-text-default);
+  font: var(--f-brand-type-headline-medium);
+}
+
+.f-fan-card__flip-hint,
+.f-fan-card__back-flip-hint {
+  margin: 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-2);
+  border-radius: var(--f-brand-radius-rounded);
+  font: var(--f-brand-type-caption);
+}
+
+.f-fan-card__flip-hint {
+  margin-top: auto;
+  color: var(--f-brand-color-text-light);
+  background: var(--c-surface);
+}
+
+.f-fan-card__back-flip-hint {
+  color: var(--f-brand-color-text-subtle);
+}
+
+.f-fan-card__flip-hint-icon,
+.f-fan-card__back-flip-hint-icon {
+  width: var(--sp-5);
+  min-height: var(--sp-5);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.f-fan-card__flip-hint-icon {
+  background-image: url('../../../assets/icons/flip-white.svg');
+}
+
+.f-fan-card__back-flip-hint-icon {
+  background-image: url('../../../assets/icons/flip-dark.svg');
+}
+
+.f-fan-card__wizard {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.f-fan-card__wizard-progress {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-1);
+}
+
+.f-fan-card__wizard-bar {
+  height: var(--sp-1);
+  border-radius: var(--r-full);
+  background: var(--f-brand-color-border-default);
+}
+
+.f-fan-card__wizard-bar--active {
+  background: var(--f-brand-color-background-primary);
+}
+
+.f-fan-card__wizard-question {
+  color: var(--f-brand-color-text-default);
+  font: var(--f-brand-type-subheading);
+}
+
+.f-fan-card__wizard-options {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.f-fan-card__wizard-option {
+  width: 100%;
+  min-height: var(--sp-11);
+  border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
+  border-radius: var(--f-brand-radius-base);
+  background: var(--f-brand-color-background-light);
+  color: var(--f-brand-color-text-default);
+  font: var(--f-brand-type-caption);
+  text-align: left;
+  padding: 0 var(--sp-3);
+}
+
+.f-fan-card__wizard-option--selected {
+  border-color: var(--f-brand-color-border-primary);
+  background: var(--c-brand-tint-6);
+}
+
+.f-fan-card__wizard-nav {
+  display: flex;
+  gap: var(--sp-2);
+}
+
+.f-fan-card__wizard-btn--back,
+.f-fan-card__wizard-btn--next {
+  flex: 1;
+}
+
+.f-fan-card__profile {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.f-fan-card__profile-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2);
+  border-radius: var(--f-brand-radius-base);
+  background: var(--f-brand-color-background-default);
+}
+
+.f-fan-card__profile-category {
+  color: var(--f-brand-color-text-subtle);
+  font: var(--f-brand-type-caption);
+}
+
+.f-fan-card__profile-answer {
+  color: var(--f-brand-color-text-default);
+  font: var(--f-brand-type-subheading);
+}
+
+.f-fan-card__cta {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.f-fan-card__cta-button {
+  min-height: var(--sp-12);
+  border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-primary);
+  border-radius: var(--f-brand-radius-rounded);
+  background: var(--f-brand-color-background-light);
+  color: var(--f-brand-color-text-primary);
+  font: var(--f-brand-type-body-medium);
+  padding: 0 var(--sp-5);
+}
+
+.f-fan-card__actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-4);
+}
+
+.f-fan-card__action {
+  border: none;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+}
+
+.f-fan-card__action-circle {
+  width: var(--sp-12);
+  min-height: var(--sp-12);
+  border-radius: var(--r-full);
+  border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
+  background: var(--f-brand-color-background-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.f-fan-card__action-label {
+  color: var(--f-brand-color-text-subtle);
+  font: var(--f-brand-type-caption);
+}
+
+.fan-card-edit-icon,
+.fan-card-share-icon,
+.fan-card-save-to-device-icon {
+  width: var(--sp-6);
+  min-height: var(--sp-6);
+  background-color: var(--f-brand-color-text-default);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
+.fan-card-edit-icon {
+  -webkit-mask-image: url('../../../assets/icons/edit-white.svg');
+  mask-image: url('../../../assets/icons/edit-white.svg');
+}
+
+.fan-card-share-icon {
+  -webkit-mask-image: url('../../../assets/icons/share-white.svg');
+  mask-image: url('../../../assets/icons/share-white.svg');
+}
+
+.fan-card-save-to-device-icon {
+  -webkit-mask-image: url('../../../assets/icons/save-white.svg');
+  mask-image: url('../../../assets/icons/save-white.svg');
+}
