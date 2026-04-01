@@ -17,6 +17,10 @@ import { StoreService } from '../services/store.service';
 
 const QUESTION_TIME = 15;
 const OPTION_LETTERS = ['A', 'B', 'C', 'D'];
+const SLIDE_TRANSITION =
+  'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)';
+const TICK_WHITE_ICON = new URL('../assets/icons/Tick-white.svg', import.meta.url).href;
+const CLOSE_WHITE_ICON = new URL('../assets/icons/Close-white.svg', import.meta.url).href;
 
 @Component({
   standalone: true,
@@ -45,8 +49,8 @@ const OPTION_LETTERS = ['A', 'B', 'C', 'D'];
           style="
             display: flex;
             align-items: center;
-            gap: var(--sp-3);
-            padding: var(--sp-12) var(--sp-4) var(--sp-4);
+            gap: var(--sp-4);
+            padding: var(--sp-18) var(--sp-4) 0;
           "
         >
           <button
@@ -56,24 +60,34 @@ const OPTION_LETTERS = ['A', 'B', 'C', 'D'];
             (click)="handleBack()"
             style="
               width: var(--sp-12);
+              min-width: var(--sp-12);
               min-height: var(--sp-12);
               border-radius: var(--r-full);
-              border: var(--f-brand-border-size-default) solid var(--c-lt-border);
+              border: var(--f-brand-border-size-default) solid var(--c-lt-surface);
               background: var(--c-lt-surface);
-              color: var(--c-lt-text-1);
-              font: var(--f-brand-type-headline);
+              box-shadow: 0px 2px 4px 0px var(--f-brand-color-shadow-default);
               cursor: pointer;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
               flex-shrink: 0;
             "
           >
-            X
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path
+                d="M3 3l10 10M13 3L3 13"
+                stroke="var(--c-lt-text-1)"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
           </button>
           <div
             style="
               flex: 1;
               height: var(--sp-2);
               border-radius: var(--r-full);
-              background: var(--c-lt-border);
+              background: var(--c-lt-surface);
               overflow: hidden;
             "
           >
@@ -82,7 +96,7 @@ const OPTION_LETTERS = ['A', 'B', 'C', 'D'];
               style="
                 height: 100%;
                 border-radius: var(--r-full);
-                background: var(--f-brand-color-background-primary);
+                background: var(--f-brand-color-flight-status-confirmed);
                 transition: width var(--f-brand-motion-duration-instant)
                   var(--f-brand-motion-easing-default);
               "
@@ -90,118 +104,196 @@ const OPTION_LETTERS = ['A', 'B', 'C', 'D'];
           </div>
         </header>
 
-        <div style="padding: var(--sp-2) var(--sp-4) 0">
+        <div
+          [ngStyle]="slideStyle()"
+          style="
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+          "
+        >
+          <div
+            style="
+              margin: var(--sp-5) var(--sp-4) 0;
+              height: 196px;
+              border-radius: var(--f-brand-radius-inner);
+              overflow: hidden;
+              flex-shrink: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+            [style.background]="currentQuestion().accentColor"
+          >
+            @if (quiz().bannerImage) {
+              <img
+                [src]="quiz().bannerImage"
+                alt=""
+                aria-hidden="true"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  transform: scaleX(-1);
+                "
+              />
+            } @else {
+              <span style="font-size: var(--text-5xl)">
+                {{ quiz().emoji }}
+              </span>
+            }
+          </div>
+
           <p
             style="
               margin: 0;
+              padding: var(--sp-6) var(--sp-4) 0;
               text-align: center;
-              color: var(--c-lt-text-2);
-              font: var(--f-brand-type-caption);
+              font: var(--f-brand-type-title-5);
+              color: var(--c-lt-text-1);
+              flex-shrink: 0;
             "
           >
-            {{ quiz().title }} - Question {{ questionIndex() + 1 }} of {{ totalQuestions() }}
+            {{ currentQuestion().question }}
           </p>
-        </div>
 
-        <div
-          style="
-            padding: var(--sp-4);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: var(--sp-4);
-          "
-        >
-          <div style="position: relative; width: 64px; height: 64px">
-            <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true" style="transform: rotate(-90deg)">
-              <circle cx="32" cy="32" r="28" fill="none" stroke="var(--c-lt-border)" stroke-width="4"></circle>
-              <circle
-                cx="32"
-                cy="32"
-                r="28"
-                fill="none"
-                [attr.stroke]="timeLeft() <= 5 ? 'var(--c-error)' : 'var(--f-brand-color-background-primary)'"
-                stroke-width="4"
-                [attr.stroke-dasharray]="timerCircumference"
-                [attr.stroke-dashoffset]="timerOffset()"
-                stroke-linecap="round"
-                style="transition: stroke-dashoffset 1s linear"
-              ></circle>
-            </svg>
-            <span
-              style="
-                position: absolute;
-                inset: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font: var(--f-brand-type-headline-medium);
-                color: var(--c-lt-text-1);
-              "
-            >
-              {{ timeLeft() }}
-            </span>
+          <div
+            style="
+              padding: var(--sp-6) var(--sp-4) 0;
+              display: flex;
+              flex-direction: column;
+              gap: var(--sp-4);
+              flex-shrink: 0;
+            "
+          >
+            @for (opt of currentQuestion().options; track opt.id; let idx = $index) {
+              <button
+                type="button"
+                data-ui="answer-option-btn"
+                [disabled]="revealed()"
+                (click)="handleSelect(opt.id)"
+                [ngStyle]="optionStyle(opt.id)"
+              >
+                <span
+                  [ngStyle]="optionBadgeStyle(opt.id)"
+                  style="
+                    width: var(--sp-10);
+                    min-width: var(--sp-10);
+                    height: var(--sp-10);
+                    border-radius: var(--r-full);
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    font: var(--f-brand-type-body);
+                    font-size: var(--text-md);
+                    flex-shrink: 0;
+                    transition: background var(--f-brand-motion-duration-instant)
+                        var(--f-brand-motion-easing-default),
+                      color var(--f-brand-motion-duration-instant)
+                        var(--f-brand-motion-easing-default);
+                  "
+                >
+                  @if (showCorrectIcon(opt.id)) {
+                    <img
+                      [src]="tickWhiteIcon"
+                      alt=""
+                      aria-hidden="true"
+                      style="width: var(--sp-6); height: var(--sp-6); display: block"
+                    />
+                  } @else if (showWrongIcon(opt.id)) {
+                    <img
+                      [src]="closeWhiteIcon"
+                      alt=""
+                      aria-hidden="true"
+                      style="width: var(--sp-6); height: var(--sp-6); display: block"
+                    />
+                  } @else {
+                    {{ optionLetter(idx) }}
+                  }
+                </span>
+                <span
+                  style="
+                    flex: 1;
+                    text-align: left;
+                    font: var(--f-brand-type-body);
+                    font-size: var(--text-md);
+                    color: inherit;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    transition: color var(--f-brand-motion-duration-instant)
+                      var(--f-brand-motion-easing-default);
+                  "
+                >
+                  {{ opt.label }}
+                </span>
+              </button>
+            }
           </div>
         </div>
 
-        <h1
-          style="
-            margin: 0;
-            padding: 0 var(--sp-4);
-            text-align: center;
-            font: var(--f-brand-type-title-4);
-            color: var(--c-lt-text-1);
-          "
-        >
-          {{ currentQuestion().question }}
-        </h1>
-
-        <div
-          style="
-            margin-top: var(--sp-4);
-            padding: 0 var(--sp-4);
-            display: flex;
-            flex-direction: column;
-            gap: var(--sp-3);
-          "
-        >
-          @for (opt of currentQuestion().options; track opt.id; let idx = $index) {
-            <button
-              type="button"
-              data-ui="answer-option-btn"
-              [disabled]="revealed()"
-              (click)="handleSelect(opt.id)"
-              [ngStyle]="optionStyle(opt.id)"
-            >
+        <div style="padding: 0 var(--sp-4) var(--sp-10); flex-shrink: 0">
+          <div
+            style="
+              display: flex;
+              justify-content: center;
+              margin: var(--sp-6) 0 var(--sp-4);
+            "
+          >
+            <div style="position: relative; width: var(--sp-16); height: var(--sp-16); flex-shrink: 0">
+              <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true" style="transform: rotate(-90deg)">
+                <defs>
+                  <linearGradient [attr.id]="timerGradientId" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="var(--f-brand-color-background-accent)" />
+                    <stop offset="100%" stop-color="var(--f-brand-color-background-accent-muted)" />
+                  </linearGradient>
+                </defs>
+                <circle cx="32" cy="32" r="30" fill="none" stroke="var(--c-lt-border)" stroke-width="4"></circle>
+                <circle
+                  cx="32"
+                  cy="32"
+                  r="30"
+                  fill="none"
+                  [attr.stroke]="timerStroke()"
+                  stroke-width="4"
+                  [attr.stroke-dasharray]="timerCircumference"
+                  [attr.stroke-dashoffset]="timerOffset()"
+                  stroke-linecap="round"
+                  style="
+                    transition: stroke-dashoffset 1s linear,
+                      stroke var(--f-brand-motion-duration-instant);
+                  "
+                ></circle>
+              </svg>
               <span
-                [ngStyle]="optionBadgeStyle(opt.id)"
+                [style.color]="timeLeft() <= 5 ? 'var(--c-error)' : 'var(--c-lt-text-1)'"
                 style="
-                  width: 32px;
-                  min-width: 32px;
-                  min-height: 32px;
-                  border-radius: var(--r-full);
-                  display: inline-flex;
+                  position: absolute;
+                  inset: 0;
+                  display: flex;
                   align-items: center;
                   justify-content: center;
+                  font: var(--f-brand-type-headline);
+                  font-size: var(--text-lg);
+                  font-weight: var(--weight-med);
+                  transition: color var(--f-brand-motion-duration-instant);
                 "
               >
-                {{ optionLabel(idx, opt.id) }}
+                {{ timerLabel() }}
               </span>
-              <span style="flex: 1; text-align: left">
-                {{ opt.label }}
-              </span>
-            </button>
-          }
-        </div>
+            </div>
+          </div>
 
-        <div style="margin-top: auto; padding: var(--sp-5) var(--sp-4) var(--sp-8)">
           @if (revealed()) {
             <p
+              [style.color]="feedbackColor()"
               style="
                 margin: 0 0 var(--sp-3);
                 text-align: center;
-                font: var(--f-brand-type-caption-medium);
-                color: var(--c-lt-text-1);
+                font-family: var(--font-body);
+                font-size: var(--text-sm);
+                font-weight: var(--weight-med);
               "
             >
               {{ feedbackText() }}
@@ -211,7 +303,6 @@ const OPTION_LETTERS = ['A', 'B', 'C', 'D'];
             type="button"
             data-ui="next-question-btn"
             (click)="handleNext()"
-            [disabled]="!revealed()"
             [ngStyle]="nextButtonStyle()"
           >
             {{ nextLabel() }}
@@ -234,6 +325,14 @@ export class QuizPage implements OnInit, OnDestroy {
   readonly selectedOptionId = signal<string | null>(null);
   readonly revealed = signal(false);
   readonly timeLeft = signal(QUESTION_TIME);
+  readonly slideStyle = signal<Record<string, string>>({
+    transform: 'translateX(0)',
+    opacity: '1',
+    transition: SLIDE_TRANSITION,
+  });
+  readonly tickWhiteIcon = TICK_WHITE_ICON;
+  readonly closeWhiteIcon = CLOSE_WHITE_ICON;
+  readonly timerGradientId = 'quiz-timer-gradient';
 
   readonly totalQuestions = computed(() => this.quiz().questions.length);
   readonly currentQuestion = computed<QuizQuestion>(
@@ -245,13 +344,16 @@ export class QuizPage implements OnInit, OnDestroy {
     return (done / this.totalQuestions()) * 100;
   });
 
-  readonly timerCircumference = 2 * Math.PI * 28;
+  readonly timerCircumference = 2 * Math.PI * 30;
   readonly timerOffset = computed(() => {
     const progress = 1 - this.timeLeft() / QUESTION_TIME;
     return this.timerCircumference * progress;
   });
 
   private timerId: number | null = null;
+  private slideEnterFrameId: number | null = null;
+  private slideExitTimeoutId: number | null = null;
+  private isAnimating = false;
 
   ngOnInit(): void {
     const routeQuizId = this.route.snapshot.paramMap.get('quizId');
@@ -261,10 +363,17 @@ export class QuizPage implements OnInit, OnDestroy {
     this.quiz.set(resolvedQuiz);
     this.analytics.track('quiz_viewed', { quizId: resolvedQuiz.id });
     this.startTimer();
+    this.triggerSlideIn();
   }
 
   ngOnDestroy(): void {
     this.stopTimer();
+    if (this.slideEnterFrameId !== null) {
+      window.cancelAnimationFrame(this.slideEnterFrameId);
+    }
+    if (this.slideExitTimeoutId !== null) {
+      window.clearTimeout(this.slideExitTimeoutId);
+    }
   }
 
   handleSelect(optionId: string): void {
@@ -284,16 +393,31 @@ export class QuizPage implements OnInit, OnDestroy {
   }
 
   handleNext(): void {
-    if (!this.revealed()) return;
+    if (this.isAnimating || !this.revealed()) return;
     if (this.isLastQuestion()) {
       this.finishQuiz();
       return;
     }
-    this.questionIndex.update(value => value + 1);
-    this.selectedOptionId.set(null);
-    this.revealed.set(false);
-    this.timeLeft.set(QUESTION_TIME);
-    this.startTimer();
+
+    this.isAnimating = true;
+    this.slideStyle.set({
+      transform: 'translateX(-60px)',
+      opacity: '0',
+      transition: SLIDE_TRANSITION,
+    });
+    if (this.slideExitTimeoutId !== null) {
+      window.clearTimeout(this.slideExitTimeoutId);
+    }
+    this.slideExitTimeoutId = window.setTimeout(() => {
+      this.questionIndex.update(value => value + 1);
+      this.selectedOptionId.set(null);
+      this.revealed.set(false);
+      this.timeLeft.set(QUESTION_TIME);
+      this.startTimer();
+      this.isAnimating = false;
+      this.triggerSlideIn();
+      this.slideExitTimeoutId = null;
+    }, 250);
   }
 
   handleBack(): void {
@@ -304,20 +428,42 @@ export class QuizPage implements OnInit, OnDestroy {
   feedbackText(): string {
     const chosenId = this.selectedOptionId();
     const correctId = this.currentQuestion().correctId;
-    if (chosenId === null) return "Time's up!";
-    return chosenId === correctId ? 'Correct!' : 'Not quite';
+    if (chosenId === null) return "⏱ Time's up!";
+    return chosenId === correctId ? '✓ Correct!' : '✗ Not quite';
+  }
+
+  feedbackColor(): string {
+    return this.selectedOptionId() === this.currentQuestion().correctId
+      ? 'var(--c-lt-correct-dark)'
+      : 'var(--c-error)';
   }
 
   nextLabel(): string {
-    if (!this.isLastQuestion()) return 'Next';
-    return `Finish - ${this.score()}/${this.totalQuestions()}`;
+    if (this.isLastQuestion() && this.revealed()) {
+      return `Finish · ${this.score()}/${this.totalQuestions()}`;
+    }
+    return 'Next';
   }
 
-  optionLabel(index: number, optionId: string): string {
-    if (!this.revealed()) return OPTION_LETTERS[index] ?? '?';
-    if (optionId === this.currentQuestion().correctId) return 'OK';
-    if (this.selectedOptionId() === optionId) return 'X';
+  optionLetter(index: number): string {
     return OPTION_LETTERS[index] ?? '?';
+  }
+
+  showCorrectIcon(optionId: string): boolean {
+    return this.revealed() && optionId === this.currentQuestion().correctId;
+  }
+
+  showWrongIcon(optionId: string): boolean {
+    return this.revealed() && this.selectedOptionId() === optionId && optionId !== this.currentQuestion().correctId;
+  }
+
+  timerLabel(): string {
+    return String(this.timeLeft()).padStart(2, '0');
+  }
+
+  timerStroke(): string {
+    if (this.timeLeft() <= 5) return 'var(--c-error)';
+    return `url(#${this.timerGradientId})`;
   }
 
   optionStyle(optionId: string): Record<string, string> {
@@ -325,69 +471,44 @@ export class QuizPage implements OnInit, OnDestroy {
     const correctId = this.currentQuestion().correctId;
     const isCorrect = optionId === correctId;
     const isChosen = selected === optionId;
+    const isWrong = isChosen && !isCorrect;
+
+    let rowBackground = 'var(--c-lt-surface)';
+    let rowBorder = 'transparent';
+    let textColor = 'var(--c-lt-text-1)';
 
     if (!this.revealed() && isChosen) {
-      return {
-        width: '100%',
-        minHeight: 'var(--sp-14)',
-        borderRadius: 'var(--r-full)',
-        border: `var(--f-brand-border-size-focused) solid var(--c-lt-brand)`,
-        background: 'var(--c-lt-surface)',
-        color: 'var(--c-lt-text-1)',
-        font: 'var(--f-brand-type-body-medium)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--sp-3)',
-        padding: '0 var(--sp-3)',
-        cursor: 'pointer',
-      };
-    }
-
-    if (this.revealed() && isCorrect) {
-      return {
-        width: '100%',
-        minHeight: 'var(--sp-14)',
-        borderRadius: 'var(--r-full)',
-        border: `var(--f-brand-border-size-default) solid var(--c-correct-border)`,
-        background: 'var(--c-correct-bg)',
-        color: 'var(--c-lt-correct-dark)',
-        font: 'var(--f-brand-type-body-medium)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--sp-3)',
-        padding: '0 var(--sp-3)',
-      };
-    }
-
-    if (this.revealed() && isChosen && !isCorrect) {
-      return {
-        width: '100%',
-        minHeight: 'var(--sp-14)',
-        borderRadius: 'var(--r-full)',
-        border: `var(--f-brand-border-size-default) solid var(--c-error-border)`,
-        background: 'var(--c-error-bg)',
-        color: 'var(--c-error)',
-        font: 'var(--f-brand-type-body-medium)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--sp-3)',
-        padding: '0 var(--sp-3)',
-      };
+      rowBorder = 'var(--c-lt-brand)';
+    } else if (this.revealed() && isCorrect) {
+      rowBackground = 'var(--c-correct-bg)';
+      rowBorder = 'var(--c-correct-border)';
+      textColor = 'var(--c-lt-correct-dark)';
+    } else if (this.revealed() && isWrong) {
+      rowBackground = 'var(--c-error-bg)';
+      rowBorder = 'var(--c-error-border)';
+      textColor = 'var(--c-error)';
+    } else if (this.revealed()) {
+      textColor = 'var(--c-lt-text-2)';
     }
 
     return {
       width: '100%',
-      minHeight: 'var(--sp-14)',
-      borderRadius: 'var(--r-full)',
-      border: `var(--f-brand-border-size-default) solid var(--c-lt-border)`,
-      background: 'var(--c-lt-surface)',
-      color: this.revealed() ? 'var(--c-lt-text-2)' : 'var(--c-lt-text-1)',
-      font: 'var(--f-brand-type-body-medium)',
+      height: 'var(--sp-14)',
+      borderRadius: 'calc(var(--sp-12) + var(--sp-1))',
+      border: `1.5px solid ${rowBorder}`,
+      background: rowBackground,
+      boxShadow: '0px 2px 4px 0px var(--f-brand-color-shadow-default)',
+      color: textColor,
+      font: 'var(--f-brand-type-body)',
       display: 'flex',
       alignItems: 'center',
-      gap: 'var(--sp-3)',
-      padding: '0 var(--sp-3)',
+      gap: 'var(--sp-4)',
+      paddingLeft: 'var(--sp-2)',
+      paddingRight: 'var(--sp-6)',
       cursor: this.revealed() ? 'default' : 'pointer',
+      textAlign: 'left',
+      transition:
+        'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
     };
   }
 
@@ -400,19 +521,19 @@ export class QuizPage implements OnInit, OnDestroy {
     if (this.revealed() && isCorrect) {
       return {
         background: 'var(--c-correct)',
-        color: 'var(--f-brand-color-text-light)',
+        color: 'var(--c-lt-white)',
       };
     }
     if (this.revealed() && isChosen && !isCorrect) {
       return {
         background: 'var(--c-error)',
-        color: 'var(--f-brand-color-text-light)',
+        color: 'var(--c-lt-white)',
       };
     }
     if (!this.revealed() && isChosen) {
       return {
         background: 'var(--c-lt-brand)',
-        color: 'var(--f-brand-color-text-light)',
+        color: 'var(--c-lt-white)',
       };
     }
     return {
@@ -424,14 +545,37 @@ export class QuizPage implements OnInit, OnDestroy {
   nextButtonStyle(): Record<string, string> {
     return {
       width: '100%',
-      minHeight: 'var(--sp-14)',
+      height: 'var(--sp-14)',
       border: 'none',
-      borderRadius: 'var(--f-brand-radius-rounded)',
+      borderRadius: 'var(--sp-8)',
       background: this.revealed() ? 'var(--c-lt-brand)' : 'var(--c-lt-border)',
-      color: this.revealed() ? 'var(--f-brand-color-text-light)' : 'var(--c-lt-text-2)',
-      font: 'var(--f-brand-type-body-medium)',
+      color: this.revealed() ? 'var(--c-lt-white)' : 'var(--c-lt-text-2)',
+      fontFamily: 'var(--font-body)',
+      fontSize: 'var(--text-md)',
+      fontWeight: 'var(--weight-med)',
       cursor: this.revealed() ? 'pointer' : 'default',
+      transition:
+        'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
     };
+  }
+
+  private triggerSlideIn(): void {
+    if (this.slideEnterFrameId !== null) {
+      window.cancelAnimationFrame(this.slideEnterFrameId);
+    }
+    this.slideStyle.set({
+      transform: 'translateX(60px)',
+      opacity: '0',
+      transition: 'none',
+    });
+    this.slideEnterFrameId = window.requestAnimationFrame(() => {
+      this.slideStyle.set({
+        transform: 'translateX(0)',
+        opacity: '1',
+        transition: SLIDE_TRANSITION,
+      });
+      this.slideEnterFrameId = null;
+    });
   }
 
   private startTimer(): void {
