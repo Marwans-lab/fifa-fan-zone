@@ -143,9 +143,9 @@ export class ResultsPage implements OnInit, OnDestroy {
   private readRouteState(): ResultsRouteState | null {
     const state = (window.history.state ?? null) as Record<string, unknown> | null;
     if (!state) return null;
-    const score = state.score;
-    const total = state.total;
-    const quizTitle = state.quizTitle;
+    const score = state['score'];
+    const total = state['total'];
+    const quizTitle = state['quizTitle'];
     if (
       typeof score !== 'number' ||
       typeof total !== 'number' ||
