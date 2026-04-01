@@ -12,7 +12,7 @@ import { ChangeDetectionStrategy, Component, Input, booleanAttribute } from '@an
 export class ScreenComponent {
   @Input() className = '';
   @Input({ transform: booleanAttribute }) centered = false;
-  @Input() style: string | null = null;
+  @Input() style: Record<string, string | number | null | undefined> | null = null;
 
   get classList(): string[] {
     return ['f-screen', this.centered ? 'f-screen--centered' : '', this.className].filter(Boolean);

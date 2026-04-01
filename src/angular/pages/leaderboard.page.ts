@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+
+import { StoreService } from '../services/store.service';
 
 @Component({
   standalone: true,
@@ -12,4 +14,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LeaderboardPage {}
+export class LeaderboardPage implements OnInit {
+  private readonly store = inject(StoreService);
+
+  ngOnInit(): void {
+    this.store.markLeaderboardVisited();
+  }
+}

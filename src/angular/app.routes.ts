@@ -31,7 +31,7 @@ export const appRoutes: Routes = [
   {
     path: 'card',
     canActivate: [authGuard],
-    loadComponent: () => import('./pages/card.page').then(m => m.CardPage),
+    loadComponent: () => import('./pages/card/card.component').then(m => m.CardComponent),
   },
   {
     path: 'quiz',

@@ -9,7 +9,7 @@
     <div
       class="f-fan-card__front"
       data-section="front-face"
-      [ngStyle]="frontFaceStyle"
+      [ngStyle]="frontInlineStyle"
     >
       <div class="f-fan-card__texture-dots"></div>
       <div class="f-fan-card__texture-stripes"></div>
@@ -103,7 +103,6 @@
                 height="24"
                 alt=""
                 class="f-fan-card__profile-icon"
-                [ngClass]="question.iconClass"
               />
               <div class="f-fan-card__profile-text">
                 <div class="f-fan-card__profile-category">{{ question.category }}</div>
