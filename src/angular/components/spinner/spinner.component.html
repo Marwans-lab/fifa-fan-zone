@@ -1,0 +1,55 @@
+@if (!fullScreen) {
+<svg
+  class="f-spinner"
+  data-component="spinner"
+  [attr.width]="size"
+  [attr.height]="size"
+  viewBox="0 0 24 24"
+  fill="none"
+  aria-label="Loading"
+>
+  <circle
+    class="spinner-track"
+    cx="12"
+    cy="12"
+    r="10"
+    stroke="var(--f-brand-color-border-default)"
+    stroke-width="3"
+  />
+  <path
+    class="spinner-arc"
+    d="M12 2a10 10 0 0 1 10 10"
+    stroke="var(--f-brand-color-primary)"
+    stroke-width="3"
+    stroke-linecap="round"
+  />
+</svg>
+} @else {
+  <div class="f-spinner--fullscreen" data-component="spinner">
+    <svg
+      class="f-spinner"
+      [attr.width]="size"
+      [attr.height]="size"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-label="Loading"
+    >
+      <circle
+        class="spinner-track"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="var(--f-brand-color-border-default)"
+        stroke-width="3"
+      />
+      <path
+        class="spinner-arc"
+        d="M12 2a10 10 0 0 1 10 10"
+        stroke="var(--f-brand-color-primary)"
+        stroke-width="3"
+        stroke-linecap="round"
+      />
+    </svg>
+    <span class="f-spinner__label">FIFA Fan Zone</span>
+  </div>
+}

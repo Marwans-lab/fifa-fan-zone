@@ -1,0 +1,25 @@
+<button
+  [class]="classList.join(' ')"
+  [attr.data-component]="'button'"
+  [type]="type"
+  [disabled]="isDisabled"
+  [attr.aria-disabled]="isDisabled ? true : null"
+  [attr.aria-busy]="loading ? true : null"
+  (click)="onButtonClick($event)"
+>
+  @if (loading) {
+    <span class="f-button__spinner" aria-hidden="true"></span>
+  } @else {
+    <span class="f-button__icon" aria-hidden="true">
+      <ng-content select="[icon-left]"></ng-content>
+    </span>
+  }
+
+  <ng-content></ng-content>
+
+  @if (!loading) {
+    <span class="f-button__icon" aria-hidden="true">
+      <ng-content select="[icon-right]"></ng-content>
+    </span>
+  }
+</button>

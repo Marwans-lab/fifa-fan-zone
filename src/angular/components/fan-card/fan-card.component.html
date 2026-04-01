@@ -1,0 +1,158 @@
+<div
+  [class]="rootClassName"
+  data-component="fan-card"
+  role="button"
+  [attr.aria-label]="isFlipped ? 'Fan card back' : 'Fan card – tap to flip'"
+  (click)="onRootClick()"
+>
+  <div class="f-fan-card__inner">
+    <div
+      class="f-fan-card__front"
+      data-section="front-face"
+      [ngStyle]="frontFaceStyle"
+    >
+      <div class="f-fan-card__texture-dots"></div>
+      <div class="f-fan-card__texture-stripes"></div>
+      <div class="f-fan-card__holographic"></div>
+
+      @if (fanCard.photoDataUrl) {
+        <img
+          [src]="fanCard.photoDataUrl"
+          alt=""
+          aria-hidden="true"
+          style="
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            z-index: 0;
+            pointer-events: none;
+            display: block;
+          "
+        />
+      }
+
+      <div class="f-fan-card__team-badge" data-section="team">
+        @if (!fanCard.teamId) {
+          <div class="f-fan-card__team-empty">No team selected</div>
+        }
+      </div>
+
+      <div class="f-fan-card__flip-hint">
+        <span class="f-fan-card__flip-hint-icon" aria-hidden="true"></span>
+        <span class="f-fan-card__flip-hint-text">Tap card to flip</span>
+      </div>
+    </div>
+
+    <div class="f-fan-card__back" data-section="back-face" (click)="flipToFront()">
+      <div class="f-fan-card__holographic"></div>
+
+      <div class="f-fan-card__back-header">
+        <div class="f-fan-card__back-title">Fan Profile</div>
+      </div>
+
+      @if (wizardActive) {
+        <div class="f-fan-card__wizard" (click)="$event.stopPropagation()">
+          <div class="f-fan-card__wizard-progress">
+            @for (question of profileQuestions; track question.id; let i = $index) {
+              <div class="f-fan-card__wizard-bar" [class.f-fan-card__wizard-bar--active]="i <= step"></div>
+            }
+          </div>
+
+          <div class="f-fan-card__wizard-question">
+            {{ currentQuestion.label }}
+          </div>
+
+          <div class="f-fan-card__wizard-options">
+            @for (option of currentQuestion.options; track option) {
+              <button
+                class="f-fan-card__wizard-option"
+                [class.f-fan-card__wizard-option--selected]="currentAnswer === option"
+                (click)="handleSelect(currentQuestion.id, option, $event)"
+              >
+                {{ option }}
+              </button>
+            }
+          </div>
+
+          <div class="f-fan-card__wizard-nav">
+            <app-button
+              variant="secondary"
+              className="f-fan-card__wizard-btn--back"
+              (clicked)="handleBack($event)"
+            >
+              Back
+            </app-button>
+            <app-button
+              className="f-fan-card__wizard-btn--next"
+              [disabled]="!currentAnswer"
+              (clicked)="handleNext($event)"
+            >
+              <span class="f-fan-card__wizard-btn-content">{{ isLastQuestion ? 'Save' : 'Next' }}</span>
+            </app-button>
+          </div>
+        </div>
+      } @else if (isComplete) {
+        <div class="f-fan-card__profile">
+          @for (question of profileQuestions; track question.id) {
+            <div class="f-fan-card__profile-row">
+              <img
+                [src]="question.iconSrc"
+                width="24"
+                height="24"
+                alt=""
+                class="f-fan-card__profile-icon"
+                [ngClass]="question.iconClass"
+              />
+              <div class="f-fan-card__profile-text">
+                <div class="f-fan-card__profile-category">{{ question.category }}</div>
+                <div class="f-fan-card__profile-answer">{{ resolvedAnswer(question.id) }}</div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="f-fan-card__cta" (click)="$event.stopPropagation()">
+          <button class="f-fan-card__cta-button" (click)="startWizard($event)">
+            Complete your card
+          </button>
+        </div>
+      }
+
+      @if (isComplete && !wizardActive) {
+        <div
+          class="f-fan-card__actions"
+          data-section="action-circles"
+          (click)="$event.stopPropagation()"
+        >
+          <button class="f-fan-card__action" data-ui="edit-btn" (click)="handleEditTap($event)">
+            <div class="f-fan-card__action-circle">
+              <span class="fan-card-edit-icon" aria-hidden="true"></span>
+            </div>
+            <span class="f-fan-card__action-label">Edit</span>
+          </button>
+
+          <button class="f-fan-card__action" data-ui="share-btn" (click)="handleShareTap($event)">
+            <div class="f-fan-card__action-circle">
+              <span class="fan-card-share-icon" aria-hidden="true"></span>
+            </div>
+            <span class="f-fan-card__action-label">Share</span>
+          </button>
+
+          <button class="f-fan-card__action" data-ui="save-btn" (click)="handleSaveTap($event)">
+            <div class="f-fan-card__action-circle">
+              <span class="fan-card-save-to-device-icon" aria-hidden="true"></span>
+            </div>
+            <span class="f-fan-card__action-label">Save</span>
+          </button>
+        </div>
+      }
+
+      <div class="f-fan-card__back-flip-hint">
+        <span class="f-fan-card__back-flip-hint-icon" aria-hidden="true"></span>
+        Tap card to flip
+      </div>
+    </div>
+  </div>
+</div>
