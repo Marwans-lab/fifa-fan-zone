@@ -618,7 +618,7 @@ export class PicturePage implements OnInit, OnDestroy {
       photoDataUrl: this.photoDataUrl(),
     });
     this.analytics.track('picture_confirmed');
-    await this.router.navigateByUrl('/identity');
+    await this.router.navigateByUrl('/card');
   }
 
   retakePhoto(): void {
