@@ -385,17 +385,22 @@ a:focus-visible {
 }
 
 .f-page-enter {
-  animation: f-page-enter-kf var(--f-brand-motion-duration-generous, 1200ms) var(--f-brand-motion-easing-entry) both;
+  animation: f-page-enter-kf var(--f-brand-motion-duration-generous, 1200ms)
+    var(--f-brand-motion-easing-entry, cubic-bezier(0.16, 1, 0.3, 1)) both;
+  will-change: opacity, transform;
 }
 
 /* Legacy alias */
 .page-in {
-  animation: f-page-enter-kf var(--f-brand-motion-duration-generous, 1200ms) var(--f-brand-motion-easing-entry) both;
+  animation: f-page-enter-kf var(--f-brand-motion-duration-generous, 1200ms)
+    var(--f-brand-motion-easing-entry, cubic-bezier(0.16, 1, 0.3, 1)) both;
+  will-change: opacity, transform;
 }
 
 /* ─── Stagger entrance utility (FDS 60ms per item) ───────────────────────── */
 .f-stagger > * {
-  animation: f-page-enter-kf var(--f-brand-motion-duration-generous, 1200ms) var(--f-brand-motion-easing-entry) both;
+  animation: f-page-enter-kf var(--f-brand-motion-duration-generous, 1200ms)
+    var(--f-brand-motion-easing-entry, cubic-bezier(0.16, 1, 0.3, 1)) both;
 }
 .f-stagger > *:nth-child(1) { animation-delay: 0ms; }
 .f-stagger > *:nth-child(2) { animation-delay: 60ms; }
@@ -407,7 +412,8 @@ a:focus-visible {
 
 /* Legacy alias */
 .stagger > * {
-  animation: f-page-enter-kf var(--f-brand-motion-duration-generous, 1200ms) var(--f-brand-motion-easing-entry) both;
+  animation: f-page-enter-kf var(--f-brand-motion-duration-generous, 1200ms)
+    var(--f-brand-motion-easing-entry, cubic-bezier(0.16, 1, 0.3, 1)) both;
 }
 .stagger > *:nth-child(1) { animation-delay: 0ms; }
 .stagger > *:nth-child(2) { animation-delay: 60ms; }
