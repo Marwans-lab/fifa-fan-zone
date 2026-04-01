@@ -20,7 +20,7 @@ const QUESTION_TIME = 15;
 const SLIDE_TRANSITION =
   'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)';
 const SLIDE_EXIT_MS = 250;
-const CHEVRON_LEFT_WHITE_ICON = new URL('../assets/icons/Chevron-left-white.svg', import.meta.url).href;
+const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
 
 @Component({
   standalone: true,

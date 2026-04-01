@@ -26,7 +26,7 @@ export const QUIZZES: Quiz[] = [
     title: 'The Connector',
     description: 'How well do you know Qatar Airways routes to FIFA 2026 host cities?',
     emoji: '✈️',
-    bannerImage: new URL('../assets/images/quiz-connector-banner.png', import.meta.url).href,
+    bannerImage: 'assets/images/quiz-connector-banner.png',
     questions: [
       {
         id: 'con1',

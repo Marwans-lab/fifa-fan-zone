@@ -20,7 +20,7 @@ const ITEM_HEIGHT = 70;
 const SLIDE_TRANSITION = 'transform 280ms ease, opacity 280ms ease';
 const SLIDE_EXIT_TRANSITION = 'transform 240ms ease, opacity 240ms ease';
 const SLIDE_EXIT_MS = 250;
-const CHEVRON_LEFT_WHITE_ICON = new URL('../assets/icons/Chevron-left-white.svg', import.meta.url).href;
+const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
 
 @Component({
   standalone: true,

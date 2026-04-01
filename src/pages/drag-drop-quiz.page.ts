@@ -18,7 +18,7 @@ import { AnalyticsService } from '../services/analytics.service';
 import { StoreService } from '../services/store.service';
 
 const KEYFRAMES_ID = 'drag-drop-quiz-keyframes';
-const CHEVRON_LEFT_WHITE_ICON = new URL('../assets/icons/Chevron-left-white.svg', import.meta.url).href;
+const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
 const SHAKE_CLEAR_DELAY_MS = 600;
 const SLIDE_DURATION_MS = 280;
 

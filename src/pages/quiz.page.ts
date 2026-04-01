@@ -19,8 +19,8 @@ const QUESTION_TIME = 15;
 const OPTION_LETTERS = ['A', 'B', 'C', 'D'];
 const SLIDE_TRANSITION =
   'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)';
-const TICK_WHITE_ICON = new URL('../assets/icons/Tick-white.svg', import.meta.url).href;
-const CLOSE_WHITE_ICON = new URL('../assets/icons/Close-white.svg', import.meta.url).href;
+const TICK_WHITE_ICON = 'assets/icons/Tick-white.svg';
+const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
 
 @Component({
   standalone: true,
@@ -568,13 +568,18 @@ export class QuizPage implements OnInit, OnDestroy {
       opacity: '0',
       transition: 'none',
     });
+    // Double-rAF ensures the browser paints the offscreen position before
+    // we apply the transition — Angular signals can batch single-rAF updates
+    // into the same paint cycle, preventing the transition from firing.
     this.slideEnterFrameId = window.requestAnimationFrame(() => {
-      this.slideStyle.set({
-        transform: 'translateX(0)',
-        opacity: '1',
-        transition: SLIDE_TRANSITION,
+      this.slideEnterFrameId = window.requestAnimationFrame(() => {
+        this.slideStyle.set({
+          transform: 'translateX(0)',
+          opacity: '1',
+          transition: SLIDE_TRANSITION,
+        });
+        this.slideEnterFrameId = null;
       });
-      this.slideEnterFrameId = null;
     });
   }
 
