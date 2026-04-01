@@ -11,6 +11,15 @@
   letter-spacing: var(--tracking-tight);
 }
 
+.results-trophy {
+  margin-bottom: var(--sp-3);
+}
+
+.results-icon {
+  width: var(--sp-6);
+  height: var(--sp-6);
+}
+
 .results-status--fallback {
   color: var(--f-brand-color-text-default);
 }
@@ -18,13 +27,13 @@
 .results-quiz-title {
   margin: 0 0 var(--sp-8);
   font: var(--f-brand-type-caption);
+  font-size: var(--text-sm);
   color: var(--f-brand-color-text-subtle);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
 }
 
 .results-ring {
-  --ring-shadow: var(--c-accent-glow);
   position: relative;
   width: var(--sp-20);
   height: var(--sp-20);
@@ -40,31 +49,27 @@
 
 .results-ring-track {
   fill: none;
-  stroke: var(--c-surface-faint);
-  stroke-width: var(--f-brand-border-size-focused);
+  stroke: rgba(255,255,255,0.07);
+  stroke-width: 6;
 }
 
 .results-ring-arc {
   fill: none;
   stroke: currentColor;
-  stroke-width: var(--f-brand-border-size-focused);
+  stroke-width: 6;
   stroke-linecap: round;
   transition:
-    stroke-dashoffset var(--f-brand-motion-duration-gentle) var(--f-brand-motion-easing-default),
-    stroke var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
+    stroke-dashoffset var(--f-brand-motion-duration-gentle) var(--f-brand-motion-easing-standard),
+    stroke var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-standard);
 }
 
 .results-ring-inner {
   position: absolute;
   inset: var(--sp-3);
   border-radius: var(--r-full);
-  background: var(--f-brand-color-background-light);
+  background: var(--glass-bg);
   backdrop-filter: blur(var(--f-brand-blur-subtle));
   -webkit-backdrop-filter: blur(var(--f-brand-blur-subtle));
-  box-shadow:
-    var(--f-brand-shadow-medium),
-    0 0 var(--sp-10) var(--ring-shadow),
-    inset 0 var(--f-brand-border-size-default) 0 var(--c-surface-raise);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -81,6 +86,7 @@
 .results-ring-label {
   margin-top: var(--sp-1);
   font: var(--f-brand-type-caption);
+  font-size: var(--text-xs);
   color: var(--f-brand-color-text-subtle);
   letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
@@ -89,7 +95,7 @@
 .results-fallback-points {
   margin: 0 0 var(--sp-8);
   font: var(--f-brand-type-title-1);
-  color: var(--c-accent);
+  color: var(--f-brand-color-accent);
 }
 
 .results-fallback-points span {
@@ -103,7 +109,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--sp-2);
+  gap: var(--f-brand-space-sm);
 }
 
 .results-action-btn {

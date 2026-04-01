@@ -31,6 +31,7 @@ export class ResultsPage implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly analytics = inject(AnalyticsService);
   readonly store = inject(StoreService);
+  readonly trophyIcon = 'assets/icons/Trophy-white.svg';
 
   readonly ringSize = 204;
   readonly ringStroke = 6;
@@ -50,6 +51,13 @@ export class ResultsPage implements OnInit, OnDestroy {
   });
   readonly status = computed(() => this.getStatus(this.scorePercent()));
   readonly ringOffset = computed(() => this.ringCircumference * (1 - this.ringProgress()));
+  readonly ringArcFilter = computed(
+    () => `drop-shadow(0 0 var(--sp-2) ${this.status().tone}88)`,
+  );
+  readonly ringInnerShadow = computed(
+    () =>
+      `0 0 var(--sp-10) ${this.status().tone}22, inset 0 var(--f-brand-border-size-default) 0 rgba(255,255,255,0.14)`,
+  );
 
   private ringDelayId: number | null = null;
   private countDelayId: number | null = null;
@@ -133,11 +141,13 @@ export class ResultsPage implements OnInit, OnDestroy {
   }
 
   private getStatus(scorePercent: number): { label: string; tone: string } {
-    if (scorePercent === 1) return { label: 'Perfect score', tone: 'var(--c-accent)' };
-    if (scorePercent >= 0.8) return { label: 'Top fan', tone: 'var(--c-accent)' };
-    if (scorePercent >= 0.6) return { label: 'Good try', tone: 'var(--c-warn)' };
-    if (scorePercent >= 0.4) return { label: 'Keep learning', tone: 'var(--c-warn)' };
-    return { label: 'Better luck next time', tone: 'var(--c-warn)' };
+    if (scorePercent === 1) return { label: 'Perfect score', tone: 'var(--f-brand-color-accent)' };
+    if (scorePercent >= 0.8) return { label: 'Top fan', tone: 'var(--f-brand-color-accent)' };
+    if (scorePercent >= 0.6) return { label: 'Good try', tone: 'var(--f-brand-color-status-warning)' };
+    if (scorePercent >= 0.4) {
+      return { label: 'Keep learning', tone: 'var(--f-brand-color-status-warning)' };
+    }
+    return { label: 'Better luck next time', tone: 'var(--f-brand-color-status-warning)' };
   }
 
   private readRouteState(): ResultsRouteState | null {

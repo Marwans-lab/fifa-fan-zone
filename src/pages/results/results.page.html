@@ -39,9 +39,10 @@
             stroke-linecap="round"
             [attr.stroke-dasharray]="ringCircumference"
             [attr.stroke-dashoffset]="ringOffset()"
+            [style.filter]="ringArcFilter()"
           ></circle>
         </svg>
-        <div class="results-ring-inner">
+        <div class="results-ring-inner" [style.box-shadow]="ringInnerShadow()">
           <span class="results-ring-points" [style.color]="status().tone">
             {{ displayPoints() }}
           </span>
@@ -49,6 +50,9 @@
         </div>
       </div>
     } @else {
+      <div class="results-trophy">
+        <img class="results-icon" [src]="trophyIcon" width="24" height="24" alt="" />
+      </div>
       <p class="results-status" style="color: var(--f-brand-color-text-default)">Your score</p>
       <p class="results-fallback-points">
         {{ store.state().points }}
