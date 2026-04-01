@@ -21,7 +21,8 @@ import { AnalyticsService } from '../services/analytics.service';
 import { StoreService } from '../services/store.service';
 import { getTeamCardBackground } from '../utils/team-card-background';
 
-const BG_REMOVAL_PUBLIC_PATH = `${window.location.origin}/bg-removal/`;
+const BASE_HREF = document.querySelector('base')?.getAttribute('href') ?? '/';
+const BG_REMOVAL_PUBLIC_PATH = `${window.location.origin}${BASE_HREF}bg-removal/`;
 const PHOTO_SIZE = 480;
 const JPG_QUALITY = 0.78;
 
