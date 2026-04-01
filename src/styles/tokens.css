@@ -31,6 +31,7 @@
   --c-accent-border: rgba(0,212,170,0.25);
   --c-brand:         #c8102e;
   --c-brand-glow:    rgba(200,16,46,0.12);
+  --c-brand-glow-soft: rgba(200,16,46,0.07);
   --c-correct:  #34DB80;
   --c-error:    #D95757;
   --c-warn:     #ffb800;
