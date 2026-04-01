@@ -661,7 +661,9 @@ export class PicturePage implements OnInit, OnDestroy {
       });
       this.stream = stream;
       this.cameraActive.set(true);
-      queueMicrotask(() => {
+      // setTimeout lets Angular finish rendering the @if block
+      // so the <video #videoRef> element exists in the DOM.
+      setTimeout(() => {
         const video = this.videoRef()?.nativeElement;
         if (!video || !this.stream) return;
         video.srcObject = this.stream;
