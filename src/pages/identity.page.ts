@@ -106,7 +106,7 @@ type Step = 'team' | 'preview';
       }
 
       .identity-page--preview {
-        max-width: 360px;
+        max-width: calc(var(--sp-20) * 4 + var(--sp-2));
         text-align: center;
         padding: var(--sp-8) var(--sp-4);
       }
