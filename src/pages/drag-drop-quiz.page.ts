@@ -5,6 +5,7 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
+  QueryList,
   ViewChildren,
   computed,
   inject,
@@ -533,8 +534,10 @@ type ResultMap = Record<string, boolean | null>;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DragDropQuizPage implements OnInit, OnDestroy {
-  @ViewChildren('dropZone', { read: ElementRef }) private dropZoneRefs!: Array<ElementRef<HTMLElement>>;
-  @ViewChildren('chipRef', { read: ElementRef }) private chipRefs!: Array<ElementRef<HTMLElement>>;
+  @ViewChildren('dropZone', { read: ElementRef }) private dropZoneRefs!: QueryList<
+    ElementRef<HTMLElement>
+  >;
+  @ViewChildren('chipRef', { read: ElementRef }) private chipRefs!: QueryList<ElementRef<HTMLElement>>;
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -980,7 +983,7 @@ export class DragDropQuizPage implements OnInit, OnDestroy {
 
   private refreshElementCaches(): void {
     this.dropZoneElements.clear();
-    for (const ref of this.dropZoneRefs?.toArray?.() ?? []) {
+    for (const ref of this.dropZoneRefs ?? []) {
       const element = ref.nativeElement;
       const pairId = element.dataset['pairId'];
       if (pairId) {
@@ -989,7 +992,7 @@ export class DragDropQuizPage implements OnInit, OnDestroy {
     }
 
     this.chipElements.clear();
-    for (const ref of this.chipRefs?.toArray?.() ?? []) {
+    for (const ref of this.chipRefs ?? []) {
       const element = ref.nativeElement;
       const answer = element.dataset['answer'];
       if (answer) {
