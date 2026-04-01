@@ -1,2 +1,38 @@
 @import '../styles/tokens.css';
 @import '../styles/global.css';
+
+.angular-page {
+  min-height: 100dvh;
+  padding: var(--sp-6);
+  color: var(--c-text-1);
+  background: var(--c-bg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.angular-page__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  line-height: 1.2;
+}
+
+.angular-page__description {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: var(--weight-med);
+  line-height: 1.4;
+  color: var(--c-text-2);
+}
+
+.angular-page__context {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-med);
+  line-height: 1.4;
+  color: var(--c-text-2);
+}

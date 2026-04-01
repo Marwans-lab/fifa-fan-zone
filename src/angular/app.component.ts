@@ -1,14 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  template: `
-    <main class="angular-shell">
-      <h1>Angular migration scaffold</h1>
-      <p>Angular now builds alongside the existing React application.</p>
-    </main>
-  `,
+  imports: [RouterOutlet],
+  template: '<router-outlet></router-outlet>',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {}

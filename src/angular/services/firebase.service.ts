@@ -32,7 +32,6 @@ function initializeFirestoreWithFallback(app: FirebaseApp): Firestore {
   try {
     return initializeFirestore(app, {
       experimentalForceLongPolling: true,
-      useFetchStreams: false,
     });
   } catch {
     return getFirestore(app);
