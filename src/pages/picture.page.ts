@@ -25,7 +25,11 @@ const JPG_QUALITY = 0.78;
   standalone: true,
   imports: [CommonModule],
   template: `
-    <main class="picture-page f-page-enter" data-page="picture">
+    <main
+      class="picture-page f-page-enter"
+      data-page="picture"
+      (animationend)="handlePageEnterAnimationEnd($event)"
+    >
       <header class="picture-page__header" data-section="header">
         <button class="picture-page__back" type="button" aria-label="Go back" (click)="handleBack()">
           <span aria-hidden="true">‹</span>
@@ -305,6 +309,7 @@ export class PicturePage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly analytics = inject(AnalyticsService);
   private readonly store = inject(StoreService);
+  private hasTriggeredTakePhotoOnEnter = false;
 
   private readonly videoRef = viewChild<ElementRef<HTMLVideoElement>>('videoRef');
   private readonly fileInputRef = viewChild<ElementRef<HTMLInputElement>>('fileInputRef');
@@ -329,6 +334,13 @@ export class PicturePage implements OnInit, OnDestroy {
     const stateTeamId = this.getIncomingState('teamId');
     this.teamId.set(routeTeamId ?? stateTeamId);
     this.restartPageEnterAnimation();
+  }
+
+  handlePageEnterAnimationEnd(event: AnimationEvent): void {
+    if (event.animationName !== 'f-page-enter-kf') {
+      return;
+    }
+    this.triggerTakePhotoOnPageEnter();
   }
 
   async handleTakePhoto(): Promise<void> {
@@ -412,6 +424,22 @@ export class PicturePage implements OnInit, OnDestroy {
     main.classList.remove('f-page-enter');
     requestAnimationFrame(() => {
       main.classList.add('f-page-enter');
+    });
+  }
+
+  private triggerTakePhotoOnPageEnter(): void {
+    if (
+      this.hasTriggeredTakePhotoOnEnter ||
+      this.hasPhoto() ||
+      this.isRemovingBg() ||
+      this.cameraActive()
+    ) {
+      return;
+    }
+
+    this.hasTriggeredTakePhotoOnEnter = true;
+    queueMicrotask(() => {
+      void this.handleTakePhoto();
     });
   }
 
