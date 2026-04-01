@@ -1,155 +1,393 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { WORLD_CUP_TEAMS } from '../data/teams';
+import { ScreenComponent } from '../components/screen/screen.component';
+import { WORLD_CUP_TEAMS, getTeam, type WorldCupTeam } from '../data/teams';
 import { AnalyticsService } from '../services/analytics.service';
 import { StoreService } from '../services/store.service';
 
+type Step = 'team' | 'preview';
+
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ScreenComponent],
   template: `
-    <main class="identity-page f-page-enter" data-page="identity">
-      <button class="identity-page__back" type="button" (click)="goBack()" aria-label="Go back">
-        <span aria-hidden="true">‹</span>
-      </button>
+    <app-screen [style]="screenStyle">
+      <main class="identity-page f-page-enter" data-page="identity">
+        @if (step() === 'team') {
+          <section class="identity-page__team-step">
+            <header class="identity-page__header" data-section="header">
+              <h2 class="identity-page__title">Choose your team</h2>
+              <p class="identity-page__subtitle">Select the country you're supporting</p>
+            </header>
 
-      <h1 class="identity-page__title">Create your fan identity</h1>
-      <p class="identity-page__description">
-        Enter your name and pick your match personality.
-      </p>
+            <div class="identity-page__search-wrap" data-section="search">
+              <input
+                class="f-input identity-page__search-input"
+                data-ui="team-search-input"
+                type="text"
+                placeholder="Search teams…"
+                [value]="query()"
+                (input)="handleQueryInput($event)"
+              />
+            </div>
 
-      <form class="identity-page__form" (ngSubmit)="continueToCard()">
-        <label class="identity-page__label" for="fan-name">Your name</label>
-        <input
-          id="fan-name"
-          name="fanName"
-          class="identity-page__input"
-          maxlength="30"
-          [ngModel]="fanName()"
-          (ngModelChange)="fanName.set($event)"
-          placeholder="Enter your name"
-          autocomplete="name"
-          required
-        />
+            <div class="identity-page__team-list scroll-y stagger" data-section="team-grid">
+              @for (team of filteredTeams(); track team.id) {
+                <button
+                  class="identity-page__team-option glass-row"
+                  type="button"
+                  data-ui="team-option-btn"
+                  (click)="handleTeamSelect(team)"
+                >
+                  <span
+                    class="identity-page__team-swatch"
+                    [style.background]="
+                      'linear-gradient(135deg, ' + team.colors[0] + ' 0%, ' + team.colors[1] + ' 100%)'
+                    "
+                  >
+                    {{ team.flag }}
+                  </span>
+                  <span class="identity-page__team-name">{{ team.name }}</span>
+                  <span class="identity-page__team-chevron" aria-hidden="true">›</span>
+                </button>
+              }
 
-        <label class="identity-page__label" for="personality">Quiz personality</label>
-        <select
-          id="personality"
-          name="personality"
-          class="identity-page__input"
-          [ngModel]="personality()"
-          (ngModelChange)="personality.set($event)"
-          required
-        >
-          <option value="" disabled>Select your style</option>
-          @for (option of personalityOptions; track option) {
-            <option [value]="option">{{ option }}</option>
+              @if (filteredTeams().length === 0) {
+                <p class="identity-page__empty">No teams found — try another search.</p>
+              }
+            </div>
+          </section>
+        } @else {
+          @if (selectedTeam(); as team) {
+            <section class="identity-page__preview-step">
+              <h2 class="identity-page__title identity-page__title--centered">Looking good!</h2>
+              <p class="identity-page__subtitle identity-page__subtitle--centered">
+                Your fan card is ready
+              </p>
+
+              <div class="identity-page__preview-card-wrap" data-section="card-preview">
+                <article
+                  class="identity-page__preview-card"
+                  [style.background]="selectedTeamGradient()"
+                >
+                  <div class="identity-page__preview-stripe"></div>
+
+                  <header class="identity-page__preview-header">
+                    <p class="identity-page__preview-kicker">FIFA Fan Zone</p>
+                    <p class="identity-page__preview-caption">Collector edition</p>
+                  </header>
+
+                  <div class="identity-page__preview-photo-wrap">
+                    @if (photoDataUrl()) {
+                      <img
+                        class="identity-page__preview-photo"
+                        [src]="photoDataUrl()"
+                        alt="Your photo"
+                      />
+                    } @else {
+                      <div class="identity-page__preview-photo-placeholder">
+                        <img
+                          class="identity-page__preview-camera-icon"
+                          src="assets/icons/camera-white.svg"
+                          width="24"
+                          height="24"
+                          alt=""
+                        />
+                        <span class="identity-page__preview-placeholder-label">Take photo</span>
+                      </div>
+                    }
+                  </div>
+
+                  <footer class="identity-page__preview-footer">
+                    <p class="identity-page__preview-motto">{{ team.motto }}</p>
+                  </footer>
+                </article>
+              </div>
+
+              <p class="identity-page__login-prompt">
+                Already have a card? <span class="identity-page__login-link">Log in</span>
+              </p>
+
+              <div class="identity-page__actions">
+                <button
+                  class="f-button identity-page__action-btn"
+                  type="button"
+                  data-ui="save-fan-card-btn"
+                  (click)="handleSaveFanCard()"
+                >
+                  Save fan card
+                </button>
+                <button
+                  class="f-button f-button--secondary identity-page__action-btn"
+                  type="button"
+                  data-ui="retake-photo-btn"
+                  (click)="handleRetakePhoto()"
+                >
+                  Retake photo
+                </button>
+              </div>
+            </section>
+          } @else {
+            <section class="identity-page__preview-step">
+              <p class="identity-page__empty">Choose a team to continue.</p>
+            </section>
           }
-        </select>
-
-        <p class="identity-page__team">
-          Team:
-          <strong>{{ selectedTeamName }}</strong>
-        </p>
-
-        <button class="identity-page__cta" type="submit" [disabled]="isSubmitDisabled()">
-          Continue
-        </button>
-      </form>
-    </main>
+        }
+      </main>
+    </app-screen>
   `,
   styles: [
     `
       .identity-page {
-        min-height: 100dvh;
-        background: var(--c-lt-bg);
-        padding: var(--sp-6) var(--sp-4);
+        min-height: 100%;
+        height: 100%;
         display: flex;
         flex-direction: column;
-        gap: var(--sp-3);
+        padding: var(--sp-6) var(--sp-4) var(--sp-4);
+        background: var(--c-bg);
+        color: var(--c-text-1);
       }
 
-      .identity-page__back {
-        width: var(--sp-12);
-        min-height: var(--sp-12);
-        border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
-        border-radius: var(--f-brand-radius-rounded);
-        background: var(--f-brand-color-background-light);
-        color: var(--f-brand-color-text-default);
-        font: var(--f-brand-type-headline);
-        cursor: pointer;
+      .identity-page__team-step,
+      .identity-page__preview-step {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+      }
+
+      .identity-page__header {
+        margin-bottom: var(--sp-4);
+      }
+
+      .identity-page__title,
+      .identity-page__subtitle {
+        margin: 0;
       }
 
       .identity-page__title {
-        margin: 0;
-        font: var(--f-brand-type-title-2);
-        color: var(--f-brand-color-text-default);
+        font: var(--f-brand-type-title-3);
+        color: var(--c-text-1);
       }
 
-      .identity-page__description {
-        margin: 0;
+      .identity-page__title--centered,
+      .identity-page__subtitle--centered {
+        text-align: center;
+      }
+
+      .identity-page__subtitle {
+        margin-top: var(--sp-1);
+        font: var(--f-brand-type-subheading);
+        color: var(--c-text-2);
+      }
+
+      .identity-page__search-wrap {
+        margin-bottom: var(--sp-3);
+      }
+
+      .identity-page__search-input {
+        width: 100%;
+        background: var(--c-surface);
+        border-color: var(--c-border);
+        color: var(--c-text-1);
+      }
+
+      .identity-page__search-input::placeholder {
+        color: var(--c-text-3);
+      }
+
+      .identity-page__team-list {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: var(--sp-2);
+        padding-bottom: var(--sp-4);
+      }
+
+      .identity-page__team-option {
+        width: 100%;
+        min-height: var(--sp-12);
+        border-radius: var(--r-md);
+        border: var(--f-brand-border-size-default) solid var(--c-border);
+        display: flex;
+        align-items: center;
+        gap: var(--sp-3);
+        padding: var(--sp-3) var(--sp-4);
+        color: var(--c-text-1);
+        cursor: pointer;
+        text-align: left;
+      }
+
+      .identity-page__team-option:focus-visible {
+        outline: var(--f-brand-border-size-focused) solid var(--c-accent);
+        outline-offset: var(--sp-1);
+      }
+
+      .identity-page__team-swatch {
+        width: var(--sp-8);
+        min-height: var(--sp-8);
+        border-radius: var(--r-full);
+        border: var(--f-brand-border-size-default) solid var(--c-border);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: var(--text-md);
+      }
+
+      .identity-page__team-name {
+        flex: 1;
         font: var(--f-brand-type-body);
-        color: var(--f-brand-color-text-subtle);
       }
 
-      .identity-page__form {
+      .identity-page__team-chevron {
+        color: var(--c-text-2);
+        font-size: var(--text-base);
+      }
+
+      .identity-page__preview-step {
+        max-width: 340px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .identity-page__preview-card-wrap {
+        margin-top: var(--sp-6);
+      }
+
+      .identity-page__preview-card {
+        width: 100%;
+        aspect-ratio: 300 / 420;
+        border-radius: var(--f-brand-radius-outer);
+        border: var(--f-brand-border-size-default) solid var(--c-border);
+        box-shadow: var(--shadow-lg);
+        padding: var(--sp-6) var(--sp-5) var(--sp-5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .identity-page__preview-stripe {
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: var(--sp-1);
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          var(--c-text-mid) 50%,
+          transparent 100%
+        );
+      }
+
+      .identity-page__preview-header {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+      }
+
+      .identity-page__preview-kicker,
+      .identity-page__preview-caption,
+      .identity-page__preview-motto {
+        margin: 0;
+      }
+
+      .identity-page__preview-kicker {
+        font-size: var(--text-2xs);
+        letter-spacing: var(--tracking-display-wide);
+        color: var(--c-text-mid);
+        text-transform: uppercase;
+      }
+
+      .identity-page__preview-caption {
+        margin-top: var(--sp-1);
+        font-size: var(--text-xs);
+        letter-spacing: var(--tracking-spaced);
+        color: var(--c-text-dim);
+      }
+
+      .identity-page__preview-photo-wrap {
+        z-index: 1;
+      }
+
+      .identity-page__preview-photo,
+      .identity-page__preview-photo-placeholder {
+        width: 120px;
+        min-height: 120px;
+        border-radius: var(--r-full);
+      }
+
+      .identity-page__preview-photo {
+        object-fit: cover;
+        object-position: top;
+        border: 3px solid var(--c-border-raise);
+      }
+
+      .identity-page__preview-photo-placeholder {
+        border: var(--c-photo-placeholder-border);
+        background: var(--c-surface);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--sp-2);
+      }
+
+      .identity-page__preview-camera-icon {
+        display: block;
+      }
+
+      .identity-page__preview-placeholder-label {
+        font-size: var(--text-3xs);
+        letter-spacing: var(--tracking-display);
+        line-height: var(--leading-close);
+        text-transform: uppercase;
+        color: var(--c-text-hi);
+      }
+
+      .identity-page__preview-footer {
+        z-index: 1;
+      }
+
+      .identity-page__preview-motto {
+        text-align: center;
+        font: var(--f-brand-type-headline-medium);
+        font-size: var(--text-sm);
+        letter-spacing: var(--tracking-spaced);
+        color: var(--c-text-hi);
+        font-style: italic;
+      }
+
+      .identity-page__login-prompt {
+        margin: var(--sp-6) 0 0;
+        text-align: center;
+        font: var(--f-brand-type-subheading);
+        color: var(--c-text-2);
+      }
+
+      .identity-page__login-link {
+        color: var(--c-text-1);
+        font-weight: var(--weight-med);
+      }
+
+      .identity-page__actions {
         margin-top: var(--sp-4);
         display: flex;
         flex-direction: column;
         gap: var(--sp-3);
       }
 
-      .identity-page__label {
-        font: var(--f-brand-type-subheading);
-        color: var(--f-brand-color-text-default);
-      }
-
-      .identity-page__input {
+      .identity-page__action-btn {
         width: 100%;
-        min-height: var(--sp-12);
-        padding: 0 var(--sp-4);
-        border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
-        border-radius: var(--f-brand-radius-base);
-        background: var(--f-brand-color-background-light);
-        color: var(--f-brand-color-text-default);
-        font: var(--f-brand-type-body);
       }
 
-      .identity-page__input:focus-visible {
-        outline: var(--f-brand-border-size-focused) solid var(--f-brand-color-border-primary);
-        outline-offset: var(--f-brand-space-2xs);
-      }
-
-      .identity-page__team {
-        margin: 0;
+      .identity-page__empty {
+        margin: var(--sp-3) 0 0;
+        text-align: center;
         font: var(--f-brand-type-subheading);
-        color: var(--f-brand-color-text-subtle);
-      }
-
-      .identity-page__team strong {
-        color: var(--f-brand-color-text-default);
-        font: var(--f-brand-type-subheading-medium);
-      }
-
-      .identity-page__cta {
-        margin-top: var(--sp-4);
-        width: 100%;
-        min-height: var(--sp-12);
-        border: none;
-        border-radius: var(--f-brand-radius-rounded);
-        background: var(--f-brand-color-background-primary);
-        color: var(--f-brand-color-text-light);
-        font: var(--f-brand-type-body-medium);
-        cursor: pointer;
-      }
-
-      .identity-page__cta:disabled {
-        background: var(--f-brand-color-background-disabled);
-        color: var(--f-brand-color-text-disabled);
-        cursor: not-allowed;
+        color: var(--c-text-2);
       }
     `,
   ],
@@ -160,43 +398,86 @@ export class IdentityPage {
   private readonly store = inject(StoreService);
   private readonly analytics = inject(AnalyticsService);
 
-  readonly personalityOptions = [
-    'The analyst',
-    'The superstitious',
-    'The hype leader',
-    'The calm watcher',
-  ] as const;
+  readonly screenStyle: Record<string, string> = {
+    background: 'var(--c-bg)',
+  };
 
-  readonly fanName = signal('');
-  readonly personality = signal('');
+  readonly query = signal('');
+  readonly selectedTeamId = signal<string | null>(this.getIncomingState('teamId') ?? this.store.state().fanCard.teamId);
+  readonly photoDataUrl = signal<string | null>(
+    this.getIncomingState('photoDataUrl') ?? this.store.state().fanCard.photoDataUrl
+  );
+  readonly step = signal<Step>(this.selectedTeamId() ? 'preview' : 'team');
 
-  get selectedTeamName(): string {
-    const teamId = this.store.state().fanCard.teamId;
-    return WORLD_CUP_TEAMS.find(team => team.id === teamId)?.name ?? 'Not selected';
+  readonly filteredTeams = computed(() => {
+    const normalizedQuery = this.query().trim().toLowerCase();
+    if (!normalizedQuery) {
+      return WORLD_CUP_TEAMS;
+    }
+    return WORLD_CUP_TEAMS.filter(team => team.name.toLowerCase().includes(normalizedQuery));
+  });
+
+  readonly selectedTeam = computed<WorldCupTeam | null>(() => {
+    const teamId = this.selectedTeamId();
+    if (!teamId) {
+      return null;
+    }
+    return getTeam(teamId) ?? null;
+  });
+
+  handleQueryInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.query.set(target.value);
   }
 
-  isSubmitDisabled(): boolean {
-    return this.fanName().trim().length === 0 || this.personality().trim().length === 0;
+  handleTeamSelect(team: WorldCupTeam): void {
+    this.selectedTeamId.set(team.id);
+    this.photoDataUrl.set(null);
+    this.step.set('preview');
+    this.store.updateFanCard({
+      teamId: team.id,
+      photoDataUrl: null,
+    });
+    this.analytics.track('identity_team_selected', { teamId: team.id });
   }
 
-  continueToCard(): void {
-    const name = this.fanName().trim();
-    const personality = this.personality().trim();
-    if (!name || !personality) return;
+  selectedTeamGradient(): string {
+    const team = this.selectedTeam();
+    if (!team) {
+      return 'linear-gradient(160deg, var(--c-card-gradient-1) 0%, var(--c-card-gradient-3) 100%)';
+    }
+    return `linear-gradient(160deg, ${team.colors[0]} 0%, ${team.colors[1]} 100%)`;
+  }
+
+  handleSaveFanCard(): void {
+    const teamId = this.selectedTeamId();
+    if (!teamId) {
+      this.step.set('team');
+      return;
+    }
 
     this.store.updateFanCard({
-      answers: {
-        ...this.store.state().fanCard.answers,
-        identityName: name,
-        personality,
-      },
-      completedAt: new Date().toISOString(),
+      teamId,
+      photoDataUrl: this.photoDataUrl(),
     });
-    this.analytics.track('identity_continue_tapped', { hasName: true, personality });
+    this.analytics.track('identity_continue_tapped', { teamId });
     void this.router.navigateByUrl('/card');
   }
 
-  goBack(): void {
-    void this.router.navigateByUrl('/picture');
+  handleRetakePhoto(): void {
+    const teamId = this.selectedTeamId();
+    if (!teamId) {
+      this.step.set('team');
+      return;
+    }
+    this.photoDataUrl.set(null);
+    this.analytics.track('identity_retake_tapped', { teamId });
+    void this.router.navigate(['/picture', teamId], { state: { teamId } });
+  }
+
+  private getIncomingState(key: 'teamId' | 'photoDataUrl'): string | null {
+    const historyState = window.history.state as Record<string, unknown> | null;
+    const value = historyState?.[key];
+    return typeof value === 'string' && value.length > 0 ? value : null;
   }
 }
