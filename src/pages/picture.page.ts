@@ -405,7 +405,7 @@ const JPG_QUALITY = 0.78;
         border-radius: 50%;
         border: 3px solid var(--f-brand-color-border-default);
         border-top-color: var(--f-brand-color-background-primary);
-        animation: f-spinner-spin var(--dur-gentle) linear infinite;
+        animation: f-spinner-spin var(--f-brand-motion-duration-gentle) linear infinite;
       }
 
       .picture-page__message {

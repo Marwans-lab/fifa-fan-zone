@@ -17,8 +17,10 @@ import { StoreService } from '../services/store.service';
 
 const QUESTION_TIME = 15;
 const ITEM_HEIGHT = 70;
-const SLIDE_TRANSITION = 'transform 280ms ease, opacity 280ms ease';
-const SLIDE_EXIT_TRANSITION = 'transform 240ms ease, opacity 240ms ease';
+const SLIDE_TRANSITION =
+  'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)';
+const SLIDE_EXIT_TRANSITION =
+  'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)';
 const SLIDE_EXIT_MS = 250;
 const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
 
@@ -72,7 +74,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                   height: 100%;
                   background: var(--c-accent);
                   border-radius: calc(var(--sp-1) / 2);
-                  transition: width 300ms ease;
+                  transition: width var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
                 "
               ></div>
             </div>
@@ -97,7 +99,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                   [attr.stroke-dasharray]="timerCircumference"
                   [attr.stroke-dashoffset]="timerOffset()"
                   stroke-linecap="round"
-                  style="transition: stroke-dashoffset 1s linear"
+                  style="transition: stroke-dashoffset var(--f-brand-motion-duration-generous) linear"
                 ></circle>
               </svg>
               <span
@@ -406,7 +408,8 @@ export class RankingQuizPage implements OnInit, OnDestroy {
       };
     }
     return {
-      transition: 'transform 200ms ease, border-color 200ms ease, background 200ms ease',
+      transition:
+        'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
       boxShadow: 'none',
     };
   }

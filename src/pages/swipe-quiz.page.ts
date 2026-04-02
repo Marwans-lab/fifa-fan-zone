@@ -245,7 +245,7 @@ const EXIT_DURATION = 420;
                     letter-spacing: var(--tracking-wide);
                     text-transform: uppercase;
                     transform: rotate(-12deg);
-                    transition: opacity var(--dur-fast) var(--f-brand-motion-easing-default);
+                    transition: opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
                     pointer-events: none;
                     z-index: 10;
                   "
@@ -267,7 +267,7 @@ const EXIT_DURATION = 420;
                     letter-spacing: var(--tracking-wide);
                     text-transform: uppercase;
                     transform: rotate(12deg);
-                    transition: opacity var(--dur-fast) var(--f-brand-motion-easing-default);
+                    transition: opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
                     pointer-events: none;
                     z-index: 10;
                   "
@@ -728,7 +728,7 @@ export class SwipeQuizPage implements OnInit {
       transition: this.prefersReducedMotion
         ? 'none'
         : this.isDragging()
-        ? 'border-color var(--dur-fast) var(--f-brand-motion-easing-default), box-shadow var(--dur-fast) var(--f-brand-motion-easing-default)'
+        ? 'border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)'
         : 'border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
     };
   }

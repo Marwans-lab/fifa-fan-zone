@@ -167,7 +167,7 @@
   border: 2px solid transparent;
   border-top-color: currentColor;
   border-radius: 50%;
-  animation: f-button-spin 600ms linear infinite;
+  animation: f-button-spin var(--f-brand-motion-duration-quick) linear infinite;
 }
 
 @keyframes f-button-spin {
