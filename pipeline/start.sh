@@ -199,9 +199,24 @@ log "Health checks every ${HEALTH_INTERVAL}s. Press Ctrl+C to stop."
 LAST_TOKEN_CHECK=0
 TOKEN_CHECK_INTERVAL=3600
 
+# Code-change detection: restart middleware when server.js changes on disk
+SERVER_JS="$SCRIPT_DIR/server.js"
+LAST_SERVER_HASH=$(md5 -q "$SERVER_JS" 2>/dev/null || md5sum "$SERVER_JS" 2>/dev/null | awk '{print $1}')
+
 while ! $SHUTTING_DOWN; do
   sleep $HEALTH_INTERVAL
   if $SHUTTING_DOWN; then break; fi
+
+  # Pull latest code every health check so we detect remote changes
+  (cd "$SCRIPT_DIR/.." && git pull --ff-only 2>/dev/null) || true
+
+  # Auto-restart middleware if server.js changed on disk
+  CURRENT_HASH=$(md5 -q "$SERVER_JS" 2>/dev/null || md5sum "$SERVER_JS" 2>/dev/null | awk '{print $1}')
+  if [ "$CURRENT_HASH" != "$LAST_SERVER_HASH" ]; then
+    log "server.js changed on disk — restarting middleware..."
+    LAST_SERVER_HASH="$CURRENT_HASH"
+    start_middleware
+  fi
 
   # Periodic token refresh
   NOW=$(date +%s)
