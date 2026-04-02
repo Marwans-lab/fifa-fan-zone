@@ -134,7 +134,7 @@
   letter-spacing: -0.02em;
   text-align: center;
   white-space: nowrap;
-  transition: color 500ms ease;
+  transition: color var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default);
 }
 
 .f-journey-card__milestone-label--active {
@@ -301,7 +301,7 @@
   border-radius: 50%;
   border: 2.5px solid var(--f-brand-color-background-disabled, #DBDEE8);
   border-top-color: var(--f-brand-color-background-primary, #8E2157);
-  animation: quiz-spin 0.6s linear infinite;
+  animation: quiz-spin var(--f-brand-motion-duration-quick) linear infinite;
 }
 
 /* ── Section header ────────────────────────────────────────────────────── */

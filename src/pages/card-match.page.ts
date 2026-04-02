@@ -366,7 +366,7 @@ const CARD_MATCH_KEYFRAMES = `
                 [attr.stroke-dasharray]="timerCircumference"
                 [attr.stroke-dashoffset]="timerDashOffset()"
                 stroke-linecap="round"
-                style="transition: stroke-dashoffset 1s linear"
+                style="transition: stroke-dashoffset var(--f-brand-motion-duration-generous) linear"
               />
             </svg>
             <span
