@@ -241,6 +241,19 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
       </section>
     </main>
   `,
+  styles: [
+    `
+      @media (prefers-reduced-motion: reduce) {
+        [data-page='ranking-quiz'],
+        [data-page='ranking-quiz'] * {
+          animation-duration: 0.01ms !important;
+          animation-delay: 0ms !important;
+          transition-duration: 0.01ms !important;
+          transition-delay: 0ms !important;
+        }
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RankingQuizPage implements OnInit, OnDestroy {

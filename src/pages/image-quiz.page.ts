@@ -403,6 +403,14 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
       }
 
       @media (prefers-reduced-motion: reduce) {
+        [data-page='image-quiz'],
+        [data-page='image-quiz'] * {
+          animation-duration: 0.01ms !important;
+          animation-delay: 0ms !important;
+          transition-duration: 0.01ms !important;
+          transition-delay: 0ms !important;
+        }
+
         .image-quiz-progress-fill,
         .image-quiz-timer-fill,
         .image-quiz-option-button,

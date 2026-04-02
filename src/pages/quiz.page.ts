@@ -305,6 +305,19 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
       </section>
     </main>
   `,
+  styles: [
+    `
+      @media (prefers-reduced-motion: reduce) {
+        [data-page='quiz'],
+        [data-page='quiz'] * {
+          animation-duration: 0.01ms !important;
+          animation-delay: 0ms !important;
+          transition-duration: 0.01ms !important;
+          transition-delay: 0ms !important;
+        }
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuizPage implements OnInit, OnDestroy {
@@ -347,6 +360,7 @@ export class QuizPage implements OnInit, OnDestroy {
   private timerId: number | null = null;
   private slideEnterFrameId: number | null = null;
   private slideExitTimeoutId: number | null = null;
+  private readonly prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   private isAnimating = false;
 
   ngOnInit(): void {
@@ -392,6 +406,11 @@ export class QuizPage implements OnInit, OnDestroy {
       this.finishQuiz();
       return;
     }
+    if (this.prefersReducedMotion) {
+      this.advanceToNextQuestion();
+      this.triggerSlideIn();
+      return;
+    }
 
     this.isAnimating = true;
     this.slideStyle.set({
@@ -403,11 +422,7 @@ export class QuizPage implements OnInit, OnDestroy {
       window.clearTimeout(this.slideExitTimeoutId);
     }
     this.slideExitTimeoutId = window.setTimeout(() => {
-      this.questionIndex.update(value => value + 1);
-      this.selectedOptionId.set(null);
-      this.revealed.set(false);
-      this.timeLeft.set(QUESTION_TIME);
-      this.startTimer();
+      this.advanceToNextQuestion();
       this.isAnimating = false;
       this.triggerSlideIn();
       this.slideExitTimeoutId = null;
@@ -552,6 +567,15 @@ export class QuizPage implements OnInit, OnDestroy {
   }
 
   private triggerSlideIn(): void {
+    if (this.prefersReducedMotion) {
+      this.slideStyle.set({
+        transform: 'translateX(0)',
+        opacity: '1',
+        transition: 'none',
+      });
+      return;
+    }
+
     if (this.slideEnterFrameId !== null) {
       window.cancelAnimationFrame(this.slideEnterFrameId);
     }
@@ -573,6 +597,14 @@ export class QuizPage implements OnInit, OnDestroy {
         this.slideEnterFrameId = null;
       });
     });
+  }
+
+  private advanceToNextQuestion(): void {
+    this.questionIndex.update(value => value + 1);
+    this.selectedOptionId.set(null);
+    this.revealed.set(false);
+    this.timeLeft.set(QUESTION_TIME);
+    this.startTimer();
   }
 
   private startTimer(): void {
