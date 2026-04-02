@@ -145,7 +145,7 @@ interface LandingCardVisual {
       .landing-page__card-avatar {
         border-radius: 50%;
         background: var(--f-brand-color-background-dark-40a);
-        border: 3px solid rgba(255, 255, 255, 0.45);
+        border: 3px solid var(--c-border-photo);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -180,7 +180,7 @@ interface LandingCardVisual {
       }
 
       .landing-page__texture-dots {
-        background-image: radial-gradient(circle, rgba(255, 255, 255, 0.28) 1.5px, transparent 1.5px);
+        background-image: radial-gradient(circle, var(--c-card-dot) 1.5px, transparent 1.5px);
         background-size: 16px 16px;
         mix-blend-mode: overlay;
       }
@@ -191,8 +191,8 @@ interface LandingCardVisual {
             -55deg,
             transparent,
             transparent 18px,
-            rgba(255, 255, 255, 0.1) 18px,
-            rgba(255, 255, 255, 0.1) 19px
+            var(--c-card-stripe) 18px,
+            var(--c-card-stripe) 19px
           );
         mix-blend-mode: overlay;
       }
@@ -203,7 +203,7 @@ interface LandingCardVisual {
         left: 0;
         right: 0;
         height: var(--sp-1);
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+        background: linear-gradient(90deg, transparent, var(--c-card-holographic), transparent);
         pointer-events: none;
       }
 

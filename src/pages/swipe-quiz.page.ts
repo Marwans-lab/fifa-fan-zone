@@ -170,8 +170,8 @@ const EXIT_DURATION = 420;
                 border-radius: var(--f-brand-radius-outer);
                 background: var(--f-brand-color-background-light);
                 border: 1.5px solid var(--f-brand-color-border-default);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
+                backdrop-filter: blur(var(--f-brand-blur-subtle));
+                -webkit-backdrop-filter: blur(var(--f-brand-blur-subtle));
               "
             ></div>
           </div>
@@ -224,7 +224,7 @@ const EXIT_DURATION = 420;
                     width: calc(var(--sp-20) * 2 + var(--sp-10));
                     min-height: calc(var(--sp-20) * 2 + var(--sp-10));
                     border-radius: 50%;
-                    filter: blur(80px);
+                    filter: blur(var(--sp-20));
                     opacity: 0.4;
                     pointer-events: none;
                   "
@@ -612,14 +612,14 @@ export class SwipeQuizPage implements OnInit {
       return {
         width: 'var(--sp-6)',
         background: 'var(--f-brand-color-border-success)',
-        boxShadow: '0 0 8px var(--f-brand-color-border-success)',
+        boxShadow: 'var(--c-glow-success)',
       };
     }
     if (result === false) {
       return {
         width: 'var(--sp-6)',
         background: 'var(--f-brand-color-status-error)',
-        boxShadow: '0 0 8px var(--f-brand-color-border-error)',
+        boxShadow: 'var(--c-glow-error)',
       };
     }
     return {
@@ -715,15 +715,15 @@ export class SwipeQuizPage implements OnInit {
     }
 
     const boxShadow = feedbackState === 'correct'
-      ? '0 0 60px var(--f-brand-color-border-success), var(--f-brand-shadow-large)'
+      ? 'var(--c-glow-success-lg), var(--f-brand-shadow-large)'
       : feedbackState === 'incorrect'
-        ? '0 0 60px var(--f-brand-color-border-error), var(--f-brand-shadow-large)'
+        ? 'var(--c-glow-error-lg), var(--f-brand-shadow-large)'
         : 'var(--f-brand-shadow-large)';
 
     return {
       border: `1.5px solid ${borderColor}`,
-      backdropFilter: 'blur(20px)',
-      WebkitBackdropFilter: 'blur(20px)',
+      backdropFilter: 'blur(var(--f-brand-blur-medium))',
+      WebkitBackdropFilter: 'blur(var(--f-brand-blur-medium))',
       boxShadow,
       transition: this.prefersReducedMotion
         ? 'none'
@@ -749,7 +749,7 @@ export class SwipeQuizPage implements OnInit {
     return {
       background: correct ? 'var(--f-brand-color-background-success-accent)' : 'var(--f-brand-color-background-error)',
       border: `2px solid ${correct ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-border-error)'}`,
-      boxShadow: `0 0 40px ${correct ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-border-error)'}`,
+      boxShadow: correct ? 'var(--c-glow-success-xl)' : 'var(--c-glow-error-xl)',
     };
   }
 

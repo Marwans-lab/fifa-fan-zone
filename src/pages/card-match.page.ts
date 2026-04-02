@@ -847,10 +847,10 @@ export class CardMatchPage implements OnInit, OnDestroy {
       textAlign: 'center',
       padding: 'var(--f-brand-space-xs)',
       boxShadow: matched
-        ? '0 0 16px var(--f-brand-color-border-success)'
+        ? 'var(--c-glow-success-md)'
         : mismatch
-          ? '0 0 16px var(--f-brand-color-border-error)'
-          : '0 2px 8px var(--f-brand-shadow-medium)',
+          ? 'var(--c-glow-error-md)'
+          : 'var(--f-brand-shadow-medium)',
       transition:
         'box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
       overflow: 'hidden',
@@ -906,8 +906,8 @@ export class CardMatchPage implements OnInit, OnDestroy {
       alignItems: 'center',
       justifyContent: 'center',
       background: visible ? 'var(--f-brand-color-background-dark-50a)' : 'transparent',
-      backdropFilter: visible ? 'blur(12px)' : 'blur(0px)',
-      WebkitBackdropFilter: visible ? 'blur(12px)' : 'blur(0px)',
+      backdropFilter: visible ? 'blur(var(--f-brand-blur-subtle))' : 'none',
+      WebkitBackdropFilter: visible ? 'blur(var(--f-brand-blur-subtle))' : 'none',
       transition:
         'background var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default), backdrop-filter var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
       padding: 'var(--f-brand-space-lg)',
@@ -939,7 +939,7 @@ export class CardMatchPage implements OnInit, OnDestroy {
     const delay = 300 + slot * 180;
     return {
       opacity: active ? '1' : '0.2',
-      filter: active ? 'drop-shadow(0 0 8px var(--c-lt-star-glow))' : 'none',
+      filter: active ? 'drop-shadow(var(--c-glow-success))' : 'none',
       display: 'inline-block',
       transform: visible && active ? 'scale(1) rotate(0deg)' : 'scale(0) rotate(-30deg)',
       transition:

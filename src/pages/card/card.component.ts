@@ -270,8 +270,8 @@ interface QuizFlowCard {
         align-items: center;
         justify-content: center;
         position: relative;
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(var(--f-brand-blur-subtle));
+        -webkit-backdrop-filter: blur(var(--f-brand-blur-subtle));
         background: var(--c-lt-tint-faint);
         border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
         transition: all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default);

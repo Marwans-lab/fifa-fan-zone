@@ -697,7 +697,7 @@ export class DragDropQuizPage implements OnInit, OnDestroy {
     const accent = this.currentQuestion().accentColor;
     return {
       background: accent,
-      boxShadow: `0 var(--sp-2) var(--sp-8) ${accent}55, inset 0 var(--f-brand-border-size-default) 0 rgba(255,255,255,0.15)`,
+      boxShadow: `0 var(--sp-2) var(--sp-8) ${accent}55, inset 0 var(--f-brand-border-size-default) 0 var(--c-surface-raise)`,
     };
   }
 
@@ -1043,8 +1043,8 @@ export class DragDropQuizPage implements OnInit, OnDestroy {
         to { opacity: 1; transform: translateX(0); }
       }
       @keyframes pulseGlow {
-        0%, 100% { box-shadow: 0 0 8px var(--f-brand-color-border-success); }
-        50% { box-shadow: 0 0 24px var(--f-brand-color-border-success); }
+        0%, 100% { box-shadow: var(--c-glow-success); }
+        50% { box-shadow: var(--c-glow-success-pulse); }
       }
       @keyframes successBounce {
         0% { transform: scale(1); }

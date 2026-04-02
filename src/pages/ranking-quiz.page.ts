@@ -391,7 +391,7 @@ export class RankingQuizPage implements OnInit, OnDestroy {
         background: 'var(--c-accent-bg)',
         zIndex: '10',
         position: 'relative',
-        boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+        boxShadow: 'var(--f-brand-shadow-large)',
         transition: 'none',
       };
     }

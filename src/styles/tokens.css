@@ -44,6 +44,8 @@
   --c-error-border:   rgba(217,87,87,0.15);
   --c-error-glow:     rgba(217,87,87,0.40);
   --c-surface-faint:  rgba(255,255,255,0.04);
+  --c-surface-soft:   rgba(255,255,255,0.07);
+  --c-blur-none:      0px;
   --c-white:          #ffffff;
 
   /* ─── Light-theme roles → aliased to FDS brand tokens ──────────────────── */
@@ -102,6 +104,7 @@
 
   /* ─── Component-specific tokens ────────────────────────────────────────────── */
   --c-photo-placeholder-border: 2px dashed rgba(255,255,255,0.45);
+  --c-border-photo: rgba(255,255,255,0.45);
   --c-capture-ring: 3px;
 
   /* ─── Card tokens (FanCard front face) ─────────────────────────────────────── */
@@ -111,6 +114,21 @@
   --c-card-shadow:          rgba(0,0,0,0.35);
   --c-card-inset:           rgba(255,255,255,0.12);
   --c-card-border:          rgba(255,255,255,0.18);
+  --c-card-dot:             rgba(255,255,255,0.28);
+  --c-card-stripe:          rgba(255,255,255,0.10);
+  --c-card-holographic:     rgba(255,255,255,0.45);
+
+  /* ─── Glow shadow tokens ───────────────────────────────────────────────────── */
+  --c-glow-success: 0 0 var(--sp-2) var(--f-brand-color-border-success);
+  --c-glow-error: 0 0 var(--sp-2) var(--f-brand-color-border-error);
+  --c-glow-star: 0 0 var(--sp-2) var(--c-lt-star-glow);
+  --c-glow-success-md: 0 0 var(--sp-4) var(--f-brand-color-border-success);
+  --c-glow-error-md: 0 0 var(--sp-4) var(--f-brand-color-border-error);
+  --c-glow-success-pulse: 0 0 var(--sp-6) var(--f-brand-color-border-success);
+  --c-glow-success-xl: 0 0 var(--sp-10) var(--f-brand-color-border-success);
+  --c-glow-error-xl: 0 0 var(--sp-10) var(--f-brand-color-border-error);
+  --c-glow-success-lg: 0 0 calc(var(--sp-10) + var(--sp-5)) var(--f-brand-color-border-success);
+  --c-glow-error-lg: 0 0 calc(var(--sp-10) + var(--sp-5)) var(--f-brand-color-border-error);
 
   /* ─── Typography ─────────────────────────────────────────────────────────── */
   --font-display: var(--f-base-type-family-primary);
