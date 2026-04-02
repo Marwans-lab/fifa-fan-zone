@@ -198,81 +198,6 @@ h1, h2, h3, h4 {
   --f-button-font-size: var(--text-lg);
 }
 
-/* ── Legacy aliases (backward compat during migration) ───────────────────── */
-.btn {
-  --f-button-bg: var(--f-brand-color-primary, #8E2157);
-  --f-button-text: var(--f-brand-color-text-light, #FFFFFF);
-  --f-button-radius: var(--f-brand-radius-rounded, 64px);
-  --f-button-height: 44px;
-  --f-button-padding-x: var(--f-brand-space-lg, 24px);
-  --f-button-padding-y: var(--f-brand-space-md, 16px);
-  --f-button-font-size: var(--text-md);
-  --f-button-font-weight: var(--weight-med);
-  --f-button-border: none;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: var(--f-button-height);
-  padding: var(--f-button-padding-y) var(--f-button-padding-x);
-  border-radius: var(--f-button-radius);
-  background: var(--f-button-bg);
-  color: var(--f-button-text);
-  font-family: var(--font-body);
-  font-size: var(--f-button-font-size);
-  font-weight: var(--f-button-font-weight);
-  letter-spacing: var(--tracking-wide);
-  border: var(--f-button-border);
-  cursor: pointer;
-  transition:
-    background var(--dur-base) var(--f-brand-motion-easing-default),
-    box-shadow var(--dur-base) var(--f-brand-motion-easing-default),
-    transform var(--dur-fast) var(--f-brand-motion-easing-default);
-  -webkit-tap-highlight-color: transparent;
-  position: relative;
-  overflow: hidden;
-}
-
-.btn:focus-visible {
-  outline: var(--f-brand-border-size-focused, 2px) solid var(--f-brand-color-border-focused, #1F212B);
-  outline-offset: 2px;
-  box-shadow: none;
-}
-
-.btn:active:not(:disabled) {
-  transform: scale(0.975);
-}
-
-.btn:disabled {
-  background: var(--f-brand-color-background-disabled, #DBDEE8);
-  color: var(--f-brand-color-text-disabled, #9099A2);
-  cursor: not-allowed;
-}
-
-.btn-primary {
-  --f-button-bg: var(--f-brand-color-primary, #8E2157);
-  --f-button-text: var(--f-brand-color-text-light, #FFFFFF);
-}
-.btn-primary:hover:not(:disabled) {
-  --f-button-bg: var(--f-brand-color-background-primary-hover, #5C0931);
-}
-.btn-secondary {
-  --f-button-bg: transparent;
-  --f-button-text: var(--f-brand-color-primary, #8E2157);
-  --f-button-border: 1px solid var(--f-brand-color-primary, #8E2157);
-}
-.btn-secondary:hover:not(:disabled) {
-  --f-button-bg: var(--c-brand-tint-6);
-}
-.btn-ghost {
-  --f-button-bg: transparent;
-  --f-button-text: var(--f-brand-color-text-default, #1F212B);
-  --f-button-border: none;
-}
-.btn-ghost:hover:not(:disabled) {
-  --f-button-bg: var(--c-dark-tint-6);
-}
-
 /* ─── Icon button ────────────────────────────────────────────────────────── */
 .btn-icon {
   width: 44px;
@@ -350,31 +275,6 @@ h1, h2, h3, h4 {
   color: var(--f-brand-color-text-disabled, #9099A2);
 }
 
-/* Legacy alias */
-.input-field {
-  width: 100%;
-  padding: var(--f-brand-space-sm, 12px) var(--f-brand-space-md, 16px);
-  background: var(--f-brand-color-surface-default, #FFFFFF);
-  border: 1px solid var(--f-brand-color-border-default, #DBDEE8);
-  border-radius: var(--f-brand-radius-base, 8px);
-  color: var(--f-brand-color-text-default, #1F212B);
-  font-size: var(--text-md);
-  font-family: inherit;
-  outline: none;
-  transition:
-    border-color var(--dur-base) var(--f-brand-motion-easing-default),
-    box-shadow var(--dur-base) var(--f-brand-motion-easing-default);
-}
-
-.input-field:focus {
-  border-color: var(--f-brand-color-border-focused, #1F212B);
-  box-shadow: 0 0 0 var(--f-brand-border-size-focused, 2px) var(--f-brand-color-border-focused, #1F212B);
-}
-
-.input-field::placeholder {
-  color: var(--f-brand-color-text-disabled, #9099A2);
-}
-
 /* ─── Global focus ring ──────────────────────────────────────────────────── */
 button:focus-visible,
 a:focus-visible {
@@ -395,13 +295,6 @@ a:focus-visible {
   will-change: opacity, transform;
 }
 
-/* Legacy alias */
-.page-in {
-  animation: f-page-enter-kf var(--f-brand-motion-duration-generous, 1200ms)
-    var(--f-brand-motion-easing-entry, cubic-bezier(0.16, 1, 0.3, 1)) both;
-  will-change: opacity, transform;
-}
-
 /* ─── Stagger entrance utility (FDS 60ms per item) ───────────────────────── */
 .f-stagger > * {
   animation: f-page-enter-kf var(--f-brand-motion-duration-generous, 1200ms)
@@ -415,34 +308,18 @@ a:focus-visible {
 .f-stagger > *:nth-child(6) { animation-delay: 300ms; }
 .f-stagger > *:nth-child(n+7) { animation-delay: 360ms; }
 
-/* Legacy alias */
-.stagger > * {
-  animation: f-page-enter-kf var(--f-brand-motion-duration-generous, 1200ms)
-    var(--f-brand-motion-easing-entry, cubic-bezier(0.16, 1, 0.3, 1)) both;
-}
-.stagger > *:nth-child(1) { animation-delay: 0ms; }
-.stagger > *:nth-child(2) { animation-delay: 60ms; }
-.stagger > *:nth-child(3) { animation-delay: 120ms; }
-.stagger > *:nth-child(4) { animation-delay: 180ms; }
-.stagger > *:nth-child(5) { animation-delay: 240ms; }
-.stagger > *:nth-child(6) { animation-delay: 300ms; }
-.stagger > *:nth-child(n+7) { animation-delay: 360ms; }
-
 /* ─── Reduced motion ────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .f-page-enter,
-  .page-in {
+  .f-page-enter {
     animation-duration: 0.01ms !important;
   }
 
-  .f-stagger > *,
-  .stagger > * {
+  .f-stagger > * {
     animation-duration: 0.01ms !important;
     animation-delay: 0ms !important;
   }
 
   .f-button,
-  .btn,
   .btn-icon {
     transition-duration: 0.01ms !important;
   }
