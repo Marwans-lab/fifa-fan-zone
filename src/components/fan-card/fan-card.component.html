@@ -98,7 +98,7 @@
       } @else if (isComplete) {
         <div class="f-fan-card__profile">
           @for (question of profileQuestions; track question.id) {
-            <div class="f-fan-card__profile-row">
+            <div class="f-fan-card__profile-row f-input f-fan-card__profile-row--filled">
               <img
                 [src]="question.iconSrc"
                 width="24"
