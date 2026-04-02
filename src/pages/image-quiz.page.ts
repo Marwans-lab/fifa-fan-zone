@@ -263,7 +263,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
       }
 
       .image-quiz-timer-fill {
-        transition: stroke-dashoffset 1s linear;
+        transition: stroke-dashoffset var(--f-brand-motion-duration-generous) linear;
       }
 
       .image-quiz-timer-label {

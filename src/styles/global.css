@@ -577,7 +577,7 @@ a:focus-visible {
 }
 
 .f-spinner {
-  animation: f-spinner-spin var(--dur-gentle) linear infinite;
+  animation: f-spinner-spin var(--f-brand-motion-duration-gentle) linear infinite;
 }
 
 .f-spinner--fullscreen {

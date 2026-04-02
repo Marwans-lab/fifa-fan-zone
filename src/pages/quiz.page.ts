@@ -259,7 +259,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
                   [attr.stroke-dashoffset]="timerOffset()"
                   stroke-linecap="round"
                   style="
-                    transition: stroke-dashoffset 1s linear,
+                    transition: stroke-dashoffset var(--f-brand-motion-duration-generous) linear,
                       stroke var(--f-brand-motion-duration-instant);
                   "
                 ></circle>
