@@ -59,8 +59,8 @@
   stroke-width: 6;
   stroke-linecap: round;
   transition:
-    stroke-dashoffset var(--f-brand-motion-duration-gentle) var(--f-brand-motion-easing-standard),
-    stroke var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-standard);
+    stroke-dashoffset var(--f-brand-motion-duration-gentle) var(--f-brand-motion-easing-default),
+    stroke var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
 }
 
 .results-ring-inner {

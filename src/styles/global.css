@@ -52,9 +52,9 @@ html, body, app-root {
 body {
   background-color: var(--f-brand-color-background-default, #F2F3FA);
   color: var(--f-brand-color-text-default, #1F212B);
-  font-family: var(--f-brand-font-family-body, 'Graphik', sans-serif);
-  font-size: var(--f-brand-font-size-md, 15px);
-  font-weight: var(--f-brand-font-weight-regular, 400);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: var(--weight-reg);
   letter-spacing: var(--tracking-normal);
   line-height: var(--leading-normal);
   -webkit-font-smoothing: antialiased;
@@ -65,7 +65,7 @@ body {
 }
 
 button, input, select, textarea {
-  font-family: var(--f-brand-font-family-body, 'Graphik', sans-serif);
+  font-family: var(--font-body);
   letter-spacing: var(--tracking-normal);
 }
 
@@ -75,7 +75,7 @@ img {
 }
 
 h1, h2, h3, h4 {
-  font-family: var(--f-brand-font-family-display, 'Jotia', sans-serif);
+  font-family: var(--font-display);
   letter-spacing: var(--tracking-tight);
   font-weight: var(--weight-light);
   line-height: var(--leading-tight);
@@ -85,13 +85,13 @@ h1, h2, h3, h4 {
 .f-button {
   /* Component tokens — alias FDS brand tokens */
   --f-button-bg: var(--f-brand-color-primary, #8E2157);
-  --f-button-text: var(--f-brand-color-text-inverse, #FFFFFF);
+  --f-button-text: var(--f-brand-color-text-light, #FFFFFF);
   --f-button-radius: var(--f-brand-radius-rounded, 64px);
   --f-button-height: 44px;
-  --f-button-padding-x: var(--f-brand-space-6, 24px);
-  --f-button-padding-y: var(--f-brand-space-4, 16px);
-  --f-button-font-size: var(--f-brand-font-size-md, 15px);
-  --f-button-font-weight: var(--f-brand-font-weight-medium, 500);
+  --f-button-padding-x: var(--f-brand-space-lg, 24px);
+  --f-button-padding-y: var(--f-brand-space-md, 16px);
+  --f-button-font-size: var(--text-md);
+  --f-button-font-weight: var(--weight-med);
   --f-button-border: none;
 
   /* Rules consume only component tokens */
@@ -103,24 +103,25 @@ h1, h2, h3, h4 {
   border-radius: var(--f-button-radius);
   background: var(--f-button-bg);
   color: var(--f-button-text);
-  font-family: var(--f-brand-font-family-body, 'Graphik', sans-serif);
+  font-family: var(--font-body);
   font-size: var(--f-button-font-size);
   font-weight: var(--f-button-font-weight);
   letter-spacing: var(--tracking-wide);
   border: var(--f-button-border);
   cursor: pointer;
   transition:
-    background var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
-    box-shadow var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
-    transform var(--f-brand-motion-duration-fast, 100ms) var(--f-brand-motion-easing-standard);
+    background var(--dur-base) var(--f-brand-motion-easing-default),
+    box-shadow var(--dur-base) var(--f-brand-motion-easing-default),
+    transform var(--dur-fast) var(--f-brand-motion-easing-default);
   -webkit-tap-highlight-color: transparent;
   position: relative;
   overflow: hidden;
 }
 
 .f-button:focus-visible {
-  outline: none;
-  box-shadow: var(--f-brand-focus-ring);
+  outline: var(--f-brand-border-size-focused, 2px) solid var(--f-brand-color-border-focused, #1F212B);
+  outline-offset: 2px;
+  box-shadow: none;
 }
 
 .f-button:active:not(:disabled) {
@@ -128,19 +129,19 @@ h1, h2, h3, h4 {
 }
 
 .f-button:disabled {
-  background: var(--f-brand-color-background-disabled, #E5E7F0);
-  color: var(--f-brand-color-text-disabled, #A0A4B0);
+  background: var(--f-brand-color-background-disabled, #DBDEE8);
+  color: var(--f-brand-color-text-disabled, #9099A2);
   cursor: not-allowed;
 }
 
 /* ── Modifiers (reassign component tokens only) ──────────────────────────── */
 .f-button--primary {
   --f-button-bg: var(--f-brand-color-primary, #8E2157);
-  --f-button-text: var(--f-brand-color-text-inverse, #FFFFFF);
+  --f-button-text: var(--f-brand-color-text-light, #FFFFFF);
 }
 
 .f-button--primary:hover:not(:disabled) {
-  --f-button-bg: var(--f-brand-color-primary-hover, #7A1C4B);
+  --f-button-bg: var(--f-brand-color-primary-hover, #5C0931);
 }
 
 .f-button--secondary {
@@ -165,8 +166,8 @@ h1, h2, h3, h4 {
 
 .f-button--white-outlined {
   --f-button-bg: transparent;
-  --f-button-text: var(--f-brand-color-text-inverse, #FFFFFF);
-  --f-button-border: 1px solid var(--f-brand-color-text-inverse, #FFFFFF);
+  --f-button-text: var(--f-brand-color-text-light, #FFFFFF);
+  --f-button-border: 1px solid var(--f-brand-color-text-light, #FFFFFF);
 }
 
 .f-button--white-outlined:hover:not(:disabled) {
@@ -174,7 +175,7 @@ h1, h2, h3, h4 {
 }
 
 .f-button--white-filled {
-  --f-button-bg: var(--f-brand-color-text-inverse, #FFFFFF);
+  --f-button-bg: var(--f-brand-color-text-light, #FFFFFF);
   --f-button-text: var(--f-brand-color-primary, #8E2157);
 }
 
@@ -185,28 +186,28 @@ h1, h2, h3, h4 {
 /* ── Size modifiers ──────────────────────────────────────────────────────── */
 .f-button--sm {
   --f-button-height: 36px;
-  --f-button-padding-x: var(--f-brand-space-4, 16px);
-  --f-button-padding-y: var(--f-brand-space-2, 8px);
-  --f-button-font-size: var(--f-brand-font-size-sm, 13px);
+  --f-button-padding-x: var(--f-brand-space-md, 16px);
+  --f-button-padding-y: var(--f-brand-space-xs, 8px);
+  --f-button-font-size: var(--text-sm);
 }
 
 .f-button--lg {
   --f-button-height: 52px;
-  --f-button-padding-x: var(--f-brand-space-6, 24px);
-  --f-button-padding-y: var(--f-brand-space-5, 20px);
-  --f-button-font-size: var(--f-brand-font-size-lg, 18px);
+  --f-button-padding-x: var(--f-brand-space-lg, 24px);
+  --f-button-padding-y: var(--sp-5);
+  --f-button-font-size: var(--text-lg);
 }
 
 /* ── Legacy aliases (backward compat during migration) ───────────────────── */
 .btn {
   --f-button-bg: var(--f-brand-color-primary, #8E2157);
-  --f-button-text: var(--f-brand-color-text-inverse, #FFFFFF);
+  --f-button-text: var(--f-brand-color-text-light, #FFFFFF);
   --f-button-radius: var(--f-brand-radius-rounded, 64px);
   --f-button-height: 44px;
-  --f-button-padding-x: var(--f-brand-space-6, 24px);
-  --f-button-padding-y: var(--f-brand-space-4, 16px);
-  --f-button-font-size: var(--f-brand-font-size-md, 15px);
-  --f-button-font-weight: var(--f-brand-font-weight-medium, 500);
+  --f-button-padding-x: var(--f-brand-space-lg, 24px);
+  --f-button-padding-y: var(--f-brand-space-md, 16px);
+  --f-button-font-size: var(--text-md);
+  --f-button-font-weight: var(--weight-med);
   --f-button-border: none;
 
   display: inline-flex;
@@ -217,24 +218,25 @@ h1, h2, h3, h4 {
   border-radius: var(--f-button-radius);
   background: var(--f-button-bg);
   color: var(--f-button-text);
-  font-family: var(--f-brand-font-family-body, 'Graphik', sans-serif);
+  font-family: var(--font-body);
   font-size: var(--f-button-font-size);
   font-weight: var(--f-button-font-weight);
   letter-spacing: var(--tracking-wide);
   border: var(--f-button-border);
   cursor: pointer;
   transition:
-    background var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
-    box-shadow var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
-    transform var(--f-brand-motion-duration-fast, 100ms) var(--f-brand-motion-easing-standard);
+    background var(--dur-base) var(--f-brand-motion-easing-default),
+    box-shadow var(--dur-base) var(--f-brand-motion-easing-default),
+    transform var(--dur-fast) var(--f-brand-motion-easing-default);
   -webkit-tap-highlight-color: transparent;
   position: relative;
   overflow: hidden;
 }
 
 .btn:focus-visible {
-  outline: none;
-  box-shadow: var(--f-brand-focus-ring);
+  outline: var(--f-brand-border-size-focused, 2px) solid var(--f-brand-color-border-focused, #1F212B);
+  outline-offset: 2px;
+  box-shadow: none;
 }
 
 .btn:active:not(:disabled) {
@@ -242,14 +244,14 @@ h1, h2, h3, h4 {
 }
 
 .btn:disabled {
-  background: var(--f-brand-color-background-disabled, #E5E7F0);
-  color: var(--f-brand-color-text-disabled, #A0A4B0);
+  background: var(--f-brand-color-background-disabled, #DBDEE8);
+  color: var(--f-brand-color-text-disabled, #9099A2);
   cursor: not-allowed;
 }
 
 .btn-primary {
   --f-button-bg: var(--f-brand-color-primary, #8E2157);
-  --f-button-text: var(--f-brand-color-text-inverse, #FFFFFF);
+  --f-button-text: var(--f-brand-color-text-light, #FFFFFF);
 }
 .btn-primary:hover:not(:disabled) {
   --f-button-bg: var(--f-brand-color-background-primary-hover, #5C0931);
@@ -288,9 +290,9 @@ h1, h2, h3, h4 {
   font-size: 16px;
   font-family: inherit;
   transition:
-    background var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
-    border-color var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
-    transform var(--f-brand-motion-duration-fast, 100ms) var(--f-brand-motion-easing-standard);
+    background var(--dur-base) var(--f-brand-motion-easing-default),
+    border-color var(--dur-base) var(--f-brand-motion-easing-default),
+    transform var(--dur-fast) var(--f-brand-motion-easing-default);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -303,8 +305,9 @@ h1, h2, h3, h4 {
 }
 
 .btn-icon:focus-visible {
-  outline: none;
-  box-shadow: var(--f-brand-focus-ring);
+  outline: var(--f-brand-border-size-focused, 2px) solid var(--f-brand-color-border-focused, #1F212B);
+  outline-offset: 2px;
+  box-shadow: none;
 }
 
 /* ─── Surface (FDS card pattern) ─────────────────────────────────────────── */
@@ -325,58 +328,59 @@ h1, h2, h3, h4 {
 /* ─── Input (FDS text input) ─────────────────────────────────────────────── */
 .f-input {
   width: 100%;
-  padding: var(--f-brand-space-3, 12px) var(--f-brand-space-4, 16px);
+  padding: var(--f-brand-space-sm, 12px) var(--f-brand-space-md, 16px);
   background: var(--f-brand-color-surface-default, #FFFFFF);
   border: 1px solid var(--f-brand-color-border-default, #DBDEE8);
   border-radius: var(--f-brand-radius-base, 8px);
   color: var(--f-brand-color-text-default, #1F212B);
-  font-size: var(--f-brand-font-size-md, 15px);
+  font-size: var(--text-md);
   font-family: inherit;
   outline: none;
   transition:
-    border-color var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
-    box-shadow var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard);
+    border-color var(--dur-base) var(--f-brand-motion-easing-default),
+    box-shadow var(--dur-base) var(--f-brand-motion-easing-default);
 }
 
 .f-input:focus {
-  border-color: var(--f-brand-color-border-focused, #8E2157);
-  box-shadow: 0 0 0 var(--f-brand-border-size-focused, 2px) var(--f-brand-color-focus-glow);
+  border-color: var(--f-brand-color-border-focused, #1F212B);
+  box-shadow: 0 0 0 var(--f-brand-border-size-focused, 2px) var(--f-brand-color-border-focused, #1F212B);
 }
 
 .f-input::placeholder {
-  color: var(--f-brand-color-text-disabled, #A0A4B0);
+  color: var(--f-brand-color-text-disabled, #9099A2);
 }
 
 /* Legacy alias */
 .input-field {
   width: 100%;
-  padding: var(--f-brand-space-3, 12px) var(--f-brand-space-4, 16px);
+  padding: var(--f-brand-space-sm, 12px) var(--f-brand-space-md, 16px);
   background: var(--f-brand-color-surface-default, #FFFFFF);
   border: 1px solid var(--f-brand-color-border-default, #DBDEE8);
   border-radius: var(--f-brand-radius-base, 8px);
   color: var(--f-brand-color-text-default, #1F212B);
-  font-size: var(--f-brand-font-size-md, 15px);
+  font-size: var(--text-md);
   font-family: inherit;
   outline: none;
   transition:
-    border-color var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
-    box-shadow var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard);
+    border-color var(--dur-base) var(--f-brand-motion-easing-default),
+    box-shadow var(--dur-base) var(--f-brand-motion-easing-default);
 }
 
 .input-field:focus {
-  border-color: var(--f-brand-color-border-focused, #8E2157);
-  box-shadow: 0 0 0 var(--f-brand-border-size-focused, 2px) var(--f-brand-color-focus-glow);
+  border-color: var(--f-brand-color-border-focused, #1F212B);
+  box-shadow: 0 0 0 var(--f-brand-border-size-focused, 2px) var(--f-brand-color-border-focused, #1F212B);
 }
 
 .input-field::placeholder {
-  color: var(--f-brand-color-text-disabled, #A0A4B0);
+  color: var(--f-brand-color-text-disabled, #9099A2);
 }
 
 /* ─── Global focus ring ──────────────────────────────────────────────────── */
 button:focus-visible,
 a:focus-visible {
-  outline: none;
-  box-shadow: var(--f-brand-focus-ring);
+  outline: var(--f-brand-border-size-focused, 2px) solid var(--f-brand-color-border-focused, #1F212B);
+  outline-offset: 2px;
+  box-shadow: none;
 }
 
 /* ─── Page entrance animation (FDS motion) ───────────────────────────────── */
@@ -622,9 +626,9 @@ a:focus-visible {
   -webkit-backdrop-filter: var(--glass-blur);
   box-shadow: var(--glass-shine);
   transition:
-    background var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
-    border-color var(--f-brand-motion-duration-base, 180ms) var(--f-brand-motion-easing-standard),
-    transform var(--f-brand-motion-duration-fast, 100ms) var(--f-brand-motion-easing-standard);
+    background var(--dur-base) var(--f-brand-motion-easing-default),
+    border-color var(--dur-base) var(--f-brand-motion-easing-default),
+    transform var(--dur-fast) var(--f-brand-motion-easing-default);
   -webkit-tap-highlight-color: transparent;
 }
 
