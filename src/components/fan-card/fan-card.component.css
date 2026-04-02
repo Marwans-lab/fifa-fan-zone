@@ -69,7 +69,7 @@
 
 .f-fan-card__texture-dots {
   border-radius: var(--f-brand-radius-outer);
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.28) 1.5px, transparent 1.5px);
+  background-image: radial-gradient(circle, var(--c-card-dot) 1.5px, transparent 1.5px);
   background-size: var(--f-brand-space-md) var(--f-brand-space-md);
   mix-blend-mode: overlay;
 }
@@ -80,8 +80,8 @@
     -55deg,
     transparent,
     transparent 18px,
-    rgba(255, 255, 255, 0.1) 18px,
-    rgba(255, 255, 255, 0.1) 19px
+    var(--c-card-stripe) 18px,
+    var(--c-card-stripe) 19px
   );
   mix-blend-mode: overlay;
 }
@@ -89,7 +89,7 @@
 .f-fan-card__holographic {
   inset: 0 0 auto;
   height: var(--f-brand-space-2xs);
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  background: linear-gradient(90deg, transparent, var(--c-card-holographic), transparent);
 }
 
 .f-fan-card__team-empty {

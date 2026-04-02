@@ -56,7 +56,7 @@ export class ResultsPage implements OnInit, OnDestroy {
   );
   readonly ringInnerShadow = computed(
     () =>
-      `0 0 var(--sp-10) ${this.status().tone}22, inset 0 var(--f-brand-border-size-default) 0 rgba(255,255,255,0.14)`,
+      `0 0 var(--sp-10) ${this.status().tone}22, inset 0 var(--f-brand-border-size-default) 0 var(--c-surface-raise)`,
   );
 
   private ringDelayId: number | null = null;

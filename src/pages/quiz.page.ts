@@ -65,7 +65,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
               border-radius: var(--r-full);
               border: var(--f-brand-border-size-default) solid var(--c-lt-surface);
               background: var(--c-lt-surface);
-              box-shadow: 0px 2px 4px 0px var(--f-brand-color-shadow-default);
+              box-shadow: var(--f-brand-shadow-medium);
               cursor: pointer;
               display: inline-flex;
               align-items: center;
@@ -506,7 +506,7 @@ export class QuizPage implements OnInit, OnDestroy {
       borderRadius: 'calc(var(--sp-12) + var(--sp-1))',
       border: `1.5px solid ${rowBorder}`,
       background: rowBackground,
-      boxShadow: '0px 2px 4px 0px var(--f-brand-color-shadow-default)',
+      boxShadow: 'var(--f-brand-shadow-medium)',
       color: textColor,
       font: 'var(--f-brand-type-body)',
       display: 'flex',
