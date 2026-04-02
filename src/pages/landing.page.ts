@@ -145,7 +145,7 @@ interface LandingCardVisual {
       .landing-page__card-avatar {
         border-radius: 50%;
         background: var(--f-brand-color-background-dark-40a);
-        border: 3px solid var(--c-border-photo);
+        border: var(--f-brand-border-size-focused) solid var(--c-border-photo);
         display: flex;
         align-items: center;
         justify-content: center;

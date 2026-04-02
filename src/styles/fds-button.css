@@ -156,15 +156,15 @@
 /* ── Elements ── */
 .f-button__icon {
   flex-shrink: 0;
-  width: 20px;
-  height: 20px;
+  width: var(--sp-5);
+  height: var(--sp-5);
   fill: currentColor;
 }
 
 .f-button__spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid transparent;
+  width: var(--sp-5);
+  height: var(--sp-5);
+  border: var(--f-brand-border-size-focused, 2px) solid transparent;
   border-top-color: currentColor;
   border-radius: 50%;
   animation: f-button-spin var(--f-brand-motion-duration-quick) linear infinite;

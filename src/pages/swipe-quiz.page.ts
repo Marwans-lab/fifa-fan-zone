@@ -169,7 +169,7 @@ const EXIT_DURATION = 420;
                 aspect-ratio: 3 / 4;
                 border-radius: var(--f-brand-radius-outer);
                 background: var(--f-brand-color-background-light);
-                border: 1.5px solid var(--f-brand-color-border-default);
+                border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
                 backdrop-filter: blur(var(--f-brand-blur-subtle));
                 -webkit-backdrop-filter: blur(var(--f-brand-blur-subtle));
               "
@@ -721,7 +721,7 @@ export class SwipeQuizPage implements OnInit {
         : 'var(--f-brand-shadow-large)';
 
     return {
-      border: `1.5px solid ${borderColor}`,
+      border: `var(--f-brand-border-size-default) solid ${borderColor}`,
       backdropFilter: 'blur(var(--f-brand-blur-medium))',
       WebkitBackdropFilter: 'blur(var(--f-brand-blur-medium))',
       boxShadow,

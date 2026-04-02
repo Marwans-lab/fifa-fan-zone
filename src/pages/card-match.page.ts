@@ -278,8 +278,8 @@ const CARD_MATCH_KEYFRAMES = `
                         position: absolute;
                         top: var(--f-brand-space-2xs);
                         right: var(--f-brand-space-2xs);
-                        width: 18px;
-                        height: 18px;
+                        width: var(--sp-5);
+                        height: var(--sp-5);
                         border-radius: var(--f-brand-radius-rounded);
                         background: var(--f-brand-color-background-success);
                         display: flex;
@@ -336,7 +336,7 @@ const CARD_MATCH_KEYFRAMES = `
             </p>
             <p
               style="
-                margin: 2px 0 0;
+                margin: var(--f-brand-border-size-focused) 0 0;
                 font: var(--f-brand-type-caption);
                 color: var(--f-brand-color-text-subtle);
                 letter-spacing: var(--tracking-wider);
@@ -395,7 +395,7 @@ const CARD_MATCH_KEYFRAMES = `
             </p>
             <p
               style="
-                margin: 2px 0 0;
+                margin: var(--f-brand-border-size-focused) 0 0;
                 font: var(--f-brand-type-caption);
                 color: var(--f-brand-color-text-subtle);
                 letter-spacing: var(--tracking-wider);
@@ -535,7 +535,7 @@ const CARD_MATCH_KEYFRAMES = `
               style="
                 width: 100%;
                 height: var(--sp-14);
-                border: 1.5px solid var(--f-brand-color-border-default);
+                border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
                 border-radius: var(--f-brand-radius-rounded);
                 background: var(--f-brand-color-background-light);
                 color: var(--f-brand-color-text-default);
@@ -830,7 +830,7 @@ export class CardMatchPage implements OnInit, OnDestroy {
       background: matched
         ? 'var(--f-brand-color-background-success-accent)'
         : 'var(--f-brand-color-background-light)',
-      border: `1.5px solid ${
+      border: `var(--f-brand-border-size-default) solid ${
         matched
           ? 'var(--f-brand-color-background-success)'
           : mismatch
@@ -890,7 +890,7 @@ export class CardMatchPage implements OnInit, OnDestroy {
       position: 'absolute',
       inset: '-8px',
       borderRadius: 'var(--f-brand-radius-inner)',
-      border: '2px solid var(--f-brand-color-background-success)',
+      border: 'var(--f-brand-border-size-focused) solid var(--f-brand-color-background-success)',
       animation: 'match-ring var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit) forwards',
       pointerEvents: 'none',
     };
@@ -919,7 +919,7 @@ export class CardMatchPage implements OnInit, OnDestroy {
     return {
       position: 'relative',
       width: '100%',
-      maxWidth: '320px',
+      maxWidth: 'var(--c-card-match-completion-max-width)',
       background: 'var(--f-brand-color-background-light)',
       border: '1px solid var(--f-brand-color-border-default)',
       borderRadius: 'var(--f-brand-radius-outer)',

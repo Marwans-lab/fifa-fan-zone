@@ -106,6 +106,9 @@
   --c-photo-placeholder-border: 2px dashed rgba(255,255,255,0.45);
   --c-border-photo: rgba(255,255,255,0.45);
   --c-capture-ring: 3px;
+  --c-picture-capture-height: calc(var(--sp-20) * 6 + var(--sp-9));
+  --c-picture-take-photo-min-width: calc(var(--sp-20) * 2 + var(--sp-9));
+  --c-card-match-completion-max-width: calc(var(--sp-20) * 4);
 
   /* ─── Card tokens (FanCard front face) ─────────────────────────────────────── */
   --c-card-gradient-1:      #1a1a2e;

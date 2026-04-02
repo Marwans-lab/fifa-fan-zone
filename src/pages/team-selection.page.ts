@@ -272,7 +272,7 @@ import { StoreService } from '../services/store.service';
       }
 
       .team-selection-page__continue:disabled {
-        opacity: 0.5;
+        opacity: var(--f-brand-opacity-disabled);
         cursor: default;
       }
     `,
