@@ -429,7 +429,6 @@ const JPG_QUALITY = 0.78;
         text-align: center;
         color: var(--f-brand-color-status-error);
         font: var(--f-brand-type-caption);
-        font-size: var(--text-xs);
         padding: 0 var(--f-brand-space-md);
       }
 

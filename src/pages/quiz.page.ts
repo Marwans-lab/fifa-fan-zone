@@ -186,7 +186,6 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
                     align-items: center;
                     justify-content: center;
                     font: var(--f-brand-type-body);
-                    font-size: var(--text-md);
                     flex-shrink: 0;
                     transition: background var(--f-brand-motion-duration-instant)
                         var(--f-brand-motion-easing-default),
@@ -217,7 +216,6 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
                     flex: 1;
                     text-align: left;
                     font: var(--f-brand-type-body);
-                    font-size: var(--text-md);
                     color: inherit;
                     overflow: hidden;
                     text-overflow: ellipsis;
@@ -274,9 +272,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
                   display: flex;
                   align-items: center;
                   justify-content: center;
-                  font: var(--f-brand-type-headline);
-                  font-size: var(--text-lg);
-                  font-weight: var(--weight-med);
+                  font: var(--f-brand-type-headline-medium);
                   transition: color var(--f-brand-motion-duration-instant);
                 "
               >
@@ -291,9 +287,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
               style="
                 margin: 0 0 var(--sp-3);
                 text-align: center;
-                font-family: var(--font-body);
-                font-size: var(--text-sm);
-                font-weight: var(--weight-med);
+                font: var(--f-brand-type-subheading-medium);
               "
             >
               {{ feedbackText() }}
@@ -550,9 +544,7 @@ export class QuizPage implements OnInit, OnDestroy {
       borderRadius: 'var(--sp-8)',
       background: this.revealed() ? 'var(--c-lt-brand)' : 'var(--c-lt-border)',
       color: this.revealed() ? 'var(--c-lt-white)' : 'var(--c-lt-text-2)',
-      fontFamily: 'var(--font-body)',
-      fontSize: 'var(--text-md)',
-      fontWeight: 'var(--weight-med)',
+      font: 'var(--f-brand-type-body-medium)',
       cursor: this.revealed() ? 'pointer' : 'default',
       transition:
         'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',

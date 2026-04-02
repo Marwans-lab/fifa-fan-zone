@@ -235,7 +235,6 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
         flex-shrink: 0;
         color: var(--c-text-2);
         font: var(--f-brand-type-caption);
-        font-size: var(--text-xs);
       }
 
       .image-quiz-content-animated {
@@ -282,7 +281,6 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
         padding: 0 var(--sp-6);
         color: var(--f-brand-color-text-light);
         font: var(--f-brand-type-title-3);
-        font-size: var(--text-xl);
         line-height: var(--leading-tight);
         letter-spacing: var(--tracking-tight);
         text-align: center;
@@ -375,7 +373,6 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
       .image-quiz-option-label {
         color: var(--f-brand-color-text-light);
         font: var(--f-brand-type-caption-medium);
-        font-size: var(--text-sm);
       }
 
       .image-quiz-footer {
@@ -387,7 +384,6 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
         margin: 0 0 var(--sp-3);
         text-align: center;
         font: var(--f-brand-type-subheading-medium);
-        font-size: var(--text-sm);
         letter-spacing: var(--tracking-wide);
       }
 
@@ -397,7 +393,6 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
         border-radius: var(--f-brand-radius-rounded);
         border: none;
         font: var(--f-brand-type-body-medium);
-        font-size: var(--text-md);
         transition:
           background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit),
           color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit);
