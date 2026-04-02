@@ -323,8 +323,6 @@ const CARD_MATCH_KEYFRAMES = `
               style="
                 margin: 0;
                 font: var(--f-brand-type-headline-medium);
-                font-size: var(--text-lg);
-                font-weight: var(--weight-bold);
                 transition: color var(--f-brand-motion-duration-instant)
                   var(--f-brand-motion-easing-default);
               "
@@ -340,7 +338,6 @@ const CARD_MATCH_KEYFRAMES = `
               style="
                 margin: 2px 0 0;
                 font: var(--f-brand-type-caption);
-                font-size: var(--text-2xs);
                 color: var(--f-brand-color-text-subtle);
                 letter-spacing: var(--tracking-wider);
                 text-transform: uppercase;
@@ -391,8 +388,6 @@ const CARD_MATCH_KEYFRAMES = `
               style="
                 margin: 0;
                 font: var(--f-brand-type-headline-medium);
-                font-size: var(--text-lg);
-                font-weight: var(--weight-bold);
                 color: var(--f-brand-color-text-default);
               "
             >
@@ -402,7 +397,6 @@ const CARD_MATCH_KEYFRAMES = `
               style="
                 margin: 2px 0 0;
                 font: var(--f-brand-type-caption);
-                font-size: var(--text-2xs);
                 color: var(--f-brand-color-text-subtle);
                 letter-spacing: var(--tracking-wider);
                 text-transform: uppercase;
@@ -884,8 +878,6 @@ export class CardMatchPage implements OnInit, OnDestroy {
   answerTextStyle(): Record<string, string> {
     return {
       font: 'var(--f-brand-type-caption-medium)',
-      fontSize: 'var(--text-xs)',
-      fontWeight: 'var(--weight-bold)',
       color: 'var(--f-brand-color-text-default)',
       textAlign: 'center',
       lineHeight: 'var(--leading-snug)',
@@ -959,8 +951,6 @@ export class CardMatchPage implements OnInit, OnDestroy {
   animatedStatStyle(visible: boolean): Record<string, string> {
     return {
       font: 'var(--f-brand-type-headline-medium)',
-      fontSize: 'var(--text-xl)',
-      fontWeight: 'var(--weight-bold)',
       color: 'var(--f-brand-color-primary)',
       opacity: visible ? '1' : '0',
       transform: visible ? 'translateY(0)' : 'translateY(8px)',

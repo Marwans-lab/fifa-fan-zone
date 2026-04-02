@@ -101,7 +101,7 @@
 .f-fan-card__back-title {
   color: var(--f-brand-color-text-primary);
   font: var(--f-brand-type-caption-medium);
-  letter-spacing: 0.12em;
+  letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
 }
 
@@ -180,7 +180,6 @@
 .f-fan-card__wizard-question {
   color: var(--f-brand-color-text-default);
   font: var(--f-brand-type-subheading);
-  line-height: 1.43;
 }
 
 .f-fan-card__wizard-options {
@@ -239,7 +238,7 @@
 .f-fan-card__profile-category {
   color: var(--f-brand-color-text-muted);
   font: var(--f-brand-type-caption);
-  letter-spacing: 0.12em;
+  letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
   margin-bottom: var(--sp-1);
 }
@@ -313,7 +312,7 @@
 .f-fan-card__action-label {
   color: var(--f-brand-color-text-muted);
   font: var(--f-brand-type-caption);
-  letter-spacing: 0.06em;
+  letter-spacing: var(--tracking-wide);
 }
 
 .fan-card-edit-icon,

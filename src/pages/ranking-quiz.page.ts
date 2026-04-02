@@ -207,8 +207,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
               style="
                 margin: 0 0 var(--sp-3);
                 text-align: center;
-                font-size: var(--text-sm);
-                font-weight: var(--weight-med);
+                font: var(--f-brand-type-subheading-medium);
                 letter-spacing: var(--tracking-wide);
               "
               [style.color]="feedbackColor()"

@@ -44,7 +44,7 @@
 }
 
 .f-journey-card__label {
-  font: 500 12px/1.33 var(--font-body, Graphik, sans-serif);
+  font: var(--f-brand-type-caption-medium);
   letter-spacing: 0.05em;
   color: var(--f-journey-card-text-muted);
   margin-bottom: var(--f-brand-space-2xs, 4px);
@@ -52,7 +52,7 @@
 }
 
 .f-journey-card__status {
-  font: 500 18px/1.33 var(--font-body, Graphik, sans-serif);
+  font: var(--f-brand-type-headline-medium);
   letter-spacing: -0.02em;
   color: var(--f-journey-card-text);
 }
@@ -64,7 +64,7 @@
   padding: 10px var(--f-brand-space-md, 16px);
   background: var(--f-brand-color-background-default, #F2F3FA);
   border-radius: var(--f-brand-radius-rounded, 64px);
-  font: 400 12px/1 var(--font-body, Graphik, sans-serif);
+  font: var(--f-brand-type-caption);
   color: var(--f-journey-card-text-muted);
 }
 
@@ -130,7 +130,7 @@
 }
 
 .f-journey-card__milestone-label {
-  font: 400 12px/1.33 var(--font-body, Graphik, sans-serif);
+  font: var(--f-brand-type-caption);
   letter-spacing: -0.02em;
   text-align: center;
   white-space: nowrap;
@@ -174,7 +174,7 @@
   justify-content: center;
   background: var(--f-journey-card-accent);
   color: var(--f-brand-color-text-light, #FFFFFF);
-  font: 600 15px/1 var(--font-body, Graphik, sans-serif);
+  font: var(--f-brand-type-body-medium);
   border-radius: var(--f-brand-radius-rounded, 64px);
   border: none;
   margin-top: var(--f-brand-space-xl, 32px);
@@ -263,7 +263,7 @@
 }
 
 .f-quiz-card__title {
-  font: 500 18px/1.33 var(--font-body, Graphik, sans-serif);
+  font: var(--f-brand-type-headline-medium);
   letter-spacing: -0.02em;
   color: var(--f-quiz-card-text);
 }
@@ -273,7 +273,7 @@
 }
 
 .f-quiz-card__progress {
-  font: 400 13px/1.5 var(--font-body, Graphik, sans-serif);
+  font: var(--f-brand-type-subheading);
   color: var(--f-quiz-card-text-muted);
   margin-top: var(--f-brand-space-xs, 8px);
 }
@@ -306,13 +306,13 @@
 
 /* ── Section header ────────────────────────────────────────────────────── */
 .f-card-hub__section-title {
-  font: 100 28px/1.12 var(--font-display, Jotia, sans-serif);
+  font: var(--f-brand-type-title-2);
   letter-spacing: -0.04em;
   color: var(--f-brand-color-text-heading, #1F212B);
 }
 
 .f-card-hub__section-subtitle {
-  font: 400 14px/1.5 var(--font-body, Graphik, sans-serif);
+  font: var(--f-brand-type-subheading);
   color: var(--f-brand-color-text-subtle, #6E7780);
   margin-top: var(--f-brand-space-2xs, 4px);
 }

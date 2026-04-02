@@ -209,7 +209,6 @@ type ResultMap = Record<string, boolean | null>;
       .drag-drop-progress-counter {
         flex-shrink: 0;
         font: var(--f-brand-type-caption);
-        font-size: var(--text-xs);
         color: var(--c-text-2);
       }
 
@@ -248,7 +247,6 @@ type ResultMap = Record<string, boolean | null>;
       .drag-drop-question-title {
         margin: 0;
         font: var(--f-brand-type-title-5);
-        font-size: var(--text-lg);
         color: var(--f-brand-color-text-default);
         text-align: center;
         line-height: var(--leading-snug);
@@ -285,7 +283,6 @@ type ResultMap = Record<string, boolean | null>;
 
       .drag-drop-zone-prompt {
         font: var(--f-brand-type-body-medium);
-        font-size: var(--text-md);
         color: var(--f-brand-color-text-default);
         min-width: var(--sp-20);
         flex-shrink: 0;
@@ -318,7 +315,6 @@ type ResultMap = Record<string, boolean | null>;
         padding: var(--sp-1) var(--sp-2);
         border-radius: var(--f-brand-radius-rounded);
         font: var(--f-brand-type-caption-medium);
-        font-size: var(--text-sm);
         min-height: var(--sp-9);
         white-space: nowrap;
         overflow: hidden;
@@ -345,7 +341,6 @@ type ResultMap = Record<string, boolean | null>;
 
       .drag-drop-chips-label {
         font: var(--f-brand-type-caption-medium);
-        font-size: var(--text-2xs);
         color: var(--f-brand-color-text-muted);
         letter-spacing: var(--tracking-wider);
         margin-bottom: var(--sp-2);
@@ -373,7 +368,6 @@ type ResultMap = Record<string, boolean | null>;
       .drag-drop-success-message {
         text-align: center;
         font: var(--f-brand-type-caption-medium);
-        font-size: var(--text-sm);
         color: var(--f-brand-color-border-success);
         margin-bottom: var(--sp-2);
         letter-spacing: var(--tracking-wide);
@@ -386,7 +380,6 @@ type ResultMap = Record<string, boolean | null>;
         border-radius: var(--f-brand-radius-rounded);
         border: none;
         font: var(--f-brand-type-body-medium);
-        font-size: var(--text-md);
         transition:
           background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit),
           color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit);
@@ -796,7 +789,6 @@ export class DragDropQuizPage implements OnInit, OnDestroy {
       padding: 'var(--sp-2) var(--sp-4)',
       borderRadius: 'var(--f-brand-radius-rounded)',
       font: 'var(--f-brand-type-caption-medium)',
-      fontSize: 'var(--text-sm)',
       color: 'var(--f-brand-color-text-default)',
       background: 'var(--f-brand-color-background-light)',
       border: '1.5px solid var(--f-brand-color-border-default)',
