@@ -389,6 +389,16 @@ type Step = 'team' | 'preview';
         font: var(--f-brand-type-subheading);
         color: var(--c-text-2);
       }
+
+      @media (prefers-reduced-motion: reduce) {
+        .identity-page,
+        .identity-page * {
+          animation-duration: 0.01ms !important;
+          animation-delay: 0ms !important;
+          transition-duration: 0.01ms !important;
+          transition-delay: 0ms !important;
+        }
+      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

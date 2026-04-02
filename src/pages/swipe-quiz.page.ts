@@ -466,6 +466,19 @@ const EXIT_DURATION = 420;
       </section>
     </main>
   `,
+  styles: [
+    `
+      @media (prefers-reduced-motion: reduce) {
+        [data-page='swipe-quiz'],
+        [data-page='swipe-quiz'] * {
+          animation-duration: 0.01ms !important;
+          animation-delay: 0ms !important;
+          transition-duration: 0.01ms !important;
+          transition-delay: 0ms !important;
+        }
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SwipeQuizPage implements OnInit {
@@ -497,6 +510,7 @@ export class SwipeQuizPage implements OnInit {
   readonly falseLabelOpacity = computed(() => Math.min(Math.max(-this.cardOffsetX() / SWIPE_THRESHOLD, 0), 1));
 
   private dragStartX = 0;
+  private readonly prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   ngOnInit(): void {
     const routeQuizId = this.route.snapshot.paramMap.get('quizId');
@@ -558,6 +572,11 @@ export class SwipeQuizPage implements OnInit {
       correct,
     });
 
+    if (this.prefersReducedMotion) {
+      window.setTimeout(() => this.advanceOrFinish(), FEEDBACK_DURATION);
+      return;
+    }
+
     window.setTimeout(() => {
       this.exitDirection.set(swipedRight ? 'right' : 'left');
       window.setTimeout(() => this.advanceOrFinish(), EXIT_DURATION);
@@ -574,12 +593,14 @@ export class SwipeQuizPage implements OnInit {
 
   handleActionPointerDown(event: PointerEvent): void {
     if (this.actionsDisabled()) return;
+    if (this.prefersReducedMotion) return;
     const element = event.currentTarget as HTMLElement | null;
     if (!element) return;
     element.style.transform = 'scale(0.9)';
   }
 
   handleActionPointerUp(event: PointerEvent): void {
+    if (this.prefersReducedMotion) return;
     const element = event.currentTarget as HTMLElement | null;
     if (!element) return;
     element.style.transform = 'scale(1)';
@@ -604,7 +625,9 @@ export class SwipeQuizPage implements OnInit {
     return {
       width: isCurrent ? 'var(--sp-6)' : 'var(--sp-2)',
       background: isCurrent ? 'var(--f-brand-color-text-default)' : 'var(--f-brand-color-background-light)',
-      transition: 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
+      transition: this.prefersReducedMotion
+        ? 'none'
+        : 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
       boxShadow: 'none',
     };
   }
@@ -614,8 +637,9 @@ export class SwipeQuizPage implements OnInit {
     return {
       opacity: visible ? '0.5' : '0',
       transform: visible ? 'scale(0.92)' : 'scale(0.85)',
-      transition:
-        'opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
+      transition: this.prefersReducedMotion
+        ? 'none'
+        : 'opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
     };
   }
 
@@ -630,8 +654,9 @@ export class SwipeQuizPage implements OnInit {
     return {
       opacity: '1',
       transform: 'scale(1)',
-      transition:
-        'opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
+      transition: this.prefersReducedMotion
+        ? 'none'
+        : 'opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
     };
   }
 
@@ -662,7 +687,9 @@ export class SwipeQuizPage implements OnInit {
     return {
       transform: `translateX(${translateX}px) translateY(${translateY}px) rotate(${angle}deg) scale(${scale})`,
       opacity: String(opacity),
-      transition: this.isDragging()
+      transition: this.prefersReducedMotion
+        ? 'none'
+        : this.isDragging()
         ? 'none'
         : exitDirection
           ? 'transform var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit), opacity var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit)'
@@ -698,7 +725,9 @@ export class SwipeQuizPage implements OnInit {
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
       boxShadow,
-      transition: this.isDragging()
+      transition: this.prefersReducedMotion
+        ? 'none'
+        : this.isDragging()
         ? 'border-color var(--dur-fast) var(--f-brand-motion-easing-default), box-shadow var(--dur-fast) var(--f-brand-motion-easing-default)'
         : 'border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
     };
@@ -708,9 +737,10 @@ export class SwipeQuizPage implements OnInit {
     const visible = this.isFeedbackVisible();
     return {
       opacity: visible ? '1' : '0',
-      transform: visible ? 'scale(1)' : 'scale(0.85)',
-      transition:
-        'opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
+      transform: this.prefersReducedMotion ? 'scale(1)' : visible ? 'scale(1)' : 'scale(0.85)',
+      transition: this.prefersReducedMotion
+        ? 'none'
+        : 'opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
     };
   }
 
@@ -737,8 +767,9 @@ export class SwipeQuizPage implements OnInit {
       justifyContent: 'center',
       cursor: disabled ? 'default' : 'pointer',
       opacity: disabled ? '0.4' : '1',
-      transition:
-        'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
+      transition: this.prefersReducedMotion
+        ? 'none'
+        : 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
       boxShadow: 'none',
     };
   }
@@ -774,6 +805,10 @@ export class SwipeQuizPage implements OnInit {
   }
 
   private triggerEnterAnimation(): void {
+    if (this.prefersReducedMotion) {
+      this.enterAnim.set(false);
+      return;
+    }
     this.enterAnim.set(true);
     requestAnimationFrame(() => this.enterAnim.set(false));
   }

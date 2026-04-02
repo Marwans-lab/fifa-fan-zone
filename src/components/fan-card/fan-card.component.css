@@ -343,3 +343,17 @@
   -webkit-mask-image: url('../../assets/icons/save-white.svg');
   mask-image: url('../../assets/icons/save-white.svg');
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .f-fan-card,
+  .f-fan-card * {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .f-fan-card__inner {
+    transition: none !important;
+  }
+}
