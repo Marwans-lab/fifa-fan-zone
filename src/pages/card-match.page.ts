@@ -901,7 +901,7 @@ export class CardMatchPage implements OnInit, OnDestroy {
     return {
       position: 'fixed',
       inset: '0',
-      zIndex: 'var(--z-overlay)',
+      zIndex: '100',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',

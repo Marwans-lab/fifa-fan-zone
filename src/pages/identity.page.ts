@@ -33,7 +33,7 @@ type Step = 'team' | 'preview';
               />
             </div>
 
-            <div class="identity-page__team-list scroll-y stagger" data-section="team-grid">
+            <div class="identity-page__team-list scroll-y f-stagger" data-section="team-grid">
               @for (team of filteredTeams(); track team.id) {
                 <button
                   class="identity-page__team-option glass-row"

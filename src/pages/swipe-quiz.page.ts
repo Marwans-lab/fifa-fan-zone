@@ -34,7 +34,7 @@ const EXIT_DURATION = 420;
       "
     >
       <section
-        class="page-in"
+        class="f-page-enter"
         style="
           width: 100%;
           max-width: 420px;

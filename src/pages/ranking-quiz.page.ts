@@ -219,7 +219,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
           }
           <button
             type="button"
-            class="btn"
+            class="f-button"
             data-ui="submit-btn"
             (click)="revealed() ? handleNext() : handleSubmit()"
             style="
