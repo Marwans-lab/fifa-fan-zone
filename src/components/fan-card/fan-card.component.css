@@ -224,10 +224,11 @@
   display: flex;
   align-items: center;
   gap: var(--sp-3);
-  padding: var(--sp-2) var(--sp-3);
-  border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-inner);
-  border-radius: var(--r-full);
+}
+
+.f-fan-card__profile-row--filled {
   background: var(--f-brand-color-background-default);
+  border-color: var(--f-brand-color-border-inner);
 }
 
 .f-fan-card__profile-icon {
@@ -236,7 +237,7 @@
 }
 
 .f-fan-card__profile-category {
-  color: var(--f-brand-color-text-muted);
+  color: var(--f-brand-color-text-subtle);
   font: var(--f-brand-type-caption);
   letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
