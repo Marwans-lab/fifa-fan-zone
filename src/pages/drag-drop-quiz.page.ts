@@ -715,12 +715,12 @@ export class DragDropQuizPage implements OnInit, OnDestroy {
             ? 'var(--f-brand-color-background-error)'
             : 'var(--f-brand-color-background-light)',
       border: hovered
-        ? '1.5px dashed var(--f-brand-color-accent)'
+        ? 'var(--f-brand-border-size-default) dashed var(--f-brand-color-accent)'
         : result === true
-          ? '1.5px solid var(--f-brand-color-border-success)'
+          ? 'var(--f-brand-border-size-default) solid var(--f-brand-color-border-success)'
           : result === false
-            ? '1.5px solid var(--f-brand-color-border-error)'
-            : '1.5px dashed var(--f-brand-color-border-default)',
+            ? 'var(--f-brand-border-size-default) solid var(--f-brand-color-border-error)'
+            : 'var(--f-brand-border-size-default) dashed var(--f-brand-color-border-default)',
       transition:
         'background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
       transform: shaking ? 'translateX(0)' : hovered ? 'scale(1.02)' : 'scale(1)',
@@ -791,7 +791,7 @@ export class DragDropQuizPage implements OnInit, OnDestroy {
       font: 'var(--f-brand-type-caption-medium)',
       color: 'var(--f-brand-color-text-default)',
       background: 'var(--f-brand-color-background-light)',
-      border: '1.5px solid var(--f-brand-color-border-default)',
+      border: 'var(--f-brand-border-size-default) solid var(--f-brand-color-border-default)',
       cursor: dragging ? 'grabbing' : 'grab',
       userSelect: 'none',
       WebkitUserSelect: 'none',

@@ -146,7 +146,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                 style="
                   height: 58px;
                   border-radius: var(--r-full);
-                  border: 1.5px solid var(--c-border);
+                  border: var(--f-brand-border-size-default) solid var(--c-border);
                   background: var(--c-surface);
                   display: flex;
                   align-items: center;
@@ -225,7 +225,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
             style="
               width: 100%;
               min-height: var(--sp-14);
-              border-radius: 50px;
+              border-radius: var(--f-brand-radius-rounded);
               border: none;
               background: var(--c-white);
               color: var(--c-brand);

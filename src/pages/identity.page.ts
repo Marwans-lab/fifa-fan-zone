@@ -314,15 +314,15 @@ type Step = 'team' | 'preview';
 
       .identity-page__preview-photo,
       .identity-page__preview-photo-placeholder {
-        width: 120px;
-        min-height: 120px;
+        width: calc(var(--sp-20) + var(--sp-10));
+        min-height: calc(var(--sp-20) + var(--sp-10));
         border-radius: var(--r-full);
       }
 
       .identity-page__preview-photo {
         object-fit: cover;
         object-position: top;
-        border: 3px solid var(--c-border-raise);
+        border: var(--f-brand-border-size-focused) solid var(--c-border-raise);
       }
 
       .identity-page__preview-photo-placeholder {

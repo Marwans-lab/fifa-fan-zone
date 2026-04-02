@@ -247,7 +247,7 @@ const JPG_QUALITY = 0.78;
       .picture-page__capture {
         margin: var(--f-brand-space-lg) var(--f-brand-space-md) 0;
         border-radius: var(--f-brand-radius-small);
-        height: 515px;
+        height: var(--c-picture-capture-height);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -369,7 +369,7 @@ const JPG_QUALITY = 0.78;
         width: 100%;
         height: auto;
         pointer-events: none;
-        opacity: 0.5;
+        opacity: var(--f-brand-opacity-disabled);
       }
 
       .picture-page__take-photo-wrap {
@@ -380,7 +380,7 @@ const JPG_QUALITY = 0.78;
       }
 
       .picture-page__take-photo {
-        min-width: 197px;
+        min-width: var(--c-picture-take-photo-min-width);
         min-height: var(--sp-14);
         box-shadow: var(--f-brand-shadow-large);
       }
@@ -403,7 +403,7 @@ const JPG_QUALITY = 0.78;
         width: var(--sp-10);
         height: var(--sp-10);
         border-radius: 50%;
-        border: 3px solid var(--f-brand-color-border-default);
+        border: var(--f-brand-border-size-focused) solid var(--f-brand-color-border-default);
         border-top-color: var(--f-brand-color-background-primary);
         animation: f-spinner-spin var(--f-brand-motion-duration-gentle) linear infinite;
       }
