@@ -219,8 +219,8 @@ async function markDeployed(issueId, identifier, teamId, prNumber) {
   }
 }
 
-// --- Angular migration: sequential step auto-promotion ---
-const MIGRATION_STEP_RE = /^Angular migration: Step (\d+)/;
+// --- Sequential step auto-promotion (any "Prefix: Step N —" pattern) ---
+const MIGRATION_STEP_RE = /^(.+): Step (\d+)/;
 
 async function promoteNextMigrationStep(issueId, deployedIdentifier, teamId) {
   try {
@@ -233,9 +233,10 @@ async function promoteNextMigrationStep(issueId, deployedIdentifier, teamId) {
     const match = deployedTitle.match(MIGRATION_STEP_RE);
     if (!match) return; // Not a migration step — skip
 
-    const completedStep = parseInt(match[1], 10);
+    const prefix = match[1];
+    const completedStep = parseInt(match[2], 10);
     const nextStep = completedStep + 1;
-    console.log(`[Pipeline] Migration step ${completedStep} (${deployedIdentifier}) deployed — looking for step ${nextStep} in Backlog`);
+    console.log(`[Pipeline] "${prefix}" step ${completedStep} (${deployedIdentifier}) deployed — looking for step ${nextStep} in Backlog`);
 
     // Find the next step in Backlog
     const backlogResult = await linearGQL(
@@ -255,11 +256,11 @@ async function promoteNextMigrationStep(issueId, deployedIdentifier, teamId) {
     const backlogIssues = backlogResult.data?.issues?.nodes || [];
     const nextIssue = backlogIssues.find((i) => {
       const m = i.title.match(MIGRATION_STEP_RE);
-      return m && parseInt(m[1], 10) === nextStep;
+      return m && m[1] === prefix && parseInt(m[2], 10) === nextStep;
     });
 
     if (!nextIssue) {
-      console.log(`[Pipeline] No migration step ${nextStep} found in Backlog — migration sequence complete or paused`);
+      console.log(`[Pipeline] No "${prefix}" step ${nextStep} found in Backlog — sequence complete or paused`);
       return;
     }
 
@@ -272,12 +273,11 @@ async function promoteNextMigrationStep(issueId, deployedIdentifier, teamId) {
       );
       markOurComment(nextIssue.id);
       await transitionIssue(nextIssue.id, todoState.id);
-      console.log(`[Pipeline] Migration: auto-promoted ${nextIssue.identifier} (Step ${nextStep}) to Todo`);
+      console.log(`[Pipeline] "${prefix}": auto-promoted ${nextIssue.identifier} (Step ${nextStep}) to Todo`);
 
       // Post @cursor comment to trigger a fresh Cloud Agent session
-      // (just assigning isn't enough if there's an old completed session)
       await postComment(nextIssue.id,
-        `@cursor Step ${completedStep} is deployed. Please start Step ${nextStep}. CRITICAL RULES: ALL Angular code goes in src/angular/ directory ONLY. Do NOT modify index.html, vite.config.ts, src/main.tsx, or src/App.tsx. Do NOT delete any React files. npm run build must still produce the React app. Branch from latest main.`
+        `@cursor Step ${completedStep} is deployed. Please start Step ${nextStep}. Branch from latest main. Run tsc && vite build before committing.`
       );
 
       // Trigger Cursor to pick it up immediately
