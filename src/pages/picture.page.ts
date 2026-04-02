@@ -85,15 +85,6 @@ const JPG_QUALITY = 0.78;
                 <div class="picture-page__placeholder-dots"></div>
                 <div class="picture-page__placeholder-stripes"></div>
 
-                @if (selectedTeam(); as team) {
-                  <div class="picture-page__team-badge-wrap">
-                    <div class="picture-page__team-badge">
-                      <span aria-hidden="true">{{ team.flag }}</span>
-                      <span>{{ team.motto }}</span>
-                    </div>
-                  </div>
-                }
-
                 <svg
                   class="picture-page__silhouette"
                   width="364"
@@ -369,27 +360,6 @@ const JPG_QUALITY = 0.78;
         );
         mix-blend-mode: overlay;
         pointer-events: none;
-      }
-
-      .picture-page__team-badge-wrap {
-        position: absolute;
-        top: var(--sp-4);
-        left: var(--sp-4);
-        right: var(--sp-4);
-        display: flex;
-        justify-content: center;
-      }
-
-      .picture-page__team-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--sp-2);
-        padding: var(--sp-1) var(--sp-3);
-        border-radius: var(--f-brand-radius-rounded);
-        background: var(--f-brand-color-background-dark-50a);
-        color: var(--f-brand-color-text-light);
-        font: var(--f-brand-type-subheading-medium);
-        font-style: italic;
       }
 
       .picture-page__silhouette {
