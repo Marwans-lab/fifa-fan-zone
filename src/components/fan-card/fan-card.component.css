@@ -114,6 +114,8 @@
   padding: var(--sp-2);
   border-radius: var(--f-brand-radius-rounded);
   font: var(--f-brand-type-caption);
+  position: relative;
+  z-index: 1;
 }
 
 .f-fan-card__flip-hint {
@@ -122,6 +124,7 @@
   justify-content: center;
   align-self: center;
   width: fit-content;
+  background: var(--f-brand-color-background-overlay);
   background: color-mix(in srgb, var(--f-brand-color-background-overlay) 50%, transparent);
 }
 
