@@ -48,6 +48,7 @@
   font: var(--f-button-font);
   letter-spacing: -0.005em;
   min-height: 44px;
+  white-space: nowrap;
   cursor: pointer;
   position: relative;
   overflow: hidden;

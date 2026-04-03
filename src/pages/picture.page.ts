@@ -377,7 +377,6 @@ const JPG_QUALITY = 0.78;
 
       .picture-page__take-photo {
         width: fit-content;
-        white-space: nowrap;
       }
 
       .picture-page__take-photo img[icon-right] {
