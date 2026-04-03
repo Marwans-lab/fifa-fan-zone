@@ -271,6 +271,7 @@ const CARD_MATCH_KEYFRAMES = `
                    [class.card-match-inner--mismatched]="isMismatched(card.id)">
                 <div class="card-match__card-back" [ngStyle]="cardBackStyle()">
                   <svg
+                    class="card-match__card-pattern"
                     width="100%"
                     height="100%"
                     viewBox="0 0 170 160"
@@ -532,7 +533,7 @@ const CARD_MATCH_KEYFRAMES = `
               "
             >
               <div class="card-match__completion-stat" style="text-align: center">
-                <div [ngStyle]="animatedStatStyle(showMovesStat())" [class.card-match-stat--visible]="showMovesStat()">{{ accumulatedMoves() }}</div>
+                <div class="card-match__completion-stat-value" [ngStyle]="animatedStatStyle(showMovesStat())" [class.card-match-stat--visible]="showMovesStat()">{{ accumulatedMoves() }}</div>
                 <div
                   class="card-match__completion-stat-label"
                   style="
@@ -548,7 +549,7 @@ const CARD_MATCH_KEYFRAMES = `
               </div>
               <div class="card-match__completion-divider" style="width: 1px; background: var(--f-brand-color-border-default)"></div>
               <div class="card-match__completion-stat" style="text-align: center">
-                <div [ngStyle]="animatedStatStyle(showTimeStat())" [class.card-match-stat--visible]="showTimeStat()">{{ accumulatedTimeUsed() }}s</div>
+                <div class="card-match__completion-stat-value" [ngStyle]="animatedStatStyle(showTimeStat())" [class.card-match-stat--visible]="showTimeStat()">{{ accumulatedTimeUsed() }}s</div>
                 <div
                   class="card-match__completion-stat-label"
                   style="

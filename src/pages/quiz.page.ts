@@ -164,6 +164,10 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
               font: var(--f-brand-type-title-5);
               color: var(--c-lt-text-1);
               flex-shrink: 0;
+              display: -webkit-box;
+              -webkit-line-clamp: 2;
+              -webkit-box-orient: vertical;
+              overflow: hidden;
             "
           >
             {{ currentQuestion().question }}
