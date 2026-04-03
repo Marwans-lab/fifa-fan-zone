@@ -224,7 +224,7 @@ interface QuizFlowCard {
 
       .f-card-page__journey-label {
         margin: 0;
-        font: var(--f-brand-type-caption-medium);
+        font: var(--f-brand-type-caption);
         letter-spacing: var(--tracking-wide);
         color: var(--f-brand-color-text-muted);
       }
