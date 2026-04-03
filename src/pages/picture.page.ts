@@ -381,8 +381,6 @@ const JPG_QUALITY = 0.78;
 
       .picture-page__take-photo {
         width: fit-content;
-        min-height: var(--sp-14);
-        box-shadow: var(--f-brand-shadow-large);
       }
 
       .picture-page__take-photo img[icon-right] {
