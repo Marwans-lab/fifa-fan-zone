@@ -230,10 +230,10 @@ function spawnClaude(issueId, issueIdentifier) {
 
   const prompt = [
     `You are implementing Linear issue ${issueIdentifier} for the FIFA Fan Zone Angular app.`,
-    `\n\nStep 1 — Fetch issue: Run this curl command to get the issue details:`,
-    `curl -s -X POST https://api.linear.app/graphql -H "Content-Type: application/json" -H "Authorization: $LINEAR_TOKEN" -d '{"query":"query{issue(id:\\"${issueIdentifier}\\"){id identifier title description state{name} labels{nodes{name}}}}"}'`,
+    `\n\nStep 1 — Fetch issue: Run this curl command to get the issue details AND comments:`,
+    `curl -s -X POST https://api.linear.app/graphql -H "Content-Type: application/json" -H "Authorization: $LINEAR_TOKEN" -d '{"query":"query{issue(id:\\"${issueIdentifier}\\"){id identifier title description state{name} labels{nodes{name}} comments(first:20){nodes{body createdAt}}}}"}'`,
     `\n\nStep 2 — Read the CLAUDE.md file in the repo root for coding conventions and guidelines.`,
-    `\n\nStep 3 — Implement: Make the changes described in the issue. Follow the project conventions in CLAUDE.md exactly.`,
+    `\n\nStep 3 — Implement: Make the changes described in the issue description AND any user comments (ignore [PIPELINE] bot comments). The most recent user comment is the highest priority — it may override or refine the original description. Follow the project conventions in CLAUDE.md exactly.`,
     `\n\nStep 4 — Verify: Run "npx tsc --noEmit && npx ng build" — fix any errors before proceeding.`,
     `\n\nStep 5 — Commit & push: Create a branch "claude/${issueIdentifier.toLowerCase()}-<slug>", commit with message "${issueIdentifier}: <description>", push to origin.`,
     `\n\nStep 6 — Create PR: Use "gh pr create --title '${issueIdentifier}: <description>' --body '<summary>'" targeting main.`,
