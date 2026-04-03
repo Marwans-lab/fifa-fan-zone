@@ -129,8 +129,9 @@
   --f-button-bg-hover:     var(--f-brand-color-background-primary-hover, #5C0931);
   --f-button-text:         var(--f-brand-color-text-primary, #8E2157);
   --f-button-text-hover:   var(--f-brand-color-text-light, #FFFFFF);
-  --f-button-border-color: var(--f-brand-color-border-primary, #8E2157);
-  --f-button-border-hover: var(--f-brand-color-border-primary-hover, #5C0931);
+  --f-button-border-color: transparent;
+  --f-button-border-hover: transparent;
+  --f-button-border-disabled: transparent;
   --f-button-icon:         var(--f-brand-color-icon-primary, #8E2157);
 }
 
