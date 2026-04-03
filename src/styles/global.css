@@ -49,6 +49,11 @@ html, body, app-root {
   overflow: hidden;
 }
 
+html {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 body {
   background-color: var(--f-brand-color-background-default, #F2F3FA);
   color: var(--f-brand-color-text-default, #1F212B);
@@ -464,8 +469,6 @@ a:focus-visible {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   background: var(--c-lt-bg);
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .f-screen--centered {
