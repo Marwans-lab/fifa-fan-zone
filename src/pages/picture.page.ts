@@ -193,7 +193,7 @@ const JPG_QUALITY = 0.78;
         display: flex;
         align-items: center;
         gap: var(--f-brand-space-md);
-        padding: var(--sp-18) var(--f-brand-space-md) 0 var(--f-brand-space-md);
+        padding: var(--f-brand-space-md) var(--f-brand-space-md) 0 var(--f-brand-space-md);
         flex-shrink: 0;
       }
 
