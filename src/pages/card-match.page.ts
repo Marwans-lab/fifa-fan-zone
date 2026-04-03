@@ -452,25 +452,6 @@ const CARD_MATCH_KEYFRAMES = `
           </div>
         </div>
 
-        <button
-          class="card-match__next-btn"
-          type="button"
-          (click)="goToResults()"
-          style="
-            margin-top: auto;
-            width: 100%;
-            min-height: var(--sp-14);
-            border: none;
-            border-radius: var(--f-brand-radius-rounded);
-            background: var(--f-brand-color-primary);
-            color: var(--f-brand-color-text-light);
-            font: var(--f-brand-type-body-medium);
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-          "
-        >
-          Next
-        </button>
       </section>
 
       @if (showCompletion()) {
