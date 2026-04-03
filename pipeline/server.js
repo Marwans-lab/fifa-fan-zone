@@ -562,8 +562,10 @@ async function handleWebhook(payload) {
     return;
   }
 
-  // Deployed → auto-promote next migration step (catches deploys from GitHub Actions)
+  // Deployed → clear cooldowns so re-trigger works immediately, then auto-promote
   if (newState === "Deployed") {
+    recentTriggers.delete(issueId);
+    recentComments.delete(issueId);
     await promoteNextMigrationStep(issueId, issueIdentifier, teamId);
     return;
   }
