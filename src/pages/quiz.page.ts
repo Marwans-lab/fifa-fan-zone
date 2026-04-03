@@ -53,7 +53,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
             display: flex;
             align-items: center;
             gap: var(--sp-4);
-            padding: var(--sp-18) var(--sp-4) 0;
+            padding: var(--f-brand-space-md) var(--sp-4) 0;
           "
         >
           <button
