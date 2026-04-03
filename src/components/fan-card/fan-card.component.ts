@@ -229,6 +229,13 @@ export class FanCardComponent implements OnChanges {
     return index <= this.step;
   }
 
+  profileIconMaskStyle(iconSrc: string): Record<string, string> {
+    return {
+      '-webkit-mask-image': `url('${iconSrc}')`,
+      'mask-image': `url('${iconSrc}')`,
+    };
+  }
+
   private resetAnswersFromInput(): void {
     this.answers = { ...(this.fanCard.answers as Partial<Record<QuestionId, string>>) };
   }

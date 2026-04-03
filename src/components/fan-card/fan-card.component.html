@@ -99,13 +99,11 @@
         <div class="f-fan-card__profile">
           @for (question of profileQuestions; track question.id) {
             <div class="f-fan-card__profile-row f-input-field f-input-field--filled">
-              <img
-                [src]="question.iconSrc"
-                width="24"
-                height="24"
-                alt=""
+              <span
                 class="f-fan-card__profile-icon"
-              />
+                [ngStyle]="profileIconMaskStyle(question.iconSrc)"
+                aria-hidden="true"
+              ></span>
               <div class="f-fan-card__profile-text">
                 <div class="f-fan-card__profile-category">{{ question.category }}</div>
                 <div class="f-fan-card__profile-answer">{{ resolvedAnswer(question.id) }}</div>
