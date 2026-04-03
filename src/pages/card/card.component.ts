@@ -478,10 +478,10 @@ interface QuizFlowCard {
 
       .f-card-page__quiz-icon-wrap {
         position: absolute;
-        top: var(--sp-2);
-        left: var(--sp-2);
+        inset: 0;
+        margin: auto;
         width: calc(var(--sp-12) + var(--sp-1));
-        min-height: calc(var(--sp-12) + var(--sp-1));
+        height: calc(var(--sp-12) + var(--sp-1));
         border-radius: var(--r-full);
         background: linear-gradient(135deg, var(--c-lt-tint-subtle), var(--c-lt-tint-faint));
         display: flex;
