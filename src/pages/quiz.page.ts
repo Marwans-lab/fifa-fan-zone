@@ -262,6 +262,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
             "
           >
             <div class="quiz-page__timer" style="position: relative; width: var(--sp-16); height: var(--sp-16); flex-shrink: 0">
+              <!-- Timer SVG — displays countdown ring -->
               <svg class="quiz-page__timer-svg" width="64" height="64" viewBox="0 0 64 64" aria-hidden="true" style="transform: rotate(-90deg)">
                 <defs>
                   <linearGradient [attr.id]="timerGradientId" x1="0%" y1="0%" x2="100%" y2="0%">
