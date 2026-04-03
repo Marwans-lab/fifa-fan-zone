@@ -67,7 +67,7 @@
   position: absolute;
   inset: var(--sp-3);
   border-radius: var(--r-full);
-  background: var(--glass-bg);
+  background: var(--f-brand-color-background-light);
   backdrop-filter: blur(var(--f-brand-blur-subtle));
   -webkit-backdrop-filter: blur(var(--f-brand-blur-subtle));
   display: flex;
