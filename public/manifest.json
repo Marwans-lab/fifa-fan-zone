@@ -1,0 +1,8 @@
+{
+  "name": "FIFA Fan Zone",
+  "short_name": "Fan Zone",
+  "start_url": "/fifa-fan-zone/",
+  "display": "standalone",
+  "background_color": "#05050a",
+  "theme_color": "#0a0a0a"
+}
