@@ -226,11 +226,6 @@
   gap: var(--sp-3);
 }
 
-.f-fan-card__profile-row--filled {
-  background: var(--f-brand-color-background-default);
-  border-color: var(--f-brand-color-border-inner);
-}
-
 .f-fan-card__profile-icon {
   opacity: var(--f-brand-opacity-disabled);
   filter: brightness(0) saturate(100%);
