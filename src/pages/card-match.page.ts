@@ -84,6 +84,32 @@ const CARD_MATCH_KEYFRAMES = `
   animation: card-press var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
 }
 
+.card-match-inner--mismatched {
+  animation: card-shake var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit) !important;
+}
+
+.card-match-inner--matched {
+  animation: card-match-pop var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit) !important;
+}
+
+.card-match-ring {
+  animation: match-ring var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit) forwards !important;
+}
+
+.card-match-shimmer {
+  animation: shimmer-slide 3s ease-in-out infinite !important;
+}
+
+.card-match-confetti-particle {
+  animation-name: confetti-fall !important;
+  animation-timing-function: var(--f-brand-motion-easing-exit);
+  animation-fill-mode: forwards;
+}
+
+.card-match-stat--visible {
+  animation: stat-count-in var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit) both !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .card-match-page, .card-match-page * {
     animation: none !important;
@@ -232,7 +258,9 @@ const CARD_MATCH_KEYFRAMES = `
               (click)="flipCard(card.id)"
               [ngStyle]="cardOuterStyle(card.id)"
             >
-              <div [ngStyle]="cardInnerStyle(card.id)">
+              <div [ngStyle]="cardInnerStyle(card.id)"
+                   [class.card-match-inner--matched]="isMatched(card.id)"
+                   [class.card-match-inner--mismatched]="isMismatched(card.id)">
                 <div [ngStyle]="cardBackStyle()">
                   <svg
                     width="100%"
@@ -261,7 +289,7 @@ const CARD_MATCH_KEYFRAMES = `
                     </defs>
                     <rect width="170" height="160" [attr.fill]="'url(#' + patternId(card.id) + ')'" />
                   </svg>
-                  <div [ngStyle]="cardBackShimmerStyle()"></div>
+                  <div class="card-match-shimmer" [ngStyle]="cardBackShimmerStyle()"></div>
                 </div>
                 <div [ngStyle]="cardFrontStyle(card.id)">
                   @if (card.type === 'flag') {
@@ -302,7 +330,7 @@ const CARD_MATCH_KEYFRAMES = `
               </div>
 
               @if (showMatchRing(card.id)) {
-                <div [ngStyle]="matchRingStyle()"></div>
+                <div class="card-match-ring" [ngStyle]="matchRingStyle()"></div>
               }
             </button>
           }
@@ -435,7 +463,7 @@ const CARD_MATCH_KEYFRAMES = `
             @if (completionVisible() && stars() >= 2) {
               <div style="position: absolute; inset: 0; overflow: hidden; pointer-events: none">
                 @for (particle of confettiParticles(); track particle.id) {
-                  <div [ngStyle]="confettiParticleStyle(particle)"></div>
+                  <div class="card-match-confetti-particle" [ngStyle]="confettiParticleStyle(particle)"></div>
                 }
               </div>
             }
@@ -482,7 +510,7 @@ const CARD_MATCH_KEYFRAMES = `
               "
             >
               <div style="text-align: center">
-                <div [ngStyle]="animatedStatStyle(showMovesStat())">{{ accumulatedMoves() }}</div>
+                <div [ngStyle]="animatedStatStyle(showMovesStat())" [class.card-match-stat--visible]="showMovesStat()">{{ accumulatedMoves() }}</div>
                 <div
                   style="
                     margin-top: 2px;
@@ -497,7 +525,7 @@ const CARD_MATCH_KEYFRAMES = `
               </div>
               <div style="width: 1px; background: var(--f-brand-color-border-default)"></div>
               <div style="text-align: center">
-                <div [ngStyle]="animatedStatStyle(showTimeStat())">{{ accumulatedTimeUsed() }}s</div>
+                <div [ngStyle]="animatedStatStyle(showTimeStat())" [class.card-match-stat--visible]="showTimeStat()">{{ accumulatedTimeUsed() }}s</div>
                 <div
                   style="
                     margin-top: 2px;
@@ -779,7 +807,6 @@ export class CardMatchPage implements OnInit, OnDestroy {
     const status = this.statuses()[cardId] ?? 'hidden';
     const flipped = status === 'flipped' || status === 'matched';
     const mismatched = status === 'mismatched';
-    const matched = status === 'matched';
     return {
       position: 'relative',
       width: '100%',
@@ -787,12 +814,11 @@ export class CardMatchPage implements OnInit, OnDestroy {
       transformStyle: 'preserve-3d',
       transform: flipped || mismatched ? 'rotateY(180deg)' : 'rotateY(0deg)',
       transition: `transform ${FLIP_DURATION}ms var(--f-brand-motion-easing-exit)`,
-      animation: mismatched
-        ? 'card-shake var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit)'
-        : matched
-          ? 'card-match-pop var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit)'
-          : 'none',
     };
+  }
+
+  isMismatched(cardId: string): boolean {
+    return (this.statuses()[cardId] ?? 'hidden') === 'mismatched';
   }
 
   cardBackStyle(): Record<string, string> {
@@ -815,7 +841,6 @@ export class CardMatchPage implements OnInit, OnDestroy {
       inset: '0',
       background:
         'linear-gradient(105deg, transparent 40%, var(--c-lt-shimmer) 50%, transparent 60%)',
-      animation: 'shimmer-slide 3s ease-in-out infinite',
     };
   }
 
@@ -891,7 +916,6 @@ export class CardMatchPage implements OnInit, OnDestroy {
       inset: '-8px',
       borderRadius: 'var(--f-brand-radius-inner)',
       border: 'var(--f-brand-border-size-focused) solid var(--f-brand-color-background-success)',
-      animation: 'match-ring var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit) forwards',
       pointerEvents: 'none',
     };
   }
@@ -954,9 +978,6 @@ export class CardMatchPage implements OnInit, OnDestroy {
       color: 'var(--f-brand-color-primary)',
       opacity: visible ? '1' : '0',
       transform: visible ? 'translateY(0)' : 'translateY(8px)',
-      animation: visible
-        ? 'stat-count-in var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit) both'
-        : 'none',
     };
   }
 
@@ -969,7 +990,8 @@ export class CardMatchPage implements OnInit, OnDestroy {
       height: particle.size,
       borderRadius: particle.rounded ? 'var(--f-brand-radius-rounded)' : '0',
       background: particle.color,
-      animation: `confetti-fall ${particle.duration} var(--f-brand-motion-easing-exit) ${particle.delay} forwards`,
+      animationDuration: particle.duration,
+      animationDelay: particle.delay,
       transform: `rotate(${particle.rotation}deg)`,
     };
   }
