@@ -31,7 +31,7 @@ interface QuizFlowCard {
   imports: [CommonModule, ScreenComponent, FanCardComponent],
   template: `
     <app-screen className="f-card-page">
-      <main class="f-card-page__content f-page-enter hide-scrollbar" data-page="card">
+      <main #contentEl class="f-card-page__content f-page-enter hide-scrollbar" data-page="card">
         <section #fanCardSection class="f-card-page__fan-card" aria-label="Your fan card">
           <app-fan-card
             [fanCard]="state().fanCard"
@@ -576,6 +576,7 @@ export class CardComponent {
   private readonly cardExportService = inject(CardExportService);
   private readonly qaappService = inject(QAAppService);
 
+  @ViewChild('contentEl') private readonly contentEl?: ElementRef<HTMLElement>;
   @ViewChild('fanCardSection') private readonly fanCardSection?: ElementRef<HTMLElement>;
   @ViewChild('quizSection') private readonly quizSection?: ElementRef<HTMLElement>;
   @ViewChild(FanCardComponent) private readonly fanCardComponent?: FanCardComponent;
@@ -751,8 +752,8 @@ export class CardComponent {
 
     if (!this.isCardComplete()) {
       this.analytics.track('complete_fan_card_journey_tapped');
-      this.scrollToElement(this.fanCardSection);
-      window.setTimeout(() => this.fanCardComponent?.startEditing(), 400);
+      this.scrollToTop();
+      window.setTimeout(() => this.fanCardComponent?.flipToBack(), 400);
       return;
     }
 
@@ -820,6 +821,11 @@ export class CardComponent {
     const current = this.milestones()[index]?.completed ?? false;
     const next = this.milestones()[index + 1]?.completed ?? false;
     return current && !next;
+  }
+
+  private scrollToTop(): void {
+    const scrollContainer = this.contentEl?.nativeElement.closest<HTMLElement>('.f-screen');
+    scrollContainer?.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   private scrollToElement(target?: ElementRef<HTMLElement>): void {
