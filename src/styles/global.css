@@ -42,16 +42,21 @@
   padding: 0;
 }
 
-html, body, app-root {
+html {
   display: block;
   height: 100%;
   width: 100%;
   overflow: hidden;
 }
 
-html {
+body, app-root {
+  display: block;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
+  box-sizing: border-box;
 }
 
 body {
