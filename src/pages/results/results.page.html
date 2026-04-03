@@ -62,25 +62,24 @@
 
     <div class="results-actions" data-section="actions">
       @if (result()) {
-        <app-button [fullWidth]="true" className="results-action-btn" (clicked)="onViewLeaderboard()">
+        <app-button [fullWidth]="true" (clicked)="onViewLeaderboard()">
           View leaderboard
         </app-button>
         <app-button
           variant="secondary"
           [fullWidth]="true"
-          className="results-action-btn"
           (clicked)="onReturnHome()"
         >
           Return home
         </app-button>
-        <app-button variant="ghost" [fullWidth]="true" className="results-action-btn" (clicked)="onPlayAgain()">
+        <app-button variant="ghost" [fullWidth]="true" (clicked)="onPlayAgain()">
           Play another quiz
         </app-button>
       } @else {
-        <app-button [fullWidth]="true" className="results-action-btn" (clicked)="onPlayAgain()">
+        <app-button [fullWidth]="true" (clicked)="onPlayAgain()">
           Play a quiz
         </app-button>
-        <app-button variant="ghost" [fullWidth]="true" className="results-action-btn" (clicked)="onReturnHome()">
+        <app-button variant="ghost" [fullWidth]="true" (clicked)="onReturnHome()">
           Return home
         </app-button>
       }

@@ -112,10 +112,6 @@
   gap: var(--f-brand-space-sm);
 }
 
-.results-action-btn {
-  width: 100%;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .results-ring-arc {
     transition-duration: 0.01ms !important;
