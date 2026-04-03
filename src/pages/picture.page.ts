@@ -380,7 +380,6 @@ const JPG_QUALITY = 0.78;
       }
 
       .picture-page__take-photo {
-        min-width: var(--c-picture-take-photo-min-width);
         min-height: var(--sp-14);
         box-shadow: var(--f-brand-shadow-large);
       }
