@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { ScreenComponent } from '../components/screen/screen.component';
 import { SWIPE_QUIZZES, type SwipeQuiz } from '../data/swipeQuizzes';
 import { FLOW_IDS, type FlowId } from '../models/flow-id.model';
 import { AnalyticsService } from '../services/analytics.service';
@@ -21,20 +22,19 @@ const EXIT_DURATION = 420;
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ScreenComponent],
   template: `
-    <main
-      data-page="swipe-quiz"
-      style="
-        min-height: 100dvh;
-        display: flex;
-        justify-content: center;
-        background: var(--c-bg);
-        color: var(--c-text-1);
-      "
-    >
+    <app-screen className="f-page-enter swipe-quiz-screen">
+      <main
+        data-page="swipe-quiz"
+        style="
+          min-height: 100dvh;
+          display: flex;
+          justify-content: center;
+          color: var(--c-text-1);
+        "
+      >
       <section
-        class="f-page-enter"
         style="
           width: 100%;
           max-width: 420px;
@@ -74,7 +74,6 @@ const EXIT_DURATION = 420;
               <span
                 style="
                   font: var(--f-brand-type-headline-medium);
-                  font-size: var(--text-md);
                   color: var(--c-text-1);
                   letter-spacing: var(--tracking-snug);
                 "
@@ -100,8 +99,7 @@ const EXIT_DURATION = 420;
               <span
                 style="
                   font: var(--f-brand-type-caption-medium);
-                  font-size: var(--text-xs);
-                  font-weight: var(--weight-bold);
+                  font-weight: var(--weight-med);
                   color: var(--f-brand-color-accent);
                 "
               >
@@ -110,7 +108,6 @@ const EXIT_DURATION = 420;
               <span
                 style="
                   font: var(--f-brand-type-caption);
-                  font-size: var(--text-2xs);
                   color: var(--f-brand-color-text-muted);
                 "
               >
@@ -241,7 +238,7 @@ const EXIT_DURATION = 420;
                     border: var(--f-brand-border-size-focused) solid var(--f-brand-color-border-success);
                     color: var(--f-brand-color-border-success);
                     font: var(--f-brand-type-headline-medium);
-                    font-weight: var(--weight-bold);
+                    font-weight: var(--weight-med);
                     letter-spacing: var(--tracking-wide);
                     text-transform: uppercase;
                     transform: rotate(-12deg);
@@ -263,7 +260,7 @@ const EXIT_DURATION = 420;
                     border: var(--f-brand-border-size-focused) solid var(--f-brand-color-status-error);
                     color: var(--f-brand-color-status-error);
                     font: var(--f-brand-type-headline-medium);
-                    font-weight: var(--weight-bold);
+                    font-weight: var(--weight-med);
                     letter-spacing: var(--tracking-wide);
                     text-transform: uppercase;
                     transform: rotate(12deg);
@@ -327,8 +324,7 @@ const EXIT_DURATION = 420;
                     [style.color]="isFeedbackCorrect() ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)'"
                     style="
                       font: var(--f-brand-type-title-3);
-                      font-size: var(--text-xl);
-                      font-weight: var(--weight-bold);
+                      font-weight: var(--weight-light);
                       letter-spacing: var(--tracking-wide);
                     "
                   >
@@ -337,7 +333,6 @@ const EXIT_DURATION = 420;
                   <span
                     style="
                       font: var(--f-brand-type-caption);
-                      font-size: var(--text-sm);
                       color: var(--f-brand-color-text-subtle);
                       text-align: center;
                       line-height: var(--leading-snug);
@@ -369,7 +364,6 @@ const EXIT_DURATION = 420;
                     position: absolute;
                     bottom: var(--sp-6);
                     font: var(--f-brand-type-caption);
-                    font-size: var(--text-xs);
                     color: var(--f-brand-color-text-muted);
                     letter-spacing: var(--tracking-wide);
                     text-transform: uppercase;
@@ -394,7 +388,6 @@ const EXIT_DURATION = 420;
           <span
             style="
               font: var(--f-brand-type-caption-medium);
-              font-size: var(--text-xs);
               color: var(--f-brand-color-status-error);
               letter-spacing: var(--tracking-wide);
               text-transform: uppercase;
@@ -406,7 +399,6 @@ const EXIT_DURATION = 420;
           <span
             style="
               font: var(--f-brand-type-caption-medium);
-              font-size: var(--text-xs);
               color: var(--f-brand-color-border-success);
               letter-spacing: var(--tracking-wide);
               text-transform: uppercase;
@@ -464,10 +456,15 @@ const EXIT_DURATION = 420;
           </div>
         </div>
       </section>
-    </main>
+      </main>
+    </app-screen>
   `,
   styles: [
     `
+      .swipe-quiz-screen {
+        background: var(--c-bg);
+      }
+
       @media (prefers-reduced-motion: reduce) {
         [data-page='swipe-quiz'],
         [data-page='swipe-quiz'] * {
@@ -748,7 +745,9 @@ export class SwipeQuizPage implements OnInit {
     const correct = this.isFeedbackCorrect();
     return {
       background: correct ? 'var(--f-brand-color-background-success-accent)' : 'var(--f-brand-color-background-error)',
-      border: `2px solid ${correct ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-border-error)'}`,
+      border: `var(--f-brand-border-size-focused) solid ${
+        correct ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-border-error)'
+      }`,
       boxShadow: correct ? 'var(--c-glow-success-xl)' : 'var(--c-glow-error-xl)',
     };
   }
@@ -760,16 +759,28 @@ export class SwipeQuizPage implements OnInit {
       width: 'calc(var(--sp-14) + var(--sp-1))',
       minHeight: 'calc(var(--sp-14) + var(--sp-1))',
       borderRadius: '50%',
-      border: `2px solid ${isTrueButton ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-border-error)'}`,
+      border: `var(--f-brand-border-size-focused) solid ${
+        isTrueButton ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-border-error)'
+      }`,
       background: isTrueButton ? 'var(--f-brand-color-background-success-accent)' : 'var(--f-brand-color-background-error)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       cursor: disabled ? 'default' : 'pointer',
-      opacity: disabled ? '0.4' : '1',
+      color: disabled ? 'var(--f-brand-color-icon-disabled)' : 'var(--f-brand-color-icon-default)',
+      backgroundColor: disabled
+        ? 'var(--f-brand-color-background-disabled)'
+        : isTrueButton
+          ? 'var(--f-brand-color-background-success-accent)'
+          : 'var(--f-brand-color-background-error)',
+      borderColor: disabled
+        ? 'var(--f-brand-color-border-disabled)'
+        : isTrueButton
+          ? 'var(--f-brand-color-border-success)'
+          : 'var(--f-brand-color-border-error)',
       transition: this.prefersReducedMotion
         ? 'none'
-        : 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
+        : 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), background-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
       boxShadow: 'none',
     };
   }

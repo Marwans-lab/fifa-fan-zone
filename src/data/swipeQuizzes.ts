@@ -29,7 +29,7 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: true,
         explanation:
           'Brazil has appeared in all 22 FIFA World Cup tournaments since 1930 — no other nation has a perfect attendance record.',
-        accentColor: '#1a3a1a',
+        accentColor: 'var(--c-swipe-accent-1)',
       },
       {
         id: 'hist2',
@@ -37,7 +37,7 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: false,
         explanation:
           'Only 13 teams competed in the 1930 World Cup in Uruguay. The tournament expanded to 32 teams in 1998 and to 48 for 2026.',
-        accentColor: '#2a1a2a',
+        accentColor: 'var(--c-swipe-accent-2)',
       },
       {
         id: 'hist3',
@@ -46,7 +46,7 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: true,
         explanation:
           'The 1950 tournament had no official final — the last round was a four-team group stage. Uruguay clinched the title by beating Brazil in the decisive match.',
-        accentColor: '#1a2a3a',
+        accentColor: 'var(--c-swipe-accent-3)',
       },
       {
         id: 'hist4',
@@ -54,7 +54,7 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: false,
         explanation:
           'Germany has won 4 World Cup titles (1954, 1974, 1990, 2014). Only Brazil has won five.',
-        accentColor: '#2a2a1a',
+        accentColor: 'var(--c-swipe-accent-4)',
       },
       {
         id: 'hist5',
@@ -63,7 +63,7 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: true,
         explanation:
           'The Jules Rimet Trophy was stolen in Brazil in 1983 and is believed to have been melted down. It has never been found.',
-        accentColor: '#1a1a2a',
+        accentColor: 'var(--c-swipe-accent-5)',
       },
       {
         id: 'hist6',
@@ -72,7 +72,7 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: false,
         explanation:
           'South Africa became the first host nation eliminated in the group stage at the 2010 World Cup.',
-        accentColor: '#2a1a1a',
+        accentColor: 'var(--c-swipe-accent-6)',
       },
       {
         id: 'hist7',
@@ -81,7 +81,7 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: true,
         explanation:
           'Hakan Şükür of Turkey scored just 10.8 seconds into the 2002 third-place match against South Korea — a record that still stands.',
-        accentColor: '#1a2a2a',
+        accentColor: 'var(--c-swipe-accent-7)',
       },
       {
         id: 'hist8',
@@ -89,7 +89,7 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: false,
         explanation:
           'Italy lost the 1970 final to Brazil (1-4) and the 1994 final to Brazil on penalties. They have 4 titles but also 2 final defeats.',
-        accentColor: '#3a1a2a',
+        accentColor: 'var(--c-swipe-accent-8)',
       },
       {
         id: 'hist9',
@@ -98,7 +98,7 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: true,
         explanation:
           "Geoff Hurst's second goal for England in the 1966 final hit the crossbar and bounced down. Whether it crossed the line remains one of football's greatest debates.",
-        accentColor: '#2a1a3a',
+        accentColor: 'var(--c-swipe-accent-9)',
       },
       {
         id: 'hist10',
@@ -106,7 +106,7 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: false,
         explanation:
           "Argentina first won the World Cup in 1978 as hosts, beating the Netherlands 3-1. The 1986 title — Maradona's famous tournament — was their second.",
-        accentColor: '#1a3a2a',
+        accentColor: 'var(--c-swipe-accent-10)',
       },
     ],
   },
