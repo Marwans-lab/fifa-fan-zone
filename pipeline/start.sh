@@ -1,8 +1,12 @@
 #!/bin/bash
 # Start the pipeline: Middleware + ngrok
-# Cursor Cloud Agent handles development — no local agent process needed.
+# Agent: set AGENT=claude (default) or AGENT=cursor in .env or environment
 
 set -e
+
+# Prevent Claude Code nesting if this script is run from inside a Claude session
+unset CLAUDECODE
+unset CLAUDE_CODE_ENTRYPOINT
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 MIDDLEWARE_PORT=3457
@@ -175,7 +179,9 @@ check_process() {
 }
 
 # --- Startup ---
-log "Pipeline starting (Cursor Cloud Agent mode)"
+AGENT="${AGENT:-claude}"
+export AGENT
+log "Pipeline starting (agent: $AGENT)"
 log "========================================"
 
 kill_port $MIDDLEWARE_PORT
@@ -190,9 +196,9 @@ echo ""
 log "Pipeline running!"
 log "  Middleware: http://localhost:$MIDDLEWARE_PORT (PID $MIDDLEWARE_PID)"
 log "  ngrok:      https://$NGROK_DOMAIN → middleware"
-log "  Agent:      Cursor Cloud (assigned on Todo)"
+log "  Agent:      $AGENT"
 log ""
-log "  Flow: Todo → assign Cursor → In Progress → In Review → Done → merge PR → Deployed"
+log "  Flow: Todo → trigger $AGENT → In Progress → In Review → Done → merge PR → Deployed"
 log ""
 log "Health checks every ${HEALTH_INTERVAL}s. Press Ctrl+C to stop."
 

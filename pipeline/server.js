@@ -1,6 +1,11 @@
 import http from "node:http";
 import https from "node:https";
-import { execSync } from "node:child_process";
+import { execSync, spawn } from "node:child_process";
+import { appendFileSync, openSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // --- Config ---
 const PORT = 3457;
@@ -9,9 +14,16 @@ const LINEAR_TOKEN = process.env.LINEAR_TOKEN;
 const GITHUB_REPO = "Marwans-lab/fifa-fan-zone";
 const GITHUB_PAGES_URL = "https://marwans-lab.github.io/fifa-fan-zone/";
 const LINEAR_PERSONAL_KEY = process.env.LINEAR_PERSONAL_KEY || "";
+const REPO_DIR = join(__dirname, "..");
 
-// Cursor's Linear user ID — assigning an issue to this user triggers Cursor Cloud Agent
+// Agent: "claude" or "cursor"
+const AGENT = process.env.AGENT || "claude";
+
+// Cursor's Linear user ID — only used when AGENT=cursor
 const CURSOR_USER_ID = "2117cef0-f13e-4281-8295-cb0b5fa505ea";
+
+// Track active Claude Code processes
+const activeClaudeProcesses = new Map();
 
 if (!LINEAR_TOKEN) {
   console.error("ERROR: LINEAR_TOKEN env var is required");
@@ -145,8 +157,8 @@ const TRIGGER_COOLDOWN = 20 * 60_000; // 20 min
 // In-process mutex
 let _triggerInFlight = false;
 
-// --- Trigger Cursor Cloud Agent by assigning the issue ---
-async function triggerCursor(issueId, issueIdentifier) {
+// --- Trigger agent (Claude Code or Cursor) ---
+async function triggerAgent(issueId, issueIdentifier) {
   // Deduplication
   const lastTrigger = recentTriggers.get(issueId);
   if (lastTrigger && Date.now() - lastTrigger < TRIGGER_COOLDOWN) {
@@ -177,9 +189,15 @@ async function triggerCursor(issueId, issueIdentifier) {
       console.warn(`[Pipeline] ${issueIdentifier}: Could not check for active sessions: ${e.message} — proceeding anyway`);
     }
 
-    // Assign to Cursor — this triggers Cursor Cloud Agent automatically
-    await assignIssue(issueId, CURSOR_USER_ID);
-    console.log(`[Pipeline] ${issueIdentifier}: Assigned to Cursor Cloud Agent`);
+    if (AGENT === "cursor") {
+      // Assign to Cursor — this triggers Cursor Cloud Agent automatically
+      await assignIssue(issueId, CURSOR_USER_ID);
+      console.log(`[Pipeline] ${issueIdentifier}: Assigned to Cursor Cloud Agent`);
+    } else {
+      // Spawn Claude Code headless process
+      spawnClaude(issueId, issueIdentifier);
+      console.log(`[Pipeline] ${issueIdentifier}: Spawned Claude Code`);
+    }
 
     recentTriggers.set(issueId, Date.now());
 
@@ -200,6 +218,71 @@ async function triggerCursor(issueId, issueIdentifier) {
   } finally {
     _triggerInFlight = false;
   }
+}
+
+// --- Spawn Claude Code headless ---
+function spawnClaude(issueId, issueIdentifier) {
+  // Only one Claude process at a time — kill any existing
+  for (const [id, proc] of activeClaudeProcesses) {
+    try { process.kill(-proc.pid, "SIGTERM"); } catch {}
+    activeClaudeProcesses.delete(id);
+  }
+
+  const prompt = [
+    `You are implementing Linear issue ${issueIdentifier} for the FIFA Fan Zone Angular app.`,
+    `\n\nStep 1 — Fetch issue: Run this curl command to get the issue details:`,
+    `curl -s -X POST https://api.linear.app/graphql -H "Content-Type: application/json" -H "Authorization: $LINEAR_TOKEN" -d '{"query":"query{issue(id:\\"${issueIdentifier}\\"){id identifier title description state{name} labels{nodes{name}}}}"}'`,
+    `\n\nStep 2 — Read the CLAUDE.md file in the repo root for coding conventions and guidelines.`,
+    `\n\nStep 3 — Implement: Make the changes described in the issue. Follow the project conventions in CLAUDE.md exactly.`,
+    `\n\nStep 4 — Verify: Run "npx tsc --noEmit && npx ng build" — fix any errors before proceeding.`,
+    `\n\nStep 5 — Commit & push: Create a branch "claude/${issueIdentifier.toLowerCase()}-<slug>", commit with message "${issueIdentifier}: <description>", push to origin.`,
+    `\n\nStep 6 — Create PR: Use "gh pr create --title '${issueIdentifier}: <description>' --body '<summary>'" targeting main.`,
+    `\n\nStep 7 — Update Linear: Run this curl to post a comment with the PR link:`,
+    `curl -s -X POST https://api.linear.app/graphql -H "Content-Type: application/json" -H "Authorization: $LINEAR_TOKEN" -d '{"query":"mutation($id:String!,$body:String!){commentCreate(input:{issueId:$id,body:$body}){success}}","variables":{"id":"<ISSUE_UUID>","body":"PR: <PR_URL>"}}'`,
+    `\n\nIMPORTANT: The LINEAR_TOKEN env var is already set. Use it in curl commands. Do NOT ask for confirmation — just implement.`,
+  ].join(" ");
+
+  const logFile = join(__dirname, "logs", `${issueIdentifier}.log`);
+
+  // Ensure logs dir exists
+  try { execSync(`mkdir -p "${join(__dirname, "logs")}"`, { encoding: "utf-8" }); } catch {}
+
+  // Clean env: remove nesting detection, ensure PATH includes claude binary
+  const childEnv = { ...process.env };
+  delete childEnv.CLAUDECODE;
+  delete childEnv.CLAUDE_CODE_ENTRYPOINT;
+
+  const logFd = openSync(logFile, "a");
+  appendFileSync(logFile, `\n${"=".repeat(60)}\n[${new Date().toISOString()}] Spawning Claude Code for ${issueIdentifier}\n${"=".repeat(60)}\n`);
+
+  const child = spawn("claude", [
+    "-p", prompt,
+    "--allowedTools", "Edit,Write,Bash,Read,Glob,Grep,WebFetch,WebSearch,Agent",
+    "--output-format", "stream-json",
+    "--verbose",
+  ], {
+    cwd: REPO_DIR,
+    stdio: ["ignore", logFd, logFd],
+    detached: true,
+    env: childEnv,
+  });
+
+  child.on("exit", (code, signal) => {
+    activeClaudeProcesses.delete(issueId);
+    const msg = `[Pipeline] ${issueIdentifier}: Claude Code exited (code=${code}, signal=${signal}) — log: ${logFile}`;
+    console.log(msg);
+    appendFileSync(logFile, `\n${msg}\n`);
+  });
+
+  child.on("error", (err) => {
+    activeClaudeProcesses.delete(issueId);
+    console.error(`[Pipeline] ${issueIdentifier}: Claude Code spawn error: ${err.message}`);
+    appendFileSync(logFile, `\nSPAWN ERROR: ${err.message}\n`);
+  });
+
+  child.unref();
+  activeClaudeProcesses.set(issueId, child);
+  console.log(`[Pipeline] ${issueIdentifier}: Claude Code spawned (PID ${child.pid}), log: ${logFile}`);
 }
 
 // --- Move issue to Deployed after successful GitHub Pages deploy ---
@@ -281,7 +364,7 @@ async function promoteNextMigrationStep(issueId, deployedIdentifier, teamId) {
       );
 
       // Trigger Cursor to pick it up immediately
-      await triggerCursor(nextIssue.id, nextIssue.identifier);
+      await triggerAgent(nextIssue.id, nextIssue.identifier);
     }
   } catch (e) {
     console.error(`[Pipeline] Migration auto-promote error: ${e.message}`);
@@ -486,7 +569,7 @@ async function handleWebhook(payload) {
   if (newState === "Todo") {
     if (recentComments.has(issueId)) return;
     markOurComment(issueId);
-    await triggerCursor(issueId, issueIdentifier);
+    await triggerAgent(issueId, issueIdentifier);
     return;
   }
 }
@@ -722,7 +805,7 @@ async function checkForStalledIssues() {
         }
       }
 
-      await triggerCursor(issue.id, issue.identifier);
+      await triggerAgent(issue.id, issue.identifier);
       retriggeredRecently.set(issue.id, now);
       break; // one at a time
     }
@@ -744,6 +827,32 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // Manual transition: POST /transition/:identifier/:state
+  if (req.method === "POST" && req.url.startsWith("/transition/")) {
+    const parts = req.url.slice("/transition/".length).split("/");
+    const identifier = parts[0];
+    const targetState = decodeURIComponent(parts.slice(1).join("/"));
+    try {
+      const d = (await linearGQL(
+        `query($id: String!) { issue(id: $id) { id identifier team { id } } }`,
+        { id: identifier }
+      )).data?.issue;
+      if (!d) throw new Error(`Issue ${identifier} not found`);
+      const states = await getStates(d.team.id);
+      const state = findState(states, targetState);
+      if (!state) throw new Error(`State "${targetState}" not found`);
+      await transitionIssue(d.id, state.id);
+      console.log(`[Pipeline] Manual transition: ${d.identifier} → ${targetState}`);
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ transitioned: true, issue: d.identifier, state: targetState }));
+    } catch (e) {
+      console.error(`[Pipeline] Manual transition failed: ${e.message}`);
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
+
   // Manual trigger: POST /trigger/:identifier
   if (req.method === "POST" && req.url.startsWith("/trigger/")) {
     const identifier = req.url.slice("/trigger/".length);
@@ -755,7 +864,7 @@ const server = http.createServer(async (req, res) => {
       if (!d) throw new Error(`Issue ${identifier} not found`);
       console.log(`[Pipeline] Manual trigger: ${d.identifier}`);
       recentTriggers.delete(d.id);
-      const ok = await triggerCursor(d.id, d.identifier);
+      const ok = await triggerAgent(d.id, d.identifier);
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ triggered: ok, issue: d.identifier }));
     } catch (e) {
@@ -787,6 +896,6 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, "127.0.0.1", () => {
   console.log(`[Pipeline] Running on http://127.0.0.1:${PORT}`);
-  console.log(`[Pipeline] Agent: Cursor Cloud (user ${CURSOR_USER_ID})`);
-  console.log(`[Pipeline] Flow: Todo → In Progress → In Review → Deploying → (GitHub Pages live) → Cursor validates → Deployed`);
+  console.log(`[Pipeline] Agent: ${AGENT === "cursor" ? `Cursor Cloud (user ${CURSOR_USER_ID})` : "Claude Code (local CLI)"}`);
+  console.log(`[Pipeline] Flow: Todo → In Progress → In Review → Deploying → (GitHub Pages live) → Deployed`);
 });
