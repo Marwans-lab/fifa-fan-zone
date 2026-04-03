@@ -17,28 +17,28 @@ import { ButtonComponent } from '../button/button.component';
 const PROFILE_QUESTIONS = [
   {
     id: 'playstyle',
-    category: 'PLAYSTYLE',
+    category: 'Playstyle',
     iconSrc: 'assets/icons/style-white.svg',
     label: 'What kind of fan are you during a match?',
     options: ['The Analyst', 'The superstitious', 'The Hype Leader', 'The calm watcher'],
   },
   {
     id: 'devotion',
-    category: 'DEVOTION',
+    category: 'Devotion',
     iconSrc: 'assets/icons/devotion-white.svg',
     label: 'How do you follow the World Cup?',
     options: ['Every game', 'My team + big games', 'Highlight only', "I'll catch what I can"],
   },
   {
     id: 'vibes',
-    category: 'VIBES',
+    category: 'Vibes',
     iconSrc: 'assets/icons/vibes-white.svg',
     label: "What's your match vibes?",
     options: ['Loud and hype', 'Chill and focused', 'Social with friends', 'Family time'],
   },
   {
     id: 'perks',
-    category: 'PERKS',
+    category: 'Perks',
     iconSrc: 'assets/icons/prks-white.svg',
     label: `What's your World Cup "perk" goal?`,
     options: [

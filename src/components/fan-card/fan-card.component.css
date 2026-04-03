@@ -235,7 +235,6 @@
   color: var(--f-brand-color-text-subtle);
   font: var(--f-brand-type-caption);
   letter-spacing: var(--tracking-wider);
-  text-transform: uppercase;
   margin-bottom: var(--sp-1);
 }
 
