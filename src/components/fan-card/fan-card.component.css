@@ -227,8 +227,17 @@
 }
 
 .f-fan-card__profile-icon {
-  opacity: var(--f-brand-opacity-disabled);
-  filter: brightness(0) saturate(100%);
+  display: inline-block;
+  width: var(--sp-6);
+  min-height: var(--sp-6);
+  flex-shrink: 0;
+  background-color: var(--f-brand-color-text-default);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
 }
 
 .f-fan-card__profile-category {
