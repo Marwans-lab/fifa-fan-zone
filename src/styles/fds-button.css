@@ -176,6 +176,13 @@
   display: block;
 }
 
+.f-button__icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
 .f-button__spinner {
   width: var(--sp-5);
   height: var(--sp-5);
