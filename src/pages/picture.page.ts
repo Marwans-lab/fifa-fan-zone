@@ -227,11 +227,7 @@ const JPG_QUALITY = 0.78;
       .picture-page__progress-fill {
         height: 100%;
         border-radius: var(--f-brand-radius-rounded);
-        background: linear-gradient(
-          -90deg,
-          var(--f-brand-color-border-success) 61.5%,
-          var(--f-brand-color-background-success) 100%
-        );
+        background: var(--f-brand-color-flight-status-confirmed);
         box-shadow: var(--f-brand-shadow-medium);
         transition: width var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit);
       }
