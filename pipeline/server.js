@@ -438,8 +438,11 @@ function mergePR(prNumber, identifier) {
 
 // --- Pipeline logic ---
 async function handleWebhook(payload) {
-  if (payload.type !== "Issue" || payload.action !== "update") return;
-  if (!payload.data?.state?.name || !payload.updatedFrom?.stateId) return;
+  if (payload.type !== "Issue") return;
+  if (payload.action !== "update" && payload.action !== "create") return;
+  if (!payload.data?.state?.name) return;
+  // "update" always has updatedFrom.stateId; "create" won't — that's OK
+  if (payload.action === "update" && !payload.updatedFrom?.stateId) return;
 
   const newState = payload.data.state.name;
   const issueId = payload.data.id;
