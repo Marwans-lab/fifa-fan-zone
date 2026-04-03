@@ -275,6 +275,29 @@ h1, h2, h3, h4 {
   color: var(--f-brand-color-text-disabled, #9099A2);
 }
 
+/* ─── Input field (FDS filled/static field container) ────────────────────── */
+.f-input-field {
+  --f-input-field-padding-y: var(--f-brand-space-sm, 12px);
+  --f-input-field-padding-x: var(--f-brand-space-md, 16px);
+  --f-input-field-bg: var(--f-brand-color-surface-default, #FFFFFF);
+  --f-input-field-border-color: var(--f-brand-color-border-default, #DBDEE8);
+
+  width: 100%;
+  min-height: 44px;
+  padding: var(--f-input-field-padding-y) var(--f-input-field-padding-x);
+  border: var(--f-brand-border-size-default, 1px) solid var(--f-input-field-border-color);
+  border-radius: var(--f-brand-radius-base, 8px);
+  background: var(--f-input-field-bg);
+  transition:
+    background var(--dur-base) var(--f-brand-motion-easing-default),
+    border-color var(--dur-base) var(--f-brand-motion-easing-default);
+}
+
+.f-input-field--filled {
+  --f-input-field-bg: var(--f-brand-color-background-default, #F2F3FA);
+  --f-input-field-border-color: var(--f-brand-color-border-inner, #F2F3FA);
+}
+
 /* ─── Global focus ring ──────────────────────────────────────────────────── */
 button:focus-visible,
 a:focus-visible {
