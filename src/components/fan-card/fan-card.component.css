@@ -297,7 +297,7 @@
   min-height: var(--sp-12);
   border-radius: var(--r-full);
   border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
-  background: var(--f-brand-color-background-default);
+  background: var(--f-brand-color-background-light);
   display: flex;
   align-items: center;
   justify-content: center;
