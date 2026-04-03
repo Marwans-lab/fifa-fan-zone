@@ -426,30 +426,6 @@ const CARD_MATCH_KEYFRAMES = `
               {{ formatTime(timeLeft()) }}
             </span>
           </div>
-          <div class="card-match__stat-moves" style="text-align: center; min-width: var(--sp-12)">
-            <p
-              class="card-match__stat-value"
-              style="
-                margin: 0;
-                font: var(--f-brand-type-headline-medium);
-                color: var(--f-brand-color-text-default);
-              "
-            >
-              {{ moves() }}
-            </p>
-            <p
-              class="card-match__stat-label"
-              style="
-                margin: var(--f-brand-border-size-focused) 0 0;
-                font: var(--f-brand-type-caption);
-                color: var(--f-brand-color-text-subtle);
-                letter-spacing: var(--tracking-wider);
-                text-transform: uppercase;
-              "
-            >
-              Moves
-            </p>
-          </div>
         </div>
 
       </section>
