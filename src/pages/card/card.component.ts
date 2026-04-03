@@ -212,7 +212,7 @@ interface QuizFlowCard {
         padding: var(--sp-4);
         display: flex;
         flex-direction: column;
-        gap: var(--sp-4);
+        gap: var(--sp-6);
       }
 
       .f-card-page__journey-header {
