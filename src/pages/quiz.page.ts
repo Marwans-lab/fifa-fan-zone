@@ -301,19 +301,6 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
             </div>
           </div>
 
-          @if (revealed()) {
-            <p
-              class="quiz-page__feedback"
-              [style.color]="feedbackColor()"
-              style="
-                margin: 0 0 var(--sp-3);
-                text-align: center;
-                font: var(--f-brand-type-subheading-medium);
-              "
-            >
-              {{ feedbackText() }}
-            </p>
-          }
           <button
             class="quiz-page__next-btn"
             type="button"
@@ -454,19 +441,6 @@ export class QuizPage implements OnInit, OnDestroy {
   handleBack(): void {
     this.analytics.track('quiz_abandoned', { quizId: this.quiz().id, qIdx: this.questionIndex() });
     window.history.back();
-  }
-
-  feedbackText(): string {
-    const chosenId = this.selectedOptionId();
-    const correctId = this.currentQuestion().correctId;
-    if (chosenId === null) return "⏱ Time's up!";
-    return chosenId === correctId ? '✓ Correct!' : '✗ Not quite';
-  }
-
-  feedbackColor(): string {
-    return this.selectedOptionId() === this.currentQuestion().correctId
-      ? 'var(--c-lt-correct-dark)'
-      : 'var(--c-error)';
   }
 
   nextLabel(): string {
