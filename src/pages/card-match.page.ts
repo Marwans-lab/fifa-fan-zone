@@ -205,11 +205,7 @@ const CARD_MATCH_KEYFRAMES = `
               style="
                 height: 100%;
                 border-radius: var(--f-brand-radius-rounded);
-                background: linear-gradient(
-                  90deg,
-                  var(--f-brand-color-accent),
-                  var(--f-brand-color-background-success)
-                );
+                background: var(--f-brand-color-flight-status-confirmed);
                 transition: width var(--f-brand-motion-duration-quick)
                   var(--f-brand-motion-easing-exit);
               "
