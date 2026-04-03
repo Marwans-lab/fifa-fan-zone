@@ -29,6 +29,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
   imports: [CommonModule],
   template: `
     <main
+      class="ranking-quiz"
       data-page="ranking-quiz"
       style="
         min-height: 100dvh;
@@ -39,6 +40,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
       "
     >
       <section
+        class="ranking-quiz__content"
         style="
           display: flex;
           flex-direction: column;
@@ -48,8 +50,8 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
           width: 100%;
         "
       >
-        <header data-section="header" style="padding: var(--sp-4); flex-shrink: 0">
-          <div style="display: flex; align-items: center; gap: var(--sp-3)">
+        <header class="ranking-quiz__header" data-section="header" style="padding: var(--sp-4); flex-shrink: 0">
+          <div class="ranking-quiz__header-actions" style="display: flex; align-items: center; gap: var(--sp-3)">
             <button
               type="button"
               class="btn-icon"
@@ -60,6 +62,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
               <img [src]="chevronLeftWhiteIcon" width="24" height="24" alt="Back" />
             </button>
             <div
+              class="ranking-quiz__progress-track"
               style="
                 flex: 1;
                 height: var(--sp-1);
@@ -69,6 +72,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
               "
             >
               <div
+                class="ranking-quiz__progress-fill"
                 [style.width.%]="progressPercent()"
                 style="
                   height: 100%;
@@ -78,18 +82,19 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                 "
               ></div>
             </div>
-            <span style="font-size: var(--text-xs); color: var(--c-text-2); flex-shrink: 0">
+            <span class="ranking-quiz__question-counter" style="font-size: var(--text-xs); color: var(--c-text-2); flex-shrink: 0">
               {{ questionIndex() + 1 }}/{{ totalQuestions() }}
             </span>
           </div>
         </header>
 
-        <div [ngStyle]="slideStyle()" style="flex: 1; display: flex; flex-direction: column; overflow: hidden">
-          <div data-section="timer" style="display: flex; justify-content: center; margin-bottom: var(--sp-4); flex-shrink: 0">
-            <div style="position: relative; width: 64px; height: 64px; flex-shrink: 0">
-              <svg width="64" height="64" viewBox="0 0 64 64" style="transform: rotate(-90deg)" aria-hidden="true">
-                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--c-surface)" stroke-width="3"></circle>
+        <div class="ranking-quiz__slide" [ngStyle]="slideStyle()" style="flex: 1; display: flex; flex-direction: column; overflow: hidden">
+          <div class="ranking-quiz__timer-wrap" data-section="timer" style="display: flex; justify-content: center; margin-bottom: var(--sp-4); flex-shrink: 0">
+            <div class="ranking-quiz__timer" style="position: relative; width: 64px; height: 64px; flex-shrink: 0">
+              <svg class="ranking-quiz__timer-svg" width="64" height="64" viewBox="0 0 64 64" style="transform: rotate(-90deg)" aria-hidden="true">
+                <circle class="ranking-quiz__timer-track" cx="32" cy="32" r="28" fill="none" stroke="var(--c-surface)" stroke-width="3"></circle>
                 <circle
+                  class="ranking-quiz__timer-progress"
                   cx="32"
                   cy="32"
                   r="28"
@@ -103,6 +108,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                 ></circle>
               </svg>
               <span
+                class="ranking-quiz__timer-label"
                 style="
                   position: absolute;
                   inset: 0;
@@ -119,6 +125,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
           </div>
 
           <h1
+            class="ranking-quiz__question"
             data-section="question"
             style="
               margin: 0;
@@ -136,9 +143,10 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
             {{ currentQuestion().question }}
           </h1>
 
-          <div style="flex: 1; padding: 0 var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-3)">
+          <div class="ranking-quiz__items" style="flex: 1; padding: 0 var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-3)">
             @for (item of items(); track item.id; let idx = $index) {
               <div
+                class="ranking-quiz__item"
                 (pointerdown)="startDrag(idx, $event)"
                 [ngStyle]="rankItemStyle(idx, item)"
                 [style.cursor]="revealed() ? 'default' : 'grab'"
@@ -157,6 +165,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                 "
               >
                 <span
+                  class="ranking-quiz__item-rank"
                   [ngStyle]="rankBadgeStyle(idx, item)"
                   style="
                     width: var(--sp-7);
@@ -172,6 +181,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                   {{ badgeLabel(idx, item) }}
                 </span>
                 <span
+                  class="ranking-quiz__item-text"
                   style="flex: 1; font-size: var(--text-md); color: var(--c-text-1)"
                   [style.font-weight]="dragIndex() === idx ? '600' : '400'"
                 >
@@ -179,6 +189,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                 </span>
                 @if (!revealed()) {
                   <div
+                    class="ranking-quiz__item-handle"
                     style="
                       display: flex;
                       flex-direction: column;
@@ -188,13 +199,13 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                       padding: 0 var(--sp-1);
                     "
                   >
-                    <div style="width: 16px; height: 2px; background: var(--c-text-1); border-radius: 1px"></div>
-                    <div style="width: 16px; height: 2px; background: var(--c-text-1); border-radius: 1px"></div>
-                    <div style="width: 16px; height: 2px; background: var(--c-text-1); border-radius: 1px"></div>
+                    <div class="ranking-quiz__item-handle-line" style="width: 16px; height: 2px; background: var(--c-text-1); border-radius: 1px"></div>
+                    <div class="ranking-quiz__item-handle-line" style="width: 16px; height: 2px; background: var(--c-text-1); border-radius: 1px"></div>
+                    <div class="ranking-quiz__item-handle-line" style="width: 16px; height: 2px; background: var(--c-text-1); border-radius: 1px"></div>
                   </div>
                 }
                 @if (revealed() && !isCorrectPosition(item, idx)) {
-                  <span style="font-size: var(--text-xs); color: var(--c-text-2); flex-shrink: 0">
+                  <span class="ranking-quiz__item-correct-pos" style="font-size: var(--text-xs); color: var(--c-text-2); flex-shrink: 0">
                     #{{ correctIndex(item) + 1 }}
                   </span>
                 }
@@ -203,9 +214,10 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
           </div>
         </div>
 
-        <div style="padding: var(--sp-5) var(--sp-4) var(--sp-8); flex-shrink: 0">
+        <div class="ranking-quiz__footer" style="padding: var(--sp-5) var(--sp-4) var(--sp-8); flex-shrink: 0">
           @if (revealed()) {
             <p
+              class="ranking-quiz__feedback"
               style="
                 margin: 0 0 var(--sp-3);
                 text-align: center;
@@ -219,7 +231,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
           }
           <button
             type="button"
-            class="f-button"
+            class="ranking-quiz__submit-btn f-button"
             data-ui="submit-btn"
             (click)="revealed() ? handleNext() : handleSubmit()"
             style="

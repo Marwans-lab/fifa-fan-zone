@@ -27,6 +27,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
   imports: [CommonModule],
   template: `
     <main
+      class="quiz-page"
       data-page="quiz"
       style="
         min-height: 100dvh;
@@ -37,6 +38,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
       "
     >
       <section
+        class="quiz-page__content"
         style="
           width: 100%;
           max-width: 420px;
@@ -46,6 +48,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
         "
       >
         <header
+          class="quiz-page__header"
           style="
             display: flex;
             align-items: center;
@@ -54,6 +57,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
           "
         >
           <button
+            class="quiz-page__back-btn"
             type="button"
             data-ui="back-btn"
             aria-label="Close quiz"
@@ -73,8 +77,9 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
               flex-shrink: 0;
             "
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <svg class="quiz-page__back-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path
+                class="quiz-page__back-icon-path"
                 d="M3 3l10 10M13 3L3 13"
                 stroke="var(--c-lt-text-1)"
                 stroke-width="2"
@@ -83,6 +88,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
             </svg>
           </button>
           <div
+            class="quiz-page__progress-track"
             style="
               flex: 1;
               height: var(--sp-2);
@@ -92,6 +98,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
             "
           >
             <div
+              class="quiz-page__progress-fill"
               [style.width.%]="progressPercent()"
               style="
                 height: 100%;
@@ -105,6 +112,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
         </header>
 
         <div
+          class="quiz-page__slide"
           [ngStyle]="slideStyle()"
           style="
             flex: 1;
@@ -114,6 +122,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
           "
         >
           <div
+            class="quiz-page__banner-wrap"
             style="
               margin: var(--sp-5) var(--sp-4) 0;
               height: 196px;
@@ -128,6 +137,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
           >
             @if (quiz().bannerImage) {
               <img
+                class="quiz-page__banner-img"
                 [src]="quiz().bannerImage"
                 alt=""
                 aria-hidden="true"
@@ -139,13 +149,14 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
                 "
               />
             } @else {
-              <span style="font-size: var(--text-5xl)">
+              <span class="quiz-page__banner-emoji" style="font-size: var(--text-5xl)">
                 {{ quiz().emoji }}
               </span>
             }
           </div>
 
           <p
+            class="quiz-page__question-text"
             style="
               margin: 0;
               padding: var(--sp-6) var(--sp-4) 0;
@@ -159,6 +170,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
           </p>
 
           <div
+            class="quiz-page__options"
             style="
               padding: var(--sp-6) var(--sp-4) 0;
               display: flex;
@@ -169,6 +181,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
           >
             @for (opt of currentQuestion().options; track opt.id; let idx = $index) {
               <button
+                class="quiz-page__option-btn"
                 type="button"
                 data-ui="answer-option-btn"
                 [disabled]="revealed()"
@@ -176,6 +189,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
                 [ngStyle]="optionStyle(opt.id)"
               >
                 <span
+                  class="quiz-page__option-badge"
                   [ngStyle]="optionBadgeStyle(opt.id)"
                   style="
                     width: var(--sp-10);
@@ -195,6 +209,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
                 >
                   @if (showCorrectIcon(opt.id)) {
                     <img
+                      class="quiz-page__option-icon"
                       [src]="tickWhiteIcon"
                       alt=""
                       aria-hidden="true"
@@ -202,6 +217,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
                     />
                   } @else if (showWrongIcon(opt.id)) {
                     <img
+                      class="quiz-page__option-icon"
                       [src]="closeWhiteIcon"
                       alt=""
                       aria-hidden="true"
@@ -212,6 +228,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
                   }
                 </span>
                 <span
+                  class="quiz-page__option-label"
                   style="
                     flex: 1;
                     text-align: left;
@@ -231,24 +248,26 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
           </div>
         </div>
 
-        <div style="padding: 0 var(--sp-4) var(--sp-10); flex-shrink: 0">
+        <div class="quiz-page__footer" style="padding: 0 var(--sp-4) var(--sp-10); flex-shrink: 0">
           <div
+            class="quiz-page__timer-center"
             style="
               display: flex;
               justify-content: center;
               margin: var(--sp-6) 0 var(--sp-4);
             "
           >
-            <div style="position: relative; width: var(--sp-16); height: var(--sp-16); flex-shrink: 0">
-              <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true" style="transform: rotate(-90deg)">
+            <div class="quiz-page__timer" style="position: relative; width: var(--sp-16); height: var(--sp-16); flex-shrink: 0">
+              <svg class="quiz-page__timer-svg" width="64" height="64" viewBox="0 0 64 64" aria-hidden="true" style="transform: rotate(-90deg)">
                 <defs>
                   <linearGradient [attr.id]="timerGradientId" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="var(--f-brand-color-background-accent)" />
                     <stop offset="100%" stop-color="var(--f-brand-color-background-accent-muted)" />
                   </linearGradient>
                 </defs>
-                <circle cx="32" cy="32" r="30" fill="none" stroke="var(--c-lt-border)" stroke-width="4"></circle>
+                <circle class="quiz-page__timer-track" cx="32" cy="32" r="30" fill="none" stroke="var(--c-lt-border)" stroke-width="4"></circle>
                 <circle
+                  class="quiz-page__timer-progress"
                   cx="32"
                   cy="32"
                   r="30"
@@ -265,6 +284,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
                 ></circle>
               </svg>
               <span
+                class="quiz-page__timer-label"
                 [style.color]="timeLeft() <= 5 ? 'var(--c-error)' : 'var(--c-lt-text-1)'"
                 style="
                   position: absolute;
@@ -283,6 +303,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
 
           @if (revealed()) {
             <p
+              class="quiz-page__feedback"
               [style.color]="feedbackColor()"
               style="
                 margin: 0 0 var(--sp-3);
@@ -294,6 +315,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
             </p>
           }
           <button
+            class="quiz-page__next-btn"
             type="button"
             data-ui="next-question-btn"
             (click)="handleNext()"

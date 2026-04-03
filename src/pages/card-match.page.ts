@@ -137,7 +137,7 @@ const CARD_MATCH_KEYFRAMES = `
       "
     >
       <section
-        class="f-page-enter"
+        class="card-match__content f-page-enter"
         style="
           flex: 1;
           width: 100%;
@@ -149,6 +149,7 @@ const CARD_MATCH_KEYFRAMES = `
         "
       >
         <header
+          class="card-match__header"
           data-section="header"
           style="
             display: flex;
@@ -158,6 +159,7 @@ const CARD_MATCH_KEYFRAMES = `
           "
         >
           <button
+            class="card-match__back-btn"
             type="button"
             data-ui="back-btn"
             aria-label="Go back"
@@ -179,14 +181,16 @@ const CARD_MATCH_KEYFRAMES = `
               -webkit-tap-highlight-color: transparent;
             "
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <svg class="card-match__back-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
+                class="card-match__back-icon-path"
                 d="M15 18.5C14.87 18.5 14.74 18.45 14.65 18.35L8.65 12.35C8.55 12.26 8.5 12.13 8.5 12C8.5 11.87 8.55 11.74 8.65 11.65L14.65 5.65C14.84 5.46 15.16 5.46 15.35 5.65C15.54 5.84 15.54 6.16 15.35 6.35L9.71 12L15.35 17.65C15.54 17.84 15.54 18.16 15.35 18.35C15.26 18.45 15.13 18.5 15 18.5Z"
                 fill="var(--f-brand-color-text-default)"
               />
             </svg>
           </button>
           <div
+            class="card-match__progress-track"
             style="
               flex: 1;
               height: var(--sp-2);
@@ -196,6 +200,7 @@ const CARD_MATCH_KEYFRAMES = `
             "
           >
             <div
+              class="card-match__progress-fill"
               [style.width.%]="progressPercent()"
               style="
                 height: 100%;
@@ -213,6 +218,7 @@ const CARD_MATCH_KEYFRAMES = `
         </header>
 
         <h1
+          class="card-match__title"
           data-section="title"
           style="
             margin: 0;
@@ -227,6 +233,7 @@ const CARD_MATCH_KEYFRAMES = `
         </h1>
         @if (activeQuiz(); as quiz) {
           <p
+            class="card-match__round-label"
             style="
               margin: 0 0 var(--f-brand-space-md);
               text-align: center;
@@ -239,6 +246,7 @@ const CARD_MATCH_KEYFRAMES = `
         }
 
         <div
+          class="card-match__grid"
           data-section="card-grid"
           style="
             display: grid;
@@ -258,10 +266,10 @@ const CARD_MATCH_KEYFRAMES = `
               (click)="flipCard(card.id)"
               [ngStyle]="cardOuterStyle(card.id)"
             >
-              <div [ngStyle]="cardInnerStyle(card.id)"
+              <div class="card-match__card-inner" [ngStyle]="cardInnerStyle(card.id)"
                    [class.card-match-inner--matched]="isMatched(card.id)"
                    [class.card-match-inner--mismatched]="isMismatched(card.id)">
-                <div [ngStyle]="cardBackStyle()">
+                <div class="card-match__card-back" [ngStyle]="cardBackStyle()">
                   <svg
                     width="100%"
                     height="100%"
@@ -291,17 +299,18 @@ const CARD_MATCH_KEYFRAMES = `
                   </svg>
                   <div class="card-match-shimmer" [ngStyle]="cardBackShimmerStyle()"></div>
                 </div>
-                <div [ngStyle]="cardFrontStyle(card.id)">
+                <div class="card-match__card-front" [ngStyle]="cardFrontStyle(card.id)">
                   @if (card.type === 'flag') {
-                    <span [ngStyle]="flagTextStyle()">{{ card.display }}</span>
+                    <span class="card-match__card-flag" [ngStyle]="flagTextStyle()">{{ card.display }}</span>
                   } @else if (card.type === 'clue') {
-                    <span [ngStyle]="clueTextStyle()">{{ card.display }}</span>
+                    <span class="card-match__card-clue" [ngStyle]="clueTextStyle()">{{ card.display }}</span>
                   } @else {
-                    <span [ngStyle]="answerTextStyle()">{{ card.display }}</span>
+                    <span class="card-match__card-answer" [ngStyle]="answerTextStyle()">{{ card.display }}</span>
                   }
 
                   @if (isMatched(card.id)) {
                     <div
+                      class="card-match__checkmark"
                       style="
                         position: absolute;
                         top: var(--f-brand-space-2xs);
@@ -315,7 +324,7 @@ const CARD_MATCH_KEYFRAMES = `
                         justify-content: center;
                       "
                     >
-                      <svg width="10" height="8" viewBox="0 0 10 8" fill="none" aria-hidden="true">
+                      <svg class="card-match__checkmark-icon" width="10" height="8" viewBox="0 0 10 8" fill="none" aria-hidden="true">
                         <path
                           d="M1 4L3.5 6.5L9 1"
                           stroke="white"
@@ -346,8 +355,9 @@ const CARD_MATCH_KEYFRAMES = `
             margin-bottom: var(--f-brand-space-lg);
           "
         >
-          <div style="text-align: center; min-width: var(--sp-12)">
+          <div class="card-match__stat-matched" style="text-align: center; min-width: var(--sp-12)">
             <p
+              class="card-match__stat-value"
               style="
                 margin: 0;
                 font: var(--f-brand-type-headline-medium);
@@ -363,6 +373,7 @@ const CARD_MATCH_KEYFRAMES = `
               {{ matchedPairs() }}/{{ pairCount() }}
             </p>
             <p
+              class="card-match__stat-label"
               style="
                 margin: var(--f-brand-border-size-focused) 0 0;
                 font: var(--f-brand-type-caption);
@@ -374,9 +385,10 @@ const CARD_MATCH_KEYFRAMES = `
               Matched
             </p>
           </div>
-          <div style="position: relative; width: 48px; height: 48px">
-            <svg [attr.width]="timerSize" [attr.height]="timerSize" style="transform: rotate(-90deg)" aria-hidden="true">
+          <div class="card-match__timer" style="position: relative; width: 48px; height: 48px">
+            <svg class="card-match__timer-svg" [attr.width]="timerSize" [attr.height]="timerSize" style="transform: rotate(-90deg)" aria-hidden="true">
               <circle
+                class="card-match__timer-track"
                 [attr.cx]="timerSize / 2"
                 [attr.cy]="timerSize / 2"
                 [attr.r]="timerRadius"
@@ -385,6 +397,7 @@ const CARD_MATCH_KEYFRAMES = `
                 [attr.stroke-width]="timerStrokeWidth"
               />
               <circle
+                class="card-match__timer-progress"
                 [attr.cx]="timerSize / 2"
                 [attr.cy]="timerSize / 2"
                 [attr.r]="timerRadius"
@@ -398,6 +411,7 @@ const CARD_MATCH_KEYFRAMES = `
               />
             </svg>
             <span
+              class="card-match__timer-text"
               style="
                 position: absolute;
                 inset: 0;
@@ -411,8 +425,9 @@ const CARD_MATCH_KEYFRAMES = `
               {{ formatTime(timeLeft()) }}
             </span>
           </div>
-          <div style="text-align: center; min-width: var(--sp-12)">
+          <div class="card-match__stat-moves" style="text-align: center; min-width: var(--sp-12)">
             <p
+              class="card-match__stat-value"
               style="
                 margin: 0;
                 font: var(--f-brand-type-headline-medium);
@@ -422,6 +437,7 @@ const CARD_MATCH_KEYFRAMES = `
               {{ moves() }}
             </p>
             <p
+              class="card-match__stat-label"
               style="
                 margin: var(--f-brand-border-size-focused) 0 0;
                 font: var(--f-brand-type-caption);
@@ -436,6 +452,7 @@ const CARD_MATCH_KEYFRAMES = `
         </div>
 
         <button
+          class="card-match__next-btn"
           type="button"
           (click)="goToResults()"
           style="
@@ -457,11 +474,12 @@ const CARD_MATCH_KEYFRAMES = `
 
       @if (showCompletion()) {
         <section
+          class="card-match__completion-overlay"
           [ngStyle]="completionOverlayStyle()"
         >
-          <div [ngStyle]="completionCardStyle()">
+          <div class="card-match__completion-card" [ngStyle]="completionCardStyle()">
             @if (completionVisible() && stars() >= 2) {
-              <div style="position: absolute; inset: 0; overflow: hidden; pointer-events: none">
+              <div class="card-match__confetti" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none">
                 @for (particle of confettiParticles(); track particle.id) {
                   <div class="card-match-confetti-particle" [ngStyle]="confettiParticleStyle(particle)"></div>
                 }
@@ -469,6 +487,7 @@ const CARD_MATCH_KEYFRAMES = `
             }
 
             <div
+              class="card-match__stars"
               style="
                 font-size: var(--text-3xl);
                 margin-bottom: var(--f-brand-space-md);
@@ -476,11 +495,12 @@ const CARD_MATCH_KEYFRAMES = `
               "
             >
               @for (slot of starSlots; track slot) {
-                <span [ngStyle]="starStyle(slot)">⭐</span>
+                <span class="card-match__star" [ngStyle]="starStyle(slot)">⭐</span>
               }
             </div>
 
             <h2
+              class="card-match__completion-heading"
               style="
                 margin: 0 0 var(--f-brand-space-xs);
                 font: var(--f-brand-type-title-3);
@@ -491,6 +511,7 @@ const CARD_MATCH_KEYFRAMES = `
               {{ completionHeading() }}
             </h2>
             <p
+              class="card-match__completion-desc"
               style="
                 margin: 0 0 var(--f-brand-space-lg);
                 font-size: var(--text-sm);
@@ -502,6 +523,7 @@ const CARD_MATCH_KEYFRAMES = `
             </p>
 
             <div
+              class="card-match__completion-stats"
               style="
                 display: flex;
                 justify-content: center;
@@ -509,9 +531,10 @@ const CARD_MATCH_KEYFRAMES = `
                 margin-bottom: var(--f-brand-space-xl);
               "
             >
-              <div style="text-align: center">
+              <div class="card-match__completion-stat" style="text-align: center">
                 <div [ngStyle]="animatedStatStyle(showMovesStat())" [class.card-match-stat--visible]="showMovesStat()">{{ accumulatedMoves() }}</div>
                 <div
+                  class="card-match__completion-stat-label"
                   style="
                     margin-top: 2px;
                     font-size: var(--text-2xs);
@@ -523,10 +546,11 @@ const CARD_MATCH_KEYFRAMES = `
                   Moves
                 </div>
               </div>
-              <div style="width: 1px; background: var(--f-brand-color-border-default)"></div>
-              <div style="text-align: center">
+              <div class="card-match__completion-divider" style="width: 1px; background: var(--f-brand-color-border-default)"></div>
+              <div class="card-match__completion-stat" style="text-align: center">
                 <div [ngStyle]="animatedStatStyle(showTimeStat())" [class.card-match-stat--visible]="showTimeStat()">{{ accumulatedTimeUsed() }}s</div>
                 <div
+                  class="card-match__completion-stat-label"
                   style="
                     margin-top: 2px;
                     font-size: var(--text-2xs);
@@ -541,6 +565,7 @@ const CARD_MATCH_KEYFRAMES = `
             </div>
 
             <button
+              class="card-match__results-btn"
               type="button"
               (click)="goToResults()"
               style="
@@ -558,6 +583,7 @@ const CARD_MATCH_KEYFRAMES = `
               View Results
             </button>
             <button
+              class="card-match__play-again-btn"
               type="button"
               (click)="handlePlayAgain()"
               style="

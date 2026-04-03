@@ -26,6 +26,7 @@ const EXIT_DURATION = 420;
   template: `
     <app-screen className="f-page-enter swipe-quiz-screen">
       <main
+        class="swipe-quiz"
         data-page="swipe-quiz"
         style="
           min-height: 100dvh;
@@ -35,6 +36,7 @@ const EXIT_DURATION = 420;
         "
       >
       <section
+        class="swipe-quiz__content"
         style="
           width: 100%;
           max-width: 420px;
@@ -43,10 +45,10 @@ const EXIT_DURATION = 420;
           flex-direction: column;
         "
       >
-        <header style="padding: var(--sp-4); flex-shrink: 0;">
-          <div style="display: flex; align-items: center; gap: var(--sp-3);">
+        <header class="swipe-quiz__header" style="padding: var(--sp-4); flex-shrink: 0;">
+          <div class="swipe-quiz__header-row" style="display: flex; align-items: center; gap: var(--sp-3);">
             <button
-              class="f-button f-button--ghost"
+              class="swipe-quiz__back-btn f-button f-button--ghost"
               type="button"
               data-ui="back-btn"
               aria-label="Go back"
@@ -59,8 +61,9 @@ const EXIT_DURATION = 420;
                 color: var(--c-text-1);
               "
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <svg class="swipe-quiz__back-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
+                  class="swipe-quiz__back-icon-path"
                   d="M15 18L9 12L15 6"
                   stroke="currentColor"
                   stroke-width="2.5"
@@ -70,8 +73,9 @@ const EXIT_DURATION = 420;
               </svg>
             </button>
 
-            <div style="flex: 1; text-align: center;">
+            <div class="swipe-quiz__title-wrap" style="flex: 1; text-align: center;">
               <span
+                class="swipe-quiz__title"
                 style="
                   font: var(--f-brand-type-headline-medium);
                   color: var(--c-text-1);
@@ -83,6 +87,7 @@ const EXIT_DURATION = 420;
             </div>
 
             <div
+              class="swipe-quiz__score-badge"
               style="
                 min-width: var(--sp-10);
                 min-height: var(--sp-7);
@@ -97,6 +102,7 @@ const EXIT_DURATION = 420;
               "
             >
               <span
+                class="swipe-quiz__score-value"
                 style="
                   font: var(--f-brand-type-caption-medium);
                   font-weight: var(--weight-med);
@@ -106,6 +112,7 @@ const EXIT_DURATION = 420;
                 {{ score() }}
               </span>
               <span
+                class="swipe-quiz__score-total"
                 style="
                   font: var(--f-brand-type-caption);
                   color: var(--f-brand-color-text-muted);
@@ -117,10 +124,11 @@ const EXIT_DURATION = 420;
           </div>
         </header>
 
-        <div style="padding: 0 var(--sp-4) var(--sp-4); flex-shrink: 0;">
-          <div style="display: flex; align-items: center; justify-content: center; gap: var(--sp-1); flex-wrap: wrap;">
+        <div class="swipe-quiz__dots-wrap" style="padding: 0 var(--sp-4) var(--sp-4); flex-shrink: 0;">
+          <div class="swipe-quiz__dots" style="display: flex; align-items: center; justify-content: center; gap: var(--sp-1); flex-wrap: wrap;">
             @for (entry of resultDots(); track $index; let i = $index) {
               <span
+                class="swipe-quiz__dot"
                 [ngStyle]="dotStyle(i, entry)"
                 style="
                   display: inline-block;
@@ -133,6 +141,7 @@ const EXIT_DURATION = 420;
         </div>
 
         <div
+          class="swipe-quiz__card-stack"
           (pointerdown)="handlePointerDown($event)"
           (pointermove)="handlePointerMove($event)"
           (pointerup)="handlePointerUp()"
@@ -148,6 +157,7 @@ const EXIT_DURATION = 420;
           "
         >
           <div
+            class="swipe-quiz__card-bg-wrap"
             style="
               position: absolute;
               inset: 0;
@@ -159,6 +169,7 @@ const EXIT_DURATION = 420;
             "
           >
             <div
+              class="swipe-quiz__card-bg"
               [ngStyle]="backgroundCardStyle()"
               style="
                 width: 100%;
@@ -174,6 +185,7 @@ const EXIT_DURATION = 420;
           </div>
 
           <div
+            class="swipe-quiz__card-active"
             [ngStyle]="activeCardStyle()"
             style="
               position: absolute;
@@ -182,6 +194,7 @@ const EXIT_DURATION = 420;
             "
           >
             <article
+              class="swipe-quiz__card"
               [ngStyle]="cardStyle()"
               style="
                 position: absolute;
@@ -194,6 +207,7 @@ const EXIT_DURATION = 420;
               "
             >
               <div
+                class="swipe-quiz__card-body"
                 [ngStyle]="cardBodyStyle()"
                 style="
                   position: relative;
@@ -212,6 +226,7 @@ const EXIT_DURATION = 420;
                 "
               >
                 <div
+                  class="swipe-quiz__card-glow"
                   [style.background]="currentStatement().accentColor"
                   style="
                     position: absolute;
@@ -228,6 +243,7 @@ const EXIT_DURATION = 420;
                 ></div>
 
                 <span
+                  class="swipe-quiz__card-label swipe-quiz__card-label--true"
                   [style.opacity]="trueLabelOpacity()"
                   style="
                     position: absolute;
@@ -250,6 +266,7 @@ const EXIT_DURATION = 420;
                   {{ labels().right }}
                 </span>
                 <span
+                  class="swipe-quiz__card-label swipe-quiz__card-label--false"
                   [style.opacity]="falseLabelOpacity()"
                   style="
                     position: absolute;
@@ -273,6 +290,7 @@ const EXIT_DURATION = 420;
                 </span>
 
                 <div
+                  class="swipe-quiz__feedback"
                   [ngStyle]="feedbackOverlayStyle()"
                   style="
                     position: absolute;
@@ -288,6 +306,7 @@ const EXIT_DURATION = 420;
                   "
                 >
                   <div
+                    class="swipe-quiz__feedback-icon"
                     [ngStyle]="feedbackIconStyle()"
                     style="
                       width: var(--sp-18);
@@ -299,7 +318,7 @@ const EXIT_DURATION = 420;
                     "
                   >
                     @if (isFeedbackCorrect()) {
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <svg class="swipe-quiz__icon-check" width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path
                           d="M5 13l4 4L19 7"
                           stroke="var(--f-brand-color-border-success)"
@@ -309,7 +328,7 @@ const EXIT_DURATION = 420;
                         />
                       </svg>
                     } @else {
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <svg class="swipe-quiz__icon-x" width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path
                           d="M18 6L6 18M6 6l12 12"
                           stroke="var(--f-brand-color-status-error)"
@@ -321,6 +340,7 @@ const EXIT_DURATION = 420;
                     }
                   </div>
                   <span
+                    class="swipe-quiz__feedback-text"
                     [style.color]="isFeedbackCorrect() ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)'"
                     style="
                       font: var(--f-brand-type-title-3);
@@ -331,6 +351,7 @@ const EXIT_DURATION = 420;
                     {{ isFeedbackCorrect() ? 'Correct!' : 'Wrong!' }}
                   </span>
                   <span
+                    class="swipe-quiz__feedback-explanation"
                     style="
                       font: var(--f-brand-type-caption);
                       color: var(--f-brand-color-text-subtle);
@@ -344,6 +365,7 @@ const EXIT_DURATION = 420;
                 </div>
 
                 <div
+                  class="swipe-quiz__statement"
                   [style.opacity]="isFeedbackVisible() ? '0' : '1'"
                   style="
                     font: var(--f-brand-type-title-3);
@@ -359,6 +381,7 @@ const EXIT_DURATION = 420;
                 </div>
 
                 <div
+                  class="swipe-quiz__swipe-hint"
                   [style.opacity]="isFeedbackVisible() ? '0' : '0.6'"
                   style="
                     position: absolute;
@@ -378,6 +401,7 @@ const EXIT_DURATION = 420;
         </div>
 
         <div
+          class="swipe-quiz__labels"
           style="
             display: flex;
             justify-content: space-between;
@@ -386,6 +410,7 @@ const EXIT_DURATION = 420;
           "
         >
           <span
+            class="swipe-quiz__label swipe-quiz__label--left"
             style="
               font: var(--f-brand-type-caption-medium);
               color: var(--f-brand-color-status-error);
@@ -397,6 +422,7 @@ const EXIT_DURATION = 420;
             {{ labels().left }}
           </span>
           <span
+            class="swipe-quiz__label swipe-quiz__label--right"
             style="
               font: var(--f-brand-type-caption-medium);
               color: var(--f-brand-color-border-success);
@@ -409,9 +435,10 @@ const EXIT_DURATION = 420;
           </span>
         </div>
 
-        <div style="padding: var(--sp-4) var(--sp-4) var(--sp-8); flex-shrink: 0;">
-          <div style="display: flex; align-items: center; justify-content: center; gap: var(--sp-10);">
+        <div class="swipe-quiz__actions" style="padding: var(--sp-4) var(--sp-4) var(--sp-8); flex-shrink: 0;">
+          <div class="swipe-quiz__actions-row" style="display: flex; align-items: center; justify-content: center; gap: var(--sp-10);">
             <button
+              class="swipe-quiz__action-btn swipe-quiz__action-btn--false"
               type="button"
               data-ui="swipe-false-btn"
               [attr.aria-label]="labels().left"
@@ -422,7 +449,7 @@ const EXIT_DURATION = 420;
               (pointerleave)="handleActionPointerUp($event)"
               [ngStyle]="actionButtonStyle('left')"
             >
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <svg class="swipe-quiz__action-icon swipe-quiz__action-icon--x" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
                   d="M18 6L6 18M6 6l12 12"
                   stroke="var(--f-brand-color-status-error)"
@@ -433,6 +460,7 @@ const EXIT_DURATION = 420;
               </svg>
             </button>
             <button
+              class="swipe-quiz__action-btn swipe-quiz__action-btn--true"
               type="button"
               data-ui="swipe-true-btn"
               [attr.aria-label]="labels().right"
@@ -443,7 +471,7 @@ const EXIT_DURATION = 420;
               (pointerleave)="handleActionPointerUp($event)"
               [ngStyle]="actionButtonStyle('right')"
             >
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <svg class="swipe-quiz__action-icon swipe-quiz__action-icon--check" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
                   d="M5 13l4 4L19 7"
                   stroke="var(--f-brand-color-border-success)"
