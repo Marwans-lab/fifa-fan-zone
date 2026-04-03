@@ -198,7 +198,7 @@ interface QuizFlowCard {
         flex-direction: column;
         min-height: 100%;
         padding: var(--sp-4) var(--sp-6);
-        gap: var(--sp-4);
+        gap: var(--f-base-space-6);
       }
 
       .f-card-page__fan-card {
