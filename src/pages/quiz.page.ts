@@ -159,7 +159,7 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
             class="quiz-page__question-text"
             style="
               margin: 0;
-              padding: var(--sp-6) var(--sp-4) 0;
+              padding: var(--sp-4) var(--sp-4) 0;
               text-align: center;
               font: var(--f-brand-type-title-5);
               color: var(--c-lt-text-1);
