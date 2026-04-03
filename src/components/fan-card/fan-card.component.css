@@ -214,6 +214,10 @@
   flex: 1;
 }
 
+.f-fan-card__wizard-btn--next {
+  --f-button-border-disabled: transparent;
+}
+
 .f-fan-card__profile {
   display: grid;
   gap: var(--sp-2);
