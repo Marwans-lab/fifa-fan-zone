@@ -49,7 +49,14 @@ html {
   overflow: hidden;
 }
 
-body, app-root {
+body {
+  display: block;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+app-root {
   display: block;
   height: 100%;
   width: 100%;
