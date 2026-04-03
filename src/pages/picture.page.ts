@@ -118,6 +118,7 @@ const JPG_QUALITY = 0.78;
                       width="20"
                       height="20"
                       alt=""
+                      style="filter: brightness(0)"
                     />
                   </app-button>
                 </div>
@@ -380,9 +381,6 @@ const JPG_QUALITY = 0.78;
         width: fit-content;
       }
 
-      .picture-page__take-photo img[icon-right] {
-        filter: brightness(0);
-      }
 
       .picture-page__loading {
         flex: 1;
