@@ -308,6 +308,11 @@
   background: var(--f-brand-color-background-primary-hover);
 }
 
+.f-fan-card__action:active:not(:disabled) .f-fan-card__action-circle {
+  background: var(--f-brand-color-background-light);
+  border-color: var(--f-brand-color-border-selected);
+}
+
 .f-fan-card__action:focus-visible .f-fan-card__action-circle {
   outline: var(--f-brand-border-size-focused) solid var(--f-brand-color-background-default);
   outline-offset: var(--f-brand-space-xs);
