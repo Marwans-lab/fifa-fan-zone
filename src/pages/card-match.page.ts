@@ -352,36 +352,6 @@ const CARD_MATCH_KEYFRAMES = `
             margin-bottom: var(--f-brand-space-lg);
           "
         >
-          <div class="card-match__stat-matched" style="text-align: center; min-width: var(--sp-12)">
-            <p
-              class="card-match__stat-value"
-              style="
-                margin: 0;
-                font: var(--f-brand-type-headline-medium);
-                transition: color var(--f-brand-motion-duration-instant)
-                  var(--f-brand-motion-easing-default);
-              "
-              [style.color]="
-                matchedPairs() > 0
-                  ? 'var(--f-brand-color-background-success)'
-                  : 'var(--f-brand-color-text-default)'
-              "
-            >
-              {{ matchedPairs() }}/{{ pairCount() }}
-            </p>
-            <p
-              class="card-match__stat-label"
-              style="
-                margin: var(--f-brand-border-size-focused) 0 0;
-                font: var(--f-brand-type-caption);
-                color: var(--f-brand-color-text-subtle);
-                letter-spacing: var(--tracking-wider);
-                text-transform: uppercase;
-              "
-            >
-              Matched
-            </p>
-          </div>
           <div class="card-match__timer" style="position: relative; width: 48px; height: 48px">
             <svg class="card-match__timer-svg" [attr.width]="timerSize" [attr.height]="timerSize" style="transform: rotate(-90deg)" aria-hidden="true">
               <circle
