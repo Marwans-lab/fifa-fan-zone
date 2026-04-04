@@ -22,7 +22,7 @@ const SLIDE_TRANSITION =
 const SLIDE_EXIT_TRANSITION =
   'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)';
 const SLIDE_EXIT_MS = 250;
-const CHEVRON_LEFT_DARK_ICON = 'assets/icons/Chevron-left-dark.svg';
+const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
 
 @Component({
   standalone: true,
@@ -50,41 +50,61 @@ const CHEVRON_LEFT_DARK_ICON = 'assets/icons/Chevron-left-dark.svg';
           width: 100%;
         "
       >
-        <header class="ranking-quiz__header" data-section="header" style="padding: var(--sp-4); flex-shrink: 0">
-          <div class="ranking-quiz__header-actions" style="display: flex; align-items: center; gap: var(--sp-3)">
-            <button
-              type="button"
-              class="btn-icon"
-              data-ui="back-btn"
-              aria-label="Go back"
-              (click)="handleBack()"
-            >
-              <img [src]="chevronLeftDarkIcon" width="24" height="24" alt="Back" />
-            </button>
+        <header
+          class="ranking-quiz__header"
+          data-section="header"
+          style="
+            padding: var(--sp-4) var(--sp-5);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: var(--sp-4);
+          "
+        >
+          <button
+            type="button"
+            class="ranking-quiz__close-btn"
+            data-ui="close-btn"
+            aria-label="Close quiz"
+            (click)="handleBack()"
+            style="
+              flex-shrink: 0;
+              width: 48px;
+              height: 48px;
+              border-radius: 44px;
+              border: var(--f-brand-border-size-default) solid var(--c-lt-surface);
+              background: var(--c-lt-surface);
+              box-shadow: 0px 2px 4px 0px var(--f-brand-color-shadow-default);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              cursor: pointer;
+              padding: 0;
+            "
+          >
+            <img [src]="closeDarkIcon" width="24" height="24" alt="" aria-hidden="true" />
+          </button>
+          <div
+            class="ranking-quiz__progress-track"
+            style="
+              flex: 1;
+              height: 8px;
+              background: var(--c-lt-surface);
+              border-radius: var(--f-brand-radius-rounded);
+              overflow: hidden;
+            "
+          >
             <div
-              class="ranking-quiz__progress-track"
+              class="ranking-quiz__progress-fill"
+              [style.width.%]="progressPercent()"
               style="
-                flex: 1;
-                height: var(--sp-1);
-                background: var(--c-lt-bg);
-                border-radius: calc(var(--sp-1) / 2);
-                overflow: hidden;
+                height: 100%;
+                background: linear-gradient(to right, var(--c-correct), var(--c-lt-correct-dark));
+                border-radius: 16px;
+                box-shadow: var(--c-progress-fill-shadow);
+                transition: width var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
               "
-            >
-              <div
-                class="ranking-quiz__progress-fill"
-                [style.width.%]="progressPercent()"
-                style="
-                  height: 100%;
-                  background: var(--c-accent);
-                  border-radius: calc(var(--sp-1) / 2);
-                  transition: width var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
-                "
-              ></div>
-            </div>
-            <span class="ranking-quiz__question-counter" style="font-size: var(--text-xs); color: var(--c-lt-text-2); flex-shrink: 0">
-              {{ questionIndex() + 1 }}/{{ totalQuestions() }}
-            </span>
+            ></div>
           </div>
         </header>
 
@@ -276,7 +296,7 @@ export class RankingQuizPage implements OnInit, OnDestroy {
   private readonly store = inject(StoreService);
   private readonly analytics = inject(AnalyticsService);
 
-  readonly chevronLeftDarkIcon = CHEVRON_LEFT_DARK_ICON;
+  readonly closeDarkIcon = CLOSE_DARK_ICON;
   readonly quiz = signal<RankingQuiz>(RANKING_QUIZZES[0]);
   readonly questionIndex = signal(0);
   readonly score = signal(0);
