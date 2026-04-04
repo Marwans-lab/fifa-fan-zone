@@ -17,10 +17,17 @@ import { StoreService } from '../services/store.service';
 
 const QUESTION_TIME = 15;
 const ITEM_HEIGHT = 68;
+const STAGGER_MS = 120;
+const DROP_SETTLE_MS = 480;
+const CORRECT_PULSE_MS = 300;
+const SHAKE_MS = 400;
+const SPRING_EASING = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
 const SLIDE_TRANSITION =
   'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)';
 const SLIDE_EXIT_MS = 250;
 const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
+
+type ItemRevealState = 'correct' | 'incorrect';
 
 @Component({
   standalone: true,
@@ -123,18 +130,23 @@ const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
             {{ currentQuestion().question }}
           </h1>
 
-          <div class="ranking-quiz__items" style="flex: 1; padding: 0 var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-3)">
+          <div
+            class="ranking-quiz__items"
+            [class.ranking-quiz__items--celebrating]="isCelebrating()"
+            style="flex: 1; padding: 0 var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-3)"
+          >
             @for (item of items(); track item.id; let idx = $index) {
               <div
                 class="ranking-quiz__item"
+                [class.ranking-quiz__item--shaking]="shakingIndices().includes(idx)"
+                [class.ranking-quiz__item--pulsing]="pulsingIndices().includes(idx)"
                 (pointerdown)="startDrag(idx, $event)"
                 [ngStyle]="rankItemStyle(idx, item)"
-                [style.cursor]="revealed() ? 'default' : 'grab'"
                 data-section="rank-item"
                 style="
                   height: 56px;
                   border-radius: 52px;
-                  border: none;
+                  border: var(--f-brand-border-size-default) solid transparent;
                   background: var(--c-lt-surface);
                   box-shadow: 0px 2px 4px 0px var(--f-brand-color-shadow-default);
                   display: flex;
@@ -178,7 +190,7 @@ const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
                 >
                   {{ item.label }}
                 </span>
-                @if (!revealed()) {
+                @if (!revealed() && revealStates()[idx] === undefined) {
                   <div
                     class="ranking-quiz__item-handle"
                     style="
@@ -204,7 +216,7 @@ const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
                     </svg>
                   </div>
                 }
-                @if (revealed() && !isCorrectPosition(item, idx)) {
+                @if (revealStates()[idx] === 'incorrect') {
                   <span class="ranking-quiz__item-correct-pos" style="font-size: var(--text-xs); color: var(--c-lt-text-2); flex-shrink: 0; padding-right: var(--sp-2)">
                     #{{ correctIndex(item) + 1 }}
                   </span>
@@ -269,13 +281,11 @@ const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
             class="ranking-quiz__submit-btn f-button"
             data-ui="submit-btn"
             (click)="revealed() ? handleNext() : handleSubmit()"
+            [ngStyle]="submitBtnStyle()"
             style="
               width: 100%;
               min-height: var(--sp-14);
               border-radius: var(--f-brand-radius-rounded);
-              border: none;
-              background: var(--c-lt-brand);
-              color: var(--f-brand-color-text-light);
               font: var(--f-brand-type-body-medium);
               cursor: pointer;
               display: flex;
@@ -286,7 +296,10 @@ const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
-              transition: background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
+              transition:
+                background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default),
+                color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default),
+                border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
             "
           >
             {{ buttonLabel() }}
@@ -311,6 +324,30 @@ const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
       .ranking-quiz__submit-btn:focus-visible {
         outline: var(--f-brand-border-size-focused) solid var(--f-brand-color-border-focused);
         outline-offset: var(--f-brand-space-xs);
+      }
+      @keyframes ranking-shake {
+        0%, 100% { transform: translateX(0); }
+        20% { transform: translateX(-6px); }
+        40% { transform: translateX(6px); }
+        60% { transform: translateX(-3px); }
+        80% { transform: translateX(3px); }
+      }
+      @keyframes ranking-correct-pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.04); }
+      }
+      @keyframes ranking-celebrate {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+      }
+      .ranking-quiz__item--shaking {
+        animation: ranking-shake 400ms cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+      }
+      .ranking-quiz__item--pulsing {
+        animation: ranking-correct-pulse 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+      .ranking-quiz__items--celebrating {
+        animation: ranking-celebrate var(--f-brand-motion-duration-quick) cubic-bezier(0.34, 1.56, 0.64, 1);
       }
       @media (prefers-reduced-motion: reduce) {
         [data-page='ranking-quiz'],
@@ -346,6 +383,15 @@ export class RankingQuizPage implements OnInit, OnDestroy {
     transition: SLIDE_TRANSITION,
   });
 
+  // Polish signals
+  readonly hasReordered = signal(false);
+  readonly settlingIndex = signal<number | null>(null);
+  readonly revealStates = signal<(ItemRevealState | undefined)[]>([]);
+  readonly shakingIndices = signal<number[]>([]);
+  readonly pulsingIndices = signal<number[]>([]);
+  readonly isCelebrating = signal(false);
+  readonly isSubmitting = signal(false);
+
   readonly totalQuestions = computed(() => this.quiz().questions.length);
   readonly currentQuestion = computed(() => this.quiz().questions[this.questionIndex()]);
   readonly progressPercent = computed(() => {
@@ -359,11 +405,29 @@ export class RankingQuizPage implements OnInit, OnDestroy {
     return this.timerCircumference * progress;
   });
 
+  readonly submitBtnStyle = computed((): Record<string, string> => {
+    const active = this.hasReordered() || this.revealed();
+    if (active) {
+      return {
+        background: 'var(--c-lt-brand)',
+        color: 'var(--f-brand-color-text-light)',
+        border: 'none',
+      };
+    }
+    return {
+      background: 'var(--c-lt-surface)',
+      color: 'var(--c-lt-brand)',
+      border: `var(--f-brand-border-size-default) solid var(--c-lt-brand)`,
+    };
+  });
+
   private dragStartY = 0;
   private dragBaseIndex = 0;
   private timerId: number | null = null;
   private slideEnterFrameId: number | null = null;
   private slideExitTimeoutId: number | null = null;
+  private settleTimerId: number | null = null;
+  private revealTimerIds: number[] = [];
   private readonly prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   private isAnimating = false;
 
@@ -378,10 +442,15 @@ export class RankingQuizPage implements OnInit, OnDestroy {
     this.analytics.track('ranking_quiz_viewed', { quizId: quiz.id });
     window.addEventListener('pointermove', this.onPointerMove, { passive: false });
     window.addEventListener('pointerup', this.onPointerUp);
+    window.addEventListener('pointercancel', this.onPointerUp);
   }
 
   ngOnDestroy(): void {
     this.stopTimer();
+    this.clearRevealTimers();
+    if (this.settleTimerId !== null) {
+      window.clearTimeout(this.settleTimerId);
+    }
     if (this.slideEnterFrameId !== null) {
       window.cancelAnimationFrame(this.slideEnterFrameId);
     }
@@ -390,26 +459,72 @@ export class RankingQuizPage implements OnInit, OnDestroy {
     }
     window.removeEventListener('pointermove', this.onPointerMove);
     window.removeEventListener('pointerup', this.onPointerUp);
+    window.removeEventListener('pointercancel', this.onPointerUp);
   }
 
   startDrag(index: number, event: PointerEvent): void {
-    if (this.revealed()) return;
+    if (this.revealed() || this.isSubmitting()) return;
     this.dragIndex.set(index);
     this.dragOffset.set(0);
     this.dragStartY = event.clientY;
     this.dragBaseIndex = index;
+    this.hapticFeedback(10);
   }
 
   handleSubmit(): void {
-    if (this.revealed()) return;
+    if (this.revealed() || this.isSubmitting()) return;
+    this.isSubmitting.set(true);
     this.stopTimer();
-    this.revealed.set(true);
     const gained = this.scoreForItems(this.items());
     this.score.update(value => value + gained);
     this.analytics.track('quiz_answer', {
       quizId: this.quiz().id,
       qIdx: this.questionIndex(),
       correctPositions: gained,
+    });
+
+    if (this.prefersReducedMotion) {
+      this.revealAll();
+      this.revealed.set(true);
+      return;
+    }
+
+    const snapshot = this.items();
+    snapshot.forEach((item, idx) => {
+      const timerId = window.setTimeout(() => {
+        const correct = this.isCorrectPosition(item, idx);
+        this.revealStates.update(states => {
+          const next = [...states];
+          next[idx] = correct ? 'correct' : 'incorrect';
+          return next;
+        });
+
+        if (correct) {
+          this.pulsingIndices.update(prev => [...prev, idx]);
+          window.setTimeout(() => {
+            this.pulsingIndices.update(prev => prev.filter(i => i !== idx));
+          }, CORRECT_PULSE_MS);
+        } else {
+          this.hapticFeedback([15, 30, 15]);
+          this.shakingIndices.update(prev => [...prev, idx]);
+          window.setTimeout(() => {
+            this.shakingIndices.update(prev => prev.filter(i => i !== idx));
+          }, SHAKE_MS);
+        }
+
+        if (idx === snapshot.length - 1) {
+          const finalRevealDelay = Math.max(CORRECT_PULSE_MS, SHAKE_MS) + 50;
+          window.setTimeout(() => {
+            this.revealed.set(true);
+            if (gained === snapshot.length) {
+              this.isCelebrating.set(true);
+              this.hapticFeedback([10, 20, 10, 20, 30]);
+              window.setTimeout(() => this.isCelebrating.set(false), DROP_SETTLE_MS);
+            }
+          }, finalRevealDelay);
+        }
+      }, idx * STAGGER_MS);
+      this.revealTimerIds.push(timerId);
     });
   }
 
@@ -450,33 +565,58 @@ export class RankingQuizPage implements OnInit, OnDestroy {
 
   rankItemStyle(index: number, item: RankingItem): Record<string, string> {
     const dragging = this.dragIndex() === index;
-    const correct = this.isCorrectPosition(item, index);
+    const settling = this.settlingIndex() === index;
+    const revealState = this.revealStates()[index];
+
     if (dragging) {
       return {
         transform: `translateY(${this.dragOffset()}px) scale(1.03)`,
         border: `var(--f-brand-border-size-default) solid var(--c-lt-brand)`,
-        background: 'var(--c-lt-brand-bg)',
-        zIndex: '10',
+        background: 'var(--c-lt-surface)',
+        zIndex: '50',
         position: 'relative',
         boxShadow: 'var(--f-brand-shadow-large)',
-        transition: 'none',
+        transition: `transform var(--f-brand-motion-duration-instant) ${SPRING_EASING}`,
+        cursor: 'grabbing',
       };
     }
-    if (this.revealed() && correct) {
+
+    if (settling) {
+      const offset = this.dragOffset();
+      const isAtRest = offset === 0;
       return {
-        borderColor: 'var(--c-correct-border)',
+        transform: `translateY(${offset}px) scale(${isAtRest ? '1' : '1.03'})`,
+        transition: `transform var(--f-brand-motion-duration-quick) ${SPRING_EASING}, box-shadow var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default), border-color var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)`,
+        boxShadow: isAtRest ? '0px 2px 4px 0px var(--f-brand-color-shadow-default)' : 'var(--f-brand-shadow-large)',
+        border: isAtRest ? 'var(--f-brand-border-size-default) solid transparent' : `var(--f-brand-border-size-default) solid var(--c-lt-brand)`,
+        zIndex: '50',
+        position: 'relative',
+        cursor: 'grab',
+      };
+    }
+
+    if (revealState === 'correct') {
+      return {
+        border: `var(--f-brand-border-size-default) solid var(--c-correct-border)`,
         background: 'var(--c-correct-bg)',
+        transition: `background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)`,
+        cursor: 'default',
       };
     }
-    if (this.revealed() && !correct) {
+
+    if (revealState === 'incorrect') {
       return {
-        borderColor: 'var(--c-error-border)',
+        border: `var(--f-brand-border-size-default) solid var(--c-error-border)`,
         background: 'var(--c-error-bg)',
+        transition: `background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)`,
+        cursor: 'default',
       };
     }
+
+    // Default: spring transition for liquid sort feel
     return {
-      transition:
-        'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
+      transition: `transform var(--f-brand-motion-duration-instant) ${SPRING_EASING}, border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)`,
+      cursor: this.revealed() ? 'default' : 'grab',
     };
   }
 
@@ -513,36 +653,68 @@ export class RankingQuizPage implements OnInit, OnDestroy {
     if (dragIdx === null || this.revealed()) return;
     event.preventDefault();
     const deltaY = event.clientY - this.dragStartY;
-    this.dragOffset.set(deltaY);
 
     const moveBy = Math.round(deltaY / ITEM_HEIGHT);
-    if (moveBy === 0) return;
-
-    this.items.update(prev => {
-      const next = [...prev];
-      const from = this.dragBaseIndex;
-      const to = Math.max(0, Math.min(next.length - 1, from + moveBy));
-      if (from === to) return prev;
-      const [moved] = next.splice(from, 1);
-      next.splice(to, 0, moved);
-      this.dragBaseIndex = to;
-      this.dragStartY += moveBy * ITEM_HEIGHT;
-      this.dragOffset.set(deltaY - moveBy * ITEM_HEIGHT);
-      return next;
-    });
+    if (moveBy !== 0) {
+      this.items.update(prev => {
+        const next = [...prev];
+        const from = this.dragBaseIndex;
+        const to = Math.max(0, Math.min(next.length - 1, from + moveBy));
+        if (from === to) return prev;
+        const [moved] = next.splice(from, 1);
+        next.splice(to, 0, moved);
+        this.dragBaseIndex = to;
+        this.dragStartY += moveBy * ITEM_HEIGHT;
+        return next;
+      });
+      this.hasReordered.set(true);
+      this.dragOffset.set(event.clientY - this.dragStartY);
+    } else {
+      // Elastic resistance at list boundaries
+      const atTop = this.dragBaseIndex === 0 && deltaY < 0;
+      const atBottom = this.dragBaseIndex === this.items().length - 1 && deltaY > 0;
+      const effectiveOffset = atTop || atBottom ? deltaY * 0.3 : deltaY;
+      this.dragOffset.set(effectiveOffset);
+    }
   };
 
   private readonly onPointerUp = (): void => {
     if (this.dragIndex() === null) return;
+    this.hapticFeedback(5);
+    const idx = this.dragIndex();
+    this.settlingIndex.set(idx);
     this.dragIndex.set(null);
-    this.dragOffset.set(0);
+
+    // Use rAF so transition is applied before offset clears, enabling the settle animation
+    window.requestAnimationFrame(() => {
+      this.dragOffset.set(0);
+      if (this.settleTimerId !== null) {
+        window.clearTimeout(this.settleTimerId);
+      }
+      this.settleTimerId = window.setTimeout(() => {
+        this.settlingIndex.set(null);
+        this.settleTimerId = null;
+      }, DROP_SETTLE_MS);
+    });
   };
 
   private prepareQuestion(): void {
     this.revealed.set(false);
+    this.isSubmitting.set(false);
     this.timeLeft.set(QUESTION_TIME);
     this.dragIndex.set(null);
     this.dragOffset.set(0);
+    this.settlingIndex.set(null);
+    this.hasReordered.set(false);
+    this.revealStates.set([]);
+    this.shakingIndices.set([]);
+    this.pulsingIndices.set([]);
+    this.isCelebrating.set(false);
+    this.clearRevealTimers();
+    if (this.settleTimerId !== null) {
+      window.clearTimeout(this.settleTimerId);
+      this.settleTimerId = null;
+    }
     this.items.set(this.shuffle(this.currentQuestion().items));
     this.startTimer();
   }
@@ -583,18 +755,19 @@ export class RankingQuizPage implements OnInit, OnDestroy {
   private startTimer(): void {
     this.stopTimer();
     this.timerId = window.setInterval(() => {
-      if (this.revealed()) return;
+      if (this.revealed() || this.isSubmitting()) return;
       const next = this.timeLeft() - 1;
       this.timeLeft.set(Math.max(next, 0));
       if (next <= 0) {
         this.stopTimer();
-        this.revealed.set(true);
         const gained = this.scoreForItems(this.items());
         this.score.update(value => value + gained);
         this.analytics.track('quiz_question_timeout', {
           quizId: this.quiz().id,
           qIdx: this.questionIndex(),
         });
+        this.revealAll();
+        this.revealed.set(true);
       }
     }, 1000);
   }
@@ -603,6 +776,28 @@ export class RankingQuizPage implements OnInit, OnDestroy {
     if (this.timerId !== null) {
       window.clearInterval(this.timerId);
       this.timerId = null;
+    }
+  }
+
+  private revealAll(): void {
+    const states = this.items().map((item, idx) =>
+      this.isCorrectPosition(item, idx) ? 'correct' : ('incorrect' as ItemRevealState),
+    );
+    this.revealStates.set(states);
+  }
+
+  private clearRevealTimers(): void {
+    this.revealTimerIds.forEach(id => window.clearTimeout(id));
+    this.revealTimerIds = [];
+  }
+
+  private hapticFeedback(pattern: number | number[]): void {
+    try {
+      if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+        navigator.vibrate(pattern);
+      }
+    } catch {
+      // Progressive enhancement — not available on iOS Safari
     }
   }
 
