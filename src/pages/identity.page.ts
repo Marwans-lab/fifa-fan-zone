@@ -47,7 +47,7 @@ type Step = 'team' | 'preview';
                       'linear-gradient(135deg, ' + team.colors[0] + ' 0%, ' + team.colors[1] + ' 100%)'
                     "
                   >
-                    {{ team.flag }}
+                    <i class="ic-nav-flag-{{team.flag}}" aria-hidden="true"></i>
                   </span>
                   <span class="identity-page__team-name">{{ team.name }}</span>
                   <span class="identity-page__team-chevron" aria-hidden="true">›</span>

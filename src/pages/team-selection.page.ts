@@ -45,7 +45,12 @@ import { StoreService } from '../services/store.service';
           aria-haspopup="listbox"
           (click)="toggleDropdown()"
         >
-          <span>{{ selectedTeamName() ?? 'Select a team' }}</span>
+          <span class="team-selection-page__dropdown-selected">
+            @if (selectedTeamFlag()) {
+              <i class="ic-nav-flag-{{selectedTeamFlag()}}" aria-hidden="true"></i>
+            }
+            {{ selectedTeamName() ?? 'Select a team' }}
+          </span>
           <svg
             class="team-selection-page__dropdown-chevron"
             [class.team-selection-page__dropdown-chevron--open]="dropdownOpen()"
@@ -63,9 +68,11 @@ import { StoreService } from '../services/store.service';
                 class="team-selection-page__option"
                 role="option"
                 [attr.aria-selected]="selectedId() === team.id"
+                [class.team-selection-page__option--selected]="selectedId() === team.id"
                 [class.team-selection-page__option--with-divider]="!isLast"
                 (click)="selectTeam(team.id)"
               >
+                <i class="ic-nav-flag-{{team.flag}}" aria-hidden="true"></i>
                 {{ team.name }}
               </li>
             }
@@ -189,6 +196,12 @@ import { StoreService } from '../services/store.service';
         color: var(--f-brand-color-text-subtle);
       }
 
+      .team-selection-page__dropdown-selected {
+        display: flex;
+        align-items: center;
+        gap: var(--sp-3);
+      }
+
       .team-selection-page__dropdown-chevron {
         width: var(--sp-4);
         height: var(--sp-4);
@@ -213,8 +226,9 @@ import { StoreService } from '../services/store.service';
         list-style: none;
         margin: 0;
         padding: 0 var(--f-brand-space-md);
-        max-height: 280px;
+        max-height: 560px;
         overflow-y: auto;
+        scroll-behavior: smooth;
         scrollbar-width: thin;
         scrollbar-color: var(--f-brand-color-text-muted) transparent;
         border: none;
@@ -230,10 +244,32 @@ import { StoreService } from '../services/store.service';
         background: transparent;
         color: var(--f-brand-color-text-default);
         padding: var(--f-brand-space-md) 0;
-        display: block;
+        display: flex;
+        align-items: center;
+        gap: var(--sp-3);
         font: var(--f-brand-type-body);
         text-align: left;
         cursor: pointer;
+        transition: background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit),
+                    color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit);
+        border-radius: var(--f-brand-radius-base);
+        margin: 0 calc(var(--f-brand-space-md) * -1);
+        padding-left: var(--f-brand-space-md);
+        padding-right: var(--f-brand-space-md);
+      }
+
+      .team-selection-page__option:hover {
+        background: var(--f-brand-color-background-default);
+      }
+
+      .team-selection-page__option--selected {
+        background: var(--c-lt-brand);
+        color: var(--f-brand-color-text-inverse);
+        border-radius: var(--f-brand-radius-base);
+      }
+
+      .team-selection-page__option--selected:hover {
+        background: var(--c-lt-brand);
       }
 
       .team-selection-page__option--with-divider {
@@ -287,13 +323,19 @@ export class TeamSelectionPage {
 
   readonly dropdownTeams = WORLD_CUP_TEAMS;
 
-  readonly dropdownOpen = signal(false);
+  readonly dropdownOpen = signal(true);
   readonly selectedId = signal<string | null>(this.store.state().fanCard.teamId);
 
   selectedTeamName(): string | null {
     const selectedId = this.selectedId();
     if (!selectedId) return null;
     return this.dropdownTeams.find(team => team.id === selectedId)?.name ?? null;
+  }
+
+  selectedTeamFlag(): string | null {
+    const selectedId = this.selectedId();
+    if (!selectedId) return null;
+    return this.dropdownTeams.find(team => team.id === selectedId)?.flag ?? null;
   }
 
   toggleDropdown(): void {

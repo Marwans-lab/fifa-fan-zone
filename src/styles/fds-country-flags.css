@@ -1,0 +1,83 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   FDS Country Flag Icons — ic-nav-flag-{iso2}
+   Usage: <i class="ic-nav-flag-us" aria-hidden="true"></i>
+   Supports all 48 FIFA World Cup 2026 qualified nations
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+[class^="ic-nav-flag-"],
+[class*=" ic-nav-flag-"] {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  font-style: normal;
+  line-height: 24px;
+  vertical-align: middle;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+[class^="ic-nav-flag-"]::before,
+[class*=" ic-nav-flag-"]::before {
+  font-size: 18px;
+  line-height: 24px;
+  display: block;
+}
+
+/* ─── South America ─────────────────────────────────────────────────────── */
+.ic-nav-flag-ar::before { content: "🇦🇷"; }
+.ic-nav-flag-bo::before { content: "🇧🇴"; }
+.ic-nav-flag-br::before { content: "🇧🇷"; }
+.ic-nav-flag-co::before { content: "🇨🇴"; }
+.ic-nav-flag-ec::before { content: "🇪🇨"; }
+.ic-nav-flag-pa::before { content: "🇵🇦"; }
+.ic-nav-flag-py::before { content: "🇵🇾"; }
+.ic-nav-flag-pe::before { content: "🇵🇪"; }
+.ic-nav-flag-uy::before { content: "🇺🇾"; }
+
+/* ─── North America ─────────────────────────────────────────────────────── */
+.ic-nav-flag-ca::before { content: "🇨🇦"; }
+.ic-nav-flag-cr::before { content: "🇨🇷"; }
+.ic-nav-flag-mx::before { content: "🇲🇽"; }
+.ic-nav-flag-tt::before { content: "🇹🇹"; }
+.ic-nav-flag-us::before { content: "🇺🇸"; }
+
+/* ─── Europe ────────────────────────────────────────────────────────────── */
+.ic-nav-flag-at::before { content: "🇦🇹"; }
+.ic-nav-flag-be::before { content: "🇧🇪"; }
+.ic-nav-flag-hr::before { content: "🇭🇷"; }
+.ic-nav-flag-dk::before { content: "🇩🇰"; }
+.ic-nav-flag-fr::before { content: "🇫🇷"; }
+.ic-nav-flag-de::before { content: "🇩🇪"; }
+.ic-nav-flag-it::before { content: "🇮🇹"; }
+.ic-nav-flag-me::before { content: "🇲🇪"; }
+.ic-nav-flag-nl::before { content: "🇳🇱"; }
+.ic-nav-flag-pl::before { content: "🇵🇱"; }
+.ic-nav-flag-pt::before { content: "🇵🇹"; }
+.ic-nav-flag-rs::before { content: "🇷🇸"; }
+.ic-nav-flag-si::before { content: "🇸🇮"; }
+.ic-nav-flag-es::before { content: "🇪🇸"; }
+.ic-nav-flag-ch::before { content: "🇨🇭"; }
+.ic-nav-flag-ua::before { content: "🇺🇦"; }
+/* GB sub-region flags */
+.ic-nav-flag-gb-eng::before { content: "🏴󠁧󠁢󠁥󠁮󠁧󠁿"; }
+.ic-nav-flag-gb-sct::before { content: "🏴󠁧󠁢󠁳󠁣󠁴󠁿"; }
+.ic-nav-flag-gb-wls::before { content: "🏴󠁧󠁢󠁷󠁬󠁳󠁿"; }
+
+/* ─── Asia ──────────────────────────────────────────────────────────────── */
+.ic-nav-flag-au::before { content: "🇦🇺"; }
+.ic-nav-flag-id::before { content: "🇮🇩"; }
+.ic-nav-flag-ir::before { content: "🇮🇷"; }
+.ic-nav-flag-jp::before { content: "🇯🇵"; }
+.ic-nav-flag-kr::before { content: "🇰🇷"; }
+.ic-nav-flag-nz::before { content: "🇳🇿"; }
+.ic-nav-flag-qa::before { content: "🇶🇦"; }
+.ic-nav-flag-sa::before { content: "🇸🇦"; }
+
+/* ─── Africa ────────────────────────────────────────────────────────────── */
+.ic-nav-flag-cm::before { content: "🇨🇲"; }
+.ic-nav-flag-eg::before { content: "🇪🇬"; }
+.ic-nav-flag-gh::before { content: "🇬🇭"; }
+.ic-nav-flag-ma::before { content: "🇲🇦"; }
+.ic-nav-flag-ng::before { content: "🇳🇬"; }
+.ic-nav-flag-sn::before { content: "🇸🇳"; }
+.ic-nav-flag-tn::before { content: "🇹🇳"; }
