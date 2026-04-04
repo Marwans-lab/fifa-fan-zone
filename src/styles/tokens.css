@@ -56,6 +56,7 @@
   --c-lt-text-2:        var(--f-brand-color-text-subtle);           /* #6e7780 */
   --c-lt-text-3:        var(--f-brand-color-text-muted);            /* #4a525d */
   --c-lt-brand:         var(--f-brand-color-primary);               /* #8e2157 */
+  --c-lt-brand-bg:      rgba(142,33,87,0.06);                      /* brand tint for drag state */
   --c-lt-correct-dark:  #1C7544;
   --c-lt-correct-bg:    rgba(28,117,68,0.08);
   --c-lt-correct-glow:  rgba(28,117,68,0.20);

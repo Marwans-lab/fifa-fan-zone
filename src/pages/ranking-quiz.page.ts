@@ -16,7 +16,7 @@ import { AnalyticsService } from '../services/analytics.service';
 import { StoreService } from '../services/store.service';
 
 const QUESTION_TIME = 15;
-const ITEM_HEIGHT = 70;
+const ITEM_HEIGHT = 68;
 const SLIDE_TRANSITION =
   'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)';
 const SLIDE_EXIT_TRANSITION =
@@ -169,38 +169,49 @@ const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
                 [style.cursor]="revealed() ? 'default' : 'grab'"
                 data-section="rank-item"
                 style="
-                  height: 58px;
-                  border-radius: var(--r-full);
-                  border: var(--f-brand-border-size-default) solid var(--c-lt-border);
+                  height: 56px;
+                  border-radius: 52px;
+                  border: none;
                   background: var(--c-lt-surface);
+                  box-shadow: 0px 2px 4px 0px var(--f-brand-color-shadow-default);
                   display: flex;
                   align-items: center;
-                  gap: var(--sp-3);
-                  padding: 0 var(--sp-4);
+                  gap: var(--sp-4);
+                  padding: 0 var(--sp-2);
+                  min-width: 240px;
+                  max-width: 560px;
                   user-select: none;
                   touch-action: none;
                 "
               >
-                <span
-                  class="ranking-quiz__item-rank"
-                  [ngStyle]="rankBadgeStyle(idx, item)"
+                <div
+                  class="ranking-quiz__item-flag"
                   style="
-                    width: var(--sp-7);
-                    min-width: var(--sp-7);
-                    min-height: var(--sp-7);
-                    border-radius: var(--r-full);
-                    display: inline-flex;
+                    width: 40px;
+                    height: 40px;
+                    min-width: 40px;
+                    border-radius: 40px;
+                    background: var(--c-lt-bg);
+                    border: 1px solid var(--c-lt-white);
+                    display: flex;
                     align-items: center;
                     justify-content: center;
-                    font: var(--f-brand-type-caption-medium);
+                    overflow: hidden;
+                    flex-shrink: 0;
                   "
                 >
-                  {{ badgeLabel(idx, item) }}
-                </span>
+                  <img [src]="item.flagUrl" width="24" height="24" alt="" aria-hidden="true" style="border-radius: 2px; object-fit: cover" />
+                </div>
                 <span
                   class="ranking-quiz__item-text"
-                  style="flex: 1; font-size: var(--text-md); color: var(--c-lt-text-1)"
-                  [style.font-weight]="dragIndex() === idx ? '600' : '400'"
+                  style="
+                    flex: 1;
+                    font: var(--f-brand-type-body);
+                    color: var(--c-lt-text-1);
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                  "
                 >
                   {{ item.label }}
                 </span>
@@ -208,21 +219,30 @@ const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
                   <div
                     class="ranking-quiz__item-handle"
                     style="
+                      width: 40px;
+                      height: 40px;
+                      min-width: 40px;
+                      border-radius: 40px;
+                      border: 1px solid var(--c-lt-white);
+                      background: transparent;
                       display: flex;
-                      flex-direction: column;
-                      gap: 2px;
-                      opacity: 0.3;
+                      align-items: center;
+                      justify-content: center;
                       flex-shrink: 0;
-                      padding: 0 var(--sp-1);
                     "
                   >
-                    <div class="ranking-quiz__item-handle-line" style="width: 16px; height: 2px; background: var(--c-lt-text-1); border-radius: 1px"></div>
-                    <div class="ranking-quiz__item-handle-line" style="width: 16px; height: 2px; background: var(--c-lt-text-1); border-radius: 1px"></div>
-                    <div class="ranking-quiz__item-handle-line" style="width: 16px; height: 2px; background: var(--c-lt-text-1); border-radius: 1px"></div>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <circle cx="9" cy="7" r="1.5" fill="var(--c-lt-text-2)" />
+                      <circle cx="15" cy="7" r="1.5" fill="var(--c-lt-text-2)" />
+                      <circle cx="9" cy="12" r="1.5" fill="var(--c-lt-text-2)" />
+                      <circle cx="15" cy="12" r="1.5" fill="var(--c-lt-text-2)" />
+                      <circle cx="9" cy="17" r="1.5" fill="var(--c-lt-text-2)" />
+                      <circle cx="15" cy="17" r="1.5" fill="var(--c-lt-text-2)" />
+                    </svg>
                   </div>
                 }
                 @if (revealed() && !isCorrectPosition(item, idx)) {
-                  <span class="ranking-quiz__item-correct-pos" style="font-size: var(--text-xs); color: var(--c-lt-text-2); flex-shrink: 0">
+                  <span class="ranking-quiz__item-correct-pos" style="font-size: var(--text-xs); color: var(--c-lt-text-2); flex-shrink: 0; padding-right: var(--sp-2)">
                     #{{ correctIndex(item) + 1 }}
                   </span>
                 }
@@ -416,8 +436,8 @@ export class RankingQuizPage implements OnInit, OnDestroy {
     if (dragging) {
       return {
         transform: `translateY(${this.dragOffset()}px) scale(1.03)`,
-        borderColor: 'var(--c-accent)',
-        background: 'var(--c-accent-bg)',
+        border: `var(--f-brand-border-size-default) solid var(--c-lt-brand)`,
+        background: 'var(--c-lt-brand-bg)',
         zIndex: '10',
         position: 'relative',
         boxShadow: 'var(--f-brand-shadow-large)',
@@ -439,35 +459,7 @@ export class RankingQuizPage implements OnInit, OnDestroy {
     return {
       transition:
         'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
-      boxShadow: 'none',
     };
-  }
-
-  rankBadgeStyle(index: number, item: RankingItem): Record<string, string> {
-    const correct = this.isCorrectPosition(item, index);
-    if (this.revealed() && correct) {
-      return {
-        background: 'var(--c-correct)',
-        color: 'var(--f-brand-color-text-light)',
-      };
-    }
-    if (this.revealed() && !correct) {
-      return {
-        background: 'var(--c-error)',
-        color: 'var(--f-brand-color-text-light)',
-      };
-    }
-    return {
-      background: 'var(--c-lt-bg)',
-      color: 'var(--c-lt-text-2)',
-    };
-  }
-
-  badgeLabel(index: number, item: RankingItem): string {
-    if (!this.revealed()) {
-      return String(index + 1);
-    }
-    return this.isCorrectPosition(item, index) ? '✓' : '✗';
   }
 
   buttonLabel(): string {
