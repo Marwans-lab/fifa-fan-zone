@@ -3,7 +3,6 @@ import {
   Component,
   ElementRef,
   HostListener,
-  afterNextRender,
   inject,
   signal,
 } from '@angular/core';
@@ -63,7 +62,7 @@ import { StoreService } from '../services/store.service';
         </button>
 
         @if (dropdownOpen()) {
-          <ul class="team-selection-page__list" role="listbox" [style.max-height]="listMaxHeight()">
+          <ul class="team-selection-page__list" role="listbox">
             @for (team of dropdownTeams; track team.id; let isLast = $last) {
               <li
                 class="team-selection-page__option"
@@ -227,6 +226,7 @@ import { StoreService } from '../services/store.service';
         list-style: none;
         margin: 0;
         padding: 0 var(--f-brand-space-md);
+        max-height: 560px;
         overflow-y: auto;
         scroll-behavior: smooth;
         scrollbar-width: thin;
@@ -325,28 +325,6 @@ export class TeamSelectionPage {
 
   readonly dropdownOpen = signal(true);
   readonly selectedId = signal<string | null>(this.store.state().fanCard.teamId);
-  readonly listMaxHeight = signal<string>('none');
-
-  constructor() {
-    afterNextRender(() => {
-      this.updateListMaxHeight();
-    });
-  }
-
-  private updateListMaxHeight(): void {
-    const trigger = this.hostElement.nativeElement.querySelector(
-      '.team-selection-page__dropdown-trigger',
-    ) as HTMLElement | null;
-    if (!trigger) return;
-    const rect = trigger.getBoundingClientRect();
-    const available = window.innerHeight - rect.bottom - 16;
-    this.listMaxHeight.set(`${Math.max(available, 120)}px`);
-  }
-
-  @HostListener('window:resize')
-  onResize(): void {
-    this.updateListMaxHeight();
-  }
 
   selectedTeamName(): string | null {
     const selectedId = this.selectedId();
@@ -362,9 +340,6 @@ export class TeamSelectionPage {
 
   toggleDropdown(): void {
     this.dropdownOpen.update(isOpen => !isOpen);
-    if (this.dropdownOpen()) {
-      this.updateListMaxHeight();
-    }
   }
 
   selectTeam(teamId: string): void {
