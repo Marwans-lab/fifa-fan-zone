@@ -410,7 +410,7 @@ const TIMER_DURATION = 10;
           </div>
         </div>
 
-        <div class="swipe-quiz__actions" style="padding: var(--sp-4) var(--sp-4) var(--sp-8); flex-shrink: 0; margin-top: var(--sp-7);">
+        <div class="swipe-quiz__actions" style="padding: var(--sp-4) var(--sp-4) var(--sp-8); flex-shrink: 0; margin-top: 0;">
           <div class="swipe-quiz__actions-row" style="display: flex; align-items: center; justify-content: center; gap: var(--sp-11);">
             <button
               class="swipe-quiz__action-btn swipe-quiz__action-btn--false"
