@@ -19,7 +19,6 @@ const SWIPE_THRESHOLD = 80;
 const ROTATION_FACTOR = 0.12;
 const FEEDBACK_DURATION = 1200;
 const EXIT_DURATION = 420;
-const CHEVRON_LEFT_DARK_ICON = 'assets/icons/Chevron-left-dark.svg';
 
 @Component({
   standalone: true,
@@ -46,97 +45,62 @@ const CHEVRON_LEFT_DARK_ICON = 'assets/icons/Chevron-left-dark.svg';
           flex-direction: column;
         "
       >
-        <header class="swipe-quiz__header" style="padding: var(--sp-4); flex-shrink: 0;">
-          <div class="swipe-quiz__header-row" style="display: flex; align-items: center; gap: var(--sp-3);">
-            <button
-              class="swipe-quiz__back-btn f-button f-button--ghost"
-              type="button"
-              data-ui="back-btn"
-              aria-label="Go back"
-              (click)="handleBack()"
-              style="
-                width: var(--sp-11);
-                min-height: var(--sp-11);
-                padding: 0;
-                border-radius: var(--r-full);
-              "
-            >
-              <img
-                [src]="chevronLeftDarkIcon"
-                width="24"
-                height="24"
-                alt=""
-                aria-hidden="true"
-                class="swipe-quiz__back-icon"
+        <header class="swipe-quiz__header" style="padding: var(--sp-5) var(--sp-4); flex-shrink: 0; display: flex; align-items: center; gap: var(--sp-4);">
+          <button
+            class="swipe-quiz__close-btn"
+            type="button"
+            data-ui="close-btn"
+            aria-label="Close quiz"
+            (click)="handleBack()"
+            style="
+              width: 48px;
+              min-height: 48px;
+              padding: 0;
+              border-radius: 44px;
+              background: var(--c-lt-surface);
+              border: var(--f-brand-border-size-default) solid var(--c-lt-surface);
+              box-shadow: 0px 2px 4px 0px var(--f-brand-color-shadow-default);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+              cursor: pointer;
+            "
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M18 6L6 18M6 6l12 12"
+                stroke="var(--c-lt-text-1)"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               />
-            </button>
+            </svg>
+          </button>
 
-            <div class="swipe-quiz__title-wrap" style="flex: 1; text-align: center;">
-              <span
-                class="swipe-quiz__title"
-                style="
-                  font: var(--f-brand-type-headline-medium);
-                  color: var(--c-lt-text-1);
-                  letter-spacing: var(--tracking-snug);
-                "
-              >
-                {{ quiz().title }}
-              </span>
-            </div>
-
+          <div
+            class="swipe-quiz__progress-track"
+            style="
+              flex: 1;
+              height: 8px;
+              background: var(--c-lt-surface);
+              border-radius: var(--f-brand-radius-rounded);
+              overflow: hidden;
+            "
+          >
             <div
-              class="swipe-quiz__score-badge"
+              class="swipe-quiz__progress-fill"
+              [style.width]="progressWidth()"
               style="
-                min-width: var(--sp-10);
-                min-height: var(--sp-7);
-                border-radius: var(--f-brand-radius-rounded);
-                background: var(--f-brand-color-background-light);
-                border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 0 var(--sp-1);
-                gap: var(--sp-1);
+                height: 100%;
+                background: var(--f-brand-color-flight-status-confirmed);
+                border-radius: 16px;
+                box-shadow: var(--c-progress-fill-shadow);
+                transition: width var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
               "
-            >
-              <span
-                class="swipe-quiz__score-value"
-                style="
-                  font: var(--f-brand-type-caption-medium);
-                  font-weight: var(--weight-med);
-                  color: var(--f-brand-color-accent);
-                "
-              >
-                {{ score() }}
-              </span>
-              <span
-                class="swipe-quiz__score-total"
-                style="
-                  font: var(--f-brand-type-caption);
-                  color: var(--f-brand-color-text-muted);
-                "
-              >
-                /{{ totalStatements() }}
-              </span>
-            </div>
+            ></div>
           </div>
         </header>
-
-        <div class="swipe-quiz__dots-wrap" style="padding: 0 var(--sp-4) var(--sp-4); flex-shrink: 0;">
-          <div class="swipe-quiz__dots" style="display: flex; align-items: center; justify-content: center; gap: var(--sp-1); flex-wrap: wrap;">
-            @for (entry of resultDots(); track $index; let i = $index) {
-              <span
-                class="swipe-quiz__dot"
-                [ngStyle]="dotStyle(i, entry)"
-                style="
-                  display: inline-block;
-                  min-height: var(--sp-2);
-                  border-radius: var(--f-brand-radius-rounded);
-                "
-              ></span>
-            }
-          </div>
-        </div>
 
         <div
           class="swipe-quiz__card-stack"
@@ -486,7 +450,6 @@ const CHEVRON_LEFT_DARK_ICON = 'assets/icons/Chevron-left-dark.svg';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SwipeQuizPage implements OnInit {
-  readonly chevronLeftDarkIcon = CHEVRON_LEFT_DARK_ICON;
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -507,8 +470,8 @@ export class SwipeQuizPage implements OnInit {
   readonly totalStatements = computed(() => this.quiz().statements.length);
   readonly currentStatement = computed(() => this.quiz().statements[this.currentIndex()]);
   readonly labels = computed(() => this.quiz().labels ?? { right: 'True', left: 'False' });
-  readonly resultDots = computed(() => this.results());
   readonly hasNextCard = computed(() => this.currentIndex() < this.totalStatements() - 1);
+  readonly progressWidth = computed(() => `${(this.currentIndex() / this.totalStatements()) * 100}%`);
   readonly isFeedbackVisible = computed(() => this.feedbackState() !== null);
   readonly isFeedbackCorrect = computed(() => this.feedbackState() === 'correct');
   readonly actionsDisabled = computed(() => this.isTransitioning() || this.feedbackState() !== null);
@@ -610,32 +573,6 @@ export class SwipeQuizPage implements OnInit {
     const element = event.currentTarget as HTMLElement | null;
     if (!element) return;
     element.style.transform = 'scale(1)';
-  }
-
-  dotStyle(index: number, result: boolean | null): Record<string, string> {
-    const isCurrent = index === this.currentIndex();
-    if (result === true) {
-      return {
-        width: 'var(--sp-6)',
-        background: 'var(--f-brand-color-border-success)',
-        boxShadow: 'var(--c-glow-success)',
-      };
-    }
-    if (result === false) {
-      return {
-        width: 'var(--sp-6)',
-        background: 'var(--f-brand-color-status-error)',
-        boxShadow: 'var(--c-glow-error)',
-      };
-    }
-    return {
-      width: isCurrent ? 'var(--sp-6)' : 'var(--sp-2)',
-      background: isCurrent ? 'var(--f-brand-color-text-default)' : 'var(--f-brand-color-background-light)',
-      transition: this.prefersReducedMotion
-        ? 'none'
-        : 'all var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
-      boxShadow: 'none',
-    };
   }
 
   backgroundCardStyle(): Record<string, string> {
