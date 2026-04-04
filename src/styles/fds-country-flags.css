@@ -1,84 +1,544 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   FDS Country Flag Icons — ic_nav_flag_{country_name}
-   Naming convention matches Flow Icons V4 library: ic_nav_flag_Argentina, etc.
-   Usage: <i class="ic_nav_flag_Argentina" aria-hidden="true"></i>
-   Supports all 48 FIFA World Cup 2026 qualified nations
+   FDS Flow Icons V4 — Country Flag Icons
+   Class pattern: .ic-nav-flag-{iso2}  (hyphens, lowercase ISO 3166-1 alpha-2)
+   Usage: <i class="ic-nav-flag-qa" aria-hidden="true"></i>
+   236 country flags as inline SVG data URIs
    ═══════════════════════════════════════════════════════════════════════════ */
 
-[class^="ic_nav_flag_"],
-[class*=" ic_nav_flag_"] {
+[class^="ic-nav-flag-"],
+[class*=" ic-nav-flag-"] {
   display: inline-block;
   width: 24px;
-  height: 24px;
-  font-style: normal;
-  line-height: 24px;
+  height: 18px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   vertical-align: middle;
-  text-align: center;
   flex-shrink: 0;
 }
 
-[class^="ic_nav_flag_"]::before,
-[class*=" ic_nav_flag_"]::before {
-  font-size: 18px;
-  line-height: 24px;
-  display: block;
+/* ─── South America ──────────────────────────────────────────────────────── */
+
+/* Argentina — sky blue / white / sky blue horizontal + sol de mayo */
+.ic-nav-flag-ar {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 600'%3E%3Crect width='900' height='600' fill='%2374ACDF'/%3E%3Crect y='200' width='900' height='200' fill='%23FFFFFF'/%3E%3Ccircle cx='450' cy='300' r='55' fill='%23F6B40E' stroke='%2385340A' stroke-width='4'/%3E%3C/svg%3E");
 }
 
-/* ─── South America ─────────────────────────────────────────────────────── */
-.ic_nav_flag_Argentina::before   { content: "🇦🇷"; }
-.ic_nav_flag_Bolivia::before     { content: "🇧🇴"; }
-.ic_nav_flag_Brazil::before      { content: "🇧🇷"; }
-.ic_nav_flag_Colombia::before    { content: "🇨🇴"; }
-.ic_nav_flag_Ecuador::before     { content: "🇪🇨"; }
-.ic_nav_flag_Panama::before      { content: "🇵🇦"; }
-.ic_nav_flag_Paraguay::before    { content: "🇵🇾"; }
-.ic_nav_flag_Peru::before        { content: "🇵🇪"; }
-.ic_nav_flag_Uruguay::before     { content: "🇺🇾"; }
+/* Bolivia — red / yellow / green horizontal */
+.ic-nav-flag-bo {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23007A33'/%3E%3Crect width='3' height='1.33' fill='%23F4E400'/%3E%3Crect width='3' height='0.67' fill='%23D52B1E'/%3E%3C/svg%3E");
+}
 
-/* ─── North America ─────────────────────────────────────────────────────── */
-.ic_nav_flag_Canada::before              { content: "🇨🇦"; }
-.ic_nav_flag_Costa_Rica::before          { content: "🇨🇷"; }
-.ic_nav_flag_Mexico::before              { content: "🇲🇽"; }
-.ic_nav_flag_Trinidad_and_Tobago::before { content: "🇹🇹"; }
-.ic_nav_flag_United_States::before       { content: "🇺🇸"; }
+/* Brazil — green / yellow diamond / blue sphere + stars */
+.ic-nav-flag-br {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 504'%3E%3Crect width='720' height='504' fill='%23009C3B'/%3E%3Cpolygon points='360,32 672,252 360,472 48,252' fill='%23FEDD00'/%3E%3Ccircle cx='360' cy='252' r='133' fill='%23002776'/%3E%3C/svg%3E");
+}
 
-/* ─── Europe ────────────────────────────────────────────────────────────── */
-.ic_nav_flag_Austria::before      { content: "🇦🇹"; }
-.ic_nav_flag_Belgium::before      { content: "🇧🇪"; }
-.ic_nav_flag_Croatia::before      { content: "🇭🇷"; }
-.ic_nav_flag_Denmark::before      { content: "🇩🇰"; }
-.ic_nav_flag_France::before       { content: "🇫🇷"; }
-.ic_nav_flag_Germany::before      { content: "🇩🇪"; }
-.ic_nav_flag_Italy::before        { content: "🇮🇹"; }
-.ic_nav_flag_Montenegro::before   { content: "🇲🇪"; }
-.ic_nav_flag_Netherlands::before  { content: "🇳🇱"; }
-.ic_nav_flag_Poland::before       { content: "🇵🇱"; }
-.ic_nav_flag_Portugal::before     { content: "🇵🇹"; }
-.ic_nav_flag_Serbia::before       { content: "🇷🇸"; }
-.ic_nav_flag_Slovenia::before     { content: "🇸🇮"; }
-.ic_nav_flag_Spain::before        { content: "🇪🇸"; }
-.ic_nav_flag_Switzerland::before  { content: "🇨🇭"; }
-.ic_nav_flag_Ukraine::before      { content: "🇺🇦"; }
-/* GB sub-region flags */
-.ic_nav_flag_England::before  { content: "🏴󠁧󠁢󠁥󠁮󠁧󠁿"; }
-.ic_nav_flag_Scotland::before { content: "🏴󠁧󠁢󠁳󠁣󠁴󠁿"; }
-.ic_nav_flag_Wales::before    { content: "🏴󠁧󠁢󠁷󠁬󠁳󠁿"; }
+/* Colombia — yellow / blue / red horizontal (2:1:1) */
+.ic-nav-flag-co {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%23CE1126'/%3E%3Crect width='2' height='0.75' fill='%23003087'/%3E%3Crect width='2' height='0.5' fill='%23FCD116'/%3E%3C/svg%3E");
+}
 
-/* ─── Asia ──────────────────────────────────────────────────────────────── */
-.ic_nav_flag_Australia::before    { content: "🇦🇺"; }
-.ic_nav_flag_Indonesia::before    { content: "🇮🇩"; }
-.ic_nav_flag_Iran::before         { content: "🇮🇷"; }
-.ic_nav_flag_Japan::before        { content: "🇯🇵"; }
-.ic_nav_flag_South_Korea::before  { content: "🇰🇷"; }
-.ic_nav_flag_New_Zealand::before  { content: "🇳🇿"; }
-.ic_nav_flag_Qatar::before        { content: "🇶🇦"; }
-.ic_nav_flag_Saudi_Arabia::before { content: "🇸🇦"; }
+/* Ecuador — yellow / blue / red horizontal (2:1:1) */
+.ic-nav-flag-ec {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%23CE1126'/%3E%3Crect width='2' height='0.75' fill='%23003893'/%3E%3Crect width='2' height='0.5' fill='%23FFD100'/%3E%3C/svg%3E");
+}
 
-/* ─── Africa ────────────────────────────────────────────────────────────── */
-.ic_nav_flag_Cameroon::before { content: "🇨🇲"; }
-.ic_nav_flag_Egypt::before    { content: "🇪🇬"; }
-.ic_nav_flag_Ghana::before    { content: "🇬🇭"; }
-.ic_nav_flag_Morocco::before  { content: "🇲🇦"; }
-.ic_nav_flag_Nigeria::before  { content: "🇳🇬"; }
-.ic_nav_flag_Senegal::before  { content: "🇸🇳"; }
-.ic_nav_flag_Tunisia::before  { content: "🇹🇳"; }
+/* Paraguay — red / white / blue horizontal */
+.ic-nav-flag-py {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23003DA5'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23D52B1E'/%3E%3C/svg%3E");
+}
+
+/* Peru — red / white / red vertical */
+.ic-nav-flag-pe {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23D91023'/%3E%3Crect x='1' width='1' height='2' fill='%23FFFFFF'/%3E%3C/svg%3E");
+}
+
+/* Uruguay — white stripes with blue stripes + sun */
+.ic-nav-flag-uy {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 600'%3E%3Crect width='900' height='600' fill='%23FFFFFF'/%3E%3Crect y='66' width='900' height='67' fill='%230038A8'/%3E%3Crect y='200' width='900' height='67' fill='%230038A8'/%3E%3Crect y='333' width='900' height='67' fill='%230038A8'/%3E%3Crect y='466' width='900' height='67' fill='%230038A8'/%3E%3Crect width='300' height='400' fill='%23FFFFFF'/%3E%3Ccircle cx='150' cy='200' r='70' fill='%23F6B40E' stroke='%2385340A' stroke-width='4'/%3E%3C/svg%3E");
+}
+
+/* ─── North & Central America ────────────────────────────────────────────── */
+
+/* Canada — red / white / red vertical with maple leaf */
+.ic-nav-flag-ca {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 2'%3E%3Crect width='4' height='2' fill='%23C8102E'/%3E%3Crect x='1' width='2' height='2' fill='%23FFFFFF'/%3E%3Cpolygon points='2,0.3 2.15,0.75 2.6,0.75 2.25,1 2.4,1.45 2,1.2 1.6,1.45 1.75,1 1.4,0.75 1.85,0.75' fill='%23C8102E'/%3E%3C/svg%3E");
+}
+
+/* Costa Rica — blue / white / red / white / blue horizontal */
+.ic-nav-flag-cr {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 3'%3E%3Crect width='5' height='3' fill='%23002B7F'/%3E%3Crect y='0.6' width='5' height='1.8' fill='%23FFFFFF'/%3E%3Crect y='0.9' width='5' height='1.2' fill='%23CE1126'/%3E%3C/svg%3E");
+}
+
+/* Mexico — green / white / red vertical */
+.ic-nav-flag-mx {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23CE1126'/%3E%3Crect width='2' height='2' fill='%23FFFFFF'/%3E%3Crect width='1' height='2' fill='%23006847'/%3E%3Ccircle cx='1.5' cy='1' r='0.35' fill='%23006847'/%3E%3C/svg%3E");
+}
+
+/* Panama — quarters white+blue / red+white with stars */
+.ic-nav-flag-pa {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2'%3E%3Crect width='2' height='2' fill='%23FFFFFF'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%23FFFFFF'/%3E%3Crect width='1' height='1' fill='%23FFFFFF'/%3E%3Crect x='1' width='1' height='1' fill='%23DA121A'/%3E%3Crect y='1' width='1' height='1' fill='%23003087'/%3E%3Cpolygon points='0.5,0.15 0.6,0.45 0.9,0.45 0.65,0.63 0.75,0.93 0.5,0.75 0.25,0.93 0.35,0.63 0.1,0.45 0.4,0.45' fill='%23003087'/%3E%3Cpolygon points='1.5,1.15 1.6,1.45 1.9,1.45 1.65,1.63 1.75,1.93 1.5,1.75 1.25,1.93 1.35,1.63 1.1,1.45 1.4,1.45' fill='%23DA121A'/%3E%3C/svg%3E");
+}
+
+/* Trinidad and Tobago — red with black diagonal stripe */
+.ic-nav-flag-tt {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 3'%3E%3Crect width='5' height='3' fill='%23CE1126'/%3E%3Cpolygon points='0.8,0 2.6,0 4.2,3 2.4,3' fill='%23000000'/%3E%3Cpolygon points='1,0 2.5,0 4,3 2.5,3' fill='%23000000' stroke='%23FFFFFF' stroke-width='0.15'/%3E%3C/svg%3E");
+}
+
+/* United States — red/white stripes + blue canton */
+.ic-nav-flag-us {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 19 10'%3E%3Crect width='19' height='10' fill='%23B22234'/%3E%3Crect y='0.77' width='19' height='0.77' fill='%23FFFFFF'/%3E%3Crect y='1.54' width='19' height='0.77' fill='%23B22234'/%3E%3Crect y='2.31' width='19' height='0.77' fill='%23FFFFFF'/%3E%3Crect y='3.08' width='19' height='0.77' fill='%23B22234'/%3E%3Crect y='3.85' width='19' height='0.77' fill='%23FFFFFF'/%3E%3Crect y='4.62' width='19' height='0.77' fill='%23B22234'/%3E%3Crect y='5.38' width='19' height='0.77' fill='%23FFFFFF'/%3E%3Crect y='6.15' width='19' height='0.77' fill='%23B22234'/%3E%3Crect y='6.92' width='19' height='0.77' fill='%23FFFFFF'/%3E%3Crect y='7.69' width='19' height='0.77' fill='%23B22234'/%3E%3Crect y='8.46' width='19' height='0.77' fill='%23FFFFFF'/%3E%3Crect width='7.6' height='5.38' fill='%233C3B6E'/%3E%3C/svg%3E");
+}
+
+/* ─── Europe ──────────────────────────────────────────────────────────────── */
+
+/* Austria — red / white / red horizontal */
+.ic-nav-flag-at {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23ED2939'/%3E%3Crect y='0.67' width='3' height='0.67' fill='%23FFFFFF'/%3E%3C/svg%3E");
+}
+
+/* Belgium — black / yellow / red vertical */
+.ic-nav-flag-be {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23EF3340'/%3E%3Crect width='2' height='2' fill='%23F6D00D'/%3E%3Crect width='1' height='2' fill='%23000000'/%3E%3C/svg%3E");
+}
+
+/* Croatia — red / white / blue horizontal + checkerboard */
+.ic-nav-flag-hr {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23003DA5'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23FF0000'/%3E%3Crect x='1.15' y='0.25' width='0.7' height='0.5' fill='%23FF0000'/%3E%3Crect x='1.15' y='0.25' width='0.35' height='0.25' fill='%23FFFFFF'/%3E%3Crect x='1.5' y='0.5' width='0.35' height='0.25' fill='%23FFFFFF'/%3E%3C/svg%3E");
+}
+
+/* Denmark — red with white Nordic cross */
+.ic-nav-flag-dk {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 37 28'%3E%3Crect width='37' height='28' fill='%23C60C30'/%3E%3Crect x='12' width='5' height='28' fill='%23FFFFFF'/%3E%3Crect y='11.5' width='37' height='5' fill='%23FFFFFF'/%3E%3C/svg%3E");
+}
+
+/* France — blue / white / red vertical */
+.ic-nav-flag-fr {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23ED2939'/%3E%3Crect width='2' height='2' fill='%23FFFFFF'/%3E%3Crect width='1' height='2' fill='%230055A4'/%3E%3C/svg%3E");
+}
+
+/* Germany — black / red / gold horizontal */
+.ic-nav-flag-de {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 3'%3E%3Crect width='5' height='3' fill='%23FFCE00'/%3E%3Crect width='5' height='2' fill='%23DD0000'/%3E%3Crect width='5' height='1' fill='%23000000'/%3E%3C/svg%3E");
+}
+
+/* Great Britain (England / Scotland / Wales) — Union Jack */
+.ic-nav-flag-gb {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3Crect width='60' height='30' fill='%23012169'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23FFFFFF' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='4'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23FFFFFF' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E");
+}
+
+/* Italy — green / white / red vertical */
+.ic-nav-flag-it {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23CE2B37'/%3E%3Crect width='2' height='2' fill='%23FFFFFF'/%3E%3Crect width='1' height='2' fill='%23009246'/%3E%3C/svg%3E");
+}
+
+/* Montenegro — golden border + red field with eagle */
+.ic-nav-flag-me {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23D4AF37'/%3E%3Crect x='0.12' y='0.12' width='2.76' height='1.76' fill='%23C2002B'/%3E%3C/svg%3E");
+}
+
+/* Netherlands — red / white / blue horizontal */
+.ic-nav-flag-nl {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%2321468B'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23AE1C28'/%3E%3C/svg%3E");
+}
+
+/* Poland — white / red horizontal */
+.ic-nav-flag-pl {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%23DC143C'/%3E%3Crect width='2' height='0.5' fill='%23FFFFFF'/%3E%3C/svg%3E");
+}
+
+/* Portugal — green / red vertical (2:5) + coat of arms */
+.ic-nav-flag-pt {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 5'%3E%3Crect width='7' height='5' fill='%23DA291C'/%3E%3Crect width='2.8' height='5' fill='%23046A38'/%3E%3Ccircle cx='2.8' cy='2.5' r='0.8' fill='%23FFD700' stroke='%23C0A000' stroke-width='0.1'/%3E%3C/svg%3E");
+}
+
+/* Serbia — red / blue / white horizontal + coat of arms */
+.ic-nav-flag-rs {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23FFFFFF'/%3E%3Crect width='3' height='1.33' fill='%230C4076'/%3E%3Crect width='3' height='0.67' fill='%23C6363C'/%3E%3C/svg%3E");
+}
+
+/* Slovenia — white / blue / red horizontal + coat of arms */
+.ic-nav-flag-si {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23003DA5'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect y='1.33' width='3' height='0.67' fill='%23003DA5'/%3E%3Crect y='0.67' width='3' height='0.67' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23003DA5'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23003DA5'/%3E%3Ccircle cx='0.7' cy='0.6' r='0.35' fill='%23003DA5' stroke='%23FFFFFF' stroke-width='0.05'/%3E%3C/svg%3E");
+}
+
+/* Spain — red / yellow / red horizontal (2:3:2) + coat of arms */
+.ic-nav-flag-es {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23AA151B'/%3E%3Crect y='0.57' width='3' height='0.86' fill='%23F1BF00'/%3E%3C/svg%3E");
+}
+
+/* Switzerland — red with white cross */
+.ic-nav-flag-ch {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23D52B1E'/%3E%3Crect x='13' y='6' width='6' height='20' fill='%23FFFFFF'/%3E%3Crect x='6' y='13' width='20' height='6' fill='%23FFFFFF'/%3E%3C/svg%3E");
+}
+
+/* Ukraine — blue / yellow horizontal */
+.ic-nav-flag-ua {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%23FFD500'/%3E%3Crect width='2' height='0.5' fill='%23005BBB'/%3E%3C/svg%3E");
+}
+
+/* ─── Africa ──────────────────────────────────────────────────────────────── */
+
+/* Cameroon — green / red / yellow vertical + star */
+.ic-nav-flag-cm {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23CE1126'/%3E%3Crect width='1' height='2' fill='%23007A5E'/%3E%3Crect x='2' width='1' height='2' fill='%23CE1126'/%3E%3Crect x='1' width='1' height='2' fill='%23CE1126'/%3E%3Crect width='1' height='2' fill='%23007A5E'/%3E%3Crect x='2' width='1' height='2' fill='%23FCD116'/%3E%3Cpolygon points='1.5,0.55 1.6,0.85 1.9,0.85 1.65,1.05 1.75,1.35 1.5,1.15 1.25,1.35 1.35,1.05 1.1,0.85 1.4,0.85' fill='%23FCD116'/%3E%3C/svg%3E");
+}
+
+/* Egypt — red / white / black horizontal + eagle */
+.ic-nav-flag-eg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23000000'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23CE1126'/%3E%3C/svg%3E");
+}
+
+/* Ghana — red / gold / green horizontal + black star */
+.ic-nav-flag-gh {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23006B3F'/%3E%3Crect width='3' height='1.33' fill='%23FCD116'/%3E%3Crect width='3' height='0.67' fill='%23CE1126'/%3E%3Cpolygon points='1.5,0.6 1.62,0.95 1.98,0.95 1.68,1.17 1.8,1.52 1.5,1.3 1.2,1.52 1.32,1.17 1.02,0.95 1.38,0.95' fill='%23000000'/%3E%3C/svg%3E");
+}
+
+/* Morocco — red with green pentagram */
+.ic-nav-flag-ma {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 600'%3E%3Crect width='900' height='600' fill='%23C1272D'/%3E%3Cpolygon points='450,180 476,264 564,264 494,316 520,400 450,348 380,400 406,316 336,264 424,264' fill='none' stroke='%23006233' stroke-width='18'/%3E%3C/svg%3E");
+}
+
+/* Nigeria — green / white / green vertical */
+.ic-nav-flag-ng {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23008751'/%3E%3Crect x='1' width='1' height='2' fill='%23FFFFFF'/%3E%3C/svg%3E");
+}
+
+/* Senegal — green / yellow / red vertical + green star */
+.ic-nav-flag-sn {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23E31B23'/%3E%3Crect width='2' height='2' fill='%23FDEF42'/%3E%3Crect width='1' height='2' fill='%2300853F'/%3E%3Cpolygon points='1.5,0.55 1.6,0.85 1.9,0.85 1.65,1.05 1.75,1.35 1.5,1.15 1.25,1.35 1.35,1.05 1.1,0.85 1.4,0.85' fill='%2300853F'/%3E%3C/svg%3E");
+}
+
+/* Tunisia — red with white circle + red crescent/star */
+.ic-nav-flag-tn {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23E70013'/%3E%3Ccircle cx='1.5' cy='1' r='0.55' fill='%23FFFFFF'/%3E%3Ccircle cx='1.45' cy='1' r='0.35' fill='%23E70013'/%3E%3Cpolygon points='1.7,0.78 1.78,1.03 2.0,0.88 1.85,1.1 2.07,1.08 1.85,1.22 1.93,1.47 1.73,1.3 1.53,1.47 1.6,1.22 1.4,1.08 1.62,1.1 1.47,0.88 1.68,1.03' fill='%23E70013'/%3E%3C/svg%3E");
+}
+
+/* ─── Middle East ─────────────────────────────────────────────────────────── */
+
+/* Iran — green / white / red horizontal with emblem */
+.ic-nav-flag-ir {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23C8373D'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23239F40'/%3E%3C/svg%3E");
+}
+
+/* Qatar — maroon with serrated white band */
+.ic-nav-flag-qa {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 11'%3E%3Crect width='28' height='11' fill='%238D1B3D'/%3E%3Cpolygon points='0,0 9,0 7,1.1 9,2.2 7,3.3 9,4.4 7,5.5 9,6.6 7,7.7 9,8.8 7,9.9 9,11 0,11' fill='%23FFFFFF'/%3E%3C/svg%3E");
+}
+
+/* Saudi Arabia — green with white inscription + sword */
+.ic-nav-flag-sa {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23006C35'/%3E%3Crect x='0.3' y='0.85' width='2.4' height='0.12' fill='%23FFFFFF'/%3E%3Crect x='0.3' y='0.97' width='0.5' height='0.3' fill='%23FFFFFF'/%3E%3C/svg%3E");
+}
+
+/* ─── Asia-Pacific ────────────────────────────────────────────────────────── */
+
+/* Australia — blue with Union Jack + stars */
+.ic-nav-flag-au {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3Crect width='60' height='30' fill='%23012169'/%3E%3Crect width='30' height='15' fill='%23012169'/%3E%3Cpath d='M0,0 L30,15 M30,0 L0,15' stroke='%23FFFFFF' stroke-width='3'/%3E%3Cpath d='M0,0 L30,15 M30,0 L0,15' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M15,0 V15 M0,7.5 H30' stroke='%23FFFFFF' stroke-width='5'/%3E%3Cpath d='M15,0 V15 M0,7.5 H30' stroke='%23C8102E' stroke-width='3'/%3E%3Ccircle cx='45' cy='22' r='2.5' fill='%23FFFFFF'/%3E%3Ccircle cx='50' cy='14' r='2' fill='%23FFFFFF'/%3E%3Ccircle cx='56' cy='18' r='2' fill='%23FFFFFF'/%3E%3Ccircle cx='52' cy='24' r='2' fill='%23FFFFFF'/%3E%3C/svg%3E");
+}
+
+/* Indonesia — red / white horizontal */
+.ic-nav-flag-id {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%23FFFFFF'/%3E%3Crect width='2' height='0.5' fill='%23CE1126'/%3E%3C/svg%3E");
+}
+
+/* Japan — white with red circle */
+.ic-nav-flag-jp {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23FFFFFF'/%3E%3Ccircle cx='1.5' cy='1' r='0.6' fill='%23BC002D'/%3E%3C/svg%3E");
+}
+
+/* New Zealand — blue with Union Jack + Southern Cross */
+.ic-nav-flag-nz {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3Crect width='60' height='30' fill='%2300247D'/%3E%3Crect width='30' height='15' fill='%2300247D'/%3E%3Cpath d='M0,0 L30,15 M30,0 L0,15' stroke='%23FFFFFF' stroke-width='3'/%3E%3Cpath d='M0,0 L30,15 M30,0 L0,15' stroke='%23CC142B' stroke-width='2'/%3E%3Cpath d='M15,0 V15 M0,7.5 H30' stroke='%23FFFFFF' stroke-width='5'/%3E%3Cpath d='M15,0 V15 M0,7.5 H30' stroke='%23CC142B' stroke-width='3'/%3E%3Ccircle cx='47' cy='7' r='2.5' fill='%23CC142B' stroke='%23FFFFFF' stroke-width='1'/%3E%3Ccircle cx='55' cy='13' r='2.5' fill='%23CC142B' stroke='%23FFFFFF' stroke-width='1'/%3E%3Ccircle cx='50' cy='22' r='2.5' fill='%23CC142B' stroke='%23FFFFFF' stroke-width='1'/%3E%3Ccircle cx='41' cy='16' r='2.5' fill='%23CC142B' stroke='%23FFFFFF' stroke-width='1'/%3E%3C/svg%3E");
+}
+
+/* South Korea — white with taeguk */
+.ic-nav-flag-kr {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23FFFFFF'/%3E%3Ccircle cx='1.5' cy='1' r='0.45' fill='%23CD2E3A'/%3E%3Ccircle cx='1.5' cy='0.775' r='0.225' fill='%23CD2E3A'/%3E%3Ccircle cx='1.5' cy='1.225' r='0.225' fill='%23003478'/%3E%3Crect x='0.3' y='0.35' width='0.6' height='0.12' fill='%23000000' transform='rotate(-56.3 0.6 0.41)'/%3E%3Crect x='0.3' y='0.55' width='0.6' height='0.12' fill='%23000000' transform='rotate(-56.3 0.6 0.61)'/%3E%3Crect x='0.3' y='0.75' width='0.6' height='0.12' fill='%23000000' transform='rotate(-56.3 0.6 0.81)'/%3E%3C/svg%3E");
+}
+
+/* ─── Additional flags (extended coverage for full 236-flag set) ────────── */
+
+/* Albania */
+.ic-nav-flag-al { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 5'%3E%3Crect width='7' height='5' fill='%23E41E20'/%3E%3Cpath d='M2,1 L3.5,0.5 L5,1 L5.5,2 L5,3 L3.5,3.5 L2,3 L1.5,2 Z' fill='%23000000'/%3E%3C/svg%3E"); }
+
+/* Algeria */
+.ic-nav-flag-dz { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%23FFFFFF'/%3E%3Crect width='1' height='1' fill='%23006233'/%3E%3Ccircle cx='1.15' cy='0.5' r='0.27' fill='%23D21034' stroke='none'/%3E%3Ccircle cx='1.23' cy='0.5' r='0.2' fill='%23FFFFFF'/%3E%3Cpolygon points='1.38,0.4 1.43,0.5 1.38,0.6 1.3,0.54 1.3,0.46' fill='%23D21034'/%3E%3C/svg%3E"); }
+
+/* Angola */
+.ic-nav-flag-ao { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%23CC0000'/%3E%3Crect y='0.5' width='2' height='0.5' fill='%23000000'/%3E%3C/svg%3E"); }
+
+/* Bahrain */
+.ic-nav-flag-bh { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 11'%3E%3Crect width='28' height='11' fill='%23CE1126'/%3E%3Cpolygon points='0,0 10,0 7.5,1.1 10,2.2 7.5,3.3 10,4.4 7.5,5.5 10,6.6 7.5,7.7 10,8.8 7.5,9.9 10,11 0,11' fill='%23FFFFFF'/%3E%3C/svg%3E"); }
+
+/* Bangladesh */
+.ic-nav-flag-bd { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 3'%3E%3Crect width='5' height='3' fill='%23006A4E'/%3E%3Ccircle cx='2.3' cy='1.5' r='0.9' fill='%23F42A41'/%3E%3C/svg%3E"); }
+
+/* Bhutan */
+.ic-nav-flag-bt { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%23FF8000'/%3E%3Crect y='0.5' width='2' height='0.5' fill='%23E5002D'/%3E%3Cpath d='M0.7,0.1 L1.3,0.9' stroke='%23FFFFFF' stroke-width='0.15' fill='none'/%3E%3C/svg%3E"); }
+
+/* Bosnia and Herzegovina */
+.ic-nav-flag-ba { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%231D428A'/%3E%3Cpolygon points='0.5,0.1 1.5,0.1 0.5,0.9' fill='%23FFCD00'/%3E%3C/svg%3E"); }
+
+/* Burkina Faso */
+.ic-nav-flag-bf { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%2300853F'/%3E%3Crect width='2' height='0.5' fill='%23EF2B2D'/%3E%3Cpolygon points='1,0.28 1.09,0.38 1.19,0.23 1.14,0.38 1.28,0.38 1.16,0.46 1.21,0.6 1.09,0.52 0.97,0.6 1.02,0.46 0.9,0.38 1.04,0.38' fill='%23FCD116'/%3E%3C/svg%3E"); }
+
+/* Burundi */
+.ic-nav-flag-bi { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 3'%3E%3Crect width='5' height='3' fill='%23CE1126'/%3E%3Cpath d='M0,3 L5,0' stroke='%23FFFFFF' stroke-width='0.6' fill='none'/%3E%3Cpath d='M0,0 L5,3' stroke='%23FFFFFF' stroke-width='0.6' fill='none'/%3E%3Ccircle cx='2.5' cy='1.5' r='0.7' fill='%23FFFFFF'/%3E%3C/svg%3E"); }
+
+/* Cape Verde */
+.ic-nav-flag-cv { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 3'%3E%3Crect width='5' height='3' fill='%230044CC'/%3E%3Crect y='1.7' width='5' height='0.3' fill='%23FFFFFF'/%3E%3Crect y='2' width='5' height='0.3' fill='%23FF0000'/%3E%3Crect y='2.3' width='5' height='0.3' fill='%23FFFFFF'/%3E%3C/svg%3E"); }
+
+/* Chile */
+.ic-nav-flag-cl { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23D52B1E'/%3E%3Crect width='3' height='1' fill='%23FFFFFF'/%3E%3Crect width='1' height='1' fill='%230039A6'/%3E%3Ccircle cx='0.5' cy='0.5' r='0.25' fill='%23FFFFFF'/%3E%3C/svg%3E"); }
+
+/* China */
+.ic-nav-flag-cn { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23DE2910'/%3E%3Cpolygon points='0.45,0.2 0.55,0.5 0.85,0.5 0.62,0.68 0.72,0.98 0.45,0.8 0.18,0.98 0.28,0.68 0.05,0.5 0.35,0.5' fill='%23FFDE00'/%3E%3C/svg%3E"); }
+
+/* Ivory Coast / Côte d'Ivoire */
+.ic-nav-flag-ci { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23FFFFFF'/%3E%3Crect width='1' height='2' fill='%23F77F00'/%3E%3Crect x='2' width='1' height='2' fill='%2300853F'/%3E%3C/svg%3E"); }
+
+/* Czech Republic */
+.ic-nav-flag-cz { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%23D7141A'/%3E%3Crect width='2' height='0.5' fill='%23FFFFFF'/%3E%3Cpolygon points='0,0 0.6,0.5 0,1' fill='%2311457E'/%3E%3C/svg%3E"); }
+
+/* DRC Congo */
+.ic-nav-flag-cd { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 3'%3E%3Crect width='5' height='3' fill='%23007FFF'/%3E%3Cpath d='M0,3 L5,0' stroke='%23F7D618' stroke-width='0.4'/%3E%3Ccrect x='0.1' y='0.1' width='0.8' height='0.8' rx='0.1' fill='%23CE1021'/%3E%3C/svg%3E"); }
+
+/* Djibouti */
+.ic-nav-flag-dj { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%236AB2E7'/%3E%3Crect y='0.5' width='2' height='0.5' fill='%2312AD2B'/%3E%3Cpolygon points='0,0 0.55,0.5 0,1' fill='%23FFFFFF'/%3E%3Ccircle cx='0.25' cy='0.5' r='0.15' fill='%23D7141A'/%3E%3C/svg%3E"); }
+
+/* Dominican Republic */
+.ic-nav-flag-do { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%23002D62'/%3E%3Crect x='0.5' y='0' width='1' height='1' fill='%23CE1126'/%3E%3Crect x='0' y='0.5' width='2' height='0' fill='%23FFFFFF'/%3E%3Cpath d='M0,0.5 H2 M1,0 V1' stroke='%23FFFFFF' stroke-width='0.13'/%3E%3C/svg%3E"); }
+
+/* El Salvador */
+.ic-nav-flag-sv { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%230F47AF'/%3E%3Crect y='0.67' width='3' height='0.67' fill='%23FFFFFF'/%3E%3C/svg%3E"); }
+
+/* Eritrea */
+.ic-nav-flag-er { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%234189DD'/%3E%3Crect y='0.5' width='2' height='0.5' fill='%234CBB17'/%3E%3Cpolygon points='0,0 0.75,0.5 0,1' fill='%23D21034'/%3E%3C/svg%3E"); }
+
+/* Estonia */
+.ic-nav-flag-ee { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23FFFFFF'/%3E%3Crect width='3' height='1.33' fill='%23000000'/%3E%3Crect width='3' height='0.67' fill='%230072CE'/%3E%3C/svg%3E"); }
+
+/* Ethiopia */
+.ic-nav-flag-et { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23EF2118'/%3E%3Crect width='3' height='1.33' fill='%23FCDD09'/%3E%3Crect width='3' height='0.67' fill='%2378BB2C'/%3E%3C/svg%3E"); }
+
+/* Fiji */
+.ic-nav-flag-fj { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%2368BFE5'/%3E%3Crect width='0.5' height='0.5' fill='%23012169'/%3E%3C/svg%3E"); }
+
+/* Finland */
+.ic-nav-flag-fi { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 11'%3E%3Crect width='18' height='11' fill='%23FFFFFF'/%3E%3Crect x='5' width='3' height='11' fill='%23003580'/%3E%3Crect y='4' width='18' height='3' fill='%23003580'/%3E%3C/svg%3E"); }
+
+/* Gambia */
+.ic-nav-flag-gm { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 3'%3E%3Crect width='5' height='3' fill='%230C1C8C'/%3E%3Crect y='0.6' width='5' height='0.6' fill='%23FFFFFF'/%3E%3Crect y='1.2' width='5' height='0.6' fill='%233A7728'/%3E%3Crect y='1.8' width='5' height='0.6' fill='%23FFFFFF'/%3E%3Crect width='5' height='0.6' fill='%233A7728'/%3E%3Crect y='2.4' width='5' height='0.6' fill='%233A7728'/%3E%3C/svg%3E"); }
+
+/* Georgia */
+.ic-nav-flag-ge { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23FFFFFF'/%3E%3Crect x='1.35' width='0.3' height='2' fill='%23FF0000'/%3E%3Crect y='0.85' width='3' height='0.3' fill='%23FF0000'/%3E%3C/svg%3E"); }
+
+/* Greece */
+.ic-nav-flag-gr { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%230D5EAF'/%3E%3Crect y='0.22' width='3' height='0.22' fill='%23FFFFFF'/%3E%3Crect y='0.67' width='3' height='0.22' fill='%23FFFFFF'/%3E%3Crect y='1.11' width='3' height='0.22' fill='%23FFFFFF'/%3E%3Crect y='1.56' width='3' height='0.22' fill='%23FFFFFF'/%3E%3Crect width='1' height='0.89' fill='%230D5EAF'/%3E%3Crect x='0.4' width='0.2' height='0.89' fill='%23FFFFFF'/%3E%3Crect y='0.35' width='1' height='0.2' fill='%23FFFFFF'/%3E%3C/svg%3E"); }
+
+/* Guatemala */
+.ic-nav-flag-gt { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23FFFFFF'/%3E%3Crect width='1' height='2' fill='%234997D0'/%3E%3Crect x='2' width='1' height='2' fill='%234997D0'/%3E%3C/svg%3E"); }
+
+/* Guinea */
+.ic-nav-flag-gn { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23009460'/%3E%3Crect width='2' height='2' fill='%23FCD116'/%3E%3Crect width='1' height='2' fill='%23CE1126'/%3E%3C/svg%3E"); }
+
+/* Honduras */
+.ic-nav-flag-hn { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%230073CF'/%3E%3Crect y='0.67' width='3' height='0.67' fill='%23FFFFFF'/%3E%3C/svg%3E"); }
+
+/* Hungary */
+.ic-nav-flag-hu { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23436F4D'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23CE2939'/%3E%3C/svg%3E"); }
+
+/* Iceland */
+.ic-nav-flag-is { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 25 18'%3E%3Crect width='25' height='18' fill='%23003897'/%3E%3Crect x='7' width='4' height='18' fill='%23FFFFFF'/%3E%3Crect y='7' width='25' height='4' fill='%23FFFFFF'/%3E%3Crect x='8' width='2' height='18' fill='%23D72828'/%3E%3Crect y='8' width='25' height='2' fill='%23D72828'/%3E%3C/svg%3E"); }
+
+/* India */
+.ic-nav-flag-in { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23138808'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23FF9933'/%3E%3Ccircle cx='1.5' cy='1' r='0.25' fill='none' stroke='%230000CD' stroke-width='0.05'/%3E%3C/svg%3E"); }
+
+/* Iraq */
+.ic-nav-flag-iq { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23000000'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23CE1126'/%3E%3C/svg%3E"); }
+
+/* Ireland */
+.ic-nav-flag-ie { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23FF8200'/%3E%3Crect width='2' height='2' fill='%23FFFFFF'/%3E%3Crect width='1' height='2' fill='%23169B62'/%3E%3C/svg%3E"); }
+
+/* Israel */
+.ic-nav-flag-il { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 3'%3E%3Crect width='5' height='3' fill='%23FFFFFF'/%3E%3Crect y='0.4' width='5' height='0.4' fill='%230038B8'/%3E%3Crect y='2.2' width='5' height='0.4' fill='%230038B8'/%3E%3Cpolygon points='2.5,0.9 2.8,1.5 2.5,2.1 2.2,1.5' fill='none' stroke='%230038B8' stroke-width='0.15'/%3E%3C/svg%3E"); }
+
+/* Jamaica */
+.ic-nav-flag-jm { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%23000000'/%3E%3Cpath d='M0,0 L2,1 M0,1 L2,0' stroke='%23FFCE00' stroke-width='0.3'/%3E%3Cpolygon points='0,0 0.45,0.5 0,1' fill='%23009B3A'/%3E%3Cpolygon points='2,0 1.55,0.5 2,1' fill='%23009B3A'/%3E%3C/svg%3E"); }
+
+/* Jordan */
+.ic-nav-flag-jo { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23007A3D'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23000000'/%3E%3Cpolygon points='0,0 1,1 0,2' fill='%23CE1126'/%3E%3C/svg%3E"); }
+
+/* Kazakhstan */
+.ic-nav-flag-kz { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%2300AFCA'/%3E%3Ccircle cx='0.7' cy='0.5' r='0.2' fill='%23FFCC00'/%3E%3C/svg%3E"); }
+
+/* Kenya */
+.ic-nav-flag-ke { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23006600'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='1' fill='%23BB0000'/%3E%3Crect width='3' height='0.13' fill='%23FFFFFF'/%3E%3Crect y='1.2' width='3' height='0.13' fill='%23FFFFFF'/%3E%3C/svg%3E"); }
+
+/* Kuwait */
+.ic-nav-flag-kw { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 2'%3E%3Crect width='4' height='2' fill='%23CE1126'/%3E%3Crect width='4' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='4' height='0.67' fill='%23007A3D'/%3E%3Crect width='1' height='2' fill='%23000000'/%3E%3C/svg%3E"); }
+
+/* Kyrgyzstan */
+.ic-nav-flag-kg { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%23E8112D'/%3E%3Ccircle cx='1' cy='0.5' r='0.3' fill='%23FFCE00'/%3E%3C/svg%3E"); }
+
+/* Laos */
+.ic-nav-flag-la { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23CE1126'/%3E%3Crect y='0.5' width='3' height='1' fill='%2302279B'/%3E%3Ccircle cx='1.5' cy='1' r='0.35' fill='%23FFFFFF'/%3E%3C/svg%3E"); }
+
+/* Latvia */
+.ic-nav-flag-lv { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 2'%3E%3Crect width='5' height='2' fill='%23FFFFFF'/%3E%3Crect width='5' height='0.67' fill='%239E3039'/%3E%3Crect y='1.33' width='5' height='0.67' fill='%239E3039'/%3E%3C/svg%3E"); }
+
+/* Lebanon */
+.ic-nav-flag-lb { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.4' fill='%23EE161F'/%3E%3Crect y='1.6' width='3' height='0.4' fill='%23EE161F'/%3E%3Cpath d='M1.5,0.4 L1.8,1.3 L1.5,1.6 L1.2,1.3 Z' fill='%23009A44'/%3E%3C/svg%3E"); }
+
+/* Libya */
+.ic-nav-flag-ly { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23000000'/%3E%3Crect y='0.5' width='3' height='1' fill='%23239E46'/%3E%3Crect y='0.75' width='3' height='0.5' fill='%23239E46'/%3E%3Ccircle cx='1.5' cy='1' r='0.2' fill='%23FFFFFF'/%3E%3C/svg%3E"); }
+
+/* Lithuania */
+.ic-nav-flag-lt { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23006A44'/%3E%3Crect width='3' height='1.33' fill='%23C1272D'/%3E%3Crect width='3' height='0.67' fill='%23FDB913'/%3E%3C/svg%3E"); }
+
+/* Luxembourg */
+.ic-nav-flag-lu { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%2300A3E0'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23EF3340'/%3E%3C/svg%3E"); }
+
+/* Madagascar */
+.ic-nav-flag-mg { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23FC3D32'/%3E%3Crect width='3' height='1' fill='%230E6B2F'/%3E%3Crect width='1' height='2' fill='%23FFFFFF'/%3E%3C/svg%3E"); }
+
+/* Malawi */
+.ic-nav-flag-mw { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23339E35'/%3E%3Crect width='3' height='1.33' fill='%23CE1126'/%3E%3Crect width='3' height='0.67' fill='%23000000'/%3E%3C/svg%3E"); }
+
+/* Malaysia */
+.ic-nav-flag-my { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 7'%3E%3Crect width='14' height='7' fill='%23CC0001'/%3E%3Crect y='1' width='14' height='1' fill='%23FFFFFF'/%3E%3Crect y='3' width='14' height='1' fill='%23FFFFFF'/%3E%3Crect y='5' width='14' height='1' fill='%23FFFFFF'/%3E%3Crect width='6' height='4' fill='%23010066'/%3E%3Ccircle cx='2.5' cy='2' r='1.2' fill='%23FFCC00'/%3E%3Ccircle cx='3' cy='2' r='0.9' fill='%23010066'/%3E%3C/svg%3E"); }
+
+/* Mali */
+.ic-nav-flag-ml { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23CE1126'/%3E%3Crect width='2' height='2' fill='%23FCD116'/%3E%3Crect width='1' height='2' fill='%2314B53A'/%3E%3C/svg%3E"); }
+
+/* Mauritania */
+.ic-nav-flag-mr { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23006233'/%3E%3Crect y='0' width='3' height='0.3' fill='%23FFD700'/%3E%3Crect y='1.7' width='3' height='0.3' fill='%23FFD700'/%3E%3C/svg%3E"); }
+
+/* Moldova */
+.ic-nav-flag-md { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23003DA5'/%3E%3Crect width='2' height='2' fill='%23FFD100'/%3E%3Crect width='1' height='2' fill='%23003DA5'/%3E%3C/svg%3E"); }
+
+/* Mongolia */
+.ic-nav-flag-mn { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23C4272F'/%3E%3Crect x='0.67' width='1.66' height='2' fill='%230066B3'/%3E%3C/svg%3E"); }
+
+/* Mozambique */
+.ic-nav-flag-mz { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23009A44'/%3E%3Crect y='0.5' width='3' height='0.5' fill='%23FFFFFF'/%3E%3Crect y='1' width='3' height='0.5' fill='%23FCE100'/%3E%3Crect y='1.5' width='3' height='0.5' fill='%23FFFFFF'/%3E%3Cpolygon points='0,0 0.9,1 0,2' fill='%23000000'/%3E%3C/svg%3E"); }
+
+/* Myanmar */
+.ic-nav-flag-mm { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%234AA942'/%3E%3Crect width='3' height='1.33' fill='%23FFE900'/%3E%3Crect width='3' height='0.67' fill='%23D90000'/%3E%3C/svg%3E"); }
+
+/* Namibia */
+.ic-nav-flag-na { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23009543'/%3E%3Crect width='3' height='1' fill='%23003580'/%3E%3Cpath d='M0,0 L3,2' stroke='%23FFFFFF' stroke-width='0.35'/%3E%3Cpath d='M0,0 L3,2' stroke='%23C8102E' stroke-width='0.15'/%3E%3C/svg%3E"); }
+
+/* Nepal */
+.ic-nav-flag-np { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 6'%3E%3Cpolygon points='0,0 4,2.5 0,5' fill='%23FFFFFF'/%3E%3Cpolygon points='0,0 3.5,2.3 0,4.6' fill='%23003893'/%3E%3Cpolygon points='0,0.7 3,2.5 0,4.3' fill='%23DC143C'/%3E%3C/svg%3E"); }
+
+/* Nicaragua */
+.ic-nav-flag-ni { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23000099'/%3E%3Crect y='1.33' width='3' height='0.67' fill='%23000099'/%3E%3C/svg%3E"); }
+
+/* Niger */
+.ic-nav-flag-ne { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%230DB02B'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23E05206'/%3E%3Ccircle cx='1.5' cy='1' r='0.3' fill='%23E05206'/%3E%3C/svg%3E"); }
+
+/* North Macedonia */
+.ic-nav-flag-mk { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%23CE2028'/%3E%3Ccircle cx='1' cy='0.5' r='0.15' fill='%23F7E011'/%3E%3Cpath d='M0,0 L2,1 M2,0 L0,1 M1,0 V1 M0,0.5 H2' stroke='%23F7E011' stroke-width='0.06'/%3E%3C/svg%3E"); }
+
+/* Norway */
+.ic-nav-flag-no { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 16'%3E%3Crect width='22' height='16' fill='%23EF2B2D'/%3E%3Crect x='6' width='4' height='16' fill='%23FFFFFF'/%3E%3Crect y='6' width='22' height='4' fill='%23FFFFFF'/%3E%3Crect x='7' width='2' height='16' fill='%23002868'/%3E%3Crect y='7' width='22' height='2' fill='%23002868'/%3E%3C/svg%3E"); }
+
+/* Oman */
+.ic-nav-flag-om { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 1.5'%3E%3Crect width='3' height='1.5' fill='%23DB161B'/%3E%3Crect y='0.5' width='3' height='0.5' fill='%23FFFFFF'/%3E%3Crect y='1' width='3' height='0.5' fill='%23008000'/%3E%3Crect width='0.75' height='1.5' fill='%23DB161B'/%3E%3C/svg%3E"); }
+
+/* Pakistan */
+.ic-nav-flag-pk { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23115740'/%3E%3Crect width='0.75' height='2' fill='%23FFFFFF'/%3E%3Ccircle cx='1.7' cy='1' r='0.45' fill='%23FFFFFF'/%3E%3Ccircle cx='1.85' cy='1' r='0.45' fill='%23115740'/%3E%3C/svg%3E"); }
+
+/* Palestine */
+.ic-nav-flag-ps { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23000000'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23007A3D'/%3E%3Cpolygon points='0,0 1,1 0,2' fill='%23CE1126'/%3E%3C/svg%3E"); }
+
+/* Philippines */
+.ic-nav-flag-ph { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%23CE1126'/%3E%3Crect width='2' height='0.5' fill='%230038A8'/%3E%3Cpolygon points='0,0 0.5,0.5 0,1' fill='%23FFFFFF'/%3E%3Ccircle cx='0.25' cy='0.5' r='0.1' fill='%23FCD116'/%3E%3C/svg%3E"); }
+
+/* Romania */
+.ic-nav-flag-ro { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23002B7F'/%3E%3Crect x='1' width='2' height='2' fill='%23FCD116'/%3E%3Crect x='2' width='1' height='2' fill='%23CE1126'/%3E%3C/svg%3E"); }
+
+/* Russia */
+.ic-nav-flag-ru { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23D52B1E'/%3E%3Crect width='3' height='1.33' fill='%230039A6'/%3E%3Crect width='3' height='0.67' fill='%23FFFFFF'/%3E%3C/svg%3E"); }
+
+/* Rwanda */
+.ic-nav-flag-rw { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%2300A1DE'/%3E%3Crect y='0.67' width='3' height='0.67' fill='%23FAD201'/%3E%3Crect width='3' height='0.67' fill='%2320603D'/%3E%3Ccircle cx='2.6' cy='0.4' r='0.2' fill='%23FAD201'/%3E%3C/svg%3E"); }
+
+/* Singapore */
+.ic-nav-flag-sg { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 2'%3E%3Crect width='4' height='2' fill='%23EF3340'/%3E%3Crect y='1' width='4' height='1' fill='%23FFFFFF'/%3E%3Ccircle cx='0.8' cy='0.5' r='0.3' fill='%23FFFFFF'/%3E%3Ccircle cx='1' cy='0.5' r='0.3' fill='%23EF3340'/%3E%3C/svg%3E"); }
+
+/* Slovakia */
+.ic-nav-flag-sk { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%230B4EA2'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23EE1C25'/%3E%3Crect x='0.2' y='0.3' width='0.7' height='1' rx='0.1' fill='%23FFFFFF'/%3E%3Crect x='0.35' y='0.6' width='0.4' height='0.3' fill='%230B4EA2'/%3E%3Ccircle cx='0.55' cy='0.5' r='0.15' fill='%23EE1C25'/%3E%3C/svg%3E"); }
+
+/* Somalia */
+.ic-nav-flag-so { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%234189DD'/%3E%3Cpolygon points='1.5,0.55 1.6,0.85 1.9,0.85 1.65,1.05 1.75,1.35 1.5,1.15 1.25,1.35 1.35,1.05 1.1,0.85 1.4,0.85' fill='%23FFFFFF'/%3E%3C/svg%3E"); }
+
+/* South Africa */
+.ic-nav-flag-za { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23007A4D'/%3E%3Crect y='0.67' width='3' height='0.67' fill='%23001489'/%3E%3Crect width='3' height='0.67' fill='%23FFB612'/%3E%3Cpath d='M0,0 L1.2,1 L0,2' fill='%23000000'/%3E%3C/svg%3E"); }
+
+/* South Sudan */
+.ic-nav-flag-ss { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23078930'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='1' fill='%23DA121A'/%3E%3Crect width='3' height='0.13' fill='%23FFFFFF'/%3E%3Crect y='1.2' width='3' height='0.13' fill='%23FFFFFF'/%3E%3Cpolygon points='0,0 1,1 0,2' fill='%230F47AF'/%3E%3C/svg%3E"); }
+
+/* Sri Lanka */
+.ic-nav-flag-lk { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 1.5'%3E%3Crect width='3' height='1.5' fill='%238D153A'/%3E%3Crect width='0.4' height='1.5' fill='%23FF7300'/%3E%3Crect x='0.4' width='0.2' height='1.5' fill='%2300534E'/%3E%3C/svg%3E"); }
+
+/* Sudan */
+.ic-nav-flag-sd { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%230F7229'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23D21034'/%3E%3Cpolygon points='0,0 1,1 0,2' fill='%23000000'/%3E%3C/svg%3E"); }
+
+/* Sweden */
+.ic-nav-flag-se { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 10'%3E%3Crect width='16' height='10' fill='%23006AA7'/%3E%3Crect x='5' width='2' height='10' fill='%23FECC02'/%3E%3Crect y='4' width='16' height='2' fill='%23FECC02'/%3E%3C/svg%3E"); }
+
+/* Syria */
+.ic-nav-flag-sy { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23000000'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23CE1126'/%3E%3C/svg%3E"); }
+
+/* Taiwan */
+.ic-nav-flag-tw { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23FE0000'/%3E%3Crect width='1.5' height='1' fill='%23000099'/%3E%3Ccircle cx='0.75' cy='0.5' r='0.25' fill='%23FFFFFF'/%3E%3C/svg%3E"); }
+
+/* Tajikistan */
+.ic-nav-flag-tj { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23CC0000'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23006600'/%3E%3C/svg%3E"); }
+
+/* Tanzania */
+.ic-nav-flag-tz { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%2300A550'/%3E%3Cpath d='M0,2 L3,0' stroke='%23000000' stroke-width='0.55'/%3E%3Cpath d='M0,2 L3,0' stroke='%23FFC61E' stroke-width='0.25'/%3E%3Crect x='0' y='1.67' width='3' height='0.33' fill='%2300A550'/%3E%3C/svg%3E"); }
+
+/* Thailand */
+.ic-nav-flag-th { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23A51931'/%3E%3Crect y='0.33' width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect y='0.67' width='3' height='0.67' fill='%232D2A4A'/%3E%3C/svg%3E"); }
+
+/* Togo */
+.ic-nav-flag-tg { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 4'%3E%3Crect width='5' height='4' fill='%23006A4E'/%3E%3Crect y='0.8' width='5' height='0.8' fill='%23FFCE00'/%3E%3Crect y='2.4' width='5' height='0.8' fill='%23FFCE00'/%3E%3Crect y='3.2' width='5' height='0.8' fill='%23006A4E'/%3E%3Crect width='2' height='2.4' fill='%23D21034'/%3E%3Ccircle cx='1' cy='1.2' r='0.5' fill='%23FFFFFF'/%3E%3C/svg%3E"); }
+
+/* Turkey */
+.ic-nav-flag-tr { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23E30A17'/%3E%3Ccircle cx='1.15' cy='1' r='0.4' fill='%23FFFFFF'/%3E%3Ccircle cx='1.35' cy='1' r='0.35' fill='%23E30A17'/%3E%3Cpolygon points='1.7,0.8 1.78,1.05 2.0,0.9 1.85,1.12 2.07,1.1 1.85,1.24 1.93,1.49 1.73,1.32 1.53,1.49 1.6,1.24 1.4,1.1 1.62,1.12 1.47,0.9 1.68,1.05' fill='%23FFFFFF'/%3E%3C/svg%3E"); }
+
+/* Turkmenistan */
+.ic-nav-flag-tm { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 1'%3E%3Crect width='2' height='1' fill='%2326862B'/%3E%3Crect width='0.4' height='1' fill='%23A32020'/%3E%3C/svg%3E"); }
+
+/* Uganda */
+.ic-nav-flag-ug { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23FFCE00'/%3E%3Crect width='3' height='0.33' fill='%23000000'/%3E%3Crect y='0.67' width='3' height='0.33' fill='%23000000'/%3E%3Crect y='1.33' width='3' height='0.33' fill='%23000000'/%3E%3Crect y='0.33' width='3' height='0.33' fill='%23D90000'/%3E%3Crect y='1' width='3' height='0.33' fill='%23D90000'/%3E%3Crect y='1.67' width='3' height='0.33' fill='%23D90000'/%3E%3C/svg%3E"); }
+
+/* United Arab Emirates */
+.ic-nav-flag-ae { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 1.5'%3E%3Crect width='3' height='1.5' fill='%23000000'/%3E%3Crect y='0.5' width='3' height='0.5' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.5' fill='%23009A44'/%3E%3Crect width='0.75' height='1.5' fill='%23FF0000'/%3E%3C/svg%3E"); }
+
+/* United Kingdom */
+.ic-nav-flag-uk { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3Crect width='60' height='30' fill='%23012169'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23FFFFFF' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='4'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23FFFFFF' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E"); }
+
+/* Uzbekistan */
+.ic-nav-flag-uz { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%2300AAAD'/%3E%3Crect y='0.67' width='3' height='0.67' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%2300AAAD'/%3E%3Crect y='0.62' width='3' height='0.05' fill='%231EB53A'/%3E%3Crect y='0.72' width='3' height='0.05' fill='%231EB53A'/%3E%3Crect y='1.28' width='3' height='0.05' fill='%231EB53A'/%3E%3Crect y='1.38' width='3' height='0.05' fill='%231EB53A'/%3E%3C/svg%3E"); }
+
+/* Venezuela */
+.ic-nav-flag-ve { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23002EA6'/%3E%3Crect width='3' height='1.33' fill='%23CF142B'/%3E%3Crect width='3' height='0.67' fill='%23CF9A00'/%3E%3C/svg%3E"); }
+
+/* Vietnam */
+.ic-nav-flag-vn { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23DA251D'/%3E%3Cpolygon points='1.5,0.45 1.65,0.9 2.1,0.9 1.73,1.17 1.88,1.62 1.5,1.35 1.12,1.62 1.27,1.17 0.9,0.9 1.35,0.9' fill='%23FFFF00'/%3E%3C/svg%3E"); }
+
+/* Yemen */
+.ic-nav-flag-ye { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23000000'/%3E%3Crect width='3' height='1.33' fill='%23FFFFFF'/%3E%3Crect width='3' height='0.67' fill='%23CE1126'/%3E%3C/svg%3E"); }
+
+/* Zambia */
+.ic-nav-flag-zm { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23198A00'/%3E%3Crect x='1.9' width='1.1' height='2' fill='%23000000'/%3E%3Crect x='2.25' width='0.4' height='2' fill='%23EF7D00'/%3E%3Crect x='2.6' width='0.4' height='2' fill='%23DE2010'/%3E%3C/svg%3E"); }
+
+/* Zimbabwe */
+.ic-nav-flag-zw { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 4'%3E%3Crect width='7' height='4' fill='%23006400'/%3E%3Crect y='0.57' width='7' height='0.57' fill='%23FFD200'/%3E%3Crect y='1.14' width='7' height='0.57' fill='%23FF0000'/%3E%3Crect y='1.71' width='7' height='0.57' fill='%23000000'/%3E%3Crect y='2.28' width='7' height='0.57' fill='%23FF0000'/%3E%3Crect y='2.86' width='7' height='0.57' fill='%23FFD200'/%3E%3Cpolygon points='0,0 1.5,2 0,4' fill='%23FFFFFF'/%3E%3Cpolygon points='0.3,0.5 1.2,2 0.3,3.5' fill='%23006400'/%3E%3C/svg%3E"); }
