@@ -241,7 +241,7 @@ const TIMER_DURATION = 10;
                     flex-direction: column;
                     align-items: center;
                     justify-content: center;
-                    gap: var(--sp-4);
+                    gap: var(--sp-3);
                     padding: var(--sp-8);
                     pointer-events: none;
                     z-index: 20;
@@ -251,16 +251,17 @@ const TIMER_DURATION = 10;
                     class="swipe-quiz__feedback-icon"
                     [ngStyle]="feedbackIconStyle()"
                     style="
-                      width: var(--sp-18);
-                      min-height: var(--sp-18);
+                      width: var(--sp-20);
+                      height: var(--sp-20);
                       border-radius: 50%;
                       display: flex;
                       align-items: center;
                       justify-content: center;
+                      flex-shrink: 0;
                     "
                   >
                     @if (isFeedbackCorrect()) {
-                      <svg class="swipe-quiz__feedback-icon-svg" width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <svg class="swipe-quiz__feedback-icon-svg" width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path
                           d="M5 13l4 4L19 7"
                           stroke="var(--c-lt-white)"
@@ -270,7 +271,7 @@ const TIMER_DURATION = 10;
                         />
                       </svg>
                     } @else {
-                      <svg class="swipe-quiz__feedback-icon-svg" width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <svg class="swipe-quiz__feedback-icon-svg" width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path
                           d="M18 6L6 18M6 6l12 12"
                           stroke="var(--c-lt-white)"
@@ -283,11 +284,11 @@ const TIMER_DURATION = 10;
                   </div>
                   <span
                     class="swipe-quiz__feedback-title"
+                    [style.color]="isFeedbackCorrect() ? 'var(--f-brand-color-text-success)' : 'var(--f-brand-color-text-error)'"
                     style="
                       font: var(--f-brand-type-title-3);
                       font-weight: var(--weight-light);
                       letter-spacing: var(--tracking-wide);
-                      color: var(--c-lt-text-1);
                     "
                   >
                     {{ isFeedbackCorrect() ? 'Correct!' : 'Wrong!' }}
@@ -295,7 +296,7 @@ const TIMER_DURATION = 10;
                   <span
                     class="swipe-quiz__feedback-text"
                     style="
-                      font: var(--f-brand-type-caption);
+                      font: var(--f-brand-type-subheading);
                       color: var(--c-lt-text-3);
                       text-align: center;
                       line-height: var(--leading-snug);
@@ -762,10 +763,7 @@ export class SwipeQuizPage implements OnInit, OnDestroy {
   feedbackIconStyle(): Record<string, string> {
     const correct = this.isFeedbackCorrect();
     return {
-      background: correct ? 'var(--f-brand-color-flight-status-confirmed)' : 'var(--f-brand-color-background-error)',
-      border: `var(--f-brand-border-size-focused) solid ${
-        correct ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-border-error)'
-      }`,
+      background: correct ? 'var(--f-brand-color-flight-status-confirmed)' : 'var(--c-swipe-false)',
     };
   }
 
