@@ -645,6 +645,7 @@ export class RankingQuizPage implements OnInit, OnDestroy {
         return {
           transform: `translateY(-${ITEM_HEIGHT}px)`,
           transition: `transform var(--f-brand-motion-duration-instant) ${SPRING_EASING}`,
+          background: 'var(--c-lt-surface)',
           cursor: 'grab',
         };
       }
@@ -653,6 +654,7 @@ export class RankingQuizPage implements OnInit, OnDestroy {
         return {
           transform: `translateY(${ITEM_HEIGHT}px)`,
           transition: `transform var(--f-brand-motion-duration-instant) ${SPRING_EASING}`,
+          background: 'var(--c-lt-surface)',
           cursor: 'grab',
         };
       }
@@ -667,6 +669,7 @@ export class RankingQuizPage implements OnInit, OnDestroy {
         // Gap 3: use the FDS shadow-medium token instead of hardcoded value
         boxShadow: isAtRest ? 'var(--f-brand-shadow-medium)' : 'var(--f-brand-shadow-large)',
         border: isAtRest ? 'var(--f-brand-border-size-default) solid transparent' : `var(--f-brand-border-size-default) solid var(--c-lt-brand)`,
+        background: 'var(--c-lt-surface)',
         zIndex: '50',
         position: 'relative',
         cursor: 'grab',
@@ -694,6 +697,7 @@ export class RankingQuizPage implements OnInit, OnDestroy {
     // Default: spring transition for liquid sort feel
     return {
       transition: `transform var(--f-brand-motion-duration-instant) ${SPRING_EASING}, border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)`,
+      background: 'var(--c-lt-surface)',
       cursor: this.revealed() ? 'default' : 'grab',
     };
   }
