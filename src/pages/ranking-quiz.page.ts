@@ -22,7 +22,7 @@ const SLIDE_TRANSITION =
 const SLIDE_EXIT_TRANSITION =
   'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)';
 const SLIDE_EXIT_MS = 250;
-const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
+const CHEVRON_LEFT_DARK_ICON = 'assets/icons/Chevron-left-dark.svg';
 
 @Component({
   standalone: true,
@@ -35,8 +35,8 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
         min-height: 100dvh;
         display: flex;
         justify-content: center;
-        background: var(--c-bg);
-        color: var(--c-text-1);
+        background: var(--c-lt-bg);
+        color: var(--c-lt-text-1);
       "
     >
       <section
@@ -59,14 +59,14 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
               aria-label="Go back"
               (click)="handleBack()"
             >
-              <img [src]="chevronLeftWhiteIcon" width="24" height="24" alt="Back" />
+              <img [src]="chevronLeftDarkIcon" width="24" height="24" alt="Back" />
             </button>
             <div
               class="ranking-quiz__progress-track"
               style="
                 flex: 1;
                 height: var(--sp-1);
-                background: var(--c-surface-raise);
+                background: var(--c-lt-bg);
                 border-radius: calc(var(--sp-1) / 2);
                 overflow: hidden;
               "
@@ -82,7 +82,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                 "
               ></div>
             </div>
-            <span class="ranking-quiz__question-counter" style="font-size: var(--text-xs); color: var(--c-text-2); flex-shrink: 0">
+            <span class="ranking-quiz__question-counter" style="font-size: var(--text-xs); color: var(--c-lt-text-2); flex-shrink: 0">
               {{ questionIndex() + 1 }}/{{ totalQuestions() }}
             </span>
           </div>
@@ -92,14 +92,14 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
           <div class="ranking-quiz__timer-wrap" data-section="timer" style="display: flex; justify-content: center; margin-bottom: var(--sp-4); flex-shrink: 0">
             <div class="ranking-quiz__timer" style="position: relative; width: 64px; height: 64px; flex-shrink: 0">
               <svg class="ranking-quiz__timer-svg" width="64" height="64" viewBox="0 0 64 64" style="transform: rotate(-90deg)" aria-hidden="true">
-                <circle class="ranking-quiz__timer-track" cx="32" cy="32" r="28" fill="none" stroke="var(--c-surface)" stroke-width="3"></circle>
+                <circle class="ranking-quiz__timer-track" cx="32" cy="32" r="28" fill="none" stroke="var(--c-lt-border)" stroke-width="3"></circle>
                 <circle
                   class="ranking-quiz__timer-progress"
                   cx="32"
                   cy="32"
                   r="28"
                   fill="none"
-                  stroke="var(--c-white)"
+                  stroke="var(--c-lt-brand)"
                   stroke-width="3"
                   [attr.stroke-dasharray]="timerCircumference"
                   [attr.stroke-dashoffset]="timerOffset()"
@@ -115,7 +115,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                   display: flex;
                   align-items: center;
                   justify-content: center;
-                  color: var(--c-white);
+                  color: var(--c-lt-text-1);
                   font: var(--f-brand-type-subheading-medium);
                 "
               >
@@ -132,7 +132,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
               padding: 0 var(--sp-6);
               font: var(--f-brand-type-title-3);
               font-size: var(--text-xl);
-              color: var(--c-text-1);
+              color: var(--c-lt-text-1);
               line-height: var(--leading-tight);
               letter-spacing: var(--tracking-tight);
               text-align: center;
@@ -154,8 +154,8 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                 style="
                   height: 58px;
                   border-radius: var(--r-full);
-                  border: var(--f-brand-border-size-default) solid var(--c-border);
-                  background: var(--c-surface);
+                  border: var(--f-brand-border-size-default) solid var(--c-lt-border);
+                  background: var(--c-lt-surface);
                   display: flex;
                   align-items: center;
                   gap: var(--sp-3);
@@ -182,7 +182,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                 </span>
                 <span
                   class="ranking-quiz__item-text"
-                  style="flex: 1; font-size: var(--text-md); color: var(--c-text-1)"
+                  style="flex: 1; font-size: var(--text-md); color: var(--c-lt-text-1)"
                   [style.font-weight]="dragIndex() === idx ? '600' : '400'"
                 >
                   {{ item.label }}
@@ -199,13 +199,13 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                       padding: 0 var(--sp-1);
                     "
                   >
-                    <div class="ranking-quiz__item-handle-line" style="width: 16px; height: 2px; background: var(--c-text-1); border-radius: 1px"></div>
-                    <div class="ranking-quiz__item-handle-line" style="width: 16px; height: 2px; background: var(--c-text-1); border-radius: 1px"></div>
-                    <div class="ranking-quiz__item-handle-line" style="width: 16px; height: 2px; background: var(--c-text-1); border-radius: 1px"></div>
+                    <div class="ranking-quiz__item-handle-line" style="width: 16px; height: 2px; background: var(--c-lt-text-1); border-radius: 1px"></div>
+                    <div class="ranking-quiz__item-handle-line" style="width: 16px; height: 2px; background: var(--c-lt-text-1); border-radius: 1px"></div>
+                    <div class="ranking-quiz__item-handle-line" style="width: 16px; height: 2px; background: var(--c-lt-text-1); border-radius: 1px"></div>
                   </div>
                 }
                 @if (revealed() && !isCorrectPosition(item, idx)) {
-                  <span class="ranking-quiz__item-correct-pos" style="font-size: var(--text-xs); color: var(--c-text-2); flex-shrink: 0">
+                  <span class="ranking-quiz__item-correct-pos" style="font-size: var(--text-xs); color: var(--c-lt-text-2); flex-shrink: 0">
                     #{{ correctIndex(item) + 1 }}
                   </span>
                 }
@@ -276,7 +276,7 @@ export class RankingQuizPage implements OnInit, OnDestroy {
   private readonly store = inject(StoreService);
   private readonly analytics = inject(AnalyticsService);
 
-  readonly chevronLeftWhiteIcon = CHEVRON_LEFT_WHITE_ICON;
+  readonly chevronLeftDarkIcon = CHEVRON_LEFT_DARK_ICON;
   readonly quiz = signal<RankingQuiz>(RANKING_QUIZZES[0]);
   readonly questionIndex = signal(0);
   readonly score = signal(0);
@@ -441,8 +441,8 @@ export class RankingQuizPage implements OnInit, OnDestroy {
       };
     }
     return {
-      background: 'var(--c-surface-raise)',
-      color: 'var(--c-text-2)',
+      background: 'var(--c-lt-bg)',
+      color: 'var(--c-lt-text-2)',
     };
   }
 
