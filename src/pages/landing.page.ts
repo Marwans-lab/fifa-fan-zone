@@ -46,17 +46,15 @@ interface LandingCardVisual {
               [style.width.px]="card.width * 0.45"
               [style.height.px]="card.width * 0.45"
             >
-              <span
-                class="landing-page__card-avatar-flag"
+              <i
+                class="ic-nav-flag-{{card.team.flag}} landing-page__card-avatar-flag"
                 aria-hidden="true"
                 [style.font-size.px]="card.width * 0.18"
-              >
-                {{ card.team.flag }}
-              </span>
+              ></i>
             </div>
 
             <p class="landing-page__card-team">
-              <span class="landing-page__card-team-flag" aria-hidden="true">{{ card.team.flag }}</span>
+              <i class="ic-nav-flag-{{card.team.flag}} landing-page__card-team-flag" aria-hidden="true"></i>
               {{ card.team.name }}
             </p>
           </article>
