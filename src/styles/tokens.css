@@ -76,6 +76,7 @@
   --c-lt-shadow-glow:   0 0 25px rgba(0,0,0,0.15);
   --c-lt-shadow-btn:    0 10px 30px rgba(0,0,0,0.12);
   --c-lt-shadow-strong: rgba(0,0,0,0.25);
+  --c-progress-fill-shadow: 1px 0px 6px 0px var(--c-lt-shadow-strong);
   --c-lt-overlay:       rgba(0,0,0,0.20);
   --c-lt-overlay-heavy: rgba(0,0,0,0.50);
   --c-lt-overlay-border: rgba(255,255,255,0.20);
