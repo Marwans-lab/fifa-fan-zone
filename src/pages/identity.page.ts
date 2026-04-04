@@ -482,7 +482,7 @@ export class IdentityPage {
     }
     this.photoDataUrl.set(null);
     this.analytics.track('identity_retake_tapped', { teamId });
-    void this.router.navigate(['/picture', teamId], { state: { teamId } });
+    void this.router.navigateByUrl('/team-selection');
   }
 
   private getIncomingState(key: 'teamId' | 'photoDataUrl'): string | null {
