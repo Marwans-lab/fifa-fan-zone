@@ -49,7 +49,7 @@ const TIMER_DURATION = 10;
       >
         <header class="swipe-quiz__header" style="padding: var(--sp-5) var(--sp-4); flex-shrink: 0; display: flex; align-items: center; gap: var(--sp-4);">
           <button
-            class="swipe-quiz__close-btn"
+            class="swipe-quiz__back-btn"
             type="button"
             data-ui="close-btn"
             aria-label="Close quiz"
@@ -69,7 +69,7 @@ const TIMER_DURATION = 10;
               cursor: pointer;
             "
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <svg class="swipe-quiz__back-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
                 d="M18 6L6 18M6 6l12 12"
                 stroke="var(--c-lt-text-1)"
@@ -260,7 +260,7 @@ const TIMER_DURATION = 10;
                     "
                   >
                     @if (isFeedbackCorrect()) {
-                      <svg class="swipe-quiz__icon-check" width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <svg class="swipe-quiz__feedback-icon-svg" width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path
                           d="M5 13l4 4L19 7"
                           stroke="var(--c-lt-white)"
@@ -270,7 +270,7 @@ const TIMER_DURATION = 10;
                         />
                       </svg>
                     } @else {
-                      <svg class="swipe-quiz__icon-x" width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <svg class="swipe-quiz__feedback-icon-svg" width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path
                           d="M18 6L6 18M6 6l12 12"
                           stroke="var(--c-lt-white)"
@@ -282,7 +282,7 @@ const TIMER_DURATION = 10;
                     }
                   </div>
                   <span
-                    class="swipe-quiz__feedback-text"
+                    class="swipe-quiz__feedback-title"
                     style="
                       font: var(--f-brand-type-title-3);
                       font-weight: var(--weight-light);
@@ -293,7 +293,7 @@ const TIMER_DURATION = 10;
                     {{ isFeedbackCorrect() ? 'Correct!' : 'Wrong!' }}
                   </span>
                   <span
-                    class="swipe-quiz__feedback-explanation"
+                    class="swipe-quiz__feedback-text"
                     style="
                       font: var(--f-brand-type-caption);
                       color: var(--c-lt-text-3);
@@ -342,7 +342,7 @@ const TIMER_DURATION = 10;
                   "
                 >
                   <span
-                    class="swipe-quiz__card-question-label"
+                    class="swipe-quiz__card-question-num"
                     style="
                       font: var(--f-brand-type-body-medium);
                       color: var(--c-lt-brand);
@@ -356,7 +356,7 @@ const TIMER_DURATION = 10;
                   </span>
 
                   <div
-                    class="swipe-quiz__statement"
+                    class="swipe-quiz__card-statement"
                     style="
                       font: 300 24px/32px var(--font-display);
                       color: var(--c-lt-text-1);
@@ -377,7 +377,7 @@ const TIMER_DURATION = 10;
                       gap: var(--sp-1);
                     "
                   >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <svg class="swipe-quiz__swipe-hint-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                       <path
                         d="M15 18l-6-6 6-6"
                         stroke="var(--c-lt-text-3)"
@@ -387,6 +387,7 @@ const TIMER_DURATION = 10;
                       />
                     </svg>
                     <span
+                      class="swipe-quiz__swipe-hint-text"
                       style="
                         font: var(--f-brand-type-subheading);
                         color: var(--c-lt-text-3);
@@ -394,7 +395,7 @@ const TIMER_DURATION = 10;
                     >
                       Swipe right or left
                     </span>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <svg class="swipe-quiz__swipe-hint-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                       <path
                         d="M9 18l6-6-6-6"
                         stroke="var(--c-lt-text-3)"
@@ -443,6 +444,7 @@ const TIMER_DURATION = 10;
               aria-hidden="true"
             >
               <svg
+                class="swipe-quiz__timer-ring"
                 width="48"
                 height="48"
                 viewBox="0 0 48 48"
@@ -465,6 +467,7 @@ const TIMER_DURATION = 10;
                 />
               </svg>
               <span
+                class="swipe-quiz__timer-text"
                 style="
                   font: var(--f-brand-type-body);
                   color: var(--c-lt-text-1);
