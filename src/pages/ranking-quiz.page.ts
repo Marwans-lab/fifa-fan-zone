@@ -170,7 +170,6 @@ type ItemRevealState = 'correct' | 'incorrect';
                     min-width: 40px;
                     border-radius: 40px;
                     background: var(--c-lt-bg);
-                    border: 1px solid var(--c-lt-white);
                     display: flex;
                     align-items: center;
                     justify-content: center;
