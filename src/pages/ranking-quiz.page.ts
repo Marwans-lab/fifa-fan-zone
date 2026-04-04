@@ -276,14 +276,19 @@ const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
               min-height: var(--sp-14);
               border-radius: var(--f-brand-radius-rounded);
               border: none;
-              background: var(--c-white);
-              color: var(--c-brand);
+              background: var(--c-lt-brand);
+              color: var(--f-brand-color-text-light);
               font: var(--f-brand-type-body-medium);
-              font-size: var(--text-md);
               cursor: pointer;
-              transition:
-                background var(--dur-base) var(--ease-out),
-                color var(--dur-base) var(--ease-out);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: var(--sp-3);
+              padding: var(--sp-4) var(--sp-8);
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              transition: background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
             "
           >
             {{ buttonLabel() }}
@@ -294,6 +299,21 @@ const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
   `,
   styles: [
     `
+      .ranking-quiz__submit-btn:hover:not(:disabled) {
+        background: var(--f-brand-color-background-primary-hover) !important;
+      }
+      .ranking-quiz__submit-btn:active:not(:disabled) {
+        background: var(--f-brand-color-background-primary-hover) !important;
+      }
+      .ranking-quiz__submit-btn:disabled {
+        background: var(--f-brand-color-background-disabled) !important;
+        color: var(--f-brand-color-text-disabled) !important;
+        cursor: not-allowed;
+      }
+      .ranking-quiz__submit-btn:focus-visible {
+        outline: var(--f-brand-border-size-focused) solid var(--f-brand-color-border-focused);
+        outline-offset: var(--f-brand-space-xs);
+      }
       @media (prefers-reduced-motion: reduce) {
         [data-page='ranking-quiz'],
         [data-page='ranking-quiz'] * {
@@ -478,7 +498,7 @@ export class RankingQuizPage implements OnInit, OnDestroy {
   feedbackColor(): string {
     const value = this.questionScore();
     if (value === 4) return 'var(--c-correct)';
-    if (value >= 2) return 'var(--c-warn)';
+    if (value >= 2) return 'var(--c-lt-text-3)';
     return 'var(--c-error)';
   }
 
