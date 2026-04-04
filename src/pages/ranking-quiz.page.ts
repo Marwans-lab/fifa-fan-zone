@@ -16,11 +16,12 @@ import { AnalyticsService } from '../services/analytics.service';
 import { StoreService } from '../services/store.service';
 
 const QUESTION_TIME = 15;
-const ITEM_HEIGHT = 68;
+const ITEM_HEIGHT = 68; // 56px item + 12px gap (--sp-3)
 const STAGGER_MS = 120;
 const DROP_SETTLE_MS = 480;
 const CORRECT_PULSE_MS = 300;
 const SHAKE_MS = 400;
+const SHIMMER_MS = 600;
 const SPRING_EASING = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
 const SLIDE_TRANSITION =
   'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)';
@@ -79,7 +80,7 @@ type ItemRevealState = 'correct' | 'incorrect';
               border-radius: 44px;
               border: var(--f-brand-border-size-default) solid var(--c-lt-surface);
               background: var(--c-lt-surface);
-              box-shadow: 0px 2px 4px 0px var(--f-brand-color-shadow-default);
+              box-shadow: var(--f-brand-shadow-medium);
               display: flex;
               align-items: center;
               justify-content: center;
@@ -140,6 +141,8 @@ type ItemRevealState = 'correct' | 'incorrect';
                 class="ranking-quiz__item"
                 [class.ranking-quiz__item--shaking]="shakingIndices().includes(idx)"
                 [class.ranking-quiz__item--pulsing]="pulsingIndices().includes(idx)"
+                [class.ranking-quiz__item--all-celebrating]="celebrateAllItems()"
+                [class.ranking-quiz__item--shimmer-correct]="shimmerAllCorrect() && revealStates()[idx] === 'correct'"
                 (pointerdown)="startDrag(idx, $event)"
                 [ngStyle]="rankItemStyle(idx, item)"
                 data-section="rank-item"
@@ -148,7 +151,7 @@ type ItemRevealState = 'correct' | 'incorrect';
                   border-radius: 52px;
                   border: var(--f-brand-border-size-default) solid transparent;
                   background: var(--c-lt-surface);
-                  box-shadow: 0px 2px 4px 0px var(--f-brand-color-shadow-default);
+                  box-shadow: var(--f-brand-shadow-medium);
                   display: flex;
                   align-items: center;
                   gap: var(--sp-4);
@@ -340,6 +343,14 @@ type ItemRevealState = 'correct' | 'incorrect';
         0%, 100% { transform: scale(1); }
         50% { transform: scale(1.02); }
       }
+      @keyframes ranking-all-celebrate {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.04); }
+      }
+      @keyframes ranking-shimmer {
+        from { background-position: -200% center, center; }
+        to { background-position: 200% center, center; }
+      }
       .ranking-quiz__item--shaking {
         animation: ranking-shake 400ms cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
       }
@@ -348,6 +359,17 @@ type ItemRevealState = 'correct' | 'incorrect';
       }
       .ranking-quiz__items--celebrating {
         animation: ranking-celebrate var(--f-brand-motion-duration-quick) cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .ranking-quiz__item--all-celebrating {
+        animation: ranking-all-celebrate var(--f-brand-motion-duration-quick) cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        background: var(--c-correct-bg) !important;
+      }
+      .ranking-quiz__item--shimmer-correct {
+        background:
+          linear-gradient(90deg, transparent 35%, rgba(255, 255, 255, 0.35) 50%, transparent 65%),
+          var(--c-correct-bg) !important;
+        background-size: 300% 100%, auto !important;
+        animation: ranking-shimmer 600ms ease-in-out forwards;
       }
       @media (prefers-reduced-motion: reduce) {
         [data-page='ranking-quiz'],
@@ -392,6 +414,15 @@ export class RankingQuizPage implements OnInit, OnDestroy {
   readonly isCelebrating = signal(false);
   readonly isSubmitting = signal(false);
 
+  // Gap 2: visual gap at drop target during drag
+  readonly dropTargetIndex = signal<number | null>(null);
+
+  // Gap 4: perfect score — all items pulse green simultaneously
+  readonly celebrateAllItems = signal(false);
+
+  // Gap 5: shimmer sweep on correct items after perfect score pulse
+  readonly shimmerAllCorrect = signal(false);
+
   readonly totalQuestions = computed(() => this.quiz().questions.length);
   readonly currentQuestion = computed(() => this.quiz().questions[this.questionIndex()]);
   readonly progressPercent = computed(() => {
@@ -431,6 +462,9 @@ export class RankingQuizPage implements OnInit, OnDestroy {
   private readonly prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   private isAnimating = false;
 
+  // Gap 1: cached item bounding rects for closest-center collision detection
+  private itemRects: DOMRect[] = [];
+
   ngOnInit(): void {
     const routeQuizId = this.route.snapshot.paramMap.get('quizId');
     const stateQuizId = this.readStateString('quizId');
@@ -464,10 +498,15 @@ export class RankingQuizPage implements OnInit, OnDestroy {
 
   startDrag(index: number, event: PointerEvent): void {
     if (this.revealed() || this.isSubmitting()) return;
+    // Gap 1: cache item bounding rects for collision detection throughout the drag
+    const itemEls = document.querySelectorAll<HTMLElement>('[data-section="rank-item"]');
+    this.itemRects = Array.from(itemEls).map(el => el.getBoundingClientRect());
+
     this.dragIndex.set(index);
     this.dragOffset.set(0);
     this.dragStartY = event.clientY;
     this.dragBaseIndex = index;
+    this.dropTargetIndex.set(index);
     this.hapticFeedback(10);
   }
 
@@ -514,14 +553,29 @@ export class RankingQuizPage implements OnInit, OnDestroy {
 
         if (idx === snapshot.length - 1) {
           const finalRevealDelay = Math.max(CORRECT_PULSE_MS, SHAKE_MS) + 50;
-          window.setTimeout(() => {
+          const revealTimerId = window.setTimeout(() => {
             this.revealed.set(true);
             if (gained === snapshot.length) {
+              // Gap 4: container bounce + all items pulse green simultaneously
               this.isCelebrating.set(true);
+              this.celebrateAllItems.set(true);
               this.hapticFeedback([10, 20, 10, 20, 30]);
-              window.setTimeout(() => this.isCelebrating.set(false), DROP_SETTLE_MS);
+              const celebrateTimerId = window.setTimeout(() => {
+                this.isCelebrating.set(false);
+                this.celebrateAllItems.set(false);
+                // Gap 5: shimmer sweep on correct items after pulse completes
+                if (!this.prefersReducedMotion) {
+                  this.shimmerAllCorrect.set(true);
+                  const shimmerTimerId = window.setTimeout(() => {
+                    this.shimmerAllCorrect.set(false);
+                  }, SHIMMER_MS);
+                  this.revealTimerIds.push(shimmerTimerId);
+                }
+              }, DROP_SETTLE_MS);
+              this.revealTimerIds.push(celebrateTimerId);
             }
           }, finalRevealDelay);
+          this.revealTimerIds.push(revealTimerId);
         }
       }, idx * STAGGER_MS);
       this.revealTimerIds.push(timerId);
@@ -564,11 +618,12 @@ export class RankingQuizPage implements OnInit, OnDestroy {
   }
 
   rankItemStyle(index: number, item: RankingItem): Record<string, string> {
-    const dragging = this.dragIndex() === index;
+    const dragIdx = this.dragIndex();
+    const dropTarget = this.dropTargetIndex();
     const settling = this.settlingIndex() === index;
     const revealState = this.revealStates()[index];
 
-    if (dragging) {
+    if (dragIdx === index) {
       return {
         transform: `translateY(${this.dragOffset()}px) scale(1.03)`,
         border: `var(--f-brand-border-size-default) solid var(--c-lt-brand)`,
@@ -581,13 +636,36 @@ export class RankingQuizPage implements OnInit, OnDestroy {
       };
     }
 
+    // Gap 2: shift non-dragged items to open a visual gap at the drop target
+    if (dragIdx !== null && dropTarget !== null && dragIdx !== dropTarget) {
+      const src = dragIdx;
+      const dst = dropTarget;
+      if (dst > src && index > src && index <= dst) {
+        // Dragging down: shift items between src+1..dst UP to fill src's vacancy
+        return {
+          transform: `translateY(-${ITEM_HEIGHT}px)`,
+          transition: `transform var(--f-brand-motion-duration-instant) ${SPRING_EASING}`,
+          cursor: 'grab',
+        };
+      }
+      if (dst < src && index >= dst && index < src) {
+        // Dragging up: shift items between dst..src-1 DOWN to fill src's vacancy
+        return {
+          transform: `translateY(${ITEM_HEIGHT}px)`,
+          transition: `transform var(--f-brand-motion-duration-instant) ${SPRING_EASING}`,
+          cursor: 'grab',
+        };
+      }
+    }
+
     if (settling) {
       const offset = this.dragOffset();
       const isAtRest = offset === 0;
       return {
         transform: `translateY(${offset}px) scale(${isAtRest ? '1' : '1.03'})`,
         transition: `transform var(--f-brand-motion-duration-quick) ${SPRING_EASING}, box-shadow var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default), border-color var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)`,
-        boxShadow: isAtRest ? '0px 2px 4px 0px var(--f-brand-color-shadow-default)' : 'var(--f-brand-shadow-large)',
+        // Gap 3: use the FDS shadow-medium token instead of hardcoded value
+        boxShadow: isAtRest ? 'var(--f-brand-shadow-medium)' : 'var(--f-brand-shadow-large)',
         border: isAtRest ? 'var(--f-brand-border-size-default) solid transparent' : `var(--f-brand-border-size-default) solid var(--c-lt-brand)`,
         zIndex: '50',
         position: 'relative',
@@ -648,44 +726,73 @@ export class RankingQuizPage implements OnInit, OnDestroy {
     return this.correctIndex(item) === index;
   }
 
+  // Gap 1: closest-center collision detection using cached item rects
   private readonly onPointerMove = (event: PointerEvent): void => {
     const dragIdx = this.dragIndex();
     if (dragIdx === null || this.revealed()) return;
     event.preventDefault();
-    const deltaY = event.clientY - this.dragStartY;
 
-    const moveBy = Math.round(deltaY / ITEM_HEIGHT);
-    if (moveBy !== 0) {
-      this.items.update(prev => {
-        const next = [...prev];
-        const from = this.dragBaseIndex;
-        const to = Math.max(0, Math.min(next.length - 1, from + moveBy));
-        if (from === to) return prev;
-        const [moved] = next.splice(from, 1);
-        next.splice(to, 0, moved);
-        this.dragBaseIndex = to;
-        this.dragStartY += moveBy * ITEM_HEIGHT;
-        return next;
-      });
-      this.hasReordered.set(true);
-      this.dragOffset.set(event.clientY - this.dragStartY);
-    } else {
-      // Elastic resistance at list boundaries
-      const atTop = this.dragBaseIndex === 0 && deltaY < 0;
-      const atBottom = this.dragBaseIndex === this.items().length - 1 && deltaY > 0;
-      const effectiveOffset = atTop || atBottom ? deltaY * 0.3 : deltaY;
-      this.dragOffset.set(effectiveOffset);
+    const deltaY = event.clientY - this.dragStartY;
+    const count = this.items().length;
+
+    // Determine drop target by comparing dragged item center against each item's center
+    const srcRect = this.itemRects[dragIdx];
+    if (srcRect) {
+      const dragCenterY = srcRect.top + srcRect.height / 2 + deltaY;
+      let newTarget = count - 1; // default: end of list
+
+      for (let i = 0; i < count; i++) {
+        if (i === dragIdx) continue;
+        const rect = this.itemRects[i];
+        if (!rect) continue;
+        const itemCenterY = rect.top + rect.height / 2;
+        if (dragCenterY < itemCenterY) {
+          // Insert before item i; adjust index to account for dragIdx removal
+          newTarget = i <= dragIdx ? i : i - 1;
+          break;
+        }
+      }
+
+      this.dropTargetIndex.set(newTarget);
+      if (newTarget !== this.dragBaseIndex) {
+        this.hasReordered.set(true);
+      }
     }
+
+    // Elastic resistance when dragging past list boundaries
+    const dropTarget = this.dropTargetIndex() ?? dragIdx;
+    const atTop = dropTarget === 0 && deltaY < 0;
+    const atBottom = dropTarget === count - 1 && deltaY > 0;
+    this.dragOffset.set(atTop || atBottom ? deltaY * 0.3 : deltaY);
   };
 
+  // Gap 2: reorder on drop and compute remaining offset for seamless settle transition
   private readonly onPointerUp = (): void => {
     if (this.dragIndex() === null) return;
     this.hapticFeedback(5);
-    const idx = this.dragIndex();
-    this.settlingIndex.set(idx);
-    this.dragIndex.set(null);
+    const dragIdx = this.dragIndex()!;
+    const target = this.dropTargetIndex() ?? dragIdx;
+    const currentOffset = this.dragOffset();
 
-    // Use rAF so transition is applied before offset clears, enabling the settle animation
+    // Compute the remaining displacement so the item settles smoothly from its
+    // visual drop position to the new flex slot (avoids a visible jump on reorder)
+    const remainingOffset = (dragIdx - target) * ITEM_HEIGHT + currentOffset;
+
+    if (target !== dragIdx) {
+      this.items.update(prev => {
+        const next = [...prev];
+        const [moved] = next.splice(dragIdx, 1);
+        next.splice(target, 0, moved);
+        return next;
+      });
+    }
+
+    this.dragIndex.set(null);
+    this.dropTargetIndex.set(null);
+    this.settlingIndex.set(target);
+    this.dragOffset.set(remainingOffset);
+
+    // rAF ensures the transition fires from remainingOffset → 0
     window.requestAnimationFrame(() => {
       this.dragOffset.set(0);
       if (this.settleTimerId !== null) {
@@ -705,11 +812,15 @@ export class RankingQuizPage implements OnInit, OnDestroy {
     this.dragIndex.set(null);
     this.dragOffset.set(0);
     this.settlingIndex.set(null);
+    this.dropTargetIndex.set(null);
     this.hasReordered.set(false);
     this.revealStates.set([]);
     this.shakingIndices.set([]);
     this.pulsingIndices.set([]);
     this.isCelebrating.set(false);
+    this.celebrateAllItems.set(false);
+    this.shimmerAllCorrect.set(false);
+    this.itemRects = [];
     this.clearRevealTimers();
     if (this.settleTimerId !== null) {
       window.clearTimeout(this.settleTimerId);
