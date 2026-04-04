@@ -175,7 +175,6 @@ const TIMER_DURATION = 10;
                 style="
                   position: relative;
                   width: 100%;
-                  max-width: calc(var(--sp-20) * 4 + var(--sp-5));
                   flex: 1;
                   min-height: 300px;
                   border-radius: var(--f-brand-radius-outer);
