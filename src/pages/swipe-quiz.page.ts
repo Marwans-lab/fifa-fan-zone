@@ -19,6 +19,7 @@ const SWIPE_THRESHOLD = 80;
 const ROTATION_FACTOR = 0.12;
 const FEEDBACK_DURATION = 1200;
 const EXIT_DURATION = 420;
+const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
 
 @Component({
   standalone: true,
@@ -58,19 +59,16 @@ const EXIT_DURATION = 420;
                 min-height: var(--sp-11);
                 padding: 0;
                 border-radius: var(--r-full);
-                color: var(--c-text-1);
               "
             >
-              <svg class="swipe-quiz__back-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  class="swipe-quiz__back-icon-path"
-                  d="M15 18L9 12L15 6"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+              <img
+                [src]="chevronLeftWhiteIcon"
+                width="24"
+                height="24"
+                alt=""
+                aria-hidden="true"
+                class="swipe-quiz__back-icon"
+              />
             </button>
 
             <div class="swipe-quiz__title-wrap" style="flex: 1; text-align: center;">
@@ -507,6 +505,8 @@ const EXIT_DURATION = 420;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SwipeQuizPage implements OnInit {
+  readonly chevronLeftWhiteIcon = CHEVRON_LEFT_WHITE_ICON;
+
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly store = inject(StoreService);
@@ -795,20 +795,10 @@ export class SwipeQuizPage implements OnInit {
       alignItems: 'center',
       justifyContent: 'center',
       cursor: disabled ? 'default' : 'pointer',
-      color: disabled ? 'var(--f-brand-color-icon-disabled)' : 'var(--f-brand-color-icon-default)',
-      backgroundColor: disabled
-        ? 'var(--f-brand-color-background-disabled)'
-        : isTrueButton
-          ? 'var(--f-brand-color-background-success-accent)'
-          : 'var(--f-brand-color-background-error)',
-      borderColor: disabled
-        ? 'var(--f-brand-color-border-disabled)'
-        : isTrueButton
-          ? 'var(--f-brand-color-border-success)'
-          : 'var(--f-brand-color-border-error)',
+      opacity: disabled ? '0.4' : '1',
       transition: this.prefersReducedMotion
         ? 'none'
-        : 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), background-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
+        : 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
       boxShadow: 'none',
     };
   }
