@@ -43,15 +43,8 @@ const JPG_QUALITY = 0.78;
             <path d="M15 19l-7-7 7-7"></path>
           </svg>
         </button>
-        <div class="team-selection-page__progress-track" aria-hidden="true">
-          <div
-            class="team-selection-page__progress-fill"
-            [style.width.%]="progressWidth()"
-          ></div>
-        </div>
+        <h1 class="team-selection-page__title" data-section="title">Select your team</h1>
       </header>
-
-      <h1 class="team-selection-page__title" data-section="title">Select your team</h1>
 
       <section class="team-selection-page__dropdown-wrap" data-section="team-dropdown">
         <button
@@ -290,34 +283,11 @@ const JPG_QUALITY = 0.78;
         stroke-linejoin: round;
       }
 
-      .team-selection-page__progress-track {
-        flex: 1;
-        height: var(--sp-2);
-        background: var(--f-brand-color-border-default);
-        border-radius: var(--f-brand-radius-rounded);
-        overflow: hidden;
-      }
-
-      .team-selection-page__progress-fill {
-        height: 100%;
-        border-radius: var(--f-brand-radius-rounded);
-        background: linear-gradient(
-          -90deg,
-          var(--f-brand-color-border-success) 61.5%,
-          var(--f-brand-color-background-success) 100%
-        );
-        box-shadow: 1px 0px 6px var(--f-brand-shadow-large);
-        transition: width var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit);
-      }
-
       .team-selection-page__title {
         margin: 0;
-        margin-top: var(--f-brand-space-xl);
-        margin-bottom: var(--f-brand-space-xl);
-        text-align: center;
+        flex: 1;
         color: var(--f-brand-color-text-default);
-        font: var(--f-brand-type-title-3);
-        flex-shrink: 0;
+        font: var(--f-brand-type-headline);
       }
 
       .team-selection-page__dropdown-wrap {
@@ -466,7 +436,8 @@ const JPG_QUALITY = 0.78;
 
       .picture-page__capture {
         margin-top: var(--f-brand-space-xl);
-        border-radius: var(--f-brand-radius-small);
+        margin-left: calc(-1 * var(--f-brand-space-md));
+        margin-right: calc(-1 * var(--f-brand-space-md));
         height: var(--c-picture-capture-height);
         display: flex;
         flex-direction: column;
@@ -528,11 +499,8 @@ const JPG_QUALITY = 0.78;
       }
 
       .picture-page__placeholder {
-        width: auto;
+        width: 100%;
         height: 100%;
-        max-width: 100%;
-        aspect-ratio: 5 / 7;
-        border-radius: var(--f-brand-radius-outer);
         border: var(--f-brand-border-size-default) solid var(--c-card-border);
         box-shadow: var(--f-brand-shadow-large);
         display: flex;
@@ -705,7 +673,6 @@ const JPG_QUALITY = 0.78;
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .team-selection-page__progress-fill,
         .picture-page__progress-fill {
           transition: none;
         }
@@ -758,12 +725,6 @@ export class TeamSelectionPage implements OnDestroy {
     photoDataUrl: this.photoDataUrl(),
     teamId: this.selectedId() ?? this.store.state().fanCard.teamId,
   }));
-
-  readonly progressWidth = computed(() => {
-    if (this.hasPhoto()) return 66;
-    if (this.selectedId()) return 33;
-    return 0;
-  });
 
   selectedTeamName(): string | null {
     const selectedId = this.selectedId();
