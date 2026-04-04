@@ -706,13 +706,14 @@ export class RankingQuizPage implements OnInit, OnDestroy {
     if (!this.revealed()) return 'Lock in order';
     const isLast = this.questionIndex() >= this.totalQuestions() - 1;
     if (!isLast) return 'Next';
-    return `Finish · ${this.score()}/${this.totalQuestions() * 4}`;
+    return `Finish · ${this.score()}/${this.totalQuestions() * this.currentQuestion().items.length}`;
   }
 
   feedbackText(): string {
     const value = this.questionScore();
-    if (value === 4) return '✓ Perfect order! +4 points';
-    return `${value}/4 correct positions`;
+    const itemCount = this.currentQuestion().items.length;
+    if (value === itemCount) return `✓ Perfect order! +${itemCount} points`;
+    return `${value}/${itemCount} correct positions`;
   }
 
   feedbackColor(): string {
@@ -936,7 +937,7 @@ export class RankingQuizPage implements OnInit, OnDestroy {
   private finishQuiz(): void {
     this.stopTimer();
     const finalScore = this.score();
-    const total = this.totalQuestions() * 4;
+    const total = this.totalQuestions() * this.quiz().questions[0].items.length;
     const quiz = this.quiz();
     this.store.addPoints(finalScore);
     this.store.recordQuizResult(quiz.id, finalScore, total);

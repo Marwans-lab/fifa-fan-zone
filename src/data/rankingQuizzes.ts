@@ -33,6 +33,7 @@ export const RANKING_QUIZZES: RankingQuiz[] = [
           { id: 'b', label: 'Germany (4)', flagUrl: 'https://flagcdn.com/w40/de.png' },
           { id: 'c', label: 'Italy (4)', flagUrl: 'https://flagcdn.com/w40/it.png' },
           { id: 'd', label: 'Argentina (3)', flagUrl: 'https://flagcdn.com/w40/ar.png' },
+          { id: 'e', label: 'France (2)', flagUrl: 'https://flagcdn.com/w40/fr.png' },
         ],
       },
       {
@@ -43,6 +44,7 @@ export const RANKING_QUIZZES: RankingQuiz[] = [
           { id: 'b', label: 'Ronaldo (15)', flagUrl: 'https://flagcdn.com/w40/br.png' },
           { id: 'c', label: 'Gerd Müller (14)', flagUrl: 'https://flagcdn.com/w40/de.png' },
           { id: 'd', label: 'Just Fontaine (13)', flagUrl: 'https://flagcdn.com/w40/fr.png' },
+          { id: 'e', label: 'Pelé (12)', flagUrl: 'https://flagcdn.com/w40/br.png' },
         ],
       },
       {
@@ -53,6 +55,7 @@ export const RANKING_QUIZZES: RankingQuiz[] = [
           { id: 'b', label: '2014 Brazil (171)', flagUrl: 'https://flagcdn.com/w40/br.png' },
           { id: 'c', label: '1998 France (171)', flagUrl: 'https://flagcdn.com/w40/fr.png' },
           { id: 'd', label: '2018 Russia (169)', flagUrl: 'https://flagcdn.com/w40/ru.png' },
+          { id: 'e', label: '2006 Germany (147)', flagUrl: 'https://flagcdn.com/w40/de.png' },
         ],
       },
       {
@@ -62,7 +65,8 @@ export const RANKING_QUIZZES: RankingQuiz[] = [
           { id: 'a', label: 'Brazil (22)', flagUrl: 'https://flagcdn.com/w40/br.png' },
           { id: 'b', label: 'Germany (20)', flagUrl: 'https://flagcdn.com/w40/de.png' },
           { id: 'c', label: 'Argentina (18)', flagUrl: 'https://flagcdn.com/w40/ar.png' },
-          { id: 'd', label: 'Spain (16)', flagUrl: 'https://flagcdn.com/w40/es.png' },
+          { id: 'd', label: 'Mexico (17)', flagUrl: 'https://flagcdn.com/w40/mx.png' },
+          { id: 'e', label: 'Spain (16)', flagUrl: 'https://flagcdn.com/w40/es.png' },
         ],
       },
       {
@@ -70,9 +74,10 @@ export const RANKING_QUIZZES: RankingQuiz[] = [
         question: 'Rank these FIFA World Cup finals by attendance (highest to lowest)',
         items: [
           { id: 'a', label: '1950 Maracanã (173,850)', flagUrl: 'https://flagcdn.com/w40/br.png' },
-          { id: 'b', label: '1966 Wembley (96,924)', flagUrl: 'https://flagcdn.com/w40/gb-eng.png' },
-          { id: 'c', label: '2022 Lusail (88,966)', flagUrl: 'https://flagcdn.com/w40/qa.png' },
-          { id: 'd', label: '2014 Maracanã (74,738)', flagUrl: 'https://flagcdn.com/w40/br.png' },
+          { id: 'b', label: '1986 Azteca (114,600)', flagUrl: 'https://flagcdn.com/w40/mx.png' },
+          { id: 'c', label: '1966 Wembley (96,924)', flagUrl: 'https://flagcdn.com/w40/gb-eng.png' },
+          { id: 'd', label: '2022 Lusail (88,966)', flagUrl: 'https://flagcdn.com/w40/qa.png' },
+          { id: 'e', label: '2014 Maracanã (74,738)', flagUrl: 'https://flagcdn.com/w40/br.png' },
         ],
       },
     ],
