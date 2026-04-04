@@ -47,8 +47,8 @@ import { StoreService } from '../services/store.service';
           (click)="toggleDropdown()"
         >
           <span class="team-selection-page__dropdown-selected">
-            @if (selectedTeamFlag()) {
-              <i class="ic-nav-flag-{{selectedTeamFlag()}}" aria-hidden="true"></i>
+            @if (selectedTeamFlagClass()) {
+              <i class="{{selectedTeamFlagClass()}}" aria-hidden="true"></i>
             }
             {{ selectedTeamName() ?? 'Select a team' }}
           </span>
@@ -73,7 +73,7 @@ import { StoreService } from '../services/store.service';
                 [class.team-selection-page__option--with-divider]="!isLast"
                 (click)="selectTeam(team.id)"
               >
-                <i class="ic-nav-flag-{{team.flag}}" aria-hidden="true"></i>
+                <i class="{{team.flagClass}}" aria-hidden="true"></i>
                 {{ team.name }}
               </li>
             }
@@ -354,10 +354,10 @@ export class TeamSelectionPage {
     return this.dropdownTeams.find(team => team.id === selectedId)?.name ?? null;
   }
 
-  selectedTeamFlag(): string | null {
+  selectedTeamFlagClass(): string | null {
     const selectedId = this.selectedId();
     if (!selectedId) return null;
-    return this.dropdownTeams.find(team => team.id === selectedId)?.flag ?? null;
+    return this.dropdownTeams.find(team => team.id === selectedId)?.flagClass ?? null;
   }
 
   toggleDropdown(): void {
