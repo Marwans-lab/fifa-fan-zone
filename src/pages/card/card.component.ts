@@ -609,11 +609,11 @@ export class CardComponent {
     {
       id: 'the-historian',
       title: 'The Historian',
-      subtitle: '10 statements · Swipe',
+      subtitle: '5 questions · Ranking',
       iconSrc: 'assets/icons/history-white.svg',
-      route: '/swipe-quiz',
+      route: '/ranking-quiz',
       routeState: { quizId: 'the-historian' },
-      type: 'swipe',
+      type: 'ranking',
     },
     {
       id: 'the-referee',
