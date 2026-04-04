@@ -110,6 +110,7 @@
   --c-picture-capture-height: calc(var(--sp-20) * 6 + var(--sp-9));
   --c-picture-take-photo-min-width: calc(var(--sp-20) * 2 + var(--sp-9));
   --c-card-match-completion-max-width: calc(var(--sp-20) * 4);
+  --c-swipe-false: #f47758;
   --c-swipe-accent-1: #1a3a1a;
   --c-swipe-accent-2: #2a1a2a;
   --c-swipe-accent-3: #1a2a3a;
