@@ -264,7 +264,7 @@ const TIMER_DURATION = 10;
                       <svg class="swipe-quiz__icon-check" width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path
                           d="M5 13l4 4L19 7"
-                          stroke="var(--f-brand-color-border-success)"
+                          stroke="var(--c-lt-white)"
                           stroke-width="2.5"
                           stroke-linecap="round"
                           stroke-linejoin="round"
@@ -274,7 +274,7 @@ const TIMER_DURATION = 10;
                       <svg class="swipe-quiz__icon-x" width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path
                           d="M18 6L6 18M6 6l12 12"
-                          stroke="var(--f-brand-color-status-error)"
+                          stroke="var(--c-lt-white)"
                           stroke-width="2.5"
                           stroke-linecap="round"
                           stroke-linejoin="round"
@@ -284,11 +284,11 @@ const TIMER_DURATION = 10;
                   </div>
                   <span
                     class="swipe-quiz__feedback-text"
-                    [style.color]="isFeedbackCorrect() ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-status-error)'"
                     style="
                       font: var(--f-brand-type-title-3);
                       font-weight: var(--weight-light);
                       letter-spacing: var(--tracking-wide);
+                      color: var(--c-lt-text-1);
                     "
                   >
                     {{ isFeedbackCorrect() ? 'Correct!' : 'Wrong!' }}
@@ -760,6 +760,7 @@ export class SwipeQuizPage implements OnInit, OnDestroy {
   feedbackOverlayStyle(): Record<string, string> {
     const visible = this.isFeedbackVisible();
     return {
+      background: 'var(--c-lt-feedback-overlay)',
       opacity: visible ? '1' : '0',
       transform: this.prefersReducedMotion ? 'scale(1)' : visible ? 'scale(1)' : 'scale(0.85)',
       transition: this.prefersReducedMotion
@@ -775,7 +776,6 @@ export class SwipeQuizPage implements OnInit, OnDestroy {
       border: `var(--f-brand-border-size-focused) solid ${
         correct ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-border-error)'
       }`,
-      boxShadow: correct ? 'var(--c-glow-success-xl)' : 'var(--c-glow-error-xl)',
     };
   }
 

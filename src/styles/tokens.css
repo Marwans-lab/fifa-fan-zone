@@ -77,8 +77,9 @@
   --c-lt-shadow-btn:    0 10px 30px rgba(0,0,0,0.12);
   --c-lt-shadow-strong: rgba(0,0,0,0.25);
   --c-progress-fill-shadow: 1px 0px 6px 0px var(--c-lt-shadow-strong);
-  --c-lt-overlay:       rgba(0,0,0,0.20);
-  --c-lt-overlay-heavy: rgba(0,0,0,0.50);
+  --c-lt-overlay:          rgba(0,0,0,0.20);
+  --c-lt-overlay-heavy:    rgba(0,0,0,0.50);
+  --c-lt-feedback-overlay: rgba(255,255,255,0.85);
   --c-lt-overlay-border: rgba(255,255,255,0.20);
   --c-lt-shadow-lg: 0 8px 32px rgba(31,33,43,0.12), 0 2px 8px rgba(31,33,43,0.08);
 
