@@ -618,11 +618,11 @@ export class CardComponent {
     {
       id: 'the-referee',
       title: 'The Referee',
-      subtitle: '5 questions · Quiz',
+      subtitle: '10 statements · Swipe',
       iconSrc: 'assets/icons/referee-white.svg',
-      route: '/quiz',
+      route: '/swipe-quiz',
       routeState: { quizId: 'the-referee' },
-      type: 'quiz',
+      type: 'swipe',
     },
     {
       id: 'the-retrospective',
