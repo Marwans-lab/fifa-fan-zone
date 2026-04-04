@@ -737,33 +737,44 @@ export class RankingQuizPage implements OnInit, OnDestroy {
 
     // Determine drop target by comparing dragged item center against each item's center
     const srcRect = this.itemRects[dragIdx];
-    if (srcRect) {
-      const dragCenterY = srcRect.top + srcRect.height / 2 + deltaY;
-      let newTarget = count - 1; // default: end of list
+    if (!srcRect) {
+      this.dragOffset.set(deltaY);
+      return;
+    }
 
-      for (let i = 0; i < count; i++) {
-        if (i === dragIdx) continue;
-        const rect = this.itemRects[i];
-        if (!rect) continue;
-        const itemCenterY = rect.top + rect.height / 2;
-        if (dragCenterY < itemCenterY) {
-          // Insert before item i; adjust index to account for dragIdx removal
-          newTarget = i <= dragIdx ? i : i - 1;
-          break;
-        }
-      }
+    const dragCenterY = srcRect.top + srcRect.height / 2 + deltaY;
+    let newTarget = count - 1; // default: end of list
 
-      this.dropTargetIndex.set(newTarget);
-      if (newTarget !== this.dragBaseIndex) {
-        this.hasReordered.set(true);
+    for (let i = 0; i < count; i++) {
+      if (i === dragIdx) continue;
+      const rect = this.itemRects[i];
+      if (!rect) continue;
+      const itemCenterY = rect.top + rect.height / 2;
+      if (dragCenterY < itemCenterY) {
+        // Insert before item i; adjust index to account for dragIdx removal
+        newTarget = i <= dragIdx ? i : i - 1;
+        break;
       }
     }
 
-    // Elastic resistance when dragging past list boundaries
-    const dropTarget = this.dropTargetIndex() ?? dragIdx;
-    const atTop = dropTarget === 0 && deltaY < 0;
-    const atBottom = dropTarget === count - 1 && deltaY > 0;
-    this.dragOffset.set(atTop || atBottom ? deltaY * 0.3 : deltaY);
+    this.dropTargetIndex.set(newTarget);
+    if (newTarget !== this.dragBaseIndex) {
+      this.hasReordered.set(true);
+    }
+
+    // Elastic resistance: tile naturally aligns with its target slot; only absorb
+    // the overscroll when the user drags past the first or last boundary.
+    // This prevents the tile from appearing stuck in the middle of a neighbor.
+    const naturalOffset = (newTarget - this.dragBaseIndex) * ITEM_HEIGHT;
+    const atTop = newTarget === 0 && deltaY < naturalOffset;
+    const atBottom = newTarget === count - 1 && deltaY > naturalOffset;
+
+    if (atTop || atBottom) {
+      const overDrag = deltaY - naturalOffset;
+      this.dragOffset.set(naturalOffset + overDrag * 0.3);
+    } else {
+      this.dragOffset.set(deltaY);
+    }
   };
 
   // Gap 2: reorder on drop and compute remaining offset for seamless settle transition
