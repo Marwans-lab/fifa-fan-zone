@@ -762,7 +762,7 @@ export class SwipeQuizPage implements OnInit, OnDestroy {
   feedbackIconStyle(): Record<string, string> {
     const correct = this.isFeedbackCorrect();
     return {
-      background: correct ? 'var(--f-brand-color-background-success-accent)' : 'var(--f-brand-color-background-error)',
+      background: correct ? 'var(--f-brand-color-flight-status-confirmed)' : 'var(--f-brand-color-background-error)',
       border: `var(--f-brand-border-size-focused) solid ${
         correct ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-border-error)'
       }`,
