@@ -379,7 +379,7 @@ const TIMER_DURATION = 10;
                   >
                     <svg class="swipe-quiz__swipe-hint-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                       <path
-                        d="M15 18l-6-6 6-6"
+                        d="M15 18l-6-6 6-6M9 18l-6-6 6-6"
                         stroke="var(--c-lt-text-3)"
                         stroke-width="1.5"
                         stroke-linecap="round"
@@ -397,7 +397,7 @@ const TIMER_DURATION = 10;
                     </span>
                     <svg class="swipe-quiz__swipe-hint-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                       <path
-                        d="M9 18l6-6-6-6"
+                        d="M9 18l6-6-6-6M15 18l6-6-6-6"
                         stroke="var(--c-lt-text-3)"
                         stroke-width="1.5"
                         stroke-linecap="round"
