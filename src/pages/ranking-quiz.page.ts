@@ -178,7 +178,7 @@ type ItemRevealState = 'correct' | 'incorrect';
                     flex-shrink: 0;
                   "
                 >
-                  <img [src]="item.flagUrl" width="24" height="24" alt="" aria-hidden="true" style="border-radius: 2px; object-fit: cover" />
+                  <img [src]="item.flagUrl" width="24" height="16" alt="" aria-hidden="true" style="border-radius: 2px; object-fit: cover" />
                 </div>
                 <span
                   class="ranking-quiz__item-text"
