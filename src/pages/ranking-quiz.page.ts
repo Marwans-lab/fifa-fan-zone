@@ -150,11 +150,8 @@ const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
             style="
               margin: 0;
               padding: 0 var(--sp-6);
-              font: var(--f-brand-type-title-3);
-              font-size: var(--text-xl);
+              font: 300 24px/32px var(--font-display);
               color: var(--c-lt-text-1);
-              line-height: var(--leading-tight);
-              letter-spacing: var(--tracking-tight);
               text-align: center;
               margin-bottom: var(--sp-6);
               flex-shrink: 0;
