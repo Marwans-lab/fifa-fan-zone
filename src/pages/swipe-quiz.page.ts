@@ -124,7 +124,7 @@ const EXIT_DURATION = 420;
               position: absolute;
               inset: 0;
               display: flex;
-              align-items: center;
+              align-items: stretch;
               justify-content: center;
               padding: var(--sp-4);
               z-index: 1;
@@ -136,7 +136,8 @@ const EXIT_DURATION = 420;
               style="
                 width: 100%;
                 max-width: calc(var(--sp-20) * 4 + var(--sp-5));
-                aspect-ratio: 3 / 4;
+                flex: 1;
+                min-height: 300px;
                 border-radius: var(--f-brand-radius-outer);
                 background: var(--c-lt-surface);
                 border: var(--f-brand-border-size-default) solid var(--c-lt-border);
@@ -160,7 +161,7 @@ const EXIT_DURATION = 420;
                 position: absolute;
                 inset: 0;
                 display: flex;
-                align-items: center;
+                align-items: stretch;
                 justify-content: center;
                 padding: var(--sp-4);
                 z-index: 5;
@@ -173,15 +174,12 @@ const EXIT_DURATION = 420;
                   position: relative;
                   width: 100%;
                   max-width: calc(var(--sp-20) * 4 + var(--sp-5));
-                  aspect-ratio: 3 / 4;
+                  flex: 1;
+                  min-height: 300px;
                   border-radius: var(--f-brand-radius-outer);
                   background: var(--c-lt-surface);
                   display: flex;
                   flex-direction: column;
-                  align-items: center;
-                  justify-content: center;
-                  padding: var(--sp-8);
-                  text-align: center;
                   overflow: hidden;
                 "
               >
@@ -308,35 +306,103 @@ const EXIT_DURATION = 420;
                 </div>
 
                 <div
-                  class="swipe-quiz__statement"
+                  class="swipe-quiz__card-image"
+                  style="
+                    flex: 1;
+                    overflow: hidden;
+                    position: relative;
+                  "
+                >
+                  <img
+                    [src]="currentStatement().imageUrl"
+                    alt=""
+                    aria-hidden="true"
+                    style="
+                      width: 100%;
+                      height: 100%;
+                      object-fit: cover;
+                      display: block;
+                    "
+                  />
+                </div>
+
+                <div
+                  class="swipe-quiz__card-content"
                   [style.opacity]="isFeedbackVisible() ? '0' : '1'"
                   style="
-                    font: var(--f-brand-type-title-3);
-                    color: var(--c-lt-text-1);
-                    line-height: var(--leading-tight);
-                    letter-spacing: var(--tracking-tight);
+                    background: var(--c-lt-surface);
+                    padding: var(--sp-4);
+                    display: flex;
+                    flex-direction: column;
+                    gap: var(--sp-3);
                     text-align: center;
                     transition: opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
                     z-index: 1;
                   "
                 >
-                  {{ currentStatement().statement }}
-                </div>
+                  <span
+                    class="swipe-quiz__card-question-label"
+                    style="
+                      font: var(--f-brand-type-body-medium);
+                      color: var(--c-lt-brand);
+                      text-align: center;
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                    "
+                  >
+                    Question {{ currentIndex() + 1 }}
+                  </span>
 
-                <div
-                  class="swipe-quiz__swipe-hint"
-                  [style.opacity]="isFeedbackVisible() ? '0' : '0.6'"
-                  style="
-                    position: absolute;
-                    bottom: var(--sp-6);
-                    font: var(--f-brand-type-caption);
-                    color: var(--c-lt-text-3);
-                    letter-spacing: var(--tracking-wide);
-                    text-transform: uppercase;
-                    transition: opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
-                  "
-                >
-                  Swipe to answer
+                  <div
+                    class="swipe-quiz__statement"
+                    style="
+                      font: 300 24px/32px var(--font-display);
+                      color: var(--c-lt-text-1);
+                      text-align: center;
+                      max-height: 96px;
+                      overflow: hidden;
+                    "
+                  >
+                    {{ currentStatement().statement }}
+                  </div>
+
+                  <div
+                    class="swipe-quiz__swipe-hint"
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      gap: var(--sp-1);
+                    "
+                  >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path
+                        d="M15 18l-6-6 6-6"
+                        stroke="var(--c-lt-text-3)"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    <span
+                      style="
+                        font: var(--f-brand-type-subheading);
+                        color: var(--c-lt-text-3);
+                      "
+                    >
+                      Swipe right or left
+                    </span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path
+                        d="M9 18l6-6-6-6"
+                        stroke="var(--c-lt-text-3)"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </article>
