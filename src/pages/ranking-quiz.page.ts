@@ -109,41 +109,6 @@ const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
         </header>
 
         <div class="ranking-quiz__slide" [ngStyle]="slideStyle()" style="flex: 1; display: flex; flex-direction: column; overflow: hidden">
-          <div class="ranking-quiz__timer-wrap" data-section="timer" style="display: flex; justify-content: center; margin-bottom: var(--sp-4); flex-shrink: 0">
-            <div class="ranking-quiz__timer" style="position: relative; width: 64px; height: 64px; flex-shrink: 0">
-              <svg class="ranking-quiz__timer-svg" width="64" height="64" viewBox="0 0 64 64" style="transform: rotate(-90deg)" aria-hidden="true">
-                <circle class="ranking-quiz__timer-track" cx="32" cy="32" r="28" fill="none" stroke="var(--c-lt-border)" stroke-width="3"></circle>
-                <circle
-                  class="ranking-quiz__timer-progress"
-                  cx="32"
-                  cy="32"
-                  r="28"
-                  fill="none"
-                  stroke="var(--c-lt-brand)"
-                  stroke-width="3"
-                  [attr.stroke-dasharray]="timerCircumference"
-                  [attr.stroke-dashoffset]="timerOffset()"
-                  stroke-linecap="round"
-                  style="transition: stroke-dashoffset var(--f-brand-motion-duration-generous) linear"
-                ></circle>
-              </svg>
-              <span
-                class="ranking-quiz__timer-label"
-                style="
-                  position: absolute;
-                  inset: 0;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  color: var(--c-lt-text-1);
-                  font: var(--f-brand-type-subheading-medium);
-                "
-              >
-                {{ timeLeft() }}
-              </span>
-            </div>
-          </div>
-
           <h1
             class="ranking-quiz__question"
             data-section="question"
@@ -251,7 +216,42 @@ const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
           </div>
         </div>
 
-        <div class="ranking-quiz__footer" style="padding: var(--sp-5) var(--sp-4) var(--sp-8); flex-shrink: 0">
+        <div class="ranking-quiz__timer-wrap" data-section="timer" style="display: flex; justify-content: center; margin-top: var(--sp-6); flex-shrink: 0">
+          <div class="ranking-quiz__timer" style="position: relative; width: 64px; height: 64px; flex-shrink: 0">
+            <svg class="ranking-quiz__timer-svg" width="64" height="64" viewBox="0 0 64 64" style="transform: rotate(-90deg)" aria-hidden="true">
+              <circle class="ranking-quiz__timer-track" cx="32" cy="32" r="28" fill="none" stroke="var(--c-lt-border)" stroke-width="3"></circle>
+              <circle
+                class="ranking-quiz__timer-progress"
+                cx="32"
+                cy="32"
+                r="28"
+                fill="none"
+                stroke="var(--c-lt-brand)"
+                stroke-width="3"
+                [attr.stroke-dasharray]="timerCircumference"
+                [attr.stroke-dashoffset]="timerOffset()"
+                stroke-linecap="round"
+                style="transition: stroke-dashoffset var(--f-brand-motion-duration-generous) linear"
+              ></circle>
+            </svg>
+            <span
+              class="ranking-quiz__timer-label"
+              style="
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--c-lt-text-1);
+                font: var(--f-brand-type-headline);
+              "
+            >
+              {{ timeLeft() }}
+            </span>
+          </div>
+        </div>
+
+        <div class="ranking-quiz__footer" style="padding: var(--sp-6) var(--sp-4) var(--sp-8); flex-shrink: 0">
           @if (revealed()) {
             <p
               class="ranking-quiz__feedback"
