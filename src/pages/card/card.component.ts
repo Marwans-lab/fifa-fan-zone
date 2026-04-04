@@ -627,11 +627,11 @@ export class CardComponent {
     {
       id: 'the-retrospective',
       title: 'The Retrospective',
-      subtitle: '5 questions · Ranking',
+      subtitle: '5 questions · Quiz',
       iconSrc: 'assets/icons/ranking-white.svg',
-      route: '/ranking-quiz',
+      route: '/quiz',
       routeState: { quizId: 'the-retrospective' },
-      type: 'ranking',
+      type: 'quiz',
     },
   ];
 
