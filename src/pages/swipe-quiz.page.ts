@@ -19,7 +19,7 @@ const SWIPE_THRESHOLD = 80;
 const ROTATION_FACTOR = 0.12;
 const FEEDBACK_DURATION = 1200;
 const EXIT_DURATION = 420;
-const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
+const CHEVRON_LEFT_DARK_ICON = 'assets/icons/Chevron-left-dark.svg';
 
 @Component({
   standalone: true,
@@ -33,7 +33,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
           min-height: 100dvh;
           display: flex;
           justify-content: center;
-          color: var(--c-text-1);
+          color: var(--c-lt-text-1);
         "
       >
       <section
@@ -62,7 +62,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
               "
             >
               <img
-                [src]="chevronLeftWhiteIcon"
+                [src]="chevronLeftDarkIcon"
                 width="24"
                 height="24"
                 alt=""
@@ -76,7 +76,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                 class="swipe-quiz__title"
                 style="
                   font: var(--f-brand-type-headline-medium);
-                  color: var(--c-text-1);
+                  color: var(--c-lt-text-1);
                   letter-spacing: var(--tracking-snug);
                 "
               >
@@ -174,10 +174,8 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                 max-width: calc(var(--sp-20) * 4 + var(--sp-5));
                 aspect-ratio: 3 / 4;
                 border-radius: var(--f-brand-radius-outer);
-                background: var(--f-brand-color-background-light);
-                border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
-                backdrop-filter: blur(var(--f-brand-blur-subtle));
-                -webkit-backdrop-filter: blur(var(--f-brand-blur-subtle));
+                background: var(--c-lt-surface);
+                border: var(--f-brand-border-size-default) solid var(--c-lt-border);
               "
             ></div>
           </div>
@@ -213,7 +211,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                   max-width: calc(var(--sp-20) * 4 + var(--sp-5));
                   aspect-ratio: 3 / 4;
                   border-radius: var(--f-brand-radius-outer);
-                  background: var(--f-brand-color-background-light);
+                  background: var(--c-lt-surface);
                   display: flex;
                   flex-direction: column;
                   align-items: center;
@@ -223,23 +221,6 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                   overflow: hidden;
                 "
               >
-                <div
-                  class="swipe-quiz__card-glow"
-                  [style.background]="currentStatement().accentColor"
-                  style="
-                    position: absolute;
-                    top: calc(var(--sp-16) * -1 + var(--sp-1));
-                    left: 50%;
-                    transform: translateX(-50%);
-                    width: calc(var(--sp-20) * 2 + var(--sp-10));
-                    min-height: calc(var(--sp-20) * 2 + var(--sp-10));
-                    border-radius: 50%;
-                    filter: blur(var(--sp-20));
-                    opacity: 0.4;
-                    pointer-events: none;
-                  "
-                ></div>
-
                 <span
                   class="swipe-quiz__card-label swipe-quiz__card-label--true"
                   [style.opacity]="trueLabelOpacity()"
@@ -352,7 +333,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                     class="swipe-quiz__feedback-explanation"
                     style="
                       font: var(--f-brand-type-caption);
-                      color: var(--f-brand-color-text-subtle);
+                      color: var(--c-lt-text-3);
                       text-align: center;
                       line-height: var(--leading-snug);
                       max-width: calc(var(--sp-20) * 3 + var(--sp-5));
@@ -367,7 +348,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                   [style.opacity]="isFeedbackVisible() ? '0' : '1'"
                   style="
                     font: var(--f-brand-type-title-3);
-                    color: var(--f-brand-color-text-default);
+                    color: var(--c-lt-text-1);
                     line-height: var(--leading-tight);
                     letter-spacing: var(--tracking-tight);
                     text-align: center;
@@ -385,7 +366,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
                     position: absolute;
                     bottom: var(--sp-6);
                     font: var(--f-brand-type-caption);
-                    color: var(--f-brand-color-text-muted);
+                    color: var(--c-lt-text-3);
                     letter-spacing: var(--tracking-wide);
                     text-transform: uppercase;
                     transition: opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
@@ -488,7 +469,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
   styles: [
     `
       .swipe-quiz-screen {
-        background: var(--c-bg);
+        background: var(--c-lt-bg);
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -505,7 +486,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SwipeQuizPage implements OnInit {
-  readonly chevronLeftWhiteIcon = CHEVRON_LEFT_WHITE_ICON;
+  readonly chevronLeftDarkIcon = CHEVRON_LEFT_DARK_ICON;
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -728,7 +709,7 @@ export class SwipeQuizPage implements OnInit {
     const trueOpacity = this.trueLabelOpacity();
     const falseOpacity = this.falseLabelOpacity();
 
-    let borderColor = 'var(--f-brand-color-border-default)';
+    let borderColor = 'var(--c-lt-border)';
     if (feedbackState === 'correct') {
       borderColor = 'var(--f-brand-color-border-success)';
     } else if (feedbackState === 'incorrect') {
@@ -739,17 +720,9 @@ export class SwipeQuizPage implements OnInit {
       borderColor = 'var(--f-brand-color-border-error)';
     }
 
-    const boxShadow = feedbackState === 'correct'
-      ? 'var(--c-glow-success-lg), var(--f-brand-shadow-large)'
-      : feedbackState === 'incorrect'
-        ? 'var(--c-glow-error-lg), var(--f-brand-shadow-large)'
-        : 'var(--f-brand-shadow-large)';
-
     return {
       border: `var(--f-brand-border-size-default) solid ${borderColor}`,
-      backdropFilter: 'blur(var(--f-brand-blur-medium))',
-      WebkitBackdropFilter: 'blur(var(--f-brand-blur-medium))',
-      boxShadow,
+      boxShadow: '0px 2px 4px 2px var(--f-brand-color-shadow-default)',
       transition: this.prefersReducedMotion
         ? 'none'
         : this.isDragging()
