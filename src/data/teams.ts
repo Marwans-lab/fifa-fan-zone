@@ -22,7 +22,7 @@ export const WORLD_CUP_TEAMS: WorldCupTeam[] = [
   { id: 'dk',     name: 'Denmark',             flag: 'dk',     flagClass: 'ic-nav-flag-dk', colors: ['#C60C30', '#1a0010'], motto: 'De Rød-Hvide!' },
   { id: 'ec',     name: 'Ecuador',             flag: 'ec',     flagClass: 'ic-nav-flag-ec', colors: ['#003893', '#FFD100'], motto: '¡La Tri va!' },
   { id: 'eg',     name: 'Egypt',               flag: 'eg',     flagClass: 'ic-nav-flag-eg', colors: ['#CE1126', '#1a1a1a'], motto: 'Yalla El-Pharaohs!' },
-  { id: 'gb-eng', name: 'England',             flag: 'gb-eng', flagClass: 'ic-nav-flag-gb', colors: ['#CF142B', '#1C3557'], motto: "It's Coming Home!" },
+  { id: 'gb-eng', name: 'England',             flag: 'gb',     flagClass: 'ic-nav-flag-gb', colors: ['#CF142B', '#1C3557'], motto: "It's Coming Home!" },
   { id: 'fr',     name: 'France',              flag: 'fr',     flagClass: 'ic-nav-flag-fr', colors: ['#0055A4', '#EF4135'], motto: 'Allez les Bleus!' },
   { id: 'de',     name: 'Germany',             flag: 'de',     flagClass: 'ic-nav-flag-de', colors: ['#1a1a1a', '#DD0000'], motto: "Auf geht's Deutschland!" },
   { id: 'gh',     name: 'Ghana',               flag: 'gh',     flagClass: 'ic-nav-flag-gh', colors: ['#006B3F', '#FCD116'], motto: 'Black Stars Rise!' },
@@ -43,7 +43,7 @@ export const WORLD_CUP_TEAMS: WorldCupTeam[] = [
   { id: 'pt',     name: 'Portugal',            flag: 'pt',     flagClass: 'ic-nav-flag-pt', colors: ['#046A38', '#DA291C'], motto: 'Força Portugal!' },
   { id: 'qa',     name: 'Qatar',               flag: 'qa',     flagClass: 'ic-nav-flag-qa', colors: ['#8D1B3D', '#1a0d17'], motto: 'Yalla Qatar!' },
   { id: 'sa',     name: 'Saudi Arabia',        flag: 'sa',     flagClass: 'ic-nav-flag-sa', colors: ['#006C35', '#1a2a1a'], motto: 'Yalla Al-Akhdar!' },
-  { id: 'gb-sct', name: 'Scotland',            flag: 'gb-sct', flagClass: 'ic-nav-flag-gb', colors: ['#003DA5', '#005EB8'], motto: "C'mon Scotland!" },
+  { id: 'gb-sct', name: 'Scotland',            flag: 'gb',     flagClass: 'ic-nav-flag-gb', colors: ['#003DA5', '#005EB8'], motto: "C'mon Scotland!" },
   { id: 'sn',     name: 'Senegal',             flag: 'sn',     flagClass: 'ic-nav-flag-sn', colors: ['#00853F', '#E31B23'], motto: 'Allez les Lions!' },
   { id: 'rs',     name: 'Serbia',              flag: 'rs',     flagClass: 'ic-nav-flag-rs', colors: ['#C6363C', '#0C4076'], motto: 'Napred Srbija!' },
   { id: 'si',     name: 'Slovenia',            flag: 'si',     flagClass: 'ic-nav-flag-si', colors: ['#003DA5', '#E8D44D'], motto: 'Naprej Slovenija!' },
@@ -55,7 +55,7 @@ export const WORLD_CUP_TEAMS: WorldCupTeam[] = [
   { id: 'ua',     name: 'Ukraine',             flag: 'ua',     flagClass: 'ic-nav-flag-ua', colors: ['#005BBB', '#FFD500'], motto: 'Slava Ukraini!' },
   { id: 'us',     name: 'United States',       flag: 'us',     flagClass: 'ic-nav-flag-us', colors: ['#0A3161', '#B31942'], motto: 'United We Play' },
   { id: 'uy',     name: 'Uruguay',             flag: 'uy',     flagClass: 'ic-nav-flag-uy', colors: ['#0038A8', '#001f6b'], motto: '¡Garra Charrúa!' },
-  { id: 'gb-wls', name: 'Wales',               flag: 'gb-wls', flagClass: 'ic-nav-flag-gb', colors: ['#C8102E', '#00B140'], motto: 'Oes y Byd!' },
+  { id: 'gb-wls', name: 'Wales',               flag: 'gb',     flagClass: 'ic-nav-flag-gb', colors: ['#C8102E', '#00B140'], motto: 'Oes y Byd!' },
 ]
 
 export function getTeam(id: string): WorldCupTeam | undefined {
