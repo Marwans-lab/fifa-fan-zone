@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  OnDestroy,
   OnInit,
   computed,
   inject,
@@ -19,6 +20,7 @@ const SWIPE_THRESHOLD = 80;
 const ROTATION_FACTOR = 0.12;
 const FEEDBACK_DURATION = 1200;
 const EXIT_DURATION = 420;
+const TIMER_DURATION = 10;
 
 @Component({
   standalone: true,
@@ -409,43 +411,8 @@ const EXIT_DURATION = 420;
           </div>
         </div>
 
-        <div
-          class="swipe-quiz__labels"
-          style="
-            display: flex;
-            justify-content: space-between;
-            padding: 0 var(--sp-8);
-            flex-shrink: 0;
-          "
-        >
-          <span
-            class="swipe-quiz__label swipe-quiz__label--left"
-            style="
-              font: var(--f-brand-type-caption-medium);
-              color: var(--f-brand-color-status-error);
-              letter-spacing: var(--tracking-wide);
-              text-transform: uppercase;
-              opacity: 0.6;
-            "
-          >
-            {{ labels().left }}
-          </span>
-          <span
-            class="swipe-quiz__label swipe-quiz__label--right"
-            style="
-              font: var(--f-brand-type-caption-medium);
-              color: var(--f-brand-color-border-success);
-              letter-spacing: var(--tracking-wide);
-              text-transform: uppercase;
-              opacity: 0.6;
-            "
-          >
-            {{ labels().right }}
-          </span>
-        </div>
-
-        <div class="swipe-quiz__actions" style="padding: var(--sp-4) var(--sp-4) var(--sp-8); flex-shrink: 0;">
-          <div class="swipe-quiz__actions-row" style="display: flex; align-items: center; justify-content: center; gap: var(--sp-10);">
+        <div class="swipe-quiz__actions" style="padding: var(--sp-4) var(--sp-4) var(--sp-8); flex-shrink: 0; margin-top: var(--sp-7);">
+          <div class="swipe-quiz__actions-row" style="display: flex; align-items: center; justify-content: center; gap: var(--sp-11);">
             <button
               class="swipe-quiz__action-btn swipe-quiz__action-btn--false"
               type="button"
@@ -458,16 +425,64 @@ const EXIT_DURATION = 420;
               (pointerleave)="handleActionPointerUp($event)"
               [ngStyle]="actionButtonStyle('left')"
             >
-              <svg class="swipe-quiz__action-icon swipe-quiz__action-icon--x" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <svg class="swipe-quiz__action-icon swipe-quiz__action-icon--x" width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
                   d="M18 6L6 18M6 6l12 12"
-                  stroke="var(--f-brand-color-status-error)"
+                  stroke="white"
                   stroke-width="2.5"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 />
               </svg>
             </button>
+
+            <div
+              class="swipe-quiz__timer"
+              style="
+                position: relative;
+                width: var(--sp-12);
+                height: var(--sp-12);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+              "
+              aria-hidden="true"
+            >
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                style="position: absolute; inset: 0; transform: rotate(-90deg);"
+                aria-hidden="true"
+              >
+                <circle
+                  cx="24" cy="24" r="20"
+                  fill="none"
+                  stroke="var(--c-lt-border)"
+                  stroke-width="3"
+                />
+                <circle
+                  cx="24" cy="24" r="20"
+                  fill="none"
+                  stroke="var(--c-lt-text-3)"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  [ngStyle]="timerRingStyle()"
+                />
+              </svg>
+              <span
+                style="
+                  font: var(--f-brand-type-body);
+                  color: var(--c-lt-text-1);
+                  position: relative;
+                  z-index: 1;
+                "
+              >
+                {{ timerSeconds() }}
+              </span>
+            </div>
+
             <button
               class="swipe-quiz__action-btn swipe-quiz__action-btn--true"
               type="button"
@@ -480,10 +495,10 @@ const EXIT_DURATION = 420;
               (pointerleave)="handleActionPointerUp($event)"
               [ngStyle]="actionButtonStyle('right')"
             >
-              <svg class="swipe-quiz__action-icon swipe-quiz__action-icon--check" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <svg class="swipe-quiz__action-icon swipe-quiz__action-icon--check" width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
                   d="M5 13l4 4L19 7"
-                  stroke="var(--f-brand-color-border-success)"
+                  stroke="white"
                   stroke-width="2.5"
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -515,7 +530,7 @@ const EXIT_DURATION = 420;
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SwipeQuizPage implements OnInit {
+export class SwipeQuizPage implements OnInit, OnDestroy {
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -532,6 +547,7 @@ export class SwipeQuizPage implements OnInit {
   readonly exitDirection = signal<'left' | 'right' | null>(null);
   readonly isTransitioning = signal(false);
   readonly enterAnim = signal(true);
+  readonly timerSeconds = signal(TIMER_DURATION);
 
   readonly totalStatements = computed(() => this.quiz().statements.length);
   readonly currentStatement = computed(() => this.quiz().statements[this.currentIndex()]);
@@ -543,9 +559,12 @@ export class SwipeQuizPage implements OnInit {
   readonly actionsDisabled = computed(() => this.isTransitioning() || this.feedbackState() !== null);
   readonly trueLabelOpacity = computed(() => Math.min(Math.max(this.cardOffsetX() / SWIPE_THRESHOLD, 0), 1));
   readonly falseLabelOpacity = computed(() => Math.min(Math.max(-this.cardOffsetX() / SWIPE_THRESHOLD, 0), 1));
+  readonly timerCircumference = 2 * Math.PI * 20;
+  readonly timerDashoffset = computed(() => this.timerCircumference * (1 - this.timerSeconds() / TIMER_DURATION));
 
   private dragStartX = 0;
-  private readonly prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  private timerInterval: number | null = null;
+  protected readonly prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   ngOnInit(): void {
     const routeQuizId = this.route.snapshot.paramMap.get('quizId');
@@ -555,7 +574,12 @@ export class SwipeQuizPage implements OnInit {
     this.quiz.set(resolvedQuiz);
     this.results.set(Array(resolvedQuiz.statements.length).fill(null) as (boolean | null)[]);
     this.triggerEnterAnimation();
+    this.startTimer();
     this.analytics.track('swipe_quiz_viewed', { quizId: resolvedQuiz.id });
+  }
+
+  ngOnDestroy(): void {
+    this.stopTimer();
   }
 
   handlePointerDown(event: PointerEvent): void {
@@ -583,6 +607,7 @@ export class SwipeQuizPage implements OnInit {
 
   answerWithDirection(direction: 'left' | 'right'): void {
     if (this.actionsDisabled()) return;
+    this.stopTimer();
     this.isTransitioning.set(true);
     const swipedRight = direction === 'right';
     const statement = this.currentStatement();
@@ -728,8 +753,6 @@ export class SwipeQuizPage implements OnInit {
       boxShadow: '0px 2px 4px 2px var(--f-brand-color-shadow-default)',
       transition: this.prefersReducedMotion
         ? 'none'
-        : this.isDragging()
-        ? 'border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)'
         : 'border-color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)',
     };
   }
@@ -760,13 +783,12 @@ export class SwipeQuizPage implements OnInit {
     const disabled = this.actionsDisabled();
     const isTrueButton = direction === 'right';
     return {
-      width: 'calc(var(--sp-14) + var(--sp-1))',
-      minHeight: 'calc(var(--sp-14) + var(--sp-1))',
-      borderRadius: '50%',
-      border: `var(--f-brand-border-size-focused) solid ${
-        isTrueButton ? 'var(--f-brand-color-border-success)' : 'var(--f-brand-color-border-error)'
-      }`,
-      background: isTrueButton ? 'var(--f-brand-color-background-success-accent)' : 'var(--f-brand-color-background-error)',
+      width: 'var(--sp-16)',
+      minHeight: 'var(--sp-16)',
+      borderRadius: '44px',
+      border: 'none',
+      background: isTrueButton ? 'var(--f-brand-color-flight-status-confirmed)' : 'var(--c-swipe-false)',
+      backdropFilter: 'blur(9.333px)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -774,9 +796,37 @@ export class SwipeQuizPage implements OnInit {
       opacity: disabled ? '0.4' : '1',
       transition: this.prefersReducedMotion
         ? 'none'
-        : 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), box-shadow var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
-      boxShadow: 'none',
+        : 'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-exit)',
     };
+  }
+
+  timerRingStyle(): Record<string, string> {
+    return {
+      'stroke-dasharray': String(this.timerCircumference),
+      'stroke-dashoffset': String(this.timerDashoffset()),
+      transition: 'stroke-dashoffset 1s linear',
+    };
+  }
+
+  private startTimer(): void {
+    this.stopTimer();
+    this.timerSeconds.set(TIMER_DURATION);
+    this.timerInterval = window.setInterval(() => {
+      const current = this.timerSeconds();
+      if (current <= 1) {
+        this.stopTimer();
+        this.answerWithDirection('left');
+      } else {
+        this.timerSeconds.update(v => v - 1);
+      }
+    }, 1000);
+  }
+
+  private stopTimer(): void {
+    if (this.timerInterval !== null) {
+      window.clearInterval(this.timerInterval);
+      this.timerInterval = null;
+    }
   }
 
   private advanceOrFinish(): void {
@@ -807,6 +857,7 @@ export class SwipeQuizPage implements OnInit {
     this.cardOffsetX.set(0);
     this.isTransitioning.set(false);
     this.triggerEnterAnimation();
+    this.startTimer();
   }
 
   private triggerEnterAnimation(): void {
