@@ -3,7 +3,6 @@ export interface SwipeStatement {
   statement: string
   isTrue: boolean
   explanation: string
-  accentColor: string
   imageUrl: string
 }
 
@@ -30,7 +29,6 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: true,
         explanation:
           'Brazil has appeared in all 22 FIFA World Cup tournaments since 1930 — no other nation has a perfect attendance record.',
-        accentColor: 'var(--c-swipe-accent-1)',
         imageUrl: 'https://picsum.photos/seed/hist1/400/300',
       },
       {
@@ -39,7 +37,6 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: false,
         explanation:
           'Only 13 teams competed in the 1930 World Cup in Uruguay. The tournament expanded to 32 teams in 1998 and to 48 for 2026.',
-        accentColor: 'var(--c-swipe-accent-2)',
         imageUrl: 'https://picsum.photos/seed/hist2/400/300',
       },
       {
@@ -49,7 +46,6 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: true,
         explanation:
           'The 1950 tournament had no official final — the last round was a four-team group stage. Uruguay clinched the title by beating Brazil in the decisive match.',
-        accentColor: 'var(--c-swipe-accent-3)',
         imageUrl: 'https://picsum.photos/seed/hist3/400/300',
       },
       {
@@ -58,7 +54,6 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: false,
         explanation:
           'Germany has won 4 World Cup titles (1954, 1974, 1990, 2014). Only Brazil has won five.',
-        accentColor: 'var(--c-swipe-accent-4)',
         imageUrl: 'https://picsum.photos/seed/hist4/400/300',
       },
       {
@@ -68,7 +63,6 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: true,
         explanation:
           'The Jules Rimet Trophy was stolen in Brazil in 1983 and is believed to have been melted down. It has never been found.',
-        accentColor: 'var(--c-swipe-accent-5)',
         imageUrl: 'https://picsum.photos/seed/hist5/400/300',
       },
       {
@@ -78,7 +72,6 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: false,
         explanation:
           'South Africa became the first host nation eliminated in the group stage at the 2010 World Cup.',
-        accentColor: 'var(--c-swipe-accent-6)',
         imageUrl: 'https://picsum.photos/seed/hist6/400/300',
       },
       {
@@ -88,7 +81,6 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: true,
         explanation:
           'Hakan Şükür of Turkey scored just 10.8 seconds into the 2002 third-place match against South Korea — a record that still stands.',
-        accentColor: 'var(--c-swipe-accent-7)',
         imageUrl: 'https://picsum.photos/seed/hist7/400/300',
       },
       {
@@ -97,7 +89,6 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: false,
         explanation:
           'Italy lost the 1970 final to Brazil (1-4) and the 1994 final to Brazil on penalties. They have 4 titles but also 2 final defeats.',
-        accentColor: 'var(--c-swipe-accent-8)',
         imageUrl: 'https://picsum.photos/seed/hist8/400/300',
       },
       {
@@ -107,7 +98,6 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: true,
         explanation:
           "Geoff Hurst's second goal for England in the 1966 final hit the crossbar and bounced down. Whether it crossed the line remains one of football's greatest debates.",
-        accentColor: 'var(--c-swipe-accent-9)',
         imageUrl: 'https://picsum.photos/seed/hist9/400/300',
       },
       {
@@ -116,7 +106,6 @@ export const SWIPE_QUIZZES: SwipeQuiz[] = [
         isTrue: false,
         explanation:
           "Argentina first won the World Cup in 1978 as hosts, beating the Netherlands 3-1. The 1986 title — Maradona's famous tournament — was their second.",
-        accentColor: 'var(--c-swipe-accent-10)',
         imageUrl: 'https://picsum.photos/seed/hist10/400/300',
       },
     ],
