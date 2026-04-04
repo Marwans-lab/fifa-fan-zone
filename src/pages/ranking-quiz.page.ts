@@ -19,8 +19,6 @@ const QUESTION_TIME = 15;
 const ITEM_HEIGHT = 68;
 const SLIDE_TRANSITION =
   'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)';
-const SLIDE_EXIT_TRANSITION =
-  'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)';
 const SLIDE_EXIT_MS = 250;
 const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
 
@@ -431,7 +429,7 @@ export class RankingQuizPage implements OnInit, OnDestroy {
     this.slideStyle.set({
       transform: 'translateX(-60px)',
       opacity: '0',
-      transition: SLIDE_EXIT_TRANSITION,
+      transition: SLIDE_TRANSITION,
     });
 
     if (this.slideExitTimeoutId !== null) {
