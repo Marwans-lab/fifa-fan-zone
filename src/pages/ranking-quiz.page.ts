@@ -184,14 +184,14 @@ type ItemRevealState = 'correct' | 'incorrect';
                   class="ranking-quiz__item-text"
                   style="
                     flex: 1;
-                    font: var(--f-brand-type-body);
-                    color: var(--c-lt-text-1);
+                    font-size: var(--f-brand-font-caption);
+                    color: var(--f-brand-color-text-muted);
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
                   "
                 >
-                  {{ item.label }}
+                  {{ stripParenthetical(item.label) }}
                 </span>
                 @if (!revealed() && revealStates()[idx] === undefined) {
                   <div
@@ -961,6 +961,10 @@ export class RankingQuizPage implements OnInit, OnDestroy {
 
   private isFlowId(value: string): value is FlowId {
     return (FLOW_IDS as readonly string[]).includes(value);
+  }
+
+  stripParenthetical(label: string): string {
+    return label.replace(/\s*\([\d,]+\)/g, '').trim();
   }
 
   private readStateString(key: string): string | null {
