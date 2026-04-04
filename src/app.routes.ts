@@ -15,13 +15,11 @@ export const appRoutes: Routes = [
   },
   {
     path: 'picture',
-    canActivate: [authGuard],
-    loadComponent: () => import('./pages/picture.page').then(m => m.PicturePage),
+    redirectTo: '/team-selection',
   },
   {
     path: 'picture/:teamId',
-    canActivate: [authGuard],
-    loadComponent: () => import('./pages/picture.page').then(m => m.PicturePage),
+    redirectTo: '/team-selection',
   },
   {
     path: 'identity',
