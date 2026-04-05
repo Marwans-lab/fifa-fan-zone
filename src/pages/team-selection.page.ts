@@ -472,7 +472,6 @@ const JPG_QUALITY = 0.78;
         object-fit: cover;
         transform: scaleX(-1);
         display: block;
-        border-radius: var(--f-brand-radius-outer);
       }
 
       .picture-page__capture-button {
