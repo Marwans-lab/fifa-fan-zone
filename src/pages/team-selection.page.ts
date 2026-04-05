@@ -400,6 +400,10 @@ const JPG_QUALITY = 0.78;
         border-bottom: var(--f-brand-border-size-default) solid var(--f-brand-color-background-default);
       }
 
+      .team-selection-page__option--selected.team-selection-page__option--with-divider {
+        border-bottom-color: var(--f-brand-color-background-light);
+      }
+
       .team-selection-page__spacer {
         flex: 1;
         min-height: var(--f-brand-space-xl);
