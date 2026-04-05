@@ -504,6 +504,7 @@ const JPG_QUALITY = 0.78;
         width: 100%;
         height: 100%;
         border: var(--f-brand-border-size-default) solid var(--c-card-border);
+        border-radius: var(--f-brand-radius-outer);
         box-shadow: var(--f-brand-shadow-large);
         display: flex;
         align-items: center;
