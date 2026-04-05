@@ -467,12 +467,11 @@ const JPG_QUALITY = 0.78;
       }
 
       .picture-page__video {
-        width: calc(100% - 2 * var(--f-brand-space-md));
+        width: 100%;
         height: 100%;
         object-fit: cover;
         transform: scaleX(-1);
         display: block;
-        margin: 0 auto;
         border-radius: var(--f-brand-radius-outer);
       }
 
