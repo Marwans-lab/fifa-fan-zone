@@ -260,6 +260,7 @@ const JPG_QUALITY = 0.78;
         align-items: center;
         gap: var(--f-brand-space-md);
         flex-shrink: 0;
+        position: relative;
       }
 
       .team-selection-page__back {
@@ -286,7 +287,11 @@ const JPG_QUALITY = 0.78;
 
       .team-selection-page__title {
         margin: 0;
-        flex: 1;
+        position: absolute;
+        left: 0;
+        right: 0;
+        text-align: center;
+        pointer-events: none;
         color: var(--f-brand-color-text-default);
         font: var(--f-brand-type-headline);
       }
