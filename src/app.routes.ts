@@ -93,6 +93,18 @@ export const appRoutes: Routes = [
     loadComponent: () => import('./pages/ranking-quiz.page').then(m => m.RankingQuizPage),
   },
   {
+    path: 'spin-wheel-quiz',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/spin-wheel-quiz.page').then(m => m.SpinWheelQuizPage),
+  },
+  {
+    path: 'spin-wheel-quiz/:quizId',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/spin-wheel-quiz.page').then(m => m.SpinWheelQuizPage),
+  },
+  {
     path: 'results',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/results/results.page').then(m => m.ResultsPage),
