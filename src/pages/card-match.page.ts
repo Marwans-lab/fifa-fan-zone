@@ -388,7 +388,6 @@ const CARD_MATCH_KEYFRAMES = `
           class="card-match__completion-overlay"
           [ngStyle]="completionOverlayStyle()"
         >
-          <div class="card-match__completion-card" [ngStyle]="completionCardStyle()">
             @if (completionVisible() && stars() >= 2) {
               <div class="card-match__confetti" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none">
                 @for (particle of confettiParticles(); track particle.id) {
@@ -510,7 +509,6 @@ const CARD_MATCH_KEYFRAMES = `
             >
               Play Again
             </button>
-          </div>
         </section>
       }
     </main>
@@ -872,25 +870,6 @@ export class CardMatchPage implements OnInit, OnDestroy {
       transition:
         'background var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default), backdrop-filter var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
       padding: 'var(--f-brand-space-lg)',
-    };
-  }
-
-  completionCardStyle(): Record<string, string> {
-    const visible = this.completionVisible();
-    return {
-      position: 'relative',
-      width: '100%',
-      maxWidth: 'var(--c-card-match-completion-max-width)',
-      background: 'var(--f-brand-color-background-light)',
-      border: '1px solid var(--f-brand-color-border-default)',
-      borderRadius: 'var(--f-brand-radius-outer)',
-      padding: 'var(--f-brand-space-xl) var(--f-brand-space-lg)',
-      textAlign: 'center',
-      opacity: visible ? '1' : '0',
-      transform: visible ? 'translateY(0) scale(1)' : 'translateY(30px) scale(0.9)',
-      transition:
-        'opacity var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit) var(--f-brand-motion-duration-instant), transform var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit) var(--f-brand-motion-duration-instant)',
-      overflow: 'hidden',
     };
   }
 
