@@ -435,7 +435,6 @@ const JPG_QUALITY = 0.78;
       /* Picture section styles */
 
       .picture-page__capture {
-        margin-top: var(--f-brand-space-xl);
         margin-left: calc(-1 * var(--f-brand-space-md));
         margin-right: calc(-1 * var(--f-brand-space-md));
         height: var(--c-picture-capture-height);
