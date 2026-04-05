@@ -222,24 +222,11 @@ const CARD_MATCH_KEYFRAMES = `
             font: var(--f-brand-type-title-3);
             color: var(--f-brand-color-text-default);
             letter-spacing: var(--tracking-tight);
-            margin-bottom: {{ activeQuiz() ? 'var(--f-brand-space-xs)' : 'var(--f-brand-space-lg)' }};
+            margin-bottom: var(--f-brand-space-lg);
           "
         >
-          {{ pageTitle() }}
+          Match the cards
         </h1>
-        @if (activeQuiz(); as quiz) {
-          <p
-            class="card-match__round-label"
-            style="
-              margin: 0 0 var(--f-brand-space-md);
-              text-align: center;
-              font: var(--f-brand-type-caption);
-              color: var(--f-brand-color-text-subtle);
-            "
-          >
-            Round {{ currentRound() + 1 }} of {{ totalRounds() }} · {{ activeRoundTitle() }}
-          </p>
-        }
 
         <div
           class="card-match__grid"
