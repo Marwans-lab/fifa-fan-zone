@@ -496,6 +496,8 @@ const JPG_QUALITY = 0.78;
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 0 var(--f-brand-space-md);
+        box-sizing: border-box;
       }
 
       .picture-page__placeholder {
