@@ -23,7 +23,7 @@ interface QuizFlowCard {
   iconSrc: string;
   route: string;
   routeState: Record<string, string>;
-  type: 'quiz' | 'swipe' | 'card_match' | 'ranking';
+  type: 'quiz' | 'swipe' | 'card_match' | 'ranking' | 'spin_wheel';
 }
 
 @Component({
@@ -627,11 +627,11 @@ export class CardComponent {
     {
       id: 'the-retrospective',
       title: 'The Retrospective',
-      subtitle: '5 questions · Quiz',
+      subtitle: '5 questions · Spin Wheel',
       iconSrc: 'assets/icons/ranking-white.svg',
-      route: '/quiz',
+      route: '/spin-wheel-quiz',
       routeState: { quizId: 'the-retrospective' },
-      type: 'quiz',
+      type: 'spin_wheel',
     },
   ];
 
