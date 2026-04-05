@@ -387,13 +387,14 @@ const JPG_QUALITY = 0.78;
       }
 
       .team-selection-page__option--selected {
-        background: var(--c-lt-brand);
-        color: var(--f-brand-color-text-inverse);
+        background: var(--f-brand-color-background-light);
+        color: var(--c-lt-text-1);
         border-radius: var(--f-brand-radius-base);
+        box-shadow: inset 0 0 0 var(--f-brand-border-size-default) var(--c-lt-brand);
       }
 
       .team-selection-page__option--selected:hover {
-        background: var(--c-lt-brand);
+        background: var(--f-brand-color-background-light);
       }
 
       .team-selection-page__option--with-divider {
@@ -401,7 +402,7 @@ const JPG_QUALITY = 0.78;
       }
 
       .team-selection-page__option--selected.team-selection-page__option--with-divider {
-        border-bottom-color: var(--f-brand-color-background-light);
+        border-bottom-color: var(--f-brand-color-background-default);
       }
 
       .team-selection-page__spacer {
