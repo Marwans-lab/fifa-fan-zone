@@ -43,7 +43,7 @@ const JPG_QUALITY = 0.78;
             <path d="M15 19l-7-7 7-7"></path>
           </svg>
         </button>
-        <h1 class="team-selection-page__title" data-section="title">Select your team</h1>
+        <h1 class="team-selection-page__title" data-section="title">Create your fan card</h1>
       </header>
 
       <section class="team-selection-page__dropdown-wrap" data-section="team-dropdown">
