@@ -271,7 +271,6 @@ const SEGMENTS = buildSegments();
               tabindex="0"
               style="
                 width: 100%;
-                max-width: 300px;
                 aspect-ratio: 1 / 1;
                 display: block;
                 overflow: visible;
@@ -284,13 +283,25 @@ const SEGMENTS = buildSegments();
               (pointercancel)="onWheelPointerUp($event)"
               (keydown)="onWheelKeyDown($event)"
             >
+              <!-- ── Shadow filter matching FDS shadow-medium ── -->
+              <defs>
+                <filter id="seg-shadow" x="-10%" y="-10%" width="120%" height="120%">
+                  <feDropShadow
+                    dx="0"
+                    dy="0.5"
+                    stdDeviation="1"
+                    flood-color="var(--f-brand-color-shadow-default)"
+                  />
+                </filter>
+              </defs>
+
               <!-- ── Rotating segments group ── -->
-              <g [ngStyle]="wheelGroupStyle()">
+              <g [ngStyle]="wheelGroupStyle()" filter="url(#seg-shadow)">
                 @for (seg of segments; track seg.index) {
                   <path
                     [attr.d]="seg.path"
                     [attr.fill]="segmentFill(seg)"
-                    style="stroke: var(--c-lt-white); stroke-width: 1.4;"
+                    style="stroke: var(--c-lt-white); stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round;"
                   />
                   @if (seg.label) {
                     <text
@@ -678,19 +689,39 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
 
   // ── Template helpers ──────────────────────────────────────────────────────
 
-  /** Fill colour for a wheel segment based on selection state and value range. */
+  /** Fill colour for a wheel segment: reversed colours with accent for selected, muted for adjacent. */
   segmentFill(seg: WheelSegment): string {
-    if (seg.index !== this.selectedIndex() || seg.value < 0) {
-      return 'var(--c-lt-bg)';
+    // Empty containers always white regardless of selection state
+    if (seg.value === -1) return 'var(--f-brand-color-background-light)';
+
+    const selIdx = this.selectedIndex();
+
+    // Selected segment: accent colour
+    if (seg.index === selIdx) return 'var(--f-brand-color-background-accent)';
+
+    // Adjacent segments (±1 from selected): accent-muted
+    const adjPrev = (selIdx - 1 + SEGMENT_COUNT) % SEGMENT_COUNT;
+    const adjNext = (selIdx + 1) % SEGMENT_COUNT;
+    if (seg.index === adjPrev || seg.index === adjNext) {
+      return 'var(--f-brand-color-background-accent-muted)';
     }
-    const v = seg.value;
-    if (v <= 3) return 'var(--c-error)'; // 0–3: unlikely
-    if (v <= 7) return 'var(--c-warn)'; // 4–7: neutral
-    return 'var(--c-correct)'; // 8–10: likely/high
+
+    // Unselected: white
+    return 'var(--f-brand-color-background-light)';
   }
 
+  /** Text colour: white for selected/adjacent, muted for unselected. */
   segmentTextFill(seg: WheelSegment): string {
-    return seg.index === this.selectedIndex() ? 'var(--c-lt-text-1)' : 'var(--c-lt-text-2)';
+    const selIdx = this.selectedIndex();
+    if (seg.index === selIdx) return 'var(--f-brand-color-text-light)';
+
+    const adjPrev = (selIdx - 1 + SEGMENT_COUNT) % SEGMENT_COUNT;
+    const adjNext = (selIdx + 1) % SEGMENT_COUNT;
+    if (seg.index === adjPrev || seg.index === adjNext) {
+      return 'var(--f-brand-color-text-light)';
+    }
+
+    return 'var(--f-brand-color-text-muted)';
   }
 
   segmentTextWeight(seg: WheelSegment): string {
