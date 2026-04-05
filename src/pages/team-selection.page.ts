@@ -364,7 +364,6 @@ const JPG_QUALITY = 0.78;
       }
 
       .team-selection-page__option {
-        width: 100%;
         border: none;
         background: transparent;
         color: var(--f-brand-color-text-default);
