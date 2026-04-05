@@ -369,7 +369,7 @@ const SEGMENTS = buildSegments();
               <!-- ── Fixed pointer at 12 o'clock (2× size, rounded top corners) ── -->
               <path
                 d="M 50,10 L 44,1.5 Q 44,0 45.5,0 L 54.5,0 Q 56,0 56,1.5 Z"
-                style="fill: var(--f-brand-color-background-default); pointer-events: none;"
+                style="fill: var(--f-brand-color-background-dark); pointer-events: none;"
               />
             </svg>
           </div>
