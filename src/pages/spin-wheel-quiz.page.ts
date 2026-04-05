@@ -157,7 +157,7 @@ const SEGMENTS = buildSegments();
               flex-shrink: 0;
             "
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <svg class="spin-wheel__back-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path
                 d="M3 3l10 10M13 3L3 13"
                 stroke="var(--c-lt-text-1)"
@@ -299,6 +299,7 @@ const SEGMENTS = buildSegments();
 
               <!-- ── Outer wheel background (gap/behind area) ── -->
               <circle
+                class="spin-wheel__outer-ring"
                 cx="50"
                 cy="50"
                 r="48"
@@ -306,15 +307,17 @@ const SEGMENTS = buildSegments();
               />
 
               <!-- ── Rotating segments group ── -->
-              <g [ngStyle]="wheelGroupStyle()" filter="url(#seg-shadow)">
+              <g class="spin-wheel__segments" [ngStyle]="wheelGroupStyle()" filter="url(#seg-shadow)">
                 @for (seg of segments; track seg.index) {
                   <path
+                    class="spin-wheel__segment"
                     [attr.d]="seg.path"
                     [attr.fill]="segmentFill(seg)"
                     style="stroke: var(--c-lt-white); stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round;"
                   />
                   @if (seg.label) {
                     <text
+                      class="spin-wheel__segment-label"
                       [attr.x]="f2(seg.textX)"
                       [attr.y]="f2(seg.textY)"
                       [attr.transform]="textTransform(seg)"
@@ -336,6 +339,7 @@ const SEGMENTS = buildSegments();
               <!-- ── Fixed centre overlay (non-rotating) ── -->
               <!-- Outer ring of centre area -->
               <circle
+                class="spin-wheel__centre-ring"
                 cx="50"
                 cy="50"
                 r="21"
@@ -343,14 +347,16 @@ const SEGMENTS = buildSegments();
               />
               <!-- Inner white circle -->
               <circle
+                class="spin-wheel__centre-disc"
                 cx="50"
                 cy="50"
                 r="18"
                 style="fill: var(--c-lt-surface); pointer-events: none;"
               />
               <!-- Current value number -->
-              <g [ngStyle]="centreNumberGroupStyle()">
+              <g class="spin-wheel__centre-value" [ngStyle]="centreNumberGroupStyle()">
                 <text
+                  class="spin-wheel__centre-text"
                   x="50"
                   y="50"
                   text-anchor="middle"
@@ -368,6 +374,7 @@ const SEGMENTS = buildSegments();
 
               <!-- ── Fixed pointer at 12 o'clock (2× size, rounded top corners) ── -->
               <path
+                class="spin-wheel__pointer"
                 d="M 50,10 L 44,1.5 Q 44,0 45.5,0 L 54.5,0 Q 56,0 56,1.5 Z"
                 style="fill: var(--f-brand-color-background-dark); pointer-events: none;"
               />
