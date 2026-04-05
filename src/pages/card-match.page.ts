@@ -44,6 +44,7 @@ const FLIP_DURATION = 400;
 const MISMATCH_DELAY = 800;
 const MATCH_DELAY = 500;
 const DEAL_STAGGER = 60;
+const AUTO_MATCH_DELAY = 480; // ~var(--f-brand-motion-duration-quick)
 
 const CARD_MATCH_KEYFRAMES = `
 @keyframes card-shake {
@@ -629,11 +630,16 @@ export class CardMatchPage implements OnInit, OnDestroy {
         }));
         this.triggerMatchRing(nextFlipped);
         this.flippedIds.set([]);
-        this.lockInput.set(false);
         this.matchedPairs.update(value => value + 1);
         this.analytics.track('card_match_pair_found', { pairId: first.pairId });
         if (this.matchedPairs() >= this.pairCount()) {
+          this.lockInput.set(false);
           this.completeCurrentRound();
+        } else if (this.pairCount() - this.matchedPairs() === 1) {
+          // Exactly 1 pair (2 cards) left — outcome is determined, auto-match them
+          this.triggerAutoMatch();
+        } else {
+          this.lockInput.set(false);
         }
       }, MATCH_DELAY);
       return;
@@ -1018,6 +1024,50 @@ export class CardMatchPage implements OnInit, OnDestroy {
         this.dealtCardIds.update(prev => ({ ...prev, [card.id]: true }));
       }, index * DEAL_STAGGER);
     });
+  }
+
+  private triggerAutoMatch(): void {
+    const unmatchedIds = this.deck()
+      .map(card => card.id)
+      .filter(id => this.statuses()[id] === 'hidden');
+
+    if (unmatchedIds.length !== 2) {
+      this.lockInput.set(false);
+      return;
+    }
+
+    const [firstId, secondId] = unmatchedIds;
+
+    // Brief pause so user registers the previous match first
+    this.scheduleTimeout(() => {
+      // Flip both cards face-up simultaneously
+      this.statuses.update(prev => ({
+        ...prev,
+        [firstId]: 'flipped',
+        [secondId]: 'flipped',
+      }));
+
+      // After flip animation completes, apply match state
+      this.scheduleTimeout(() => {
+        this.moves.update(value => value + 1);
+        this.statuses.update(prev => ({
+          ...prev,
+          [firstId]: 'matched',
+          [secondId]: 'matched',
+        }));
+        this.triggerMatchRing([firstId, secondId]);
+        this.flippedIds.set([]);
+        this.matchedPairs.update(value => value + 1);
+
+        const card = this.deck().find(item => item.id === firstId);
+        if (card) {
+          this.analytics.track('card_match_pair_found', { pairId: card.pairId });
+        }
+
+        this.lockInput.set(false);
+        this.completeCurrentRound();
+      }, FLIP_DURATION + MATCH_DELAY);
+    }, AUTO_MATCH_DELAY);
   }
 
   private triggerMatchRing(cardIds: string[]): void {
