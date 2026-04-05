@@ -60,7 +60,8 @@ function buildSegments(): WheelSegment[] {
     const endDeg = (i + 1) * SEGMENT_ANGLE - 90;
     const startRad = degToRad(startDeg);
     const endRad = degToRad(endDeg);
-    const midRad = (startRad + endRad) / 2;
+    // True visual midpoint of the visible 30° segment
+    const midRad = degToRad(i * SEGMENT_ANGLE - 90);
 
     // Outer arc points (clockwise)
     const ox1 = (CX + OUTER_RADIUS * Math.cos(startRad)).toFixed(3);
@@ -296,6 +297,14 @@ const SEGMENTS = buildSegments();
                 </filter>
               </defs>
 
+              <!-- ── Outer wheel background (gap/behind area) ── -->
+              <circle
+                cx="50"
+                cy="50"
+                r="48"
+                style="fill: var(--f-brand-color-background-default); pointer-events: none;"
+              />
+
               <!-- ── Rotating segments group ── -->
               <g [ngStyle]="wheelGroupStyle()" filter="url(#seg-shadow)">
                 @for (seg of segments; track seg.index) {
@@ -310,7 +319,7 @@ const SEGMENTS = buildSegments();
                       [attr.y]="f2(seg.textY)"
                       [attr.transform]="textTransform(seg)"
                       text-anchor="middle"
-                      dominant-baseline="central"
+                      dominant-baseline="middle"
                       [attr.fill]="segmentTextFill(seg)"
                       [attr.font-weight]="segmentTextWeight(seg)"
                       font-size="5.5"
@@ -360,7 +369,7 @@ const SEGMENTS = buildSegments();
               <!-- ── Fixed pointer at 12 o'clock (2× size, rounded top corners) ── -->
               <path
                 d="M 50,10 L 44,1.5 Q 44,0 45.5,0 L 54.5,0 Q 56,0 56,1.5 Z"
-                style="fill: var(--f-brand-color-background-disabled); pointer-events: none;"
+                style="fill: var(--f-brand-color-background-default); pointer-events: none;"
               />
             </svg>
           </div>
@@ -724,38 +733,15 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
 
   // ── Template helpers ──────────────────────────────────────────────────────
 
-  /** Fill colour for a wheel segment: reversed colours with accent for selected, muted for adjacent. */
+  /** Fill colour for a wheel segment: accent for selected, white for all others. */
   segmentFill(seg: WheelSegment): string {
-    // Empty containers always white regardless of selection state
-    if (seg.value === -1) return 'var(--f-brand-color-background-light)';
-
-    const selIdx = this.selectedIndex();
-
-    // Selected segment: accent colour
-    if (seg.index === selIdx) return 'var(--f-brand-color-background-accent)';
-
-    // Adjacent segments (±1 from selected): accent-muted
-    const adjPrev = (selIdx - 1 + SEGMENT_COUNT) % SEGMENT_COUNT;
-    const adjNext = (selIdx + 1) % SEGMENT_COUNT;
-    if (seg.index === adjPrev || seg.index === adjNext) {
-      return 'var(--f-brand-color-background-accent-muted)';
-    }
-
-    // Unselected: white
+    if (seg.index === this.selectedIndex()) return 'var(--f-brand-color-background-accent)';
     return 'var(--f-brand-color-background-light)';
   }
 
-  /** Text colour: white for selected/adjacent, muted for unselected. */
+  /** Text colour: white for selected, muted for all unselected. */
   segmentTextFill(seg: WheelSegment): string {
-    const selIdx = this.selectedIndex();
-    if (seg.index === selIdx) return 'var(--f-brand-color-text-light)';
-
-    const adjPrev = (selIdx - 1 + SEGMENT_COUNT) % SEGMENT_COUNT;
-    const adjNext = (selIdx + 1) % SEGMENT_COUNT;
-    if (seg.index === adjPrev || seg.index === adjNext) {
-      return 'var(--f-brand-color-text-light)';
-    }
-
+    if (seg.index === this.selectedIndex()) return 'var(--f-brand-color-text-light)';
     return 'var(--f-brand-color-text-muted)';
   }
 
