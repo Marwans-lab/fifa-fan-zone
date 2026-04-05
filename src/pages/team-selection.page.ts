@@ -458,6 +458,7 @@ const JPG_QUALITY = 0.78;
 
       .picture-page__capture--active {
         background: var(--f-brand-color-text-light);
+        width: calc(100% + 2 * var(--f-brand-space-md));
       }
 
       .picture-page__camera-feed {
