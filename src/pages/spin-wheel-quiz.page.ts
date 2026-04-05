@@ -56,7 +56,7 @@ function degToRad(deg: number): number {
 function buildSegments(): WheelSegment[] {
   const segs: WheelSegment[] = [];
   for (let i = 0; i < SEGMENT_COUNT; i++) {
-    const startDeg = i * SEGMENT_ANGLE - 90; // -90 → segment 0 starts at 12 o'clock
+    const startDeg = i * SEGMENT_ANGLE - 90 - SEGMENT_ANGLE / 2; // segment 0 midpoint at 12 o'clock
     const endDeg = (i + 1) * SEGMENT_ANGLE - 90;
     const startRad = degToRad(startDeg);
     const endRad = degToRad(endDeg);
@@ -343,10 +343,10 @@ const SEGMENTS = buildSegments();
                 "
               >{{ centreLabel() }}</text>
 
-              <!-- ── Fixed pointer triangle at 12 o'clock ── -->
-              <polygon
-                points="47,0 53,0 50,5"
-                style="fill: var(--c-lt-text-3); pointer-events: none;"
+              <!-- ── Fixed pointer at 12 o'clock (2× size, rounded top corners) ── -->
+              <path
+                d="M 50,10 L 44,1.5 Q 44,0 45.5,0 L 54.5,0 Q 56,0 56,1.5 Z"
+                style="fill: var(--f-brand-color-background-disabled); pointer-events: none;"
               />
             </svg>
           </div>
