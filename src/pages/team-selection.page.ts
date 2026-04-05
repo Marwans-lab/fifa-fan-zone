@@ -248,6 +248,7 @@ const JPG_QUALITY = 0.78;
         background: var(--f-brand-color-background-default);
         display: flex;
         flex-direction: column;
+        gap: var(--f-brand-space-md);
         padding: var(--f-brand-space-md);
         box-sizing: border-box;
         overflow-y: auto;
