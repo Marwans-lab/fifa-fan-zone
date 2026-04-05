@@ -631,7 +631,6 @@ const JPG_QUALITY = 0.78;
         display: flex;
         flex-direction: column;
         gap: var(--f-brand-space-md);
-        padding-top: var(--f-brand-space-xl);
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         flex-shrink: 0;
