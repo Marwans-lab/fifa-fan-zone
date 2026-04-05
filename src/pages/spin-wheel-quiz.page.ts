@@ -32,7 +32,7 @@ const SEGMENT_VALUES: readonly number[] = [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 const INITIAL_ROTATION = -6 * SEGMENT_ANGLE; // -180°
 
 // ─── Animation constants ─────────────────────────────────────────────────────
-const SNAP_SPRING = 'cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+const SNAP_SPRING = 'cubic-bezier(0.2, 1.4, 0.3, 1)';
 const SLIDE_TRANSITION =
   'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)';
 const SLIDE_EXIT_MS = 250;
@@ -247,6 +247,7 @@ const SEGMENTS = buildSegments();
           <!-- ── Wheel ── -->
           <div
             class="spin-wheel__wheel-wrap"
+            [ngStyle]="wheelScaleStyle()"
             style="
               display: flex;
               align-items: center;
@@ -339,20 +340,22 @@ const SEGMENTS = buildSegments();
                 style="fill: var(--c-lt-surface); pointer-events: none;"
               />
               <!-- Current value number -->
-              <text
-                x="50"
-                y="50"
-                text-anchor="middle"
-                dominant-baseline="central"
-                font-size="11"
-                font-weight="600"
-                style="
-                  fill: var(--c-lt-text-1);
-                  font-family: var(--font-display);
-                  user-select: none;
-                  pointer-events: none;
-                "
-              >{{ centreLabel() }}</text>
+              <g [ngStyle]="centreNumberGroupStyle()">
+                <text
+                  x="50"
+                  y="50"
+                  text-anchor="middle"
+                  dominant-baseline="central"
+                  font-size="11"
+                  font-weight="600"
+                  style="
+                    fill: var(--c-lt-text-1);
+                    font-family: var(--font-display);
+                    user-select: none;
+                    pointer-events: none;
+                  "
+                >{{ centreLabel() }}</text>
+              </g>
 
               <!-- ── Fixed pointer at 12 o'clock (2× size, rounded top corners) ── -->
               <path
@@ -477,6 +480,8 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
   readonly lastPoints = signal(0);
   readonly wheelRotation = signal(INITIAL_ROTATION);
   readonly isDragging = signal(false);
+  readonly snapScale = signal(1);
+  readonly centreScale = signal(1);
   readonly slideStyle = signal<Record<string, string>>({
     transform: 'translateX(0)',
     opacity: '1',
@@ -527,7 +532,24 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
     transformBox: 'view-box',
     transition: this.isDragging()
       ? 'none'
-      : `transform var(--f-brand-motion-duration-quick) ${SNAP_SPRING}`,
+      : `transform var(--f-brand-motion-duration-gentle) ${SNAP_SPRING}`,
+  }));
+
+  /** Scale pulse applied to the wheel wrapper on snap. */
+  readonly wheelScaleStyle = computed((): Record<string, string> => ({
+    transform: `scale(${this.snapScale()})`,
+    transformOrigin: 'center',
+    transition: this.isDragging()
+      ? 'none'
+      : `transform var(--f-brand-motion-duration-gentle) ${SNAP_SPRING}`,
+  }));
+
+  /** Scale pop applied to the centre number group when value changes during drag. */
+  readonly centreNumberGroupStyle = computed((): Record<string, string> => ({
+    transform: `scale(${this.centreScale()})`,
+    transformOrigin: '50px 50px',
+    transformBox: 'view-box',
+    transition: `transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)`,
   }));
 
   /** Border/background for the post-submit feedback panel. */
@@ -579,11 +601,14 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
   private svgCenter = { x: 0, y: 0 };
   private dragStartAngle = 0;
   private dragStartRotation = 0;
+  private prevCentreValue = -999;
 
   // ── Private timer handles ──
   private snapFrameId: number | null = null;
   private slideEnterFrameId: number | null = null;
   private slideExitTimeoutId: number | null = null;
+  private snapScaleTimeoutId: number | null = null;
+  private centreScaleTimeoutId: number | null = null;
   private isAnimating = false;
   private readonly prefersReducedMotion = window.matchMedia(
     '(prefers-reduced-motion: reduce)'
@@ -606,6 +631,8 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
     if (this.snapFrameId !== null) window.cancelAnimationFrame(this.snapFrameId);
     if (this.slideEnterFrameId !== null) window.cancelAnimationFrame(this.slideEnterFrameId);
     if (this.slideExitTimeoutId !== null) window.clearTimeout(this.slideExitTimeoutId);
+    if (this.snapScaleTimeoutId !== null) window.clearTimeout(this.snapScaleTimeoutId);
+    if (this.centreScaleTimeoutId !== null) window.clearTimeout(this.centreScaleTimeoutId);
   }
 
   // ── Wheel drag handlers ────────────────────────────────────────────────────
@@ -620,6 +647,7 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
       event.clientX - this.svgCenter.x
     );
     this.dragStartRotation = this.wheelRotation();
+    this.prevCentreValue = this.selectedValue();
     this.isDragging.set(true);
     try {
       target.setPointerCapture(event.pointerId);
@@ -638,6 +666,13 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
     );
     const deltaDeg = ((currentAngle - this.dragStartAngle) * 180) / Math.PI;
     this.wheelRotation.set(this.dragStartRotation + deltaDeg);
+
+    // Centre scale pop when selected value changes during drag
+    const newValue = this.selectedValue();
+    if (!this.prefersReducedMotion && newValue >= 0 && newValue !== this.prevCentreValue) {
+      this.triggerCentreScalePop();
+    }
+    this.prevCentreValue = newValue;
   }
 
   onWheelPointerUp(_event: PointerEvent): void {
@@ -788,12 +823,32 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
     this.revealed.set(false);
     this.lastPoints.set(0);
     this.wheelRotation.set(INITIAL_ROTATION);
+    this.centreScale.set(1);
+    this.snapScale.set(1);
+    this.prevCentreValue = -999;
   }
 
   /** Snap wheel rotation to the nearest 30° boundary. */
   private snapWheel(): void {
     const snapped = Math.round(this.wheelRotation() / SEGMENT_ANGLE) * SEGMENT_ANGLE;
     this.wheelRotation.set(snapped);
+    if (!this.prefersReducedMotion) {
+      this.snapScale.set(1.02);
+      if (this.snapScaleTimeoutId !== null) window.clearTimeout(this.snapScaleTimeoutId);
+      this.snapScaleTimeoutId = window.setTimeout(() => {
+        this.snapScale.set(1);
+        this.snapScaleTimeoutId = null;
+      }, 480);
+    }
+  }
+
+  private triggerCentreScalePop(): void {
+    if (this.centreScaleTimeoutId !== null) window.clearTimeout(this.centreScaleTimeoutId);
+    this.centreScale.set(1.15);
+    this.centreScaleTimeoutId = window.setTimeout(() => {
+      this.centreScale.set(1);
+      this.centreScaleTimeoutId = null;
+    }, 240);
   }
 
   private computePoints(submitted: number, q: SpinWheelQuestion): number {
