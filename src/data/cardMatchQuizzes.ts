@@ -4,6 +4,7 @@ export interface CardMatchPair {
   id: string
   clue: string
   answer: string
+  imageUrl?: string
 }
 
 export interface CardMatchRound {
@@ -82,57 +83,57 @@ export const CARD_MATCH_QUIZZES: CardMatchQuiz[] = [
   {
     id: 'the-architect',
     title: 'The Architect',
-    description: 'Match FIFA 2026 stadiums to their names and cities.',
+    description: 'Match FIFA 2026 stadium photos to their names.',
     emoji: '🏟',
     rounds: [
       {
         id: 'ta-r1',
         title: 'Round 1 — American Icons',
         pairs: [
-          { id: 'ta-r1p1', clue: '82,500 seats in East Rutherford, hosts the 2026 Final', answer: 'MetLife Stadium' },
-          { id: 'ta-r1p2', clue: '$5.5 billion venue in Inglewood, opened in 2020', answer: 'SoFi Stadium' },
-          { id: 'ta-r1p3', clue: 'Retractable roof in Arlington, home of the Cowboys', answer: 'AT&T Stadium' },
-          { id: 'ta-r1p4', clue: 'Open-air venue in Santa Clara, home of the 49ers', answer: "Levi's Stadium" },
+          { id: 'ta-r1p1', clue: 'MetLife Stadium', answer: 'MetLife Stadium', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Metlife_stadium_%28Aerial_view%29.jpg/400px-Metlife_stadium_%28Aerial_view%29.jpg' },
+          { id: 'ta-r1p2', clue: 'SoFi Stadium', answer: 'SoFi Stadium', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/SoFi_Stadium_2023.jpg/400px-SoFi_Stadium_2023.jpg' },
+          { id: 'ta-r1p3', clue: 'AT&T Stadium', answer: 'AT&T Stadium', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Arlington_June_2020_4_%28AT%26T_Stadium%29.jpg/400px-Arlington_June_2020_4_%28AT%26T_Stadium%29.jpg' },
+          { id: 'ta-r1p4', clue: "Levi's Stadium", answer: "Levi's Stadium", imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Levi%27s_Stadium_in_February_2016_prior_to_Super_Bowl_50_%2824398261729%29.jpg/400px-Levi%27s_Stadium_in_February_2016_prior_to_Super_Bowl_50_%2824398261729%29.jpg' },
         ],
       },
       {
         id: 'ta-r2',
         title: 'Round 2 — Southern & Eastern Hosts',
         pairs: [
-          { id: 'ta-r2p1', clue: 'Eight-panel retractable roof in Atlanta, seats 71,000', answer: 'Mercedes-Benz Stadium' },
-          { id: 'ta-r2p2', clue: 'First retractable-roof NFL stadium, located in Houston', answer: 'NRG Stadium' },
-          { id: 'ta-r2p3', clue: 'Hosted six Super Bowls, located in Miami Gardens', answer: 'Hard Rock Stadium' },
-          { id: 'ta-r2p4', clue: 'Home of the Eagles in Philadelphia, opened in 2003', answer: 'Lincoln Financial Field' },
+          { id: 'ta-r2p1', clue: 'Mercedes-Benz Stadium', answer: 'Mercedes-Benz Stadium', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Mercedes_Benz_Stadium_time_lapse_capture_2017-08-13.jpg/400px-Mercedes_Benz_Stadium_time_lapse_capture_2017-08-13.jpg' },
+          { id: 'ta-r2p2', clue: 'NRG Stadium', answer: 'NRG Stadium', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Nrg_stadium.jpg/400px-Nrg_stadium.jpg' },
+          { id: 'ta-r2p3', clue: 'Hard Rock Stadium', answer: 'Hard Rock Stadium', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Hard_Rock_Stadium_for_Super_Bowl_LIV_%2849606710103%29.jpg/400px-Hard_Rock_Stadium_for_Super_Bowl_LIV_%2849606710103%29.jpg' },
+          { id: 'ta-r2p4', clue: 'Lincoln Financial Field', answer: 'Lincoln Financial Field', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Lincoln_Financial_Field_%28Aerial_view%29.jpg/400px-Lincoln_Financial_Field_%28Aerial_view%29.jpg' },
         ],
       },
       {
         id: 'ta-r3',
         title: 'Round 3 — North & West',
         pairs: [
-          { id: 'ta-r3p1', clue: 'Seattle waterfront venue, known for deafening crowd noise', answer: 'Lumen Field' },
-          { id: 'ta-r3p2', clue: 'Legendary Kansas City venue, home of the Chiefs', answer: 'GEHA Field at Arrowhead' },
-          { id: 'ta-r3p3', clue: 'Foxborough venue near Boston, home of the Patriots', answer: 'Gillette Stadium' },
-          { id: 'ta-r3p4', clue: "Retractable roof dome in Vancouver, hosted 2015 Women's WC Final", answer: 'BC Place' },
+          { id: 'ta-r3p1', clue: 'Lumen Field', answer: 'Lumen Field', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Qwest_Field_North.jpg/400px-Qwest_Field_North.jpg' },
+          { id: 'ta-r3p2', clue: 'GEHA Field at Arrowhead', answer: 'GEHA Field at Arrowhead', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Aerial_view_of_Arrowhead_Stadium_08-31-2013.jpg/400px-Aerial_view_of_Arrowhead_Stadium_08-31-2013.jpg' },
+          { id: 'ta-r3p3', clue: 'Gillette Stadium', answer: 'Gillette Stadium', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Gillette_Stadium_%28Top_View%29.jpg/400px-Gillette_Stadium_%28Top_View%29.jpg' },
+          { id: 'ta-r3p4', clue: 'BC Place', answer: 'BC Place', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/BC_Place_2015_Women%27s_FIFA_World_Cup.jpg/400px-BC_Place_2015_Women%27s_FIFA_World_Cup.jpg' },
         ],
       },
       {
         id: 'ta-r4',
         title: 'Round 4 — Mexico & Canada',
         pairs: [
-          { id: 'ta-r4p1', clue: 'Mexico City landmark, hosted 1970 and 1986 World Cup finals', answer: 'Estadio Azteca' },
-          { id: 'ta-r4p2', clue: 'Known as the Steel Giant, home of CF Monterrey', answer: 'Estadio BBVA' },
-          { id: 'ta-r4p3', clue: 'Guadalajara venue, home of CD Guadalajara (Chivas)', answer: 'Estadio Akron' },
-          { id: 'ta-r4p4', clue: 'Toronto venue expanded for 2026, home of the Argonauts', answer: 'BMO Field' },
+          { id: 'ta-r4p1', clue: 'Estadio Azteca', answer: 'Estadio Azteca', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Mexico_city_Estadio_Azteca_estadio_banorte_fifa_world_cup_2026_4.JPG/400px-Mexico_city_Estadio_Azteca_estadio_banorte_fifa_world_cup_2026_4.JPG' },
+          { id: 'ta-r4p2', clue: 'Estadio BBVA', answer: 'Estadio BBVA', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Mexico_Guadalupe_Monterrey_Estadio_BBVA_Bancomer_fifa_world_cup_2026_6.JPG/400px-Mexico_Guadalupe_Monterrey_Estadio_BBVA_Bancomer_fifa_world_cup_2026_6.JPG' },
+          { id: 'ta-r4p3', clue: 'Estadio Akron', answer: 'Estadio Akron', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Estadio_Akron_02-07-2022_cabecera_sur_lado_derecho_%283%29.jpg/400px-Estadio_Akron_02-07-2022_cabecera_sur_lado_derecho_%283%29.jpg' },
+          { id: 'ta-r4p4', clue: 'BMO Field', answer: 'BMO Field', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/BMO_Field_in_2016.png/400px-BMO_Field_in_2016.png' },
         ],
       },
       {
         id: 'ta-r5',
-        title: 'Round 5 — Stadium Challenge',
+        title: 'Round 5 — Mixed Challenge',
         pairs: [
-          { id: 'ta-r5p1', clue: 'Highest altitude 2026 venue at 2,200m above sea level', answer: 'Estadio Azteca' },
-          { id: 'ta-r5p2', clue: 'Features a 70,000 sq ft video board called the Infinity Screen', answer: 'SoFi Stadium' },
-          { id: 'ta-r5p3', clue: 'Oldest NFL stadium still in use, opened in 1972', answer: 'GEHA Field at Arrowhead' },
-          { id: 'ta-r5p4', clue: "North America's largest stadium by capacity for 2026", answer: 'MetLife Stadium' },
+          { id: 'ta-r5p1', clue: 'MetLife Stadium', answer: 'MetLife Stadium', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Metlife_stadium_%28Aerial_view%29.jpg/400px-Metlife_stadium_%28Aerial_view%29.jpg' },
+          { id: 'ta-r5p2', clue: 'Estadio Azteca', answer: 'Estadio Azteca', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Mexico_city_Estadio_Azteca_estadio_banorte_fifa_world_cup_2026_4.JPG/400px-Mexico_city_Estadio_Azteca_estadio_banorte_fifa_world_cup_2026_4.JPG' },
+          { id: 'ta-r5p3', clue: 'SoFi Stadium', answer: 'SoFi Stadium', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/SoFi_Stadium_2023.jpg/400px-SoFi_Stadium_2023.jpg' },
+          { id: 'ta-r5p4', clue: 'Hard Rock Stadium', answer: 'Hard Rock Stadium', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Hard_Rock_Stadium_for_Super_Bowl_LIV_%2849606710103%29.jpg/400px-Hard_Rock_Stadium_for_Super_Bowl_LIV_%2849606710103%29.jpg' },
         ],
       },
     ],
