@@ -20,16 +20,17 @@ import { AnalyticsService } from '../services/analytics.service';
 import { StoreService } from '../services/store.service';
 
 // ─── Wheel geometry constants ────────────────────────────────────────────────
-const SEGMENT_COUNT = 12;
-const SEGMENT_ANGLE = 360 / SEGMENT_COUNT; // 30° per segment
+const SEGMENT_COUNT = 11;
+const SEGMENT_ANGLE = 360 / SEGMENT_COUNT; // ~32.73° per segment
 const OUTER_RADIUS = 46;
 const INNER_RADIUS = 22;
 const CX = 50;
 const CY = 50;
-// -1 is a blank spacer segment; 0–10 are selectable values
-const SEGMENT_VALUES: readonly number[] = [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-// Initial rotation shows value 5 (index 6) at the pointer
-const INITIAL_ROTATION = -6 * SEGMENT_ANGLE; // -180°
+const SEGMENT_GAP_DEG = 1.2; // gap between segments (outer ring shows through)
+// Values 0–10, one per segment
+const SEGMENT_VALUES: readonly number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+// Initial rotation shows value 5 (index 5) at the pointer
+const INITIAL_ROTATION = -5 * SEGMENT_ANGLE;
 
 // ─── Animation constants ─────────────────────────────────────────────────────
 const SNAP_SPRING = 'cubic-bezier(0.2, 1.4, 0.3, 1)';
@@ -56,8 +57,9 @@ function degToRad(deg: number): number {
 function buildSegments(): WheelSegment[] {
   const segs: WheelSegment[] = [];
   for (let i = 0; i < SEGMENT_COUNT; i++) {
-    const startDeg = i * SEGMENT_ANGLE - 90 - SEGMENT_ANGLE / 2; // segment 0 midpoint at 12 o'clock
-    const endDeg = (i + 1) * SEGMENT_ANGLE - 90;
+    const halfGap = SEGMENT_GAP_DEG / 2;
+    const startDeg = i * SEGMENT_ANGLE - 90 - SEGMENT_ANGLE / 2 + halfGap;
+    const endDeg = (i + 1) * SEGMENT_ANGLE - 90 - SEGMENT_ANGLE / 2 - halfGap;
     const startRad = degToRad(startDeg);
     const endRad = degToRad(endDeg);
     // True visual midpoint of the visible 30° segment
@@ -91,7 +93,7 @@ function buildSegments(): WheelSegment[] {
       textX,
       textY,
       textAngle,
-      label: SEGMENT_VALUES[i] === -1 ? '' : String(SEGMENT_VALUES[i]),
+      label: String(SEGMENT_VALUES[i]),
     });
   }
   return segs;
@@ -269,7 +271,7 @@ const SEGMENTS = buildSegments();
               aria-label="Answer selector"
               aria-valuemin="0"
               aria-valuemax="10"
-              [attr.aria-valuenow]="selectedValue() >= 0 ? selectedValue() : 0"
+              [attr.aria-valuenow]="selectedValue()"
               tabindex="0"
               style="
                 width: 100%;
@@ -308,12 +310,13 @@ const SEGMENTS = buildSegments();
 
               <!-- ── Rotating segments group ── -->
               <g class="spin-wheel__segments" [ngStyle]="wheelGroupStyle()" filter="url(#seg-shadow)">
-                @for (seg of segments; track seg.index) {
+                <!-- Pass 1: unselected segments (background layer) -->
+                @for (seg of unselectedSegments(); track seg.index) {
                   <path
                     class="spin-wheel__segment"
                     [attr.d]="seg.path"
                     [attr.fill]="segmentFill(seg)"
-                    style="stroke: var(--c-lt-white); stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round;"
+                    style="stroke: none;"
                   />
                   @if (seg.label) {
                     <text
@@ -327,11 +330,38 @@ const SEGMENTS = buildSegments();
                       [attr.font-weight]="segmentTextWeight(seg)"
                       font-size="5.5"
                       style="
-                        font-family: var(--font-display);
+                        font-family: var(--f-base-type-family-primary);
                         user-select: none;
                         pointer-events: none;
                       "
                     >{{ seg.label }}</text>
+                  }
+                }
+                <!-- Pass 2: selected segment (painted last for consistent size) -->
+                @if (selectedSegment(); as sel) {
+                  <path
+                    class="spin-wheel__segment spin-wheel__segment--selected"
+                    [attr.d]="sel.path"
+                    [attr.fill]="segmentFill(sel)"
+                    style="stroke: none;"
+                  />
+                  @if (sel.label) {
+                    <text
+                      class="spin-wheel__segment-label spin-wheel__segment-label--selected"
+                      [attr.x]="f2(sel.textX)"
+                      [attr.y]="f2(sel.textY)"
+                      [attr.transform]="textTransform(sel)"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      [attr.fill]="segmentTextFill(sel)"
+                      [attr.font-weight]="segmentTextWeight(sel)"
+                      font-size="5.5"
+                      style="
+                        font-family: var(--f-base-type-family-primary);
+                        user-select: none;
+                        pointer-events: none;
+                      "
+                    >{{ sel.label }}</text>
                   }
                 }
               </g>
@@ -362,10 +392,10 @@ const SEGMENTS = buildSegments();
                   text-anchor="middle"
                   dominant-baseline="central"
                   font-size="11"
-                  font-weight="600"
                   style="
                     fill: var(--c-lt-text-1);
-                    font-family: var(--font-display);
+                    font-family: var(--f-base-type-family-primary);
+                    font-weight: var(--f-base-type-weight-medium);
                     user-select: none;
                     pointer-events: none;
                   "
@@ -516,9 +546,8 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
   });
 
   /**
-   * Returns the segment index (0–11) currently under the fixed pointer.
-   * rotation = 0 → index 0 (blank) at pointer.
-   * rotation = -30 → index 1 (value 0) at pointer.
+   * Returns the segment index (0–10) currently under the fixed pointer.
+   * rotation = 0 → index 0 (value 0) at pointer.
    */
   readonly selectedIndex = computed(() => {
     const raw =
@@ -526,20 +555,20 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
     return Math.round(raw) % SEGMENT_COUNT;
   });
 
-  /** The numeric value at the pointer. -1 means the blank spacer segment. */
+  /** The numeric value (0–10) at the pointer. */
   readonly selectedValue = computed(() => SEGMENT_VALUES[this.selectedIndex()]);
 
-  /** Text shown in the centre circle. */
-  readonly centreLabel = computed(() => {
-    const v = this.selectedValue();
-    return v === -1 ? '' : String(v);
-  });
+  /** The currently selected segment object (rendered last for consistent paint order). */
+  readonly selectedSegment = computed(() => SEGMENTS[this.selectedIndex()]);
 
-  /** Whether the action button should be enabled. */
-  readonly canAct = computed(() => {
-    if (this.revealed()) return true;
-    return this.selectedValue() >= 0;
-  });
+  /** All segments except the selected one (rendered first as background layer). */
+  readonly unselectedSegments = computed(() => SEGMENTS.filter((_, i) => i !== this.selectedIndex()));
+
+  /** Text shown in the centre circle. */
+  readonly centreLabel = computed(() => String(this.selectedValue()));
+
+  /** Action button is always enabled (all segments are valid values). */
+  readonly canAct = computed(() => true);
 
   /** CSS styles for the rotating SVG group. */
   readonly wheelGroupStyle = computed((): Record<string, string> => ({
@@ -685,7 +714,7 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
 
     // Centre scale pop when selected value changes during drag
     const newValue = this.selectedValue();
-    if (!this.prefersReducedMotion && newValue >= 0 && newValue !== this.prevCentreValue) {
+    if (!this.prefersReducedMotion && newValue !== this.prevCentreValue) {
       this.triggerCentreScalePop();
     }
     this.prevCentreValue = newValue;
@@ -740,7 +769,7 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
 
   // ── Template helpers ──────────────────────────────────────────────────────
 
-  /** Fill colour for a wheel segment: accent for selected, white for all others. */
+  /** Fill colour for a wheel segment: accent for selected, white for others. */
   segmentFill(seg: WheelSegment): string {
     if (seg.index === this.selectedIndex()) return 'var(--f-brand-color-background-accent)';
     return 'var(--f-brand-color-background-light)';
@@ -769,7 +798,6 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
 
   private submitAnswer(): void {
     const value = this.selectedValue();
-    if (value < 0) return;
     const q = this.currentQuestion();
     const pts = this.computePoints(value, q);
     this.lastPoints.set(pts);
