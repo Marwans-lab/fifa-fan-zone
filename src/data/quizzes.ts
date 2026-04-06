@@ -26,7 +26,7 @@ export const QUIZZES: Quiz[] = [
     title: 'The Connector',
     description: 'How well do you know Qatar Airways routes to FIFA 2026 host cities?',
     emoji: '✈️',
-    bannerImage: 'assets/images/quiz-banners/the-connector.svg',
+    bannerImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Qatar_Airways_Airbus_A350-1000_%28A7-ANA%29.jpg/750px-Qatar_Airways_Airbus_A350-1000_%28A7-ANA%29.jpg',
     questions: [
       {
         id: 'con1',
@@ -90,7 +90,7 @@ export const QUIZZES: Quiz[] = [
     title: 'World Cup History',
     description: 'Test your knowledge of FIFA World Cup moments, records, and champions.',
     emoji: '🏆',
-    bannerImage: 'assets/images/quiz-banners/world-cup-history.svg',
+    bannerImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/FIFA_World_Cup_Trophy_2015.jpg/750px-FIFA_World_Cup_Trophy_2015.jpg',
     questions: [
       {
         id: 'wch1',
@@ -154,7 +154,7 @@ export const QUIZZES: Quiz[] = [
     title: 'Stadium Knowledge',
     description: 'How much do you know about the iconic venues hosting FIFA World Cup 2026?',
     emoji: '🏟️',
-    bannerImage: 'assets/images/quiz-banners/stadium-knowledge.svg',
+    bannerImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Metlife_stadium_%28Aerial_view%29.jpg/750px-Metlife_stadium_%28Aerial_view%29.jpg',
     questions: [
       {
         id: 'stk1',
@@ -218,7 +218,7 @@ export const QUIZZES: Quiz[] = [
     title: 'Star Players',
     description: 'Test your knowledge of the greatest FIFA World Cup players ever.',
     emoji: '⭐',
-    bannerImage: 'assets/images/quiz-banners/star-players.svg',
+    bannerImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/2026_Lionel_Messi_%28cropped%29.jpg/750px-2026_Lionel_Messi_%28cropped%29.jpg',
     questions: [
       {
         id: 'sp1',
@@ -282,7 +282,7 @@ export const QUIZZES: Quiz[] = [
     title: 'Host Nations',
     description: 'How well do you know USA, Canada, and Mexico — the co-hosts of FIFA 2026?',
     emoji: '🌎',
-    bannerImage: 'assets/images/quiz-banners/host-nations.svg',
+    bannerImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Sobrevuelos_CDMX_HJ2A4913_%2825514321687%29_%28cropped%29.jpg/750px-Sobrevuelos_CDMX_HJ2A4913_%2825514321687%29_%28cropped%29.jpg',
     questions: [
       {
         id: 'hn1',
