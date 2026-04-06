@@ -219,7 +219,7 @@ const SEGMENTS = buildSegments();
               margin: var(--sp-3) 0 0;
               padding: 0 var(--sp-6);
               text-align: center;
-              font: 300 22px/30px var(--font-display);
+              font: var(--f-brand-type-title-5);
               color: var(--c-lt-text-1);
               flex-shrink: 0;
             "
@@ -779,7 +779,8 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
   }
 
   segmentTextWeight(seg: WheelSegment): string {
-    return seg.index === this.selectedIndex() ? '700' : '400';
+    /* SVG attr — CSS vars unsupported; resolved from --weight-bold (600) / --weight-reg (400) */
+    return seg.index === this.selectedIndex() ? '600' : '400';
   }
 
   textTransform(seg: WheelSegment): string {
