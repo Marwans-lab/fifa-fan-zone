@@ -636,6 +636,7 @@ export class CardComponent {
   ];
 
   readonly milestones = computed<JourneyMilestone[]>(() => {
+    const completedCount = this.state().completedFlows.length;
     return [
       {
         iconSrc: 'assets/icons/qr-logo.svg',
@@ -644,18 +645,18 @@ export class CardComponent {
       },
       {
         iconSrc: 'assets/icons/globe-dark.svg',
-        label: 'Connector',
-        completed: this.isFlowCompleted('the-connector'),
+        label: '1st quiz',
+        completed: completedCount >= 1,
       },
       {
         iconSrc: 'assets/icons/stadium-dark.svg',
-        label: 'Architect',
-        completed: this.isFlowCompleted('the-architect'),
+        label: '3 quizzes',
+        completed: completedCount >= 3,
       },
       {
-        iconSrc: 'assets/icons/history-dark.svg',
-        label: 'Historian',
-        completed: this.isFlowCompleted('the-historian'),
+        iconSrc: 'assets/icons/Trophy-dark.svg',
+        label: 'Reward',
+        completed: this.allQuizzesCompleted(),
       },
     ];
   });
@@ -690,13 +691,13 @@ export class CardComponent {
     if (done === 1) {
       return 'Rising fan';
     }
-    if (done <= 2) {
+    if (done === 2) {
       return 'Quiz taker';
     }
-    if (done <= 3) {
+    if (done === 3) {
       return 'Top fan';
     }
-    return 'Quiz champion';
+    return 'Reward unlocked';
   });
 
   handleFanCardSave(answers: Record<string, string>): void {
