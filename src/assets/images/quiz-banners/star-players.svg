@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 400" width="750" height="400">
+  <defs>
+    <linearGradient id="bg-p" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0D0020"/>
+      <stop offset="50%" stop-color="#1A0035"/>
+      <stop offset="100%" stop-color="#060010"/>
+    </linearGradient>
+    <linearGradient id="ball-p" x1="20%" y1="10%" x2="80%" y2="90%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="60%" stop-color="#E0E0E0"/>
+      <stop offset="100%" stop-color="#AAAAAA"/>
+    </linearGradient>
+    <radialGradient id="spotlight-p" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#7B3FD4" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#7B3FD4" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="spot2-p" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#B06AFE" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#B06AFE" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur-p">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+    <filter id="blur-sm-p">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="750" height="400" fill="url(#bg-p)"/>
+
+  <!-- Spotlight glow behind ball -->
+  <ellipse cx="375" cy="200" rx="180" ry="160" fill="url(#spotlight-p)" filter="url(#blur-p)"/>
+  <ellipse cx="375" cy="200" rx="100" ry="90" fill="url(#spot2-p)" filter="url(#blur-sm-p)"/>
+
+  <!-- Particle stars (small, scattered) -->
+  <g fill="#B06AFE" opacity="0.5">
+    <circle cx="100" cy="80" r="2"/><circle cx="160" cy="50" r="1.5"/><circle cx="220" cy="90" r="2"/>
+    <circle cx="60" cy="160" r="1.5"/><circle cx="140" cy="130" r="2"/><circle cx="80" cy="220" r="1.5"/>
+    <circle cx="650" cy="80" r="2"/><circle cx="590" cy="50" r="1.5"/><circle cx="530" cy="90" r="2"/>
+    <circle cx="690" cy="160" r="1.5"/><circle cx="610" cy="130" r="2"/><circle cx="670" cy="220" r="1.5"/>
+    <circle cx="200" cy="320" r="1.5"/><circle cx="300" cy="350" r="2"/><circle cx="450" cy="340" r="1.5"/>
+    <circle cx="550" cy="320" r="2"/>
+  </g>
+
+  <!-- Glowing star shapes -->
+  <g opacity="0.65">
+    <!-- Top left star -->
+    <polygon points="130,70 133,80 143,80 135,86 138,96 130,90 122,96 125,86 117,80 127,80" fill="#B06AFE"/>
+    <!-- Top right star -->
+    <polygon points="620,60 624,73 637,73 627,81 631,94 620,86 609,94 613,81 603,73 616,73" fill="#7B3FD4"/>
+    <!-- Middle left -->
+    <polygon points="80,250 83,260 93,260 85,266 88,276 80,270 72,276 75,266 67,260 77,260" fill="#9B50E4" opacity="0.8"/>
+    <!-- Middle right -->
+    <polygon points="670,240 673,250 683,250 675,256 678,266 670,260 662,266 665,256 657,250 667,250" fill="#B06AFE" opacity="0.8"/>
+  </g>
+
+  <!-- Speed lines (motion trails) -->
+  <g stroke="#7B3FD4" stroke-width="1.5" opacity="0.3">
+    <line x1="100" y1="200" x2="270" y2="195"/>
+    <line x1="90" y1="185" x2="260" y2="180"/>
+    <line x1="95" y1="215" x2="260" y2="210"/>
+    <line x1="650" y1="200" x2="480" y2="195"/>
+    <line x1="660" y1="185" x2="490" y2="180"/>
+    <line x1="655" y1="215" x2="490" y2="210"/>
+  </g>
+
+  <!-- Football (soccer ball) -->
+  <g transform="translate(275, 100)">
+    <!-- Main circle -->
+    <circle cx="100" cy="100" r="85" fill="url(#ball-p)" opacity="0.95"/>
+    <!-- Pentagon patches -->
+    <g fill="#222222" opacity="0.8">
+      <!-- Centre pentagon -->
+      <polygon points="100,52 118,66 111,87 89,87 82,66"/>
+      <!-- Top patches -->
+      <polygon points="100,52 118,66 130,55 128,35 108,28"/>
+      <polygon points="100,52 82,66 70,55 72,35 92,28"/>
+      <!-- Side patches -->
+      <polygon points="111,87 130,86 148,72 143,52 128,55"/>
+      <polygon points="89,87 70,86 52,72 57,52 72,55"/>
+      <!-- Bottom patches -->
+      <polygon points="111,87 118,107 105,120 89,107 89,87"/>
+      <!-- Lower left / right -->
+      <polygon points="52,72 40,90 50,112 70,113 70,86"/>
+      <polygon points="148,72 160,90 150,112 130,113 130,86"/>
+    </g>
+    <!-- Ball shine -->
+    <ellipse cx="70" cy="65" rx="22" ry="15" fill="white" opacity="0.3" transform="rotate(-30, 70, 65)"/>
+  </g>
+
+  <!-- FIFA 2026 text on ball band -->
+  <text x="375" y="208" font-family="sans-serif" font-size="12" font-weight="700" fill="#7B3FD4" opacity="0.7" text-anchor="middle">FIFA 2026</text>
+
+  <!-- Title -->
+  <text x="375" y="358" font-family="sans-serif" font-size="22" font-weight="700" fill="#B06AFE" opacity="0.95" text-anchor="middle" letter-spacing="3">STAR PLAYERS</text>
+  <text x="375" y="380" font-family="sans-serif" font-size="11" fill="#7B3FD4" opacity="0.8" text-anchor="middle" letter-spacing="2">WORLD CUP LEGENDS QUIZ</text>
+</svg>
