@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 400" width="750" height="400">
+  <defs>
+    <linearGradient id="bg-n" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00062A"/>
+      <stop offset="50%" stop-color="#0A0A1F"/>
+      <stop offset="100%" stop-color="#050014"/>
+    </linearGradient>
+    <!-- USA gradient - red/white/blue -->
+    <linearGradient id="usa-flag" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#BF0A30"/>
+      <stop offset="33%" stop-color="#BF0A30"/>
+      <stop offset="33%" stop-color="#FFFFFF"/>
+      <stop offset="66%" stop-color="#FFFFFF"/>
+      <stop offset="66%" stop-color="#002868"/>
+      <stop offset="100%" stop-color="#002868"/>
+    </linearGradient>
+    <!-- Canada gradient - red/white/red -->
+    <linearGradient id="canada-flag" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D80621"/>
+      <stop offset="25%" stop-color="#D80621"/>
+      <stop offset="25%" stop-color="#FFFFFF"/>
+      <stop offset="75%" stop-color="#FFFFFF"/>
+      <stop offset="75%" stop-color="#D80621"/>
+      <stop offset="100%" stop-color="#D80621"/>
+    </linearGradient>
+    <!-- Mexico gradient - green/white/red -->
+    <linearGradient id="mexico-flag" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#006847"/>
+      <stop offset="33%" stop-color="#006847"/>
+      <stop offset="33%" stop-color="#FFFFFF"/>
+      <stop offset="66%" stop-color="#FFFFFF"/>
+      <stop offset="66%" stop-color="#CE1126"/>
+      <stop offset="100%" stop-color="#CE1126"/>
+    </linearGradient>
+    <radialGradient id="globe-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1E40AF" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#1E40AF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur-n">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+    <clipPath id="usa-clip"><rect x="110" y="100" width="120" height="90" rx="6"/></clipPath>
+    <clipPath id="canada-clip"><rect x="315" y="80" width="120" height="90" rx="6"/></clipPath>
+    <clipPath id="mexico-clip"><rect x="520" y="100" width="120" height="90" rx="6"/></clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="750" height="400" fill="url(#bg-n)"/>
+
+  <!-- Globe glow (background) -->
+  <ellipse cx="375" cy="200" rx="300" ry="200" fill="url(#globe-glow)" filter="url(#blur-n)"/>
+
+  <!-- Globe arc circles -->
+  <circle cx="375" cy="200" r="240" fill="none" stroke="#1E40AF" stroke-width="1" opacity="0.3"/>
+  <circle cx="375" cy="200" r="190" fill="none" stroke="#3B82F6" stroke-width="0.8" opacity="0.2"/>
+  <!-- Latitude lines -->
+  <ellipse cx="375" cy="200" rx="240" ry="80" fill="none" stroke="#1E40AF" stroke-width="0.8" opacity="0.2"/>
+  <ellipse cx="375" cy="200" rx="240" ry="40" fill="none" stroke="#1E40AF" stroke-width="0.8" opacity="0.15"/>
+  <!-- Longitude lines -->
+  <ellipse cx="375" cy="200" rx="100" ry="240" fill="none" stroke="#1E40AF" stroke-width="0.8" opacity="0.2"/>
+  <ellipse cx="375" cy="200" rx="200" ry="240" fill="none" stroke="#1E40AF" stroke-width="0.8" opacity="0.15"/>
+
+  <!-- Connector lines (from globe to flags) -->
+  <line x1="195" y1="165" x2="280" y2="200" stroke="#BF0A30" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6"/>
+  <line x1="375" y1="140" x2="375" y2="200" stroke="#D80621" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6"/>
+  <line x1="555" y1="165" x2="470" y2="200" stroke="#006847" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6"/>
+
+  <!-- Flag: USA -->
+  <g>
+    <rect x="110" y="100" width="120" height="90" rx="6" fill="url(#usa-flag)" opacity="0.9"/>
+    <!-- Stars block (simplified) -->
+    <rect x="110" y="100" width="46" height="60" rx="4" fill="#002868" opacity="0.75"/>
+    <g fill="white" opacity="0.9" font-family="sans-serif" font-size="16" text-anchor="middle">
+      <text x="133" y="122">★</text><text x="148" y="122">★</text>
+      <text x="133" y="137">★</text><text x="148" y="137">★</text>
+      <text x="133" y="152">★</text><text x="148" y="152">★</text>
+    </g>
+    <rect x="110" y="100" width="120" height="90" rx="6" fill="none" stroke="white" stroke-width="1.5" opacity="0.5"/>
+    <text x="170" y="208" font-family="sans-serif" font-size="13" font-weight="700" fill="white" opacity="0.8" text-anchor="middle">USA</text>
+  </g>
+
+  <!-- Flag: Canada -->
+  <g>
+    <rect x="315" y="80" width="120" height="90" rx="6" fill="url(#canada-flag)" opacity="0.9"/>
+    <!-- Maple leaf (simplified) -->
+    <g transform="translate(375, 125) scale(0.9)" fill="#D80621" opacity="0.95">
+      <polygon points="0,-18 3,-8 14,-10 8,-4 12,6 0,2 -12,6 -8,-4 -14,-10 -3,-8"/>
+      <rect x="-2.5" y="2" width="5" height="10"/>
+    </g>
+    <rect x="315" y="80" width="120" height="90" rx="6" fill="none" stroke="white" stroke-width="1.5" opacity="0.5"/>
+    <text x="375" y="188" font-family="sans-serif" font-size="13" font-weight="700" fill="white" opacity="0.8" text-anchor="middle">CANADA</text>
+  </g>
+
+  <!-- Flag: Mexico -->
+  <g>
+    <rect x="520" y="100" width="120" height="90" rx="6" fill="url(#mexico-flag)" opacity="0.9"/>
+    <!-- Eagle emblem (simplified circle) -->
+    <circle cx="580" cy="145" r="16" fill="#8B6914" opacity="0.7"/>
+    <circle cx="580" cy="145" r="10" fill="#CD853F" opacity="0.6"/>
+    <rect x="520" y="100" width="120" height="90" rx="6" fill="none" stroke="white" stroke-width="1.5" opacity="0.5"/>
+    <text x="580" y="208" font-family="sans-serif" font-size="13" font-weight="700" fill="white" opacity="0.8" text-anchor="middle">MEXICO</text>
+  </g>
+
+  <!-- Connection dots on globe -->
+  <circle cx="280" cy="200" r="5" fill="#BF0A30" opacity="0.8"/>
+  <circle cx="375" cy="200" r="5" fill="#D80621" opacity="0.8"/>
+  <circle cx="470" cy="200" r="5" fill="#006847" opacity="0.8"/>
+
+  <!-- FIFA 2026 logo area -->
+  <text x="375" y="290" font-family="sans-serif" font-size="28" font-weight="900" fill="white" opacity="0.2" text-anchor="middle" letter-spacing="6">FIFA 2026</text>
+
+  <!-- Title -->
+  <text x="375" y="358" font-family="sans-serif" font-size="22" font-weight="700" fill="white" opacity="0.9" text-anchor="middle" letter-spacing="3">HOST NATIONS</text>
+  <text x="375" y="380" font-family="sans-serif" font-size="11" fill="#3B82F6" opacity="0.8" text-anchor="middle" letter-spacing="2">USA · CANADA · MEXICO 2026</text>
+</svg>
