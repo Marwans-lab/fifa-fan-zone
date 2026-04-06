@@ -501,10 +501,10 @@ const SEGMENTS = buildSegments();
             style="
               width: 100%;
               min-height: 44px;
-              padding: var(--f-brand-space-xs) var(--f-brand-space-md);
+              padding: var(--f-brand-space-sm) var(--f-brand-space-xl);
               border-radius: var(--f-brand-radius-rounded, 999px);
               border: var(--f-brand-border-size-default) solid transparent;
-              font: var(--f-brand-type-subheading);
+              font: var(--f-brand-type-body-medium);
               display: inline-flex;
               align-items: center;
               justify-content: center;
