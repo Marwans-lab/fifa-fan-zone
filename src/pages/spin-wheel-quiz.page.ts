@@ -26,6 +26,7 @@ const OUTER_RADIUS = 46;
 const INNER_RADIUS = 22;
 const CX = 50;
 const CY = 50;
+const SEGMENT_GAP_DEG = 1.2; // gap between segments (outer ring shows through)
 // -1 is a blank spacer segment; 0–10 are selectable values
 const SEGMENT_VALUES: readonly number[] = [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 // Initial rotation shows value 5 (index 6) at the pointer
@@ -56,8 +57,9 @@ function degToRad(deg: number): number {
 function buildSegments(): WheelSegment[] {
   const segs: WheelSegment[] = [];
   for (let i = 0; i < SEGMENT_COUNT; i++) {
-    const startDeg = i * SEGMENT_ANGLE - 90 - SEGMENT_ANGLE / 2; // segment 0 midpoint at 12 o'clock
-    const endDeg = (i + 1) * SEGMENT_ANGLE - 90 - SEGMENT_ANGLE / 2;
+    const halfGap = SEGMENT_GAP_DEG / 2;
+    const startDeg = i * SEGMENT_ANGLE - 90 - SEGMENT_ANGLE / 2 + halfGap;
+    const endDeg = (i + 1) * SEGMENT_ANGLE - 90 - SEGMENT_ANGLE / 2 - halfGap;
     const startRad = degToRad(startDeg);
     const endRad = degToRad(endDeg);
     // True visual midpoint of the visible 30° segment
@@ -315,7 +317,7 @@ const SEGMENTS = buildSegments();
                     class="spin-wheel__segment"
                     [attr.d]="seg.path"
                     [attr.fill]="segmentFill(seg)"
-                    style="stroke: var(--c-lt-white); stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round;"
+                    style="stroke: none;"
                   />
                   @if (seg.label) {
                     <text
@@ -342,7 +344,7 @@ const SEGMENTS = buildSegments();
                     class="spin-wheel__segment spin-wheel__segment--selected"
                     [attr.d]="sel.path"
                     [attr.fill]="segmentFill(sel)"
-                    style="stroke: var(--c-lt-white); stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round;"
+                    style="stroke: none;"
                   />
                   @if (sel.label) {
                     <text
