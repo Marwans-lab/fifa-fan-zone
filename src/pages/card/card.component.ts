@@ -752,8 +752,9 @@ export class CardComponent {
 
     if (!this.isCardComplete()) {
       this.analytics.track('complete_fan_card_journey_tapped');
+      this.fanCardSection?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
       this.scrollToTop();
-      window.setTimeout(() => this.fanCardComponent?.flipToBack(), 400);
+      window.setTimeout(() => this.fanCardComponent?.flipToBack(), 500);
       return;
     }
 
@@ -824,8 +825,13 @@ export class CardComponent {
   }
 
   private scrollToTop(): void {
-    const scrollContainer = this.contentEl?.nativeElement.closest<HTMLElement>('.f-screen');
-    scrollContainer?.scrollTo({ top: 0, behavior: 'smooth' });
+    const el = this.contentEl?.nativeElement;
+    const scrollContainer = el?.closest<HTMLElement>('.f-screen');
+    if (scrollContainer) {
+      scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   private scrollToElement(target?: ElementRef<HTMLElement>): void {
