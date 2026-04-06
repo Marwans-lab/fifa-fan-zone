@@ -57,7 +57,7 @@ function buildSegments(): WheelSegment[] {
   const segs: WheelSegment[] = [];
   for (let i = 0; i < SEGMENT_COUNT; i++) {
     const startDeg = i * SEGMENT_ANGLE - 90 - SEGMENT_ANGLE / 2; // segment 0 midpoint at 12 o'clock
-    const endDeg = (i + 1) * SEGMENT_ANGLE - 90;
+    const endDeg = (i + 1) * SEGMENT_ANGLE - 90 - SEGMENT_ANGLE / 2;
     const startRad = degToRad(startDeg);
     const endRad = degToRad(endDeg);
     // True visual midpoint of the visible 30° segment
@@ -325,7 +325,7 @@ const SEGMENTS = buildSegments();
                       dominant-baseline="middle"
                       [attr.fill]="segmentTextFill(seg)"
                       [attr.font-weight]="segmentTextWeight(seg)"
-                      [attr.font-size]="seg.value === 10 ? '4.2' : '5.5'"
+                      font-size="5.5"
                       style="
                         font-family: var(--font-display);
                         user-select: none;
