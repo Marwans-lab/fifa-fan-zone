@@ -25,16 +25,6 @@ interface MatchCard {
 
 type CardStatus = 'hidden' | 'flipped' | 'matched' | 'mismatched';
 
-interface ConfettiParticle {
-  id: number;
-  left: string;
-  delay: string;
-  duration: string;
-  color: string;
-  size: string;
-  rotation: number;
-  rounded: boolean;
-}
 
 const LEGACY_PAIR_COUNT = 3;
 const LEGACY_ROUND_TIME = 30;
@@ -67,14 +57,6 @@ const CARD_MATCH_KEYFRAMES = `
   0% { transform: scale(0.6); opacity: 1; }
   100% { transform: scale(1.8); opacity: 0; }
 }
-@keyframes confetti-fall {
-  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(60px) rotate(360deg); opacity: 0; }
-}
-@keyframes stat-count-in {
-  0% { transform: translateY(8px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
 @keyframes card-press {
   0% { transform: scale(1); }
   50% { transform: scale(0.95); }
@@ -99,16 +81,6 @@ const CARD_MATCH_KEYFRAMES = `
 
 .card-match-shimmer {
   animation: shimmer-slide 3s ease-in-out infinite !important;
-}
-
-.card-match-confetti-particle {
-  animation-name: confetti-fall !important;
-  animation-timing-function: var(--f-brand-motion-easing-exit);
-  animation-fill-mode: forwards;
-}
-
-.card-match-stat--visible {
-  animation: stat-count-in var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit) both !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -384,134 +356,6 @@ const CARD_MATCH_KEYFRAMES = `
 
       </section>
 
-      @if (showCompletion()) {
-        <section
-          class="card-match__completion-overlay"
-          [ngStyle]="completionOverlayStyle()"
-        >
-            @if (completionVisible() && stars() >= 2) {
-              <div class="card-match__confetti" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none">
-                @for (particle of confettiParticles(); track particle.id) {
-                  <div class="card-match-confetti-particle" [ngStyle]="confettiParticleStyle(particle)"></div>
-                }
-              </div>
-            }
-
-            <div
-              class="card-match__stars"
-              style="
-                font-size: var(--text-3xl);
-                margin-bottom: var(--f-brand-space-md);
-                letter-spacing: var(--tracking-display-ultra);
-              "
-            >
-              @for (slot of starSlots; track slot) {
-                <span class="card-match__star" [ngStyle]="starStyle(slot)">⭐</span>
-              }
-            </div>
-
-            <h2
-              class="card-match__completion-heading"
-              style="
-                margin: 0 0 var(--f-brand-space-xs);
-                font: var(--f-brand-type-title-3);
-                color: var(--f-brand-color-text-default);
-                letter-spacing: var(--tracking-tight);
-              "
-            >
-              {{ completionHeading() }}
-            </h2>
-            <p
-              class="card-match__completion-desc"
-              style="
-                margin: 0 0 var(--f-brand-space-lg);
-                font-size: var(--text-sm);
-                color: var(--f-brand-color-text-subtle);
-                line-height: var(--leading-normal);
-              "
-            >
-              {{ completionDescription() }}
-            </p>
-
-            <div
-              class="card-match__completion-stats"
-              style="
-                display: flex;
-                justify-content: center;
-                gap: var(--f-brand-space-lg);
-                margin-bottom: var(--f-brand-space-xl);
-              "
-            >
-              <div class="card-match__completion-stat" style="text-align: center">
-                <div class="card-match__completion-stat-value" [ngStyle]="animatedStatStyle(showMovesStat())" [class.card-match-stat--visible]="showMovesStat()">{{ accumulatedMoves() }}</div>
-                <div
-                  class="card-match__completion-stat-label"
-                  style="
-                    margin-top: 2px;
-                    font-size: var(--text-2xs);
-                    color: var(--f-brand-color-text-subtle);
-                    letter-spacing: var(--tracking-wider);
-                    text-transform: uppercase;
-                  "
-                >
-                  Moves
-                </div>
-              </div>
-              <div class="card-match__completion-divider" style="width: 1px; background: var(--f-brand-color-border-default)"></div>
-              <div class="card-match__completion-stat" style="text-align: center">
-                <div class="card-match__completion-stat-value" [ngStyle]="animatedStatStyle(showTimeStat())" [class.card-match-stat--visible]="showTimeStat()">{{ accumulatedTimeUsed() }}s</div>
-                <div
-                  class="card-match__completion-stat-label"
-                  style="
-                    margin-top: 2px;
-                    font-size: var(--text-2xs);
-                    color: var(--f-brand-color-text-subtle);
-                    letter-spacing: var(--tracking-wider);
-                    text-transform: uppercase;
-                  "
-                >
-                  Time
-                </div>
-              </div>
-            </div>
-
-            <button
-              class="card-match__results-btn"
-              type="button"
-              (click)="goToResults()"
-              style="
-                width: 100%;
-                height: var(--sp-14);
-                border: none;
-                border-radius: var(--f-brand-radius-rounded);
-                background: var(--f-brand-color-primary);
-                color: var(--f-brand-color-text-light);
-                font: var(--f-brand-type-body-medium);
-                cursor: pointer;
-                margin-bottom: var(--f-brand-space-sm);
-              "
-            >
-              View Results
-            </button>
-            <button
-              class="card-match__play-again-btn"
-              type="button"
-              (click)="handlePlayAgain()"
-              style="
-                width: 100%;
-                height: var(--sp-14);
-                border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
-                border-radius: var(--f-brand-radius-rounded);
-                background: var(--f-brand-color-background-light);
-                color: var(--f-brand-color-text-default);
-                font: var(--f-brand-type-body-medium);
-                cursor: pointer;
-              "
-            >
-              Play Again
-            </button>
-        </section>
-      }
     </main>
   `,
   styles: [CARD_MATCH_KEYFRAMES],
@@ -538,15 +382,9 @@ export class CardMatchPage implements OnInit, OnDestroy {
   readonly matchedPairs = signal(0);
   readonly timeLeft = signal(LEGACY_ROUND_TIME);
   readonly gameComplete = signal(false);
-  readonly showCompletion = signal(false);
-  readonly completionVisible = signal(false);
-  readonly showMovesStat = signal(false);
-  readonly showTimeStat = signal(false);
-  readonly confettiParticles = signal<ConfettiParticle[]>([]);
   readonly started = signal(false);
   readonly lockInput = signal(false);
 
-  readonly starSlots = [1, 2, 3] as const;
   readonly timerSize = 48;
   readonly timerStrokeWidth = 4;
   readonly timerRadius = (this.timerSize - this.timerStrokeWidth) / 2;
@@ -565,7 +403,6 @@ export class CardMatchPage implements OnInit, OnDestroy {
     const progress = this.timeLeft() / total;
     return this.timerCircumference * (1 - progress);
   });
-  readonly stars = computed(() => this.getStars());
   readonly progressPercent = computed(() => {
     const current = this.currentRound();
     const rounds = this.totalRounds();
@@ -673,19 +510,6 @@ export class CardMatchPage implements OnInit, OnDestroy {
     window.history.back();
   }
 
-  handlePlayAgain(): void {
-    this.accumulatedScore.set(0);
-    this.accumulatedMoves.set(0);
-    this.accumulatedTimeUsed.set(0);
-    this.showCompletion.set(false);
-    this.completionVisible.set(false);
-    this.showMovesStat.set(false);
-    this.showTimeStat.set(false);
-    this.confettiParticles.set([]);
-    this.setupRound(0);
-    this.analytics.track('card_match_play_again', { flowId: this.activeQuiz()?.id ?? 'card-match' });
-  }
-
   cardButtonDisabled(cardId: string): boolean {
     return this.statuses()[cardId] !== 'hidden' || this.gameComplete() || this.lockInput();
   }
@@ -711,18 +535,6 @@ export class CardMatchPage implements OnInit, OnDestroy {
 
   formatTime(value: number): string {
     return String(Math.max(value, 0)).padStart(2, '0');
-  }
-
-  completionHeading(): string {
-    const stars = this.stars();
-    if (stars === 3) return 'Perfect!';
-    if (stars === 2) return 'Great Job!';
-    return 'Well Done!';
-  }
-
-  completionDescription(): string {
-    const rounds = this.totalRounds();
-    return `You matched all ${this.pairCount()} pairs${rounds > 1 ? ` across ${rounds} rounds` : ''}`;
   }
 
   cardOuterStyle(cardId: string): Record<string, string> {
@@ -861,63 +673,6 @@ export class CardMatchPage implements OnInit, OnDestroy {
     };
   }
 
-  completionOverlayStyle(): Record<string, string> {
-    const visible = this.completionVisible();
-    return {
-      position: 'fixed',
-      inset: '0',
-      zIndex: '100',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: visible ? 'var(--f-brand-color-background-dark-50a)' : 'transparent',
-      backdropFilter: visible ? 'blur(var(--f-brand-blur-subtle))' : 'none',
-      WebkitBackdropFilter: visible ? 'blur(var(--f-brand-blur-subtle))' : 'none',
-      transition:
-        'background var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default), backdrop-filter var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default)',
-      padding: 'var(--f-brand-space-lg)',
-    };
-  }
-
-  starStyle(slot: number): Record<string, string> {
-    const active = slot <= this.stars();
-    const visible = this.completionVisible();
-    const delay = 300 + slot * 180;
-    return {
-      opacity: active ? '1' : '0.2',
-      filter: active ? 'drop-shadow(var(--c-glow-success))' : 'none',
-      display: 'inline-block',
-      transform: visible && active ? 'scale(1) rotate(0deg)' : 'scale(0) rotate(-30deg)',
-      transition:
-        `transform var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-exit) ${delay}ms, ` +
-        `opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default) ${delay}ms`,
-    };
-  }
-
-  animatedStatStyle(visible: boolean): Record<string, string> {
-    return {
-      font: 'var(--f-brand-type-headline-medium)',
-      color: 'var(--f-brand-color-primary)',
-      opacity: visible ? '1' : '0',
-      transform: visible ? 'translateY(0)' : 'translateY(8px)',
-    };
-  }
-
-  confettiParticleStyle(particle: ConfettiParticle): Record<string, string> {
-    return {
-      position: 'absolute',
-      top: '-8px',
-      left: particle.left,
-      width: particle.size,
-      height: particle.size,
-      borderRadius: particle.rounded ? 'var(--f-brand-radius-rounded)' : '0',
-      background: particle.color,
-      animationDuration: particle.duration,
-      animationDelay: particle.delay,
-      transform: `rotate(${particle.rotation}deg)`,
-    };
-  }
-
   goToResults(): void {
     const quiz = this.activeQuiz();
     const quizId = quiz?.id ?? 'card-match';
@@ -981,8 +736,7 @@ export class CardMatchPage implements OnInit, OnDestroy {
       moves: totalMoves,
       timeUsed,
     });
-    this.triggerCompletionEntrance();
-    this.showCompletion.set(true);
+    this.goToResults();
   }
 
   private startTimer(): void {
@@ -1001,16 +755,6 @@ export class CardMatchPage implements OnInit, OnDestroy {
       window.clearInterval(this.timerId);
       this.timerId = null;
     }
-  }
-
-  private triggerCompletionEntrance(): void {
-    this.completionVisible.set(false);
-    this.showMovesStat.set(false);
-    this.showTimeStat.set(false);
-    this.confettiParticles.set(this.buildConfettiParticles());
-    this.scheduleTimeout(() => this.completionVisible.set(true), 100);
-    this.scheduleTimeout(() => this.showMovesStat.set(true), 700);
-    this.scheduleTimeout(() => this.showTimeStat.set(true), 900);
   }
 
   private queueDealIn(deck: MatchCard[]): void {
@@ -1111,32 +855,6 @@ export class CardMatchPage implements OnInit, OnDestroy {
     const moveScore = Math.max(0, pairCount - Math.max(0, moves - pairCount));
     const timeBonus = timeLeft >= 20 ? 2 : timeLeft >= 10 ? 1 : 0;
     return matchBonus + moveScore + timeBonus;
-  }
-
-  private getStars(): number {
-    if (this.matchedPairs() < this.pairCount()) return 1;
-    if (this.moves() <= this.pairCount() + 2) return 3;
-    if (this.moves() <= this.pairCount() + 6) return 2;
-    return 1;
-  }
-
-  private buildConfettiParticles(): ConfettiParticle[] {
-    const colors = [
-      'var(--f-brand-color-background-success)',
-      'var(--f-brand-color-primary)',
-      'var(--f-brand-color-status-warning)',
-      'var(--f-brand-color-accent)',
-    ];
-    return Array.from({ length: 20 }, (_, index) => ({
-      id: index,
-      left: `${Math.random() * 100}%`,
-      delay: `${Math.random() * 600}ms`,
-      duration: `${800 + Math.random() * 600}ms`,
-      color: colors[index % colors.length],
-      size: `${4 + Math.random() * 4}px`,
-      rotation: Math.random() * 360,
-      rounded: index % 3 === 0,
-    }));
   }
 
   private buildLegacyDeck(pairCount: number): MatchCard[] {
