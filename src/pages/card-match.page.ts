@@ -19,7 +19,7 @@ import { StoreService } from '../services/store.service';
 interface MatchCard {
   id: string;
   pairId: string;
-  type: 'flag' | 'name' | 'clue' | 'answer';
+  type: 'flag' | 'name' | 'clue' | 'answer' | 'image';
   display: string;
 }
 
@@ -259,6 +259,20 @@ const CARD_MATCH_KEYFRAMES = `
                 <div class="card-match__card-front" [ngStyle]="cardFrontStyle(card.id)">
                   @if (card.type === 'flag') {
                     <span class="card-match__card-flag" [ngStyle]="flagTextStyle()">{{ card.display }}</span>
+                  } @else if (card.type === 'image') {
+                    <img
+                      class="card-match__card-image"
+                      [src]="card.display"
+                      alt=""
+                      style="
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        position: absolute;
+                        inset: 0;
+                        border-radius: var(--f-brand-radius-small);
+                      "
+                    />
                   } @else if (card.type === 'clue') {
                     <span class="card-match__card-clue" [ngStyle]="clueTextStyle()">{{ card.display }}</span>
                   } @else {
@@ -881,12 +895,21 @@ export class CardMatchPage implements OnInit, OnDestroy {
     const selectedPairs = this.shuffle([...pairs]).slice(0, pairCount);
     const cards: MatchCard[] = [];
     for (const pair of selectedPairs) {
-      cards.push({
-        id: `${pair.id}-clue`,
-        pairId: pair.id,
-        type: 'clue',
-        display: pair.clue,
-      });
+      if (pair.imageUrl) {
+        cards.push({
+          id: `${pair.id}-image`,
+          pairId: pair.id,
+          type: 'image',
+          display: pair.imageUrl,
+        });
+      } else {
+        cards.push({
+          id: `${pair.id}-clue`,
+          pairId: pair.id,
+          type: 'clue',
+          display: pair.clue,
+        });
+      }
       cards.push({
         id: `${pair.id}-answer`,
         pairId: pair.id,
