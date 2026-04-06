@@ -72,14 +72,8 @@
         >
           Return home
         </app-button>
-        <app-button variant="ghost" [fullWidth]="true" (clicked)="onPlayAgain()">
-          Play another quiz
-        </app-button>
       } @else {
-        <app-button [fullWidth]="true" (clicked)="onPlayAgain()">
-          Play a quiz
-        </app-button>
-        <app-button variant="ghost" [fullWidth]="true" (clicked)="onReturnHome()">
+        <app-button [fullWidth]="true" (clicked)="onReturnHome()">
           Return home
         </app-button>
       }
