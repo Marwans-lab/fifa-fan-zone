@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 400" width="750" height="400">
+  <defs>
+    <linearGradient id="bg-c" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A1628"/>
+      <stop offset="60%" stop-color="#1A0830"/>
+      <stop offset="100%" stop-color="#3D0A1E"/>
+    </linearGradient>
+    <linearGradient id="plane-c" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8E2157"/>
+      <stop offset="100%" stop-color="#C0436E"/>
+    </linearGradient>
+    <radialGradient id="glow-c" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#8E2157" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#8E2157" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur-c">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="750" height="400" fill="url(#bg-c)"/>
+
+  <!-- Subtle grid dots (world map effect) -->
+  <g fill="#FFFFFF" opacity="0.06">
+    <circle cx="60" cy="80" r="2"/><circle cx="120" cy="80" r="2"/><circle cx="180" cy="80" r="2"/><circle cx="240" cy="80" r="2"/><circle cx="300" cy="80" r="2"/><circle cx="360" cy="80" r="2"/><circle cx="420" cy="80" r="2"/><circle cx="480" cy="80" r="2"/><circle cx="540" cy="80" r="2"/><circle cx="600" cy="80" r="2"/><circle cx="660" cy="80" r="2"/><circle cx="720" cy="80" r="2"/>
+    <circle cx="60" cy="140" r="2"/><circle cx="120" cy="140" r="2"/><circle cx="180" cy="140" r="2"/><circle cx="240" cy="140" r="2"/><circle cx="300" cy="140" r="2"/><circle cx="360" cy="140" r="2"/><circle cx="420" cy="140" r="2"/><circle cx="480" cy="140" r="2"/><circle cx="540" cy="140" r="2"/><circle cx="600" cy="140" r="2"/><circle cx="660" cy="140" r="2"/><circle cx="720" cy="140" r="2"/>
+    <circle cx="60" cy="200" r="2"/><circle cx="120" cy="200" r="2"/><circle cx="180" cy="200" r="2"/><circle cx="240" cy="200" r="2"/><circle cx="300" cy="200" r="2"/><circle cx="360" cy="200" r="2"/><circle cx="420" cy="200" r="2"/><circle cx="480" cy="200" r="2"/><circle cx="540" cy="200" r="2"/><circle cx="600" cy="200" r="2"/><circle cx="660" cy="200" r="2"/><circle cx="720" cy="200" r="2"/>
+    <circle cx="60" cy="260" r="2"/><circle cx="120" cy="260" r="2"/><circle cx="180" cy="260" r="2"/><circle cx="240" cy="260" r="2"/><circle cx="300" cy="260" r="2"/><circle cx="360" cy="260" r="2"/><circle cx="420" cy="260" r="2"/><circle cx="480" cy="260" r="2"/><circle cx="540" cy="260" r="2"/><circle cx="600" cy="260" r="2"/><circle cx="660" cy="260" r="2"/><circle cx="720" cy="260" r="2"/>
+    <circle cx="60" cy="320" r="2"/><circle cx="120" cy="320" r="2"/><circle cx="180" cy="320" r="2"/><circle cx="240" cy="320" r="2"/><circle cx="300" cy="320" r="2"/><circle cx="360" cy="320" r="2"/><circle cx="420" cy="320" r="2"/><circle cx="480" cy="320" r="2"/><circle cx="540" cy="320" r="2"/><circle cx="600" cy="320" r="2"/><circle cx="660" cy="320" r="2"/><circle cx="720" cy="320" r="2"/>
+  </g>
+
+  <!-- Globe arc -->
+  <circle cx="375" cy="200" r="200" fill="none" stroke="#8E2157" stroke-width="1" opacity="0.25"/>
+  <circle cx="375" cy="200" r="150" fill="none" stroke="#8E2157" stroke-width="1" opacity="0.2"/>
+  <ellipse cx="375" cy="200" rx="200" ry="80" fill="none" stroke="#8E2157" stroke-width="1" opacity="0.2"/>
+  <ellipse cx="375" cy="200" rx="100" ry="200" fill="none" stroke="#8E2157" stroke-width="1" opacity="0.15"/>
+
+  <!-- Glow behind plane -->
+  <ellipse cx="375" cy="200" rx="120" ry="60" fill="url(#glow-c)" filter="url(#blur-c)"/>
+
+  <!-- Flight route arcs -->
+  <path d="M120,280 Q375,80 630,260" fill="none" stroke="#C0436E" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.6"/>
+  <path d="M80,200 Q375,50 680,180" fill="none" stroke="#8E2157" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.5"/>
+  <path d="M150,320 Q400,180 680,290" fill="none" stroke="#C0436E" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.4"/>
+
+  <!-- Route dot nodes -->
+  <circle cx="120" cy="280" r="4" fill="#8E2157" opacity="0.8"/>
+  <circle cx="630" cy="260" r="4" fill="#8E2157" opacity="0.8"/>
+  <circle cx="80" cy="200" r="4" fill="#C0436E" opacity="0.8"/>
+  <circle cx="680" cy="180" r="4" fill="#C0436E" opacity="0.8"/>
+  <circle cx="150" cy="320" r="4" fill="#8E2157" opacity="0.7"/>
+  <circle cx="680" cy="290" r="4" fill="#8E2157" opacity="0.7"/>
+
+  <!-- Plane silhouette (centered) -->
+  <g transform="translate(310, 172) scale(1.1)">
+    <!-- Body -->
+    <path d="M0,26 L110,26 Q130,26 130,16 Q130,6 110,6 L0,6 Z" fill="url(#plane-c)" opacity="0.95"/>
+    <!-- Nose -->
+    <path d="M110,6 L140,16 L110,26 Z" fill="#C0436E"/>
+    <!-- Wings -->
+    <path d="M50,6 L20,-20 L10,-20 L40,6 Z" fill="#8E2157" opacity="0.9"/>
+    <path d="M50,26 L20,52 L10,52 L40,26 Z" fill="#8E2157" opacity="0.9"/>
+    <!-- Tail fin -->
+    <path d="M0,6 L-18,-8 L-14,-8 L2,6 Z" fill="#C0436E" opacity="0.9"/>
+    <!-- Windows -->
+    <rect x="60" y="10" width="8" height="6" rx="2" fill="white" opacity="0.5"/>
+    <rect x="75" y="10" width="8" height="6" rx="2" fill="white" opacity="0.5"/>
+    <rect x="90" y="10" width="8" height="6" rx="2" fill="white" opacity="0.5"/>
+  </g>
+
+  <!-- Destination labels -->
+  <text x="105" y="298" font-family="sans-serif" font-size="10" fill="white" opacity="0.6" text-anchor="middle">DOHA</text>
+  <text x="645" y="250" font-family="sans-serif" font-size="10" fill="white" opacity="0.6" text-anchor="middle">NEW YORK</text>
+  <text x="695" y="170" font-family="sans-serif" font-size="10" fill="white" opacity="0.6" text-anchor="middle">TORONTO</text>
+
+  <!-- Title -->
+  <text x="375" y="360" font-family="sans-serif" font-size="22" font-weight="700" fill="white" opacity="0.9" text-anchor="middle" letter-spacing="3">THE CONNECTOR</text>
+  <text x="375" y="382" font-family="sans-serif" font-size="11" fill="#C0436E" opacity="0.8" text-anchor="middle" letter-spacing="2">QATAR AIRWAYS ROUTES QUIZ</text>
+</svg>
