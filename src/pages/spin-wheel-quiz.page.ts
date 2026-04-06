@@ -440,7 +440,7 @@ const SEGMENTS = buildSegments();
               <!-- ── Fixed pointer at 12 o'clock (2× size, rounded top corners) ── -->
               <path
                 class="spin-wheel__pointer"
-                d="M 50,10 L 44,1.5 Q 44,0 45.5,0 L 54.5,0 Q 56,0 56,1.5 Z"
+                d="M 50,10 L 48.2,7.45 Q 48.2,7 48.65,7 L 51.35,7 Q 51.8,7 51.8,7.45 Z"
                 style="fill: var(--f-brand-color-background-dark); pointer-events: none;"
               />
             </svg>
