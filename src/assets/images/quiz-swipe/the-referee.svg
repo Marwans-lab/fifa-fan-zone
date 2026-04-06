@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500">
+  <defs>
+    <linearGradient id="bg-ref" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A1F0A"/>
+      <stop offset="50%" stop-color="#0D2B0D"/>
+      <stop offset="100%" stop-color="#051205"/>
+    </linearGradient>
+    <linearGradient id="pitch-ref" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1A4D1A"/>
+      <stop offset="100%" stop-color="#0F3010"/>
+    </linearGradient>
+    <linearGradient id="card-yellow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#FFA500"/>
+    </linearGradient>
+    <radialGradient id="glow-ref" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#FFD700" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#FFD700" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow-ref" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <filter id="blur-ref">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="500" fill="url(#bg-ref)"/>
+
+  <!-- Pitch stripes -->
+  <rect x="0" y="240" width="400" height="260" fill="url(#pitch-ref)" opacity="0.9"/>
+  <rect x="0" y="240" width="66" height="260" fill="#1C521C" opacity="0.4"/>
+  <rect x="132" y="240" width="66" height="260" fill="#1C521C" opacity="0.4"/>
+  <rect x="264" y="240" width="66" height="260" fill="#1C521C" opacity="0.4"/>
+  <rect x="330" y="240" width="70" height="260" fill="#1C521C" opacity="0.4"/>
+
+  <!-- Glow -->
+  <ellipse cx="200" cy="200" rx="180" ry="140" fill="url(#glow-ref)" filter="url(#blur-ref)"/>
+
+  <!-- Pitch markings -->
+  <line x1="0" y1="262" x2="400" y2="262" stroke="white" stroke-width="2" opacity="0.4"/>
+  <!-- Center circle -->
+  <circle cx="200" cy="370" r="55" fill="none" stroke="white" stroke-width="2" opacity="0.35"/>
+  <circle cx="200" cy="370" r="4" fill="white" opacity="0.4"/>
+  <!-- Penalty box -->
+  <rect x="100" y="420" width="200" height="80" fill="none" stroke="white" stroke-width="2" opacity="0.35"/>
+  <!-- Goal box -->
+  <rect x="150" y="460" width="100" height="40" fill="none" stroke="white" stroke-width="2" opacity="0.3"/>
+  <!-- Penalty spot -->
+  <circle cx="200" cy="450" r="3" fill="white" opacity="0.4"/>
+
+  <!-- Referee figure silhouette -->
+  <!-- Head -->
+  <circle cx="200" cy="105" r="28" fill="#1A1A1A" opacity="0.9"/>
+  <!-- Neck -->
+  <rect x="192" y="128" width="16" height="14" rx="4" fill="#1A1A1A" opacity="0.9"/>
+  <!-- Body (black & white striped shirt) -->
+  <rect x="160" y="140" width="80" height="70" rx="8" fill="#1A1A1A" opacity="0.9"/>
+  <!-- Shirt stripes -->
+  <rect x="174" y="140" width="12" height="70" rx="2" fill="white" opacity="0.7"/>
+  <rect x="198" y="140" width="12" height="70" rx="2" fill="white" opacity="0.7"/>
+  <rect x="222" y="140" width="12" height="70" rx="2" fill="white" opacity="0.7"/>
+  <!-- Arms -->
+  <line x1="160" y1="155" x2="120" y2="185" stroke="#1A1A1A" stroke-width="16" stroke-linecap="round" opacity="0.9"/>
+  <line x1="240" y1="155" x2="270" y2="175" stroke="#1A1A1A" stroke-width="16" stroke-linecap="round" opacity="0.9"/>
+  <!-- Shorts -->
+  <rect x="165" y="208" width="30" height="36" rx="4" fill="#111" opacity="0.95"/>
+  <rect x="205" y="208" width="30" height="36" rx="4" fill="#111" opacity="0.95"/>
+  <!-- Legs -->
+  <rect x="170" y="242" width="18" height="48" rx="6" fill="#222" opacity="0.9"/>
+  <rect x="212" y="242" width="18" height="48" rx="6" fill="#222" opacity="0.9"/>
+  <!-- Socks -->
+  <rect x="168" y="280" width="22" height="18" rx="4" fill="#1A4D1A" opacity="0.9"/>
+  <rect x="210" y="280" width="22" height="18" rx="4" fill="#1A4D1A" opacity="0.9"/>
+  <!-- Shoes -->
+  <ellipse cx="179" cy="300" rx="14" ry="7" fill="#0A0A0A" opacity="0.95"/>
+  <ellipse cx="221" cy="300" rx="14" ry="7" fill="#0A0A0A" opacity="0.95"/>
+
+  <!-- Yellow card held up (right arm raised) -->
+  <line x1="270" y1="175" x2="278" y2="118" stroke="#1A1A1A" stroke-width="16" stroke-linecap="round" opacity="0.9"/>
+  <!-- Card shadow/glow -->
+  <rect x="270" y="68" width="36" height="50" rx="4" fill="#FFD700" filter="url(#blur-ref)" opacity="0.5"/>
+  <!-- Yellow card -->
+  <rect x="272" y="60" width="36" height="50" rx="5" fill="url(#card-yellow)" filter="url(#shadow-ref)" opacity="0.95"/>
+  <!-- Card shine -->
+  <rect x="276" y="64" width="10" height="42" rx="3" fill="white" opacity="0.15"/>
+
+  <!-- Whistle on cord -->
+  <line x1="200" y1="140" x2="155" y2="165" stroke="#888" stroke-width="2" opacity="0.7" stroke-dasharray="3,2"/>
+  <ellipse cx="145" cy="168" rx="9" ry="6" fill="#C0A050" opacity="0.9"/>
+  <rect x="136" y="165" width="5" height="6" rx="1" fill="#A08040" opacity="0.9"/>
+
+  <!-- Title area -->
+  <rect x="0" y="320" width="400" height="2" fill="white" opacity="0.15"/>
+
+  <!-- Text label at bottom -->
+  <rect x="0" y="450" width="400" height="50" fill="black" opacity="0.45"/>
+  <text x="200" y="476" font-family="sans-serif" font-size="20" font-weight="700" fill="white" opacity="0.95" text-anchor="middle" letter-spacing="3">THE REFEREE</text>
+  <text x="200" y="494" font-family="sans-serif" font-size="10" fill="#FFD700" opacity="0.85" text-anchor="middle" letter-spacing="2">TRUE OR FALSE</text>
+</svg>
