@@ -328,7 +328,7 @@ const SEGMENTS = buildSegments();
                       [attr.font-weight]="segmentTextWeight(seg)"
                       font-size="5.5"
                       style="
-                        font-family: var(--font-display);
+                        font-family: var(--f-base-type-family-primary);
                         user-select: none;
                         pointer-events: none;
                       "
@@ -363,10 +363,10 @@ const SEGMENTS = buildSegments();
                   text-anchor="middle"
                   dominant-baseline="central"
                   font-size="11"
-                  font-weight="600"
                   style="
                     fill: var(--c-lt-text-1);
-                    font-family: var(--font-display);
+                    font-family: var(--f-base-type-family-primary);
+                    font-weight: var(--f-base-type-weight-medium);
                     user-select: none;
                     pointer-events: none;
                   "
