@@ -309,7 +309,8 @@ const SEGMENTS = buildSegments();
 
               <!-- ── Rotating segments group ── -->
               <g class="spin-wheel__segments" [ngStyle]="wheelGroupStyle()" filter="url(#seg-shadow)">
-                @for (seg of segments; track seg.index) {
+                <!-- Pass 1: unselected segments (background layer) -->
+                @for (seg of unselectedSegments(); track seg.index) {
                   <path
                     class="spin-wheel__segment"
                     [attr.d]="seg.path"
@@ -333,6 +334,33 @@ const SEGMENTS = buildSegments();
                         pointer-events: none;
                       "
                     >{{ seg.label }}</text>
+                  }
+                }
+                <!-- Pass 2: selected segment (painted last for consistent size) -->
+                @if (selectedSegment(); as sel) {
+                  <path
+                    class="spin-wheel__segment spin-wheel__segment--selected"
+                    [attr.d]="sel.path"
+                    [attr.fill]="segmentFill(sel)"
+                    style="stroke: var(--c-lt-white); stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round;"
+                  />
+                  @if (sel.label) {
+                    <text
+                      class="spin-wheel__segment-label spin-wheel__segment-label--selected"
+                      [attr.x]="f2(sel.textX)"
+                      [attr.y]="f2(sel.textY)"
+                      [attr.transform]="textTransform(sel)"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      [attr.fill]="segmentTextFill(sel)"
+                      [attr.font-weight]="segmentTextWeight(sel)"
+                      font-size="5.5"
+                      style="
+                        font-family: var(--f-base-type-family-primary);
+                        user-select: none;
+                        pointer-events: none;
+                      "
+                    >{{ sel.label }}</text>
                   }
                 }
               </g>
@@ -529,6 +557,12 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
 
   /** The numeric value at the pointer. -1 means the blank spacer segment. */
   readonly selectedValue = computed(() => SEGMENT_VALUES[this.selectedIndex()]);
+
+  /** The currently selected segment object (rendered last for consistent paint order). */
+  readonly selectedSegment = computed(() => SEGMENTS[this.selectedIndex()]);
+
+  /** All segments except the selected one (rendered first as background layer). */
+  readonly unselectedSegments = computed(() => SEGMENTS.filter((_, i) => i !== this.selectedIndex()));
 
   /** Text shown in the centre circle. */
   readonly centreLabel = computed(() => {
