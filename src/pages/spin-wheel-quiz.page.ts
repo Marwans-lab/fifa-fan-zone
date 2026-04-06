@@ -36,7 +36,12 @@ const INITIAL_ROTATION = -5 * SEGMENT_ANGLE;
 const SNAP_SPRING = 'cubic-bezier(0.2, 1.4, 0.3, 1)';
 const SLIDE_TRANSITION =
   'transform var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default), opacity var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default)';
-const SLIDE_EXIT_MS = 250;
+// --f-brand-motion-duration-instant = 240ms
+const SLIDE_EXIT_MS = 240;
+// --f-brand-motion-duration-quick = 480ms
+const SNAP_SCALE_DURATION_MS = 480;
+// --f-brand-motion-duration-instant = 240ms
+const CENTRE_SCALE_DURATION_MS = 240;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface WheelSegment {
@@ -868,7 +873,7 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
       this.snapScaleTimeoutId = window.setTimeout(() => {
         this.snapScale.set(1);
         this.snapScaleTimeoutId = null;
-      }, 480);
+      }, SNAP_SCALE_DURATION_MS);
     }
   }
 
@@ -878,7 +883,7 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
     this.centreScaleTimeoutId = window.setTimeout(() => {
       this.centreScale.set(1);
       this.centreScaleTimeoutId = null;
-    }, 240);
+    }, CENTRE_SCALE_DURATION_MS);
   }
 
   private computePoints(submitted: number, q: SpinWheelQuestion): number {
