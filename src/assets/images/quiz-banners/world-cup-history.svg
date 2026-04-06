@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 400" width="750" height="400">
+  <defs>
+    <linearGradient id="bg-h" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A1000"/>
+      <stop offset="50%" stop-color="#2D1A00"/>
+      <stop offset="100%" stop-color="#0A0A00"/>
+    </linearGradient>
+    <linearGradient id="trophy-h" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFD700"/>
+      <stop offset="50%" stop-color="#FFA500"/>
+      <stop offset="100%" stop-color="#CC7700"/>
+    </linearGradient>
+    <radialGradient id="glow-h" cx="50%" cy="45%" r="40%">
+      <stop offset="0%" stop-color="#FFD700" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#FFD700" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur-h">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="750" height="400" fill="url(#bg-h)"/>
+
+  <!-- Starburst lines emanating from trophy -->
+  <g stroke="#FFD700" stroke-width="1" opacity="0.1" transform="translate(375, 180)">
+    <line x1="0" y1="-250" x2="0" y2="-80"/>
+    <line x1="0" y1="80" x2="0" y2="250"/>
+    <line x1="-250" y1="0" x2="-80" y2="0"/>
+    <line x1="80" y1="0" x2="250" y2="0"/>
+    <line x1="-177" y1="-177" x2="-57" y2="-57"/>
+    <line x1="57" y1="57" x2="177" y2="177"/>
+    <line x1="177" y1="-177" x2="57" y2="-57"/>
+    <line x1="-57" y1="57" x2="-177" y2="177"/>
+    <line x1="-235" y1="-96" x2="-75" y2="-31"/>
+    <line x1="75" y1="31" x2="235" y2="96"/>
+    <line x1="235" y1="-96" x2="75" y2="-31"/>
+    <line x1="-75" y1="31" x2="-235" y2="96"/>
+    <line x1="-96" y1="-235" x2="-31" y2="-75"/>
+    <line x1="31" y1="75" x2="96" y2="235"/>
+    <line x1="96" y1="-235" x2="31" y2="-75"/>
+    <line x1="-31" y1="75" x2="-96" y2="235"/>
+  </g>
+
+  <!-- Glow behind trophy -->
+  <ellipse cx="375" cy="185" rx="140" ry="120" fill="url(#glow-h)" filter="url(#blur-h)"/>
+
+  <!-- Trophy silhouette -->
+  <g transform="translate(295, 60)">
+    <!-- Cup bowl -->
+    <path d="M50,0 L110,0 L125,60 Q130,100 80,110 Q30,100 35,60 Z" fill="url(#trophy-h)" opacity="0.95"/>
+    <!-- Handles -->
+    <path d="M35,15 Q10,15 10,40 Q10,65 35,65" fill="none" stroke="url(#trophy-h)" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+    <path d="M125,15 Q150,15 150,40 Q150,65 125,65" fill="none" stroke="url(#trophy-h)" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+    <!-- Stem -->
+    <rect x="68" y="110" width="24" height="35" rx="2" fill="url(#trophy-h)" opacity="0.85"/>
+    <!-- Base -->
+    <rect x="48" y="145" width="64" height="12" rx="4" fill="#CC7700" opacity="0.9"/>
+    <rect x="38" y="157" width="84" height="8" rx="3" fill="#AA5500" opacity="0.85"/>
+    <!-- Trophy shine -->
+    <path d="M65,10 Q70,5 80,8 Q70,30 60,50 Q55,45 62,20 Z" fill="white" opacity="0.25"/>
+  </g>
+
+  <!-- Year milestones -->
+  <g font-family="sans-serif" font-weight="700" text-anchor="middle" opacity="0.5">
+    <text x="120" y="300" font-size="13" fill="#FFD700">1930</text>
+    <text x="190" y="270" font-size="13" fill="#FFD700">1966</text>
+    <text x="270" y="310" font-size="13" fill="#FFD700">1994</text>
+    <text x="480" y="280" font-size="13" fill="#FFD700">2002</text>
+    <text x="570" y="300" font-size="13" fill="#FFD700">2014</text>
+    <text x="640" y="270" font-size="13" fill="#FFD700">2022</text>
+  </g>
+
+  <!-- Stars above trophy -->
+  <g fill="#FFD700" opacity="0.7">
+    <polygon points="310,45 313,55 323,55 315,61 318,71 310,65 302,71 305,61 297,55 307,55" transform="scale(0.7) translate(130,-10)"/>
+    <polygon points="375,30 379,43 393,43 382,51 386,64 375,56 364,64 368,51 357,43 371,43" transform="scale(0.9)"/>
+    <polygon points="440,45 443,55 453,55 445,61 448,71 440,65 432,71 435,61 427,55 437,55" transform="scale(0.7) translate(-130,-10)"/>
+  </g>
+
+  <!-- Title -->
+  <text x="375" y="358" font-family="sans-serif" font-size="22" font-weight="700" fill="#FFD700" opacity="0.95" text-anchor="middle" letter-spacing="3">WORLD CUP HISTORY</text>
+  <text x="375" y="380" font-family="sans-serif" font-size="11" fill="#FFA500" opacity="0.75" text-anchor="middle" letter-spacing="2">FIFA TRIVIA CHALLENGE</text>
+</svg>
