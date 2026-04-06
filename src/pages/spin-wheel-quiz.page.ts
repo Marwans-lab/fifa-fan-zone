@@ -500,13 +500,15 @@ const SEGMENTS = buildSegments();
             [ngStyle]="actionBtnStyle()"
             style="
               width: 100%;
-              height: var(--sp-16);
-              border-radius: var(--r-xl);
-              border: none;
-              font: var(--f-brand-type-body-medium);
-              display: flex;
+              min-height: 44px;
+              padding: var(--f-brand-space-xs) var(--f-brand-space-md);
+              border-radius: var(--f-brand-radius-rounded, 999px);
+              border: var(--f-brand-border-size-default) solid transparent;
+              font: var(--f-brand-type-subheading);
+              display: inline-flex;
               align-items: center;
               justify-content: center;
+              gap: var(--f-brand-space-sm);
               transition:
                 background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default),
                 color var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
@@ -529,6 +531,12 @@ const SEGMENTS = buildSegments();
       .spin-wheel__back-btn:focus-visible {
         outline: var(--f-brand-border-size-focused) solid var(--f-brand-color-border-focused);
         outline-offset: var(--f-brand-space-xs);
+      }
+      .spin-wheel__action-btn:hover:not(:disabled) {
+        background: var(--f-brand-color-background-primary-hover) !important;
+      }
+      .spin-wheel__action-btn:active:not(:disabled) {
+        background: var(--f-brand-color-background-primary-hover) !important;
       }
       .spin-wheel__action-btn:focus-visible {
         outline: var(--f-brand-border-size-focused) solid var(--f-brand-color-border-focused);
@@ -686,12 +694,14 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
       return {
         background: 'var(--f-brand-color-background-disabled)',
         color: 'var(--f-brand-color-text-disabled)',
+        borderColor: 'transparent',
         cursor: 'not-allowed',
       };
     }
     return {
-      background: 'var(--c-lt-text-1)',
-      color: 'var(--c-lt-white)',
+      background: 'var(--f-brand-color-background-primary)',
+      color: 'var(--f-brand-color-text-light)',
+      borderColor: 'transparent',
       cursor: 'pointer',
     };
   });
