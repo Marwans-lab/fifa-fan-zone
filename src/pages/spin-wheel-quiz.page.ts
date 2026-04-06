@@ -152,6 +152,7 @@ const SEGMENTS = buildSegments();
               align-items: center;
               justify-content: center;
               flex-shrink: 0;
+              transition: background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
             "
           >
             <svg class="spin-wheel__back-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -482,6 +483,16 @@ const SEGMENTS = buildSegments();
   `,
   styles: [
     `
+      .spin-wheel__back-btn:hover {
+        background: var(--f-brand-color-background-default) !important;
+      }
+      .spin-wheel__back-btn:active {
+        background: var(--f-brand-color-background-subtle) !important;
+      }
+      .spin-wheel__back-btn:focus-visible {
+        outline: var(--f-brand-border-size-focused) solid var(--f-brand-color-border-focused);
+        outline-offset: var(--f-brand-space-xs);
+      }
       .spin-wheel__action-btn:focus-visible {
         outline: var(--f-brand-border-size-focused) solid var(--f-brand-color-border-focused);
         outline-offset: var(--f-brand-space-xs);
