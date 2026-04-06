@@ -741,9 +741,10 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
 
   // ── Template helpers ──────────────────────────────────────────────────────
 
-  /** Fill colour for a wheel segment: accent for selected, white for all others. */
+  /** Fill colour for a wheel segment: accent for selected, default for blank, white for others. */
   segmentFill(seg: WheelSegment): string {
     if (seg.index === this.selectedIndex()) return 'var(--f-brand-color-background-accent)';
+    if (seg.value === -1) return 'var(--f-brand-color-background-default)';
     return 'var(--f-brand-color-background-light)';
   }
 
