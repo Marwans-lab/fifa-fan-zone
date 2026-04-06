@@ -159,6 +159,7 @@ const SEGMENTS = buildSegments();
           >
             <svg class="spin-wheel__back-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path
+                class="spin-wheel__back-icon-path"
                 d="M3 3l10 10M13 3L3 13"
                 stroke="var(--c-lt-text-1)"
                 stroke-width="2"
