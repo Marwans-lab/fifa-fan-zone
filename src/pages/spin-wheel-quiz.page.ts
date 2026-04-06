@@ -325,7 +325,7 @@ const SEGMENTS = buildSegments();
                       dominant-baseline="middle"
                       [attr.fill]="segmentTextFill(seg)"
                       [attr.font-weight]="segmentTextWeight(seg)"
-                      font-size="5.5"
+                      [attr.font-size]="seg.value === 10 ? '4.2' : '5.5'"
                       style="
                         font-family: var(--font-display);
                         user-select: none;
