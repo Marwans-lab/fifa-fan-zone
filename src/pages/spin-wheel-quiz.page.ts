@@ -27,6 +27,7 @@ const INNER_RADIUS = 22;
 const CX = 50;
 const CY = 50;
 const SEGMENT_GAP_DEG = 1.2; // gap between segments (outer ring shows through)
+const CORNER_RADIUS = 1.5; // rounding radius for segment corners (≈4px at viewBox scale)
 // Values 0–10, one per segment
 const SEGMENT_VALUES: readonly number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 // Initial rotation shows value 5 (index 5) at the pointer
@@ -54,37 +55,81 @@ function degToRad(deg: number): number {
   return (deg * Math.PI) / 180;
 }
 
+/** Interpolate a point along the line from (ax,ay) to (bx,by) by distance d. */
+function offsetPoint(ax: number, ay: number, bx: number, by: number, d: number): [number, number] {
+  const dx = bx - ax;
+  const dy = by - ay;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  if (len === 0) return [ax, ay];
+  return [ax + (dx / len) * d, ay + (dy / len) * d];
+}
+
+/** Interpolate a point along an arc of given radius by angular offset (radians). */
+function arcOffset(cx: number, cy: number, r: number, angle: number, delta: number): [number, number] {
+  return [cx + r * Math.cos(angle + delta), cy + r * Math.sin(angle + delta)];
+}
+
 function buildSegments(): WheelSegment[] {
   const segs: WheelSegment[] = [];
+  const r = CORNER_RADIUS;
+  // Angular offset that corresponds to CORNER_RADIUS along each arc
+  const outerAngOff = r / OUTER_RADIUS;
+  const innerAngOff = r / INNER_RADIUS;
+
   for (let i = 0; i < SEGMENT_COUNT; i++) {
     const halfGap = SEGMENT_GAP_DEG / 2;
     const startDeg = i * SEGMENT_ANGLE - 90 - SEGMENT_ANGLE / 2 + halfGap;
     const endDeg = (i + 1) * SEGMENT_ANGLE - 90 - SEGMENT_ANGLE / 2 - halfGap;
     const startRad = degToRad(startDeg);
     const endRad = degToRad(endDeg);
-    // True visual midpoint of the visible 30° segment
     const midRad = degToRad(i * SEGMENT_ANGLE - 90);
 
-    // Outer arc points (clockwise)
-    const ox1 = (CX + OUTER_RADIUS * Math.cos(startRad)).toFixed(3);
-    const oy1 = (CY + OUTER_RADIUS * Math.sin(startRad)).toFixed(3);
-    const ox2 = (CX + OUTER_RADIUS * Math.cos(endRad)).toFixed(3);
-    const oy2 = (CY + OUTER_RADIUS * Math.sin(endRad)).toFixed(3);
+    // Raw corner points
+    const ox1x = CX + OUTER_RADIUS * Math.cos(startRad);
+    const ox1y = CY + OUTER_RADIUS * Math.sin(startRad);
+    const ox2x = CX + OUTER_RADIUS * Math.cos(endRad);
+    const ox2y = CY + OUTER_RADIUS * Math.sin(endRad);
+    const ix2x = CX + INNER_RADIUS * Math.cos(endRad);
+    const ix2y = CY + INNER_RADIUS * Math.sin(endRad);
+    const ix1x = CX + INNER_RADIUS * Math.cos(startRad);
+    const ix1y = CY + INNER_RADIUS * Math.sin(startRad);
 
-    // Inner arc points (counter-clockwise for closing)
-    const ix2 = (CX + INNER_RADIUS * Math.cos(endRad)).toFixed(3);
-    const iy2 = (CY + INNER_RADIUS * Math.sin(endRad)).toFixed(3);
-    const ix1 = (CX + INNER_RADIUS * Math.cos(startRad)).toFixed(3);
-    const iy1 = (CY + INNER_RADIUS * Math.sin(startRad)).toFixed(3);
+    // Corner 1: inner-start → outer-start (start radial meets outer arc)
+    const [c1a_x, c1a_y] = offsetPoint(ox1x, ox1y, ix1x, ix1y, r); // inset along radial
+    const [c1b_x, c1b_y] = arcOffset(CX, CY, OUTER_RADIUS, startRad, outerAngOff); // inset along outer arc
 
-    // Donut arc path: outer clockwise, inner counter-clockwise
-    const path = `M ${ox1} ${oy1} A ${OUTER_RADIUS} ${OUTER_RADIUS} 0 0 1 ${ox2} ${oy2} L ${ix2} ${iy2} A ${INNER_RADIUS} ${INNER_RADIUS} 0 0 0 ${ix1} ${iy1} Z`;
+    // Corner 2: outer arc end → end radial (outer arc meets end radial)
+    const [c2a_x, c2a_y] = arcOffset(CX, CY, OUTER_RADIUS, endRad, -outerAngOff);
+    const [c2b_x, c2b_y] = offsetPoint(ox2x, ox2y, ix2x, ix2y, r);
+
+    // Corner 3: end radial → inner arc (end radial meets inner arc)
+    const [c3a_x, c3a_y] = offsetPoint(ix2x, ix2y, ox2x, ox2y, r);
+    const [c3b_x, c3b_y] = arcOffset(CX, CY, INNER_RADIUS, endRad, -innerAngOff);
+
+    // Corner 4: inner arc → start radial (inner arc meets start radial)
+    const [c4a_x, c4a_y] = arcOffset(CX, CY, INNER_RADIUS, startRad, innerAngOff);
+    const [c4b_x, c4b_y] = offsetPoint(ix1x, ix1y, ox1x, ox1y, r);
+
+    const f = (n: number) => n.toFixed(3);
+
+    // Build path with quadratic Bézier corners
+    const path = [
+      `M ${f(c1a_x)} ${f(c1a_y)}`,                                                         // start inset from corner 1
+      `Q ${f(ox1x)} ${f(ox1y)} ${f(c1b_x)} ${f(c1b_y)}`,                                   // round corner 1
+      `A ${OUTER_RADIUS} ${OUTER_RADIUS} 0 0 1 ${f(c2a_x)} ${f(c2a_y)}`,                   // outer arc
+      `Q ${f(ox2x)} ${f(ox2y)} ${f(c2b_x)} ${f(c2b_y)}`,                                   // round corner 2
+      `L ${f(c3a_x)} ${f(c3a_y)}`,                                                          // end radial line
+      `Q ${f(ix2x)} ${f(ix2y)} ${f(c3b_x)} ${f(c3b_y)}`,                                   // round corner 3
+      `A ${INNER_RADIUS} ${INNER_RADIUS} 0 0 0 ${f(c4a_x)} ${f(c4a_y)}`,                   // inner arc
+      `Q ${f(ix1x)} ${f(ix1y)} ${f(c4b_x)} ${f(c4b_y)}`,                                   // round corner 4
+      'Z',
+    ].join(' ');
 
     // Text positioned at arc midpoint
     const midTextR = (OUTER_RADIUS + INNER_RADIUS) / 2;
     const textX = CX + midTextR * Math.cos(midRad);
     const textY = CY + midTextR * Math.sin(midRad);
-    const textAngle = (midRad * 180) / Math.PI + 90; // rotate to read radially
+    const textAngle = (midRad * 180) / Math.PI + 90;
 
     segs.push({
       index: i,
