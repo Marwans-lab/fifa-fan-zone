@@ -417,7 +417,7 @@ const SEGMENTS = buildSegments();
                 margin: var(--sp-5) var(--sp-4) 0;
                 padding: var(--sp-4) var(--sp-5);
                 border-radius: var(--r-lg);
-                border-width: 1px;
+                border-width: var(--f-brand-border-size-default);
                 border-style: solid;
                 flex-shrink: 0;
               "
@@ -627,8 +627,8 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
   readonly actionBtnStyle = computed((): Record<string, string> => {
     if (!this.canAct()) {
       return {
-        background: 'var(--c-lt-border)',
-        color: 'var(--c-lt-text-2)',
+        background: 'var(--f-brand-color-background-disabled)',
+        color: 'var(--f-brand-color-text-disabled)',
         cursor: 'not-allowed',
       };
     }
