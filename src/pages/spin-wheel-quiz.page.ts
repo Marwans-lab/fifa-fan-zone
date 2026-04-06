@@ -437,10 +437,10 @@ const SEGMENTS = buildSegments();
                 >{{ centreLabel() }}</text>
               </g>
 
-              <!-- ── Fixed pointer at 12 o'clock (2× size, rounded top corners) ── -->
+              <!-- ── Fixed pointer at 12 o'clock (centred on wheel edge) ── -->
               <path
                 class="spin-wheel__pointer"
-                d="M 50,10 L 48.2,7.45 Q 48.2,7 48.65,7 L 51.35,7 Q 51.8,7 51.8,7.45 Z"
+                d="M 50,7 L 46.4,1.9 Q 46.4,1 47.3,1 L 52.7,1 Q 53.6,1 53.6,1.9 Z"
                 style="fill: var(--f-brand-color-background-dark); pointer-events: none;"
               />
             </svg>
