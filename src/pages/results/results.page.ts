@@ -88,11 +88,6 @@ export class ResultsPage implements OnInit, OnDestroy {
     void this.router.navigateByUrl(this.homeRoute());
   }
 
-  onPlayAgain(): void {
-    this.analytics.track('results_play_again');
-    void this.router.navigate(['/quiz']);
-  }
-
   private startAnimations(): void {
     const targetPoints = this.store.state().points;
     if (this.prefersReducedMotion()) {
