@@ -1,6 +1,7 @@
 import { NgStyle } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -81,7 +82,10 @@ export class FanCardComponent implements OnChanges {
 
   readonly profileQuestions = PROFILE_QUESTIONS;
 
-  constructor(private readonly analytics: AnalyticsService) {
+  constructor(
+    private readonly analytics: AnalyticsService,
+    private readonly cdr: ChangeDetectorRef,
+  ) {
     this.resetAnswersFromInput();
   }
 
@@ -150,6 +154,7 @@ export class FanCardComponent implements OnChanges {
 
   flipToBack(): void {
     this.isFlipped = true;
+    this.cdr.markForCheck();
     this.analytics.track('card_flipped_to_back');
   }
 
