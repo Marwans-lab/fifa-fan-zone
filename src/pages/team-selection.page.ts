@@ -459,7 +459,10 @@ const JPG_QUALITY = 0.78;
 
       .picture-page__capture--active {
         background: var(--f-brand-color-text-light);
-        width: calc(100% + 2 * var(--f-brand-space-md));
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        border-radius: var(--f-brand-radius-outer);
       }
 
       .picture-page__camera-feed {
