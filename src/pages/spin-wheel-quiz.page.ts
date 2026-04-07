@@ -19,6 +19,9 @@ import { FLOW_IDS, type FlowId } from '../models/flow-id.model';
 import { AnalyticsService } from '../services/analytics.service';
 import { StoreService } from '../services/store.service';
 
+// ─── Asset paths ─────────────────────────────────────────────────────────────
+const CLOSE_DARK_ICON = 'assets/icons/Close-dark.svg';
+
 // ─── Wheel geometry constants ────────────────────────────────────────────────
 const SEGMENT_COUNT = 11;
 const SEGMENT_ANGLE = 360 / SEGMENT_COUNT; // ~32.73° per segment
@@ -160,14 +163,7 @@ const SEGMENTS = buildSegments();
               transition: background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
             "
           >
-            <svg class="spin-wheel__back-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path
-                d="M3 3l10 10M13 3L3 13"
-                stroke="var(--c-lt-text-1)"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-            </svg>
+            <img [src]="closeDarkIcon" class="spin-wheel__back-icon" width="24" height="24" alt="" aria-hidden="true" />
           </button>
           <div
             class="spin-wheel__progress-track"
@@ -570,6 +566,7 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
   private readonly analytics = inject(AnalyticsService);
 
   readonly segments = SEGMENTS;
+  readonly closeDarkIcon = CLOSE_DARK_ICON;
 
   // ── State signals ──
   readonly quiz = signal<SpinWheelQuiz>(SPIN_WHEEL_QUIZZES[0]);
