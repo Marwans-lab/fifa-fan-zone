@@ -40,10 +40,12 @@
         }
       </div>
 
-      <div class="f-fan-card__flip-hint">
-        <span class="f-fan-card__flip-hint-icon" aria-hidden="true"></span>
-        <span class="f-fan-card__flip-hint-text">Tap card to flip</span>
-      </div>
+      @if (!hideFlipHint) {
+        <div class="f-fan-card__flip-hint">
+          <span class="f-fan-card__flip-hint-icon" aria-hidden="true"></span>
+          <span class="f-fan-card__flip-hint-text">Tap card to flip</span>
+        </div>
+      }
     </div>
 
     <div class="f-fan-card__back" data-section="back-face" (click)="flipToFront($event)">
