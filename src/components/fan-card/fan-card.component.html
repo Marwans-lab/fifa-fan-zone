@@ -1,8 +1,9 @@
 <div
   [class]="rootClassName"
   data-component="fan-card"
-  role="button"
-  [attr.aria-label]="isFlipped ? 'Fan card back' : 'Fan card – tap to flip'"
+  [attr.role]="hideFlipHint ? null : 'button'"
+  [attr.aria-label]="hideFlipHint ? null : (isFlipped ? 'Fan card back' : 'Fan card – tap to flip')"
+  [style.cursor]="hideFlipHint ? 'default' : null"
   (click)="onRootClick()"
 >
   <div class="f-fan-card__inner">

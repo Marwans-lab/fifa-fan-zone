@@ -141,6 +141,7 @@ export class FanCardComponent implements OnChanges {
   }
 
   onRootClick(): void {
+    if (this.hideFlipHint) return;
     if (!this.isFlipped) {
       this.flipToBack();
     }
