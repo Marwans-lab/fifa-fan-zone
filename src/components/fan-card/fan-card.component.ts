@@ -63,6 +63,8 @@ type QuestionId = Question['id'];
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FanCardComponent implements OnChanges {
+  @Input() hideFlipHint = false;
+
   @Input() fanCard: FanCard = {
     teamId: null,
     photoDataUrl: null,

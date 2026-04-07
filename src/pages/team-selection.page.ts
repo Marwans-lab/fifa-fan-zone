@@ -177,7 +177,7 @@ const JPG_QUALITY = 0.78;
           </section>
         } @else {
           <section class="picture-page__preview" data-section="card-preview">
-            <app-fan-card [fanCard]="previewFanCard()"></app-fan-card>
+            <app-fan-card [fanCard]="previewFanCard()" [hideFlipHint]="true"></app-fan-card>
           </section>
         }
 
