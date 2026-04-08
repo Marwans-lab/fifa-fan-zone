@@ -318,8 +318,8 @@ interface QuizFlowCard {
       }
 
       .f-card-page__journey-icon--tick {
-        mask-image: url(/assets/icons/Tick-black.svg);
-        -webkit-mask-image: url(/assets/icons/Tick-black.svg);
+        mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.9 17.9c-.3 0-.6-.1-.8-.3l-4.4-4.4c-.2-.2-.2-.5 0-.7s.5-.2.7 0l4.4 4.4h.1L19.4 6.4c.2-.2.5-.2.7 0s.2.5 0 .7L9.6 17.6c-.2.2-.5.3-.8.3z' fill='%231F212B'/%3E%3C/svg%3E");
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.9 17.9c-.3 0-.6-.1-.8-.3l-4.4-4.4c-.2-.2-.2-.5 0-.7s.5-.2.7 0l4.4 4.4h.1L19.4 6.4c.2-.2.5-.2.7 0s.2.5 0 .7L9.6 17.6c-.2.2-.5.3-.8.3z' fill='%231F212B'/%3E%3C/svg%3E");
         background-color: var(--f-brand-color-icon-light);
       }
 
