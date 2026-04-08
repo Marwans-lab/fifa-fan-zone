@@ -62,17 +62,19 @@ interface QuizFlowCard {
                     <div class="animate-ping-slow f-card-page__journey-ping"></div>
                   }
                   @if (milestone.completed) {
-                    <img
+                    <span
                       class="f-card-page__journey-icon f-card-page__journey-icon--tick"
-                      src="assets/icons/Tick-black.svg"
-                      alt=""
-                    />
+                      aria-hidden="true"
+                    ></span>
                   } @else {
-                    <img
+                    <span
                       class="f-card-page__journey-icon"
-                      [src]="milestone.iconSrc"
-                      alt=""
-                    />
+                      [ngStyle]="{
+                        'mask-image': 'url(' + milestone.iconSrc + ')',
+                        '-webkit-mask-image': 'url(' + milestone.iconSrc + ')'
+                      }"
+                      aria-hidden="true"
+                    ></span>
                   }
                 </div>
                 <p
@@ -272,7 +274,7 @@ interface QuizFlowCard {
         position: relative;
         backdrop-filter: blur(var(--f-brand-blur-subtle));
         -webkit-backdrop-filter: blur(var(--f-brand-blur-subtle));
-        background: var(--c-lt-tint-faint);
+        background: var(--f-brand-color-background-default);
         border: var(--f-brand-border-size-default) solid var(--f-brand-color-border-default);
         transition: all var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default);
       }
@@ -288,7 +290,7 @@ interface QuizFlowCard {
       .f-card-page__journey-node--current {
         transform: scale(1.05);
         z-index: 20;
-        background: var(--c-lt-tint);
+        background: var(--f-brand-color-background-default);
         border-color: var(--f-brand-color-border-default);
       }
 
@@ -303,18 +305,22 @@ interface QuizFlowCard {
       .f-card-page__journey-icon {
         width: var(--sp-6);
         height: var(--sp-6);
-        filter: invert(1);
+        display: block;
+        background-color: var(--f-brand-color-icon-muted);
+        mask-size: contain;
+        mask-repeat: no-repeat;
+        mask-position: center;
+        -webkit-mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-position: center;
         position: relative;
         z-index: 1;
       }
 
-      .f-card-page__journey-node:not(.f-card-page__journey-node--current):not(.f-card-page__journey-node--completed)
-        .f-card-page__journey-icon {
-        opacity: 0.6;
-      }
-
       .f-card-page__journey-icon--tick {
-        filter: invert(1);
+        mask-image: url(/assets/icons/Tick-black.svg);
+        -webkit-mask-image: url(/assets/icons/Tick-black.svg);
+        background-color: var(--f-brand-color-text-light);
       }
 
       .f-card-page__journey-step-label {
