@@ -263,7 +263,7 @@ const SEGMENTS = buildSegments();
             -->
             <svg
               class="spin-wheel__svg"
-              viewBox="0 0 100 100"
+              viewBox="0 -4 100 108"
               role="slider"
               aria-label="Answer selector"
               aria-valuemin="0"
