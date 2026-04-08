@@ -308,7 +308,7 @@
 .f-fan-card__action:active:not(:disabled) .f-fan-card__action-circle,
 .f-fan-card__action--selected .f-fan-card__action-circle {
   background: var(--f-brand-color-background-light);
-  border-color: var(--f-brand-color-border-selected);
+  border-color: var(--f-brand-color-text-default);
 }
 
 .f-fan-card__action:focus-visible .f-fan-card__action-circle {
