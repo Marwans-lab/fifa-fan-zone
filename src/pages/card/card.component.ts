@@ -11,7 +11,7 @@ import { QAAppService } from '../../services/qaapp.service';
 import { StoreService } from '../../services/store.service';
 
 interface JourneyMilestone {
-  iconSrc: string;
+  iconClass: 'profile' | 'language' | 'stadium' | 'star';
   label: string;
   completed: boolean;
 }
@@ -20,7 +20,7 @@ interface QuizFlowCard {
   id: FlowId;
   title: string;
   subtitle: string;
-  iconSrc: string;
+  iconClass: string;
   route: string;
   routeState: Record<string, string>;
   type: 'quiz' | 'swipe' | 'card_match' | 'ranking' | 'spin_wheel';
@@ -64,15 +64,13 @@ interface QuizFlowCard {
                   @if (milestone.completed) {
                     <span
                       class="f-card-page__journey-icon f-card-page__journey-icon--tick"
+                      [ngStyle]="fdsIconStyle('tick')"
                       aria-hidden="true"
                     ></span>
                   } @else {
                     <span
                       class="f-card-page__journey-icon"
-                      [ngStyle]="{
-                        'mask-image': 'url(' + milestone.iconSrc + ')',
-                        '-webkit-mask-image': 'url(' + milestone.iconSrc + ')'
-                      }"
+                      [ngStyle]="fdsIconStyle(milestone.iconClass)"
                       aria-hidden="true"
                     ></span>
                   }
@@ -157,11 +155,11 @@ interface QuizFlowCard {
                     </svg>
                     <div class="f-card-page__quiz-icon-wrap">
                       @if (isFlowLocked(flow)) {
-                        <img class="f-card-page__quiz-icon f-card-page__quiz-icon--locked" src="assets/icons/Lock-white.svg" alt="" />
+                        <span class="f-card-page__quiz-icon f-card-page__quiz-icon--lock" [ngStyle]="fdsIconStyle('lock')" aria-hidden="true"></span>
                       } @else if (isFlowCompleted(flow.id)) {
-                        <img class="f-card-page__quiz-icon" src="assets/icons/Tick-black.svg" alt="" />
+                        <span class="f-card-page__quiz-icon f-card-page__quiz-icon--tick" [ngStyle]="fdsIconStyle('tick')" aria-hidden="true"></span>
                       } @else {
-                        <img class="f-card-page__quiz-icon f-card-page__quiz-icon--quiz" [src]="flow.iconSrc" alt="" />
+                        <span class="f-card-page__quiz-icon" [ngStyle]="fdsIconStyle(flow.iconClass)" aria-hidden="true"></span>
                       }
                     </div>
                   </div>
@@ -321,6 +319,30 @@ interface QuizFlowCard {
         mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.9 17.9c-.3 0-.6-.1-.8-.3l-4.4-4.4c-.2-.2-.2-.5 0-.7s.5-.2.7 0l4.4 4.4h.1L19.4 6.4c.2-.2.5-.2.7 0s.2.5 0 .7L9.6 17.6c-.2.2-.5.3-.8.3z' fill='%231F212B'/%3E%3C/svg%3E");
         -webkit-mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.9 17.9c-.3 0-.6-.1-.8-.3l-4.4-4.4c-.2-.2-.2-.5 0-.7s.5-.2.7 0l4.4 4.4h.1L19.4 6.4c.2-.2.5-.2.7 0s.2.5 0 .7L9.6 17.6c-.2.2-.5.3-.8.3z' fill='%231F212B'/%3E%3C/svg%3E");
         background-color: var(--f-brand-color-icon-light);
+      }
+
+      /* FDS: ic_nav_profile */
+      .f-card-page__journey-icon--profile {
+        mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z' fill='%231F212B'/%3E%3C/svg%3E");
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z' fill='%231F212B'/%3E%3C/svg%3E");
+      }
+
+      /* FDS: ic_nav_language (globe) */
+      .f-card-page__journey-icon--language {
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-8 10c0-.61.08-1.21.21-1.78L8 14v1a2 2 0 0 0 2 2v2.93A8.01 8.01 0 0 1 4 12Zm13.9 5.39A1.99 1.99 0 0 0 16 16h-1v-3a1 1 0 0 0-1-1H8v-2h2a1 1 0 0 0 1-1V7h2a2 2 0 0 0 2-2v-.41A7.99 7.99 0 0 1 20 12a7.94 7.94 0 0 1-2.1 5.39Z' fill='%231F212B'/%3E%3C/svg%3E");
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-8 10c0-.61.08-1.21.21-1.78L8 14v1a2 2 0 0 0 2 2v2.93A8.01 8.01 0 0 1 4 12Zm13.9 5.39A1.99 1.99 0 0 0 16 16h-1v-3a1 1 0 0 0-1-1H8v-2h2a1 1 0 0 0 1-1V7h2a2 2 0 0 0 2-2v-.41A7.99 7.99 0 0 1 20 12a7.94 7.94 0 0 1-2.1 5.39Z' fill='%231F212B'/%3E%3C/svg%3E");
+      }
+
+      /* FDS: ic_nav_stadium */
+      .f-card-page__journey-icon--stadium {
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M7 5 3 7v2l4-2 5-2 5 2 4 2V7l-4-2-5-2-5 2Zm0 4L3 11v2l4-2 5-2 5 2 4 2v-2l-4-2-5-2-5 2Zm-4 6v2l4-2 5-2 5 2 4 2v-2l-4-2-5-2-5 2-4 2Zm4-2 5-2 5 2 4 2v2l-4-2-5-2-5 2-4 2v-2l4-2Z' fill='%231F212B'/%3E%3C/svg%3E");
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M7 5 3 7v2l4-2 5-2 5 2 4 2V7l-4-2-5-2-5 2Zm0 4L3 11v2l4-2 5-2 5 2 4 2v-2l-4-2-5-2-5 2Zm-4 6v2l4-2 5-2 5 2 4 2v-2l-4-2-5-2-5 2-4 2Zm4-2 5-2 5 2 4 2v2l-4-2-5-2-5 2-4 2v-2l4-2Z' fill='%231F212B'/%3E%3C/svg%3E");
+      }
+
+      /* FDS: ic_nav_star */
+      .f-card-page__journey-icon--star {
+        mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z' fill='%231F212B'/%3E%3C/svg%3E");
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z' fill='%231F212B'/%3E%3C/svg%3E");
       }
 
       .f-card-page__journey-step-label {
@@ -509,11 +531,22 @@ interface QuizFlowCard {
       .f-card-page__quiz-icon {
         width: var(--sp-6);
         height: var(--sp-6);
+        display: block;
+        mask-size: contain;
+        mask-repeat: no-repeat;
+        mask-position: center;
+        -webkit-mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        background-color: var(--f-brand-color-icon-default);
       }
 
-      .f-card-page__quiz-icon--quiz,
-      .f-card-page__quiz-icon--locked {
-        filter: invert(1);
+      .f-card-page__quiz-icon--tick {
+        background-color: var(--f-brand-color-icon-success);
+      }
+
+      .f-card-page__quiz-icon--lock {
+        background-color: var(--f-brand-color-icon-muted);
       }
 
       .f-card-page__quiz-icon--locked {
@@ -593,12 +626,31 @@ export class CardComponent {
   readonly quizRingNormRadius = this.quizRingRadius - this.quizRingStroke / 2;
   readonly quizRingCircumference = 2 * Math.PI * this.quizRingNormRadius;
 
+  /* FDS icon SVG data URIs — mapped to ic_nav_{name} concepts */
+  private readonly fdsIcons: Record<string, string> = {
+    language: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-8 10c0-.61.08-1.21.21-1.78L8 14v1a2 2 0 0 0 2 2v2.93A8.01 8.01 0 0 1 4 12Zm13.9 5.39A1.99 1.99 0 0 0 16 16h-1v-3a1 1 0 0 0-1-1H8v-2h2a1 1 0 0 0 1-1V7h2a2 2 0 0 0 2-2v-.41A7.99 7.99 0 0 1 20 12a7.94 7.94 0 0 1-2.1 5.39Z' fill='%231F212B'/%3E%3C/svg%3E",
+    stadium: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M7 5 3 7v2l4-2 5-2 5 2 4 2V7l-4-2-5-2-5 2Zm0 4L3 11v2l4-2 5-2 5 2 4 2v-2l-4-2-5-2-5 2Zm-4 6v2l4-2 5-2 5 2 4 2v-2l-4-2-5-2-5 2-4 2Zm4-2 5-2 5 2 4 2v2l-4-2-5-2-5 2-4 2v-2l4-2Z' fill='%231F212B'/%3E%3C/svg%3E",
+    itinerary: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H5V10h14v10ZM5 8V6h14v2H5Zm2 4h5v5H7v-5Z' fill='%231F212B'/%3E%3C/svg%3E",
+    football: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 3.06a8.02 8.02 0 0 1 4.36 2.08l-1.61 2.22-2.75.87V7.5l1-2.44H13Zm-3 0L11 7.5v2.73l-2.75-.87-1.61-2.22A8.02 8.02 0 0 1 10 5.06ZM5.05 14.3a8 8 0 0 1-.98-3.55l2.5.93.95 2.83-1.6 2.08a8 8 0 0 1-.87-2.3Zm5.38 4.6a8.1 8.1 0 0 1-2.04-.7l.72-2.4H14.9l.72 2.4a8.1 8.1 0 0 1-2.04.7L12 18.06l-1.57.83Zm8.52-4.6a8 8 0 0 1-.87 2.3l-1.6-2.08.95-2.83 2.5-.93a8 8 0 0 1-.98 3.55Z' fill='%231F212B'/%3E%3C/svg%3E",
+    star: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M12 2l2.94 6.56L22 9.27l-5 4.54L18.18 21 12 17.27 5.82 21 7 13.81 2 9.27l7.06-.71L12 2Z' fill='%231F212B'/%3E%3C/svg%3E",
+    tick: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M8.9 17.9c-.3 0-.6-.1-.8-.3l-4.4-4.4c-.2-.2-.2-.5 0-.7s.5-.2.7 0l4.4 4.4h.1L19.4 6.4c.2-.2.5-.2.7 0s.2.5 0 .7L9.6 17.6c-.2.2-.5.3-.8.3z' fill='%231F212B'/%3E%3C/svg%3E",
+    lock: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M18 8h-1V6A5 5 0 0 0 7 6v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2ZM9 6a3 3 0 1 1 6 0v2H9V6Zm9 14H6V10h12v10Zm-6-3a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z' fill='%231F212B'/%3E%3C/svg%3E",
+  };
+
+  fdsIconStyle(name: string): Record<string, string> {
+    const uri = this.fdsIcons[name] ?? '';
+    return {
+      'mask-image': `url("${uri}")`,
+      '-webkit-mask-image': `url("${uri}")`,
+    };
+  }
+
   readonly flowCards: ReadonlyArray<QuizFlowCard> = [
     {
       id: 'the-connector',
       title: 'The Connector',
       subtitle: '5 questions · Quiz',
-      iconSrc: 'assets/icons/globe-white.svg',
+      iconClass: 'language',
       route: '/quiz',
       routeState: { quizId: 'the-connector' },
       type: 'quiz',
@@ -607,7 +659,7 @@ export class CardComponent {
       id: 'the-architect',
       title: 'The Architect',
       subtitle: '5 rounds · Card Match',
-      iconSrc: 'assets/icons/stadium-white.svg',
+      iconClass: 'stadium',
       route: '/card-match',
       routeState: { flowId: 'the-architect' },
       type: 'card_match',
@@ -616,7 +668,7 @@ export class CardComponent {
       id: 'the-historian',
       title: 'The Historian',
       subtitle: '5 questions · Ranking',
-      iconSrc: 'assets/icons/history-white.svg',
+      iconClass: 'itinerary',
       route: '/ranking-quiz',
       routeState: { quizId: 'the-historian' },
       type: 'ranking',
@@ -625,7 +677,7 @@ export class CardComponent {
       id: 'the-referee',
       title: 'The Referee',
       subtitle: '10 statements · Swipe',
-      iconSrc: 'assets/icons/referee-white.svg',
+      iconClass: 'football',
       route: '/swipe-quiz',
       routeState: { quizId: 'the-referee' },
       type: 'swipe',
@@ -634,7 +686,7 @@ export class CardComponent {
       id: 'the-retrospective',
       title: 'The Retrospective',
       subtitle: '5 questions · Spin Wheel',
-      iconSrc: 'assets/icons/ranking-white.svg',
+      iconClass: 'star',
       route: '/spin-wheel-quiz',
       routeState: { quizId: 'the-retrospective' },
       type: 'spin_wheel',
@@ -645,22 +697,22 @@ export class CardComponent {
     const completedCount = this.state().completedFlows.length;
     return [
       {
-        iconSrc: 'assets/icons/qr-logo.svg',
+        iconClass: 'profile',
         label: 'Fan card',
         completed: this.isCardComplete(),
       },
       {
-        iconSrc: 'assets/icons/globe-dark.svg',
+        iconClass: 'language',
         label: '1st quiz',
         completed: completedCount >= 1,
       },
       {
-        iconSrc: 'assets/icons/stadium-dark.svg',
+        iconClass: 'stadium',
         label: '3 quizzes',
         completed: completedCount >= 3,
       },
       {
-        iconSrc: 'assets/icons/Trophy-dark.svg',
+        iconClass: 'star',
         label: 'Reward',
         completed: this.allQuizzesCompleted(),
       },
