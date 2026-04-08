@@ -263,7 +263,7 @@ const SEGMENTS = buildSegments();
             -->
             <svg
               class="spin-wheel__svg"
-              viewBox="0 -4 100 108"
+              viewBox="0 0 100 100"
               role="slider"
               aria-label="Answer selector"
               aria-valuemin="0"
@@ -436,7 +436,7 @@ const SEGMENTS = buildSegments();
               <!-- ── Fixed pointer at 12 o'clock (centred on wheel edge) ── -->
               <path
                 class="spin-wheel__pointer"
-                d="M 50,11 L 42.4,-1.6 Q 42.4,-3 43.9,-3 L 56.1,-3 Q 57.6,-3 57.6,-1.6 Z"
+                d="M 50,14 L 43,1.5 Q 43,0 44.5,0 L 55.5,0 Q 57,0 57,1.5 Z"
                 style="fill: var(--f-brand-color-background-dark); pointer-events: none;"
               />
             </svg>
