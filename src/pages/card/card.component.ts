@@ -320,7 +320,7 @@ interface QuizFlowCard {
       .f-card-page__journey-icon--tick {
         mask-image: url(/assets/icons/Tick-black.svg);
         -webkit-mask-image: url(/assets/icons/Tick-black.svg);
-        background-color: var(--f-brand-color-text-light);
+        background-color: var(--f-brand-color-icon-light);
       }
 
       .f-card-page__journey-step-label {
