@@ -316,33 +316,7 @@ interface QuizFlowCard {
       }
 
       .f-card-page__journey-icon--tick {
-        mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.9 17.9c-.3 0-.6-.1-.8-.3l-4.4-4.4c-.2-.2-.2-.5 0-.7s.5-.2.7 0l4.4 4.4h.1L19.4 6.4c.2-.2.5-.2.7 0s.2.5 0 .7L9.6 17.6c-.2.2-.5.3-.8.3z' fill='%231F212B'/%3E%3C/svg%3E");
-        -webkit-mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.9 17.9c-.3 0-.6-.1-.8-.3l-4.4-4.4c-.2-.2-.2-.5 0-.7s.5-.2.7 0l4.4 4.4h.1L19.4 6.4c.2-.2.5-.2.7 0s.2.5 0 .7L9.6 17.6c-.2.2-.5.3-.8.3z' fill='%231F212B'/%3E%3C/svg%3E");
         background-color: var(--f-brand-color-icon-light);
-      }
-
-      /* FDS: ic_nav_profile */
-      .f-card-page__journey-icon--profile {
-        mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z' fill='%231F212B'/%3E%3C/svg%3E");
-        -webkit-mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z' fill='%231F212B'/%3E%3C/svg%3E");
-      }
-
-      /* FDS: ic_nav_language (globe) */
-      .f-card-page__journey-icon--language {
-        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-8 10c0-.61.08-1.21.21-1.78L8 14v1a2 2 0 0 0 2 2v2.93A8.01 8.01 0 0 1 4 12Zm13.9 5.39A1.99 1.99 0 0 0 16 16h-1v-3a1 1 0 0 0-1-1H8v-2h2a1 1 0 0 0 1-1V7h2a2 2 0 0 0 2-2v-.41A7.99 7.99 0 0 1 20 12a7.94 7.94 0 0 1-2.1 5.39Z' fill='%231F212B'/%3E%3C/svg%3E");
-        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-8 10c0-.61.08-1.21.21-1.78L8 14v1a2 2 0 0 0 2 2v2.93A8.01 8.01 0 0 1 4 12Zm13.9 5.39A1.99 1.99 0 0 0 16 16h-1v-3a1 1 0 0 0-1-1H8v-2h2a1 1 0 0 0 1-1V7h2a2 2 0 0 0 2-2v-.41A7.99 7.99 0 0 1 20 12a7.94 7.94 0 0 1-2.1 5.39Z' fill='%231F212B'/%3E%3C/svg%3E");
-      }
-
-      /* FDS: ic_nav_stadium */
-      .f-card-page__journey-icon--stadium {
-        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M7 5 3 7v2l4-2 5-2 5 2 4 2V7l-4-2-5-2-5 2Zm0 4L3 11v2l4-2 5-2 5 2 4 2v-2l-4-2-5-2-5 2Zm-4 6v2l4-2 5-2 5 2 4 2v-2l-4-2-5-2-5 2-4 2Zm4-2 5-2 5 2 4 2v2l-4-2-5-2-5 2-4 2v-2l4-2Z' fill='%231F212B'/%3E%3C/svg%3E");
-        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M7 5 3 7v2l4-2 5-2 5 2 4 2V7l-4-2-5-2-5 2Zm0 4L3 11v2l4-2 5-2 5 2 4 2v-2l-4-2-5-2-5 2Zm-4 6v2l4-2 5-2 5 2 4 2v-2l-4-2-5-2-5 2-4 2Zm4-2 5-2 5 2 4 2v2l-4-2-5-2-5 2-4 2v-2l4-2Z' fill='%231F212B'/%3E%3C/svg%3E");
-      }
-
-      /* FDS: ic_nav_star */
-      .f-card-page__journey-icon--star {
-        mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z' fill='%231F212B'/%3E%3C/svg%3E");
-        -webkit-mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z' fill='%231F212B'/%3E%3C/svg%3E");
       }
 
       .f-card-page__journey-step-label {
@@ -628,6 +602,7 @@ export class CardComponent {
 
   /* FDS icon SVG data URIs — mapped to ic_nav_{name} concepts */
   private readonly fdsIcons: Record<string, string> = {
+    profile: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z' fill='%231F212B'/%3E%3C/svg%3E",
     language: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-8 10c0-.61.08-1.21.21-1.78L8 14v1a2 2 0 0 0 2 2v2.93A8.01 8.01 0 0 1 4 12Zm13.9 5.39A1.99 1.99 0 0 0 16 16h-1v-3a1 1 0 0 0-1-1H8v-2h2a1 1 0 0 0 1-1V7h2a2 2 0 0 0 2-2v-.41A7.99 7.99 0 0 1 20 12a7.94 7.94 0 0 1-2.1 5.39Z' fill='%231F212B'/%3E%3C/svg%3E",
     stadium: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M7 5 3 7v2l4-2 5-2 5 2 4 2V7l-4-2-5-2-5 2Zm0 4L3 11v2l4-2 5-2 5 2 4 2v-2l-4-2-5-2-5 2Zm-4 6v2l4-2 5-2 5 2 4 2v-2l-4-2-5-2-5 2-4 2Zm4-2 5-2 5 2 4 2v2l-4-2-5-2-5 2-4 2v-2l4-2Z' fill='%231F212B'/%3E%3C/svg%3E",
     itinerary: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'%3E%3Cpath d='M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H5V10h14v10ZM5 8V6h14v2H5Zm2 4h5v5H7v-5Z' fill='%231F212B'/%3E%3C/svg%3E",
