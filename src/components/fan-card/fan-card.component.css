@@ -301,12 +301,13 @@
   transition: background var(--f-brand-motion-duration-instant) var(--f-brand-motion-easing-default);
 }
 
-.f-fan-card__action:hover:not(:disabled) .f-fan-card__action-circle {
+.f-fan-card__action:hover:not(:disabled):not(.f-fan-card__action--selected) .f-fan-card__action-circle {
   background: var(--f-brand-color-background-primary-hover);
 }
 
 .f-fan-card__action:active:not(:disabled) .f-fan-card__action-circle,
-.f-fan-card__action--selected .f-fan-card__action-circle {
+.f-fan-card__action--selected .f-fan-card__action-circle,
+.f-fan-card__action--selected:hover .f-fan-card__action-circle {
   background: var(--f-brand-color-background-light);
   border-color: var(--f-brand-color-text-default);
 }
