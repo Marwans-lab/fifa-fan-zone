@@ -60,7 +60,7 @@ app-root {
   display: block;
   height: 100%;
   width: 100%;
-  max-width: 430px;
+  max-width: 375px;
   margin: 0 auto;
   overflow: hidden;
   padding-top: env(safe-area-inset-top);
