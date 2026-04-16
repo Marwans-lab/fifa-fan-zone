@@ -187,7 +187,7 @@ const CHEVRON_LEFT_WHITE_ICON = 'assets/icons/Chevron-left-white.svg';
         display: flex;
         flex-direction: column;
         min-height: 100%;
-        max-width: 420px;
+        
         width: 100%;
         margin: 0 auto;
       }
