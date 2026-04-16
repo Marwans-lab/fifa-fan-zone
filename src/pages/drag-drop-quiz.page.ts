@@ -164,7 +164,7 @@ type ResultMap = Record<string, boolean | null>;
         display: flex;
         flex-direction: column;
         min-height: 100%;
-        max-width: 420px;
+        
         margin: 0 auto;
         width: 100%;
       }

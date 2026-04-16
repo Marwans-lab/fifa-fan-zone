@@ -114,7 +114,6 @@ const CARD_MATCH_KEYFRAMES = `
         style="
           flex: 1;
           width: 100%;
-          max-width: 420px;
           margin: 0 auto;
           display: flex;
           flex-direction: column;
