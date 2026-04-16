@@ -51,7 +51,7 @@ type ItemRevealState = 'correct' | 'incorrect';
           display: flex;
           flex-direction: column;
           min-height: 100dvh;
-          max-width: 420px;
+          
           margin: 0 auto;
           width: 100%;
         "
@@ -157,7 +157,7 @@ type ItemRevealState = 'correct' | 'incorrect';
                   gap: var(--sp-4);
                   padding: 0 var(--sp-2);
                   min-width: 240px;
-                  max-width: 560px;
+                  
                   user-select: none;
                   touch-action: none;
                 "

@@ -124,7 +124,7 @@ const SEGMENTS = buildSegments();
         class="spin-wheel__content"
         style="
           width: 100%;
-          max-width: 420px;
+          
           min-height: 100dvh;
           display: flex;
           flex-direction: column;

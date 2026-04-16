@@ -41,7 +41,6 @@ const CLOSE_WHITE_ICON = 'assets/icons/Close-white.svg';
         class="quiz-page__content"
         style="
           width: 100%;
-          max-width: 420px;
           min-height: 100dvh;
           display: flex;
           flex-direction: column;

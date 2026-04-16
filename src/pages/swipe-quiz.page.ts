@@ -41,7 +41,7 @@ const TIMER_DURATION = 10;
         class="swipe-quiz__content"
         style="
           width: 100%;
-          max-width: 420px;
+          
           min-height: 100dvh;
           display: flex;
           flex-direction: column;
