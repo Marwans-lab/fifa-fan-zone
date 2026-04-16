@@ -70,7 +70,7 @@ app-root {
 }
 
 body {
-  background-color: var(--f-brand-color-background-default, #F2F3FA);
+  background-color: #0a0a0a;
   color: var(--f-brand-color-text-default, #1F212B);
   font-family: var(--font-body);
   font-size: var(--text-md);
