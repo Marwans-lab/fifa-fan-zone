@@ -19,7 +19,7 @@ interface LandingCardVisual {
   template: `
     <main class="landing-page f-page-enter" data-page="landing">
       <h1 class="landing-page__title">
-        You Could Win Tickets to FIFA World Cup 2026
+        Your World Cup starts here. Play to win!
       </h1>
 
       <section class="landing-page__stack" aria-hidden="true">
