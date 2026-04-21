@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, initial-scale=1.0">
+  <title>FIFA Fan Zone — Executive Brief</title>
+  <style>
+    /* ── FONTS ── */
+    @font-face {
+      font-family: 'Jotia';
+      src: url('/Users/designersmantra/Library/Fonts/jotia_thin.ttf') format('truetype'),
+           local('Jotia Thin'), local('Jotia-Thin');
+      font-weight: 100; font-style: normal;
+    }
+    @font-face {
+      font-family: 'Jotia';
+      src: url('/Users/designersmantra/Library/Fonts/jotia_light.ttf') format('truetype'),
+           local('Jotia Light'), local('Jotia-Light');
+      font-weight: 300; font-style: normal;
+    }
+    @font-face {
+      font-family: 'Graphik';
+      src: url('/Users/designersmantra/Library/Fonts/Graphik-Light.otf') format('opentype');
+      font-weight: 300; font-style: normal;
+    }
+    @font-face {
+      font-family: 'Graphik';
+      src: url('/Users/designersmantra/Library/Fonts/Graphik-Regular.otf') format('opentype');
+      font-weight: 400; font-style: normal;
+    }
+    @font-face {
+      font-family: 'Graphik';
+      src: url('/Users/designersmantra/Library/Fonts/Graphik-Medium.otf') format('opentype');
+      font-weight: 500; font-style: normal;
+    }
+    @font-face {
+      font-family: 'Graphik';
+      src: url('/Users/designersmantra/Library/Fonts/Graphik-Semibold.otf') format('opentype');
+      font-weight: 600; font-style: normal;
+    }
+
+    /* ── RESET ── */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ── CANVAS ── */
+    body {
+      font-family: 'Graphik', -apple-system, sans-serif;
+      overflow: hidden;
+      background: #0D0E14;
+    }
+
+    .deck {
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      transform-origin: top left;
+    }
+
+    /* ── LIGHT THEME TOKENS ── */
+    [data-theme="light"] {
+      --slide-bg: #F2F3FA;
+      --surface-01: #FFFFFF;
+      --surface-02: #F7F7FB;
+      --surface-03: #EEEEF5;
+      --surface-inset: #1A1C24;
+
+      --accent: #941651;
+      --accent-muted: rgba(148,22,81,0.07);
+      --accent-border: rgba(148,22,81,0.20);
+      --burgundy: #941651;
+
+      --text-default: #494949;
+      --text-near-black: #1E212A;
+      --text-body: rgba(73,73,73,0.70);
+      --text-muted: rgba(73,73,73,0.50);
+      --text-subtle: rgba(73,73,73,0.35);
+
+      --border-default: rgba(0,0,0,0.06);
+      --border-elevated: rgba(0,0,0,0.08);
+
+      --card-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.04);
+      --title-gradient: linear-gradient(180deg, #1E212A 0%, rgba(30,33,42,0.55) 100%);
+
+      --font-primary: 'Graphik', -apple-system, sans-serif;
+      --font-title: 'Jotia', 'Graphik', sans-serif;
+
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-7: 28px;
+      --space-8: 32px;
+      --space-10: 40px;
+      --space-12: 48px;
+      --space-14: 56px;
+      --space-16: 64px;
+      --space-20: 80px;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+
+    /* ── SLIDE STRUCTURE ── */
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      padding: 80px 100px 80px 100px;
+      background: linear-gradient(180deg, #ffffff 0%, #F2F3FA 40%);
+    }
+
+    .slide.active { opacity: 1; }
+
+    /* ── TOP NAV ── */
+    .top-nav {
+      position: absolute;
+      top: 48px;
+      left: 100px;
+      right: 100px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      z-index: 10;
+    }
+
+    .top-nav .logo {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-default);
+      letter-spacing: -0.3px;
+    }
+
+    .top-nav .meta {
+      display: flex;
+      gap: 32px;
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    /* ── SLIDE BODY ── */
+    .slide-body {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide-body.center {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* ── TYPOGRAPHY ── */
+    .t1 {
+      font-family: var(--font-title);
+      font-size: 144px;
+      font-weight: 100;
+      letter-spacing: -7px;
+      line-height: 0.9;
+      background: var(--title-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .t2 {
+      font-family: var(--font-title);
+      font-size: 88px;
+      font-weight: 100;
+      letter-spacing: -4.5px;
+      line-height: 1.0;
+      background: var(--title-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .t3 {
+      font-family: var(--font-title);
+      font-size: 56px;
+      font-weight: 100;
+      letter-spacing: -2.5px;
+      line-height: 1.1;
+      background: var(--title-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .headline {
+      font-size: 36px;
+      font-weight: 400;
+      letter-spacing: -1px;
+      line-height: 1.25;
+      color: var(--text-default);
+    }
+
+    .headline-md {
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: -0.5px;
+      line-height: 1.3;
+      color: var(--text-default);
+    }
+
+    .body-text {
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--text-body);
+    }
+
+    .caption {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    .label {
+      font-size: 17px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--accent);
+    }
+
+    .slide-subtitle {
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--text-body);
+      line-height: 1.6;
+      margin-top: var(--space-7);
+      max-width: 960px;
+    }
+
+    /* ── STAT COMPONENTS ── */
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .stat-num {
+      font-family: var(--font-title);
+      font-size: 44px;
+      font-weight: 300;
+      color: var(--accent);
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 21px;
+      font-weight: 400;
+      color: var(--text-near-black);
+      line-height: 1.4;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface-01);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: var(--space-10);
+      box-shadow: var(--card-shadow);
+    }
+
+    /* ── COVER LAYOUT ── */
+    .cover-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-8);
+      max-width: 1200px;
+    }
+
+    .cover-footer {
+      position: absolute;
+      bottom: 80px;
+      left: 100px;
+      right: 100px;
+      border-top: 1px solid var(--border-default);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding-top: var(--space-6);
+      gap: var(--space-8);
+    }
+
+    .cover-footer-item .cf-label {
+      font-size: 14px;
+      color: var(--text-subtle);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .cover-footer-item .cf-value {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text-default);
+      margin-top: var(--space-2);
+    }
+
+    /* ── SECTION BREAK ── */
+    .section-num {
+      position: absolute;
+      right: 80px;
+      top: 20px;
+      font-size: 320px;
+      font-weight: 100;
+      font-family: var(--font-title);
+      color: var(--surface-03);
+      line-height: 1;
+      pointer-events: none;
+      z-index: 0;
+      letter-spacing: -16px;
+    }
+
+    /* ── STATS GRID ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-8);
+      margin-top: var(--space-12);
+    }
+
+    .stats-grid-2col {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* ── FEATURE GRID ── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-8);
+      margin-top: var(--space-12);
+    }
+
+    .feature-col {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+      padding: var(--space-8);
+      background: var(--surface-01);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      background: var(--accent-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .feature-title {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text-default);
+    }
+
+    .feature-body {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── PHASE GRID ── */
+    .phase-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+      margin-top: var(--space-12);
+    }
+
+    .phase-col {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+      padding: var(--space-8);
+      background: var(--surface-01);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+    }
+
+    .phase-num {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .phase-title {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text-default);
+    }
+
+    .phase-body {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── UTILITIES ── */
+    .mt-12 { margin-top: var(--space-12); }
+    .mb-8 { margin-bottom: var(--space-8); }
+    .max-w-960 { max-width: 960px; }
+
+    /* ── NAVIGATION ── */
+    .nav-controls {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      display: flex;
+      gap: 16px;
+      z-index: 1000;
+    }
+
+    .nav-btn {
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--border-default);
+      background: var(--surface-01);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+      color: var(--text-default);
+      box-shadow: var(--card-shadow);
+    }
+
+    .nav-btn:hover {
+      background: var(--surface-02);
+    }
+
+    .slide-counter {
+      position: fixed;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      color: var(--text-muted);
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <div class="deck" id="deck" data-theme="light">
+
+    <!-- SLIDE 1: COVER -->
+    <div class="slide active" data-slide="1">
+      <div class="top-nav">
+        <div class="logo">Qatar Airways</div>
+        <div class="meta">
+          <span>April 2026</span>
+          <span>Executive Brief</span>
+        </div>
+      </div>
+      <div class="slide-body">
+        <div class="cover-content">
+          <div class="label">FIFA World Cup 2026</div>
+          <h1 class="t1">FIFA Fan Zone<br>Strategy</h1>
+          <p class="slide-subtitle">Transforming our $50M FIFA sponsorship into 500K+ engaged fans, 100K new Privilege Club members, and the foundation for multi-sport activation across all Qatar Airways partnerships.</p>
+        </div>
+      </div>
+      <div class="cover-footer">
+        <div class="cover-footer-item">
+          <div class="cf-label">Presented To</div>
+          <div class="cf-value">CCO — Chief Commercial Officer</div>
+        </div>
+        <div class="cover-footer-item">
+          <div class="cf-label">Investment</div>
+          <div class="cf-value">$504K Year 1 (FIFA)</div>
+        </div>
+        <div class="cover-footer-item">
+          <div class="cf-label">ROI</div>
+          <div class="cf-value">4,990x ($2.5B LTV)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: SECTION 1 BREAK -->
+    <div class="slide" data-slide="2">
+      <div class="section-num">01</div>
+      <div class="slide-body" style="justify-content: flex-end;">
+        <h2 class="t2">Customer<br>Experience</h2>
+        <p class="slide-subtitle max-w-960">How fans engage with the World Cup through Qatar Airways — from first download to grand prize winner.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: USER JOURNEY -->
+    <div class="slide" data-slide="3">
+      <div class="top-nav">
+        <div class="logo">Customer Experience</div>
+        <div class="meta"><span>01</span></div>
+      </div>
+      <div class="slide-body">
+        <div class="label">5-stage journey</div>
+        <h2 class="t3 mb-8">From casual fan to<br>tournament champion</h2>
+
+        <div class="phase-grid">
+          <div class="phase-col">
+            <div class="phase-num">Stage 1 — Day 0</div>
+            <div class="phase-title">Discovery</div>
+            <div class="phase-body">Download from QA app, in-flight promo, or social. Complete onboarding in 60 seconds. Select team. Take first quiz.</div>
+            <div class="stat mt-12">
+              <div class="stat-num">80%</div>
+              <div class="stat-label">Onboarding completion target</div>
+            </div>
+          </div>
+
+          <div class="phase-col">
+            <div class="phase-num">Stage 2 — Week 1</div>
+            <div class="phase-title">Activation</div>
+            <div class="phase-body">Daily match alerts. Earn first badge. Understand reward mechanics. Form habit loop.</div>
+            <div class="stat mt-12">
+              <div class="stat-num">50%</div>
+              <div class="stat-label">Day 7 retention target</div>
+            </div>
+          </div>
+
+          <div class="phase-col">
+            <div class="phase-num">Stage 3-5 — Weeks 2-6</div>
+            <div class="phase-title">Momentum</div>
+            <div class="phase-body">Weekly competitions. Social challenges. Knockout intensity. Grand prize draw.</div>
+            <div class="stat mt-12">
+              <div class="stat-num">4+</div>
+              <div class="stat-label">Sessions per user per week</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: PERSONALIZATION -->
+    <div class="slide" data-slide="4">
+      <div class="top-nav">
+        <div class="logo">Customer Experience</div>
+        <div class="meta"><span>01</span></div>
+      </div>
+      <div class="slide-body">
+        <div class="label">Personalization engine</div>
+        <h2 class="t3 mb-8">Every fan gets their<br>own World Cup</h2>
+
+        <div class="feature-grid">
+          <div class="feature-col">
+            <div class="feature-icon">🎯</div>
+            <div class="feature-title">Team-Based</div>
+            <div class="feature-body">Content filtered by selected team. Notifications only for your team's matches. Leaderboard shows tribal competition.</div>
+          </div>
+
+          <div class="feature-col">
+            <div class="feature-icon">📊</div>
+            <div class="feature-title">Performance-Based</div>
+            <div class="feature-body">Adaptive difficulty adjusts to accuracy. Personalized challenges target weak areas.</div>
+          </div>
+
+          <div class="feature-col">
+            <div class="feature-icon">⏰</div>
+            <div class="feature-title">Behavioral</div>
+            <div class="feature-body">Notifications sent at user's preferred time. Quiz types matched to engagement patterns.</div>
+          </div>
+        </div>
+
+        <div class="stats-grid mt-12">
+          <div class="stat">
+            <div class="stat-num">70%</div>
+            <div class="stat-label">Notification open rate target (vs 20% industry average)</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">4</div>
+            <div class="stat-label">Languages: English, Spanish, French, Arabic</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">2M+</div>
+            <div class="stat-label">Quiz completions across tournament</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">500K</div>
+            <div class="stat-label">Active users target by tournament end</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: SECTION 2 BREAK -->
+    <div class="slide" data-slide="5">
+      <div class="section-num">02</div>
+      <div class="slide-body" style="justify-content: flex-end;">
+        <h2 class="t2">Business<br>Case</h2>
+        <p class="slide-subtitle max-w-960">Why this investment delivers 4,990x ROI and transforms our sponsorship strategy.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: STRATEGIC CONTEXT -->
+    <div class="slide" data-slide="6">
+      <div class="top-nav">
+        <div class="logo">Business Case</div>
+        <div class="meta"><span>02</span></div>
+      </div>
+      <div class="slide-body">
+        <div class="label">The opportunity</div>
+        <h2 class="t3 mb-8">Underutilized<br>sponsorship asset</h2>
+
+        <div class="body-text max-w-960">Qatar Airways pays $50M annually for FIFA partnership through 2030. Current activation: jersey sleeve branding and hospitality. Digital engagement: minimal. Emirates, Etihad, Turkish Airlines have the same gap. First mover wins.</div>
+
+        <div class="stats-grid mt-12">
+          <div class="stat">
+            <div class="stat-num">$100M+</div>
+            <div class="stat-label">Annual spend on sports sponsorships (FIFA, PSG, Bayern, Formula E)</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">5B</div>
+            <div class="stat-label">Global viewers for FIFA World Cup 2026</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">104</div>
+            <div class="stat-label">Matches (48 teams, USA/Canada/Mexico)</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">0</div>
+            <div class="stat-label">Competitors with integrated fan engagement platforms</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: ROI BREAKDOWN -->
+    <div class="slide" data-slide="7">
+      <div class="top-nav">
+        <div class="logo">Business Case</div>
+        <div class="meta"><span>02</span></div>
+      </div>
+      <div class="slide-body">
+        <div class="label">Return on investment</div>
+        <h2 class="t3 mb-8">$2.5B lifetime value<br>on $504K investment</h2>
+
+        <div class="stats-grid-2col" style="grid-template-columns: repeat(2, 1fr); gap: var(--space-12); margin-top: var(--space-12);">
+          <div class="card" style="padding: var(--space-12);">
+            <div class="label mb-8">Investment (Year 1)</div>
+            <div class="stat mb-8">
+              <div class="stat-num">$504K</div>
+              <div class="stat-label">Total FIFA 2026 budget</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div class="body-text">Development: $170K</div>
+              <div class="body-text">Infrastructure: $14K</div>
+              <div class="body-text">Content: $30K</div>
+              <div class="body-text">Operations: $175K</div>
+              <div class="body-text">Rewards: $45K</div>
+              <div class="body-text">Marketing: $70K</div>
+            </div>
+          </div>
+
+          <div class="card" style="padding: var(--space-12);">
+            <div class="label mb-8">Return</div>
+            <div class="stat mb-8">
+              <div class="stat-num">$2.515B</div>
+              <div class="stat-label">Total value generated</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div class="body-text">100K new Privilege Club members</div>
+              <div class="body-text">$2.5B lifetime value ($5K avg LTV × 10 years)</div>
+              <div class="body-text">$15M earned media value</div>
+              <div class="body-text">26x sponsorship activation multiplier</div>
+              <div class="body-text">"Most engaged sponsor" positioning</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat mt-12" style="text-align: center;">
+          <div class="stat-num" style="font-size: 72px;">4,990x ROI</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: SCALABILITY -->
+    <div class="slide" data-slide="8">
+      <div class="top-nav">
+        <div class="logo">Business Case</div>
+        <div class="meta"><span>02</span></div>
+      </div>
+      <div class="slide-body">
+        <div class="label">Platform foundation</div>
+        <h2 class="t3 mb-8">FIFA is Phase 1 of<br>3-year roadmap</h2>
+
+        <div class="body-text max-w-960 mb-8">Build once for FIFA. Deploy everywhere for PSG, Formula E, Tennis, Concerts at <$2K per partnership. Universal event architecture enables zero-refactor expansion.</div>
+
+        <div class="phase-grid">
+          <div class="phase-col">
+            <div class="phase-num">2026 — FIFA Core</div>
+            <div class="phase-title">Build Universal Platform</div>
+            <div class="phase-body">Event-agnostic architecture. AI content generation. Plug-and-play handlers.</div>
+            <div class="stat mt-12">
+              <div class="stat-num">$504K</div>
+              <div class="stat-label">One-time core investment</div>
+            </div>
+          </div>
+
+          <div class="phase-col">
+            <div class="phase-num">2027 — Multi-Sport</div>
+            <div class="phase-title">Expand to All QA Partnerships</div>
+            <div class="phase-body">PSG, Bayern, Roma (soccer). Formula E. Tennis Grand Slams.</div>
+            <div class="stat mt-12">
+              <div class="stat-num">$30K</div>
+              <div class="stat-label">5 partnerships × 2 days each</div>
+            </div>
+          </div>
+
+          <div class="phase-col">
+            <div class="phase-num">2028 — Lifestyle</div>
+            <div class="phase-title">Privilege Club Collection</div>
+            <div class="phase-body">Concerts, dining, cultural experiences. In-app Avios redemption.</div>
+            <div class="stat mt-12">
+              <div class="stat-num">$30K</div>
+              <div class="stat-label">3 lifestyle handlers + redemption flow</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid mt-12">
+          <div class="stat">
+            <div class="stat-num">$564K</div>
+            <div class="stat-label">Total 3-year investment (FIFA + 10 partnerships)</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">99.8%</div>
+            <div class="stat-label">Cost reduction per partnership after FIFA (vs custom app)</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">10+</div>
+            <div class="stat-label">Partnerships activated by 2028</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">5M</div>
+            <div class="stat-label">Users by 2028 (10x FIFA base)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: SECTION 3 BREAK -->
+    <div class="slide" data-slide="9">
+      <div class="section-num">03</div>
+      <div class="slide-body" style="justify-content: flex-end;">
+        <h2 class="t2">Delivery</h2>
+        <p class="slide-subtitle max-w-960">8-phase roadmap from concept to launch — May to August 2026.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: ROADMAP -->
+    <div class="slide" data-slide="10">
+      <div class="top-nav">
+        <div class="logo">Delivery</div>
+        <div class="meta"><span>03</span></div>
+      </div>
+      <div class="slide-body">
+        <div class="label">Timeline</div>
+        <h2 class="t3 mb-8">May to August 2026</h2>
+
+        <div class="feature-grid">
+          <div class="feature-col">
+            <div class="phase-num">Phase 1-2 — May</div>
+            <div class="feature-title">Foundation + Backend</div>
+            <div class="feature-body">Universal event architecture. Match scheduler. Quiz engine. Leaderboard service. Firebase + Redis setup.</div>
+          </div>
+
+          <div class="feature-col">
+            <div class="phase-num">Phase 3-4 — June</div>
+            <div class="feature-title">Frontend + Content</div>
+            <div class="feature-body">Angular UI refresh. Push notifications. AI content generation for 2,080 questions.</div>
+          </div>
+
+          <div class="feature-col">
+            <div class="phase-num">Phase 5 — July</div>
+            <div class="feature-title">Beta Testing</div>
+            <div class="feature-body">10K beta users. Performance testing. Bug fixes. Analytics dashboard.</div>
+          </div>
+        </div>
+
+        <div class="feature-grid mt-12">
+          <div class="feature-col">
+            <div class="phase-num">Phase 6 — August</div>
+            <div class="feature-title">Public Launch</div>
+            <div class="feature-body">Press release. Social campaign. In-flight promo. 100K downloads Week 1.</div>
+          </div>
+
+          <div class="feature-col">
+            <div class="phase-num">Phase 7 — June-July</div>
+            <div class="feature-title">Tournament Ops</div>
+            <div class="feature-body">24/7 coverage. Content team publishes 4 quizzes per match. DevOps monitors 99.9% uptime.</div>
+          </div>
+
+          <div class="feature-col">
+            <div class="phase-num">Phase 8 — August</div>
+            <div class="feature-title">Grand Prize</div>
+            <div class="feature-body">Livestreamed draw. Winner receives 2 Final tickets + flights. Retrospective.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 11: TEAM & TECH -->
+    <div class="slide" data-slide="11">
+      <div class="top-nav">
+        <div class="logo">Delivery</div>
+        <div class="meta"><span>03</span></div>
+      </div>
+      <div class="slide-body">
+        <div class="label">Resources</div>
+        <h2 class="t3 mb-8">Team & technology</h2>
+
+        <div class="stats-grid-2col" style="grid-template-columns: 1fr 1fr; gap: var(--space-12); margin-top: var(--space-12);">
+          <div class="card" style="padding: var(--space-12);">
+            <div class="label mb-8">Core Team (6 months)</div>
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <div>
+                <div class="feature-title">2 Backend Engineers</div>
+                <div class="caption">Universal event system, quiz engine, leaderboard, Avios API</div>
+              </div>
+              <div>
+                <div class="feature-title">1 Frontend Engineer</div>
+                <div class="caption">Angular 18, TypeScript, progressive web app</div>
+              </div>
+              <div>
+                <div class="feature-title">2 Content Editors</div>
+                <div class="caption">AI-assisted question generation, editorial review</div>
+              </div>
+              <div>
+                <div class="feature-title">1 Product Manager</div>
+                <div class="caption">Roadmap, stakeholder coordination, FIFA partnership</div>
+              </div>
+              <div>
+                <div class="feature-title">1 DevOps Engineer</div>
+                <div class="caption">GCP infrastructure, monitoring, incident response</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="padding: var(--space-12);">
+            <div class="label mb-8">Technology Stack</div>
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <div>
+                <div class="feature-title">Frontend</div>
+                <div class="caption">Angular 18, TypeScript, Flow Design System, GitHub Pages</div>
+              </div>
+              <div>
+                <div class="feature-title">Backend</div>
+                <div class="caption">Node.js, Firebase (Auth, Firestore, Cloud Messaging), Redis</div>
+              </div>
+              <div>
+                <div class="feature-title">AI Content</div>
+                <div class="caption">GPT-4 integration for quiz generation (80% automated)</div>
+              </div>
+              <div>
+                <div class="feature-title">Infrastructure</div>
+                <div class="caption">Google Cloud Platform, Firebase Hosting, BigQuery analytics</div>
+              </div>
+              <div>
+                <div class="feature-title">Integrations</div>
+                <div class="caption">FIFA Match API, Qatar Airways Avios API, OneSignal push</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 12: SUCCESS METRICS -->
+    <div class="slide" data-slide="12">
+      <div class="top-nav">
+        <div class="logo">Delivery</div>
+        <div class="meta"><span>03</span></div>
+      </div>
+      <div class="slide-body">
+        <div class="label">Measurement</div>
+        <h2 class="t3 mb-8">How we define success</h2>
+
+        <div class="stats-grid mt-12">
+          <div class="stat">
+            <div class="stat-num">500K+</div>
+            <div class="stat-label">Active users by tournament end</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">70%</div>
+            <div class="stat-label">Notification open rate</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">4+</div>
+            <div class="stat-label">Sessions per user per week</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">2M+</div>
+            <div class="stat-label">Quiz completions across tournament</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">100K</div>
+            <div class="stat-label">New Privilege Club sign-ups</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">99.9%</div>
+            <div class="stat-label">Platform uptime during tournament</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">50%</div>
+            <div class="stat-label">Day 7 retention rate</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">$15M+</div>
+            <div class="stat-label">Earned media value</div>
+          </div>
+        </div>
+
+        <div class="body-text mt-12 max-w-960" style="text-align: center; margin-left: auto; margin-right: auto;">If we hit these targets, we approve Phase 2 expansion to PSG, Formula E, and Tennis for <$100K total.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 13: CLOSING -->
+    <div class="slide" data-slide="13">
+      <div class="slide-body center">
+        <div class="label mb-8">The decision</div>
+        <h2 class="t2 mb-8">Approve $504K for<br>FIFA 2026 launch</h2>
+        <p class="slide-subtitle" style="text-align: center;">Prove the model. Validate scalability. Unlock 3-year roadmap for all Qatar Airways partnerships.</p>
+
+        <div class="stats-grid mt-12" style="max-width: 1200px;">
+          <div class="stat">
+            <div class="stat-num">$504K</div>
+            <div class="stat-label">Year 1 investment</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">4,990x</div>
+            <div class="stat-label">ROI projection</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">$2.5B</div>
+            <div class="stat-label">Lifetime value generated</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-num">10+</div>
+            <div class="stat-label">Partnerships unlocked (2027-2028)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="nav-controls">
+    <div class="nav-btn" onclick="prevSlide()">←</div>
+    <div class="nav-btn" onclick="nextSlide()">→</div>
+  </div>
+  <div class="slide-counter">
+    <span id="current-slide">1</span> / <span id="total-slides">13</span>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 13;
+
+    function showSlide(n) {
+      const slides = document.querySelectorAll('.slide');
+      if (n > totalSlides) currentSlide = totalSlides;
+      if (n < 1) currentSlide = 1;
+
+      slides.forEach(slide => slide.classList.remove('active'));
+      slides[currentSlide - 1].classList.add('active');
+
+      document.getElementById('current-slide').textContent = currentSlide;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        showSlide(currentSlide);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        showSlide(currentSlide);
+      }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    // Initialize
+    document.getElementById('total-slides').textContent = totalSlides;
+    showSlide(currentSlide);
+
+    // Auto-scale deck to fit viewport
+    function scaleDeck() {
+      const deck = document.getElementById('deck');
+      const scaleX = window.innerWidth / 1920;
+      const scaleY = window.innerHeight / 1080;
+      const scale = Math.min(scaleX, scaleY);
+      deck.style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener('resize', scaleDeck);
+    scaleDeck();
+  </script>
+</body>
+</html>
