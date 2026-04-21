@@ -414,9 +414,99 @@
       line-height: 1.6;
     }
 
+    /* ── IMAGE PANEL ── */
+    .img-panel {
+      flex: 1;
+      border-radius: var(--radius-lg);
+      background: var(--surface-02);
+      border: 1px solid var(--border-default);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-subtle);
+      font-size: 16px;
+      overflow: hidden;
+      min-height: 400px;
+    }
+
+    .img-panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+    }
+
+    /* ── SPLIT LAYOUTS ── */
+    .split-layout {
+      display: flex;
+      gap: var(--space-12);
+      align-items: center;
+      height: 100%;
+    }
+
+    .split-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    .split-col.narrow {
+      flex: 0 0 45%;
+    }
+
+    .split-col.wide {
+      flex: 1;
+    }
+
+    /* ── JOURNEY CARDS ── */
+    .journey-row {
+      display: flex;
+      gap: var(--space-6);
+      margin-top: var(--space-8);
+    }
+
+    .journey-card {
+      flex: 1;
+      background: var(--surface-01);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: var(--space-8);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .journey-num {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .journey-title {
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--text-default);
+    }
+
+    .journey-body {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
     /* ── UTILITIES ── */
+    .mt-4 { margin-top: var(--space-4); }
+    .mt-6 { margin-top: var(--space-6); }
+    .mt-8 { margin-top: var(--space-8); }
     .mt-12 { margin-top: var(--space-12); }
+    .mt-16 { margin-top: var(--space-16); }
+    .mb-4 { margin-bottom: var(--space-4); }
+    .mb-6 { margin-bottom: var(--space-6); }
     .mb-8 { margin-bottom: var(--space-8); }
+    .max-w-800 { max-width: 800px; }
     .max-w-960 { max-width: 960px; }
 
     /* ── NAVIGATION ── */
@@ -510,37 +600,50 @@
         <div class="meta"><span>01</span></div>
       </div>
       <div class="slide-body">
-        <div class="label">5-stage journey</div>
-        <h2 class="t3 mb-8">From casual fan to<br>tournament champion</h2>
+        <div class="label">User journey</div>
+        <h2 class="t3 mb-6">From first download<br>to tournament champion</h2>
 
-        <div class="phase-grid">
-          <div class="phase-col">
-            <div class="phase-num">Stage 1 — Day 0</div>
-            <div class="phase-title">Discovery</div>
-            <div class="phase-body">Download from QA app, in-flight promo, or social. Complete onboarding in 60 seconds. Select team. Take first quiz.</div>
-            <div class="stat mt-12">
-              <div class="stat-num">80%</div>
-              <div class="stat-label">Onboarding completion target</div>
+        <div class="split-layout" style="margin-top: var(--space-12);">
+          <div class="split-col narrow">
+            <div class="journey-row" style="flex-direction: column; gap: var(--space-4);">
+              <div class="journey-card">
+                <div class="journey-num">1. Discovery</div>
+                <div class="journey-title">Download & Onboard</div>
+                <div class="journey-body">Select team. Take first quiz. 60 seconds to activation.</div>
+              </div>
+
+              <div class="journey-card">
+                <div class="journey-num">2. Activation</div>
+                <div class="journey-title">First Week Habit</div>
+                <div class="journey-body">Daily match alerts. Earn first badge. Leaderboard entry.</div>
+              </div>
+
+              <div class="journey-card">
+                <div class="journey-num">3. Momentum</div>
+                <div class="journey-title">Tournament Engagement</div>
+                <div class="journey-body">Weekly competitions. Social challenges. Climb leaderboard.</div>
+              </div>
+            </div>
+
+            <div class="stats-grid-2col mt-8" style="grid-template-columns: 1fr 1fr; gap: var(--space-6);">
+              <div class="stat">
+                <div class="stat-num">80%</div>
+                <div class="stat-label">Onboarding completion</div>
+              </div>
+              <div class="stat">
+                <div class="stat-num">50%</div>
+                <div class="stat-label">Day 7 retention</div>
+              </div>
             </div>
           </div>
 
-          <div class="phase-col">
-            <div class="phase-num">Stage 2 — Week 1</div>
-            <div class="phase-title">Activation</div>
-            <div class="phase-body">Daily match alerts. Earn first badge. Understand reward mechanics. Form habit loop.</div>
-            <div class="stat mt-12">
-              <div class="stat-num">50%</div>
-              <div class="stat-label">Day 7 retention target</div>
-            </div>
-          </div>
-
-          <div class="phase-col">
-            <div class="phase-num">Stage 3-5 — Weeks 2-6</div>
-            <div class="phase-title">Momentum</div>
-            <div class="phase-body">Weekly competitions. Social challenges. Knockout intensity. Grand prize draw.</div>
-            <div class="stat mt-12">
-              <div class="stat-num">4+</div>
-              <div class="stat-label">Sessions per user per week</div>
+          <div class="split-col wide">
+            <div class="img-panel" style="min-height: 580px;">
+              <div style="text-align: center; color: var(--text-muted);">
+                <div style="font-size: 48px; margin-bottom: 16px;">📱</div>
+                <div>UI mockup placeholder</div>
+                <div style="font-size: 14px; margin-top: 8px;">Team selection → Quiz → Leaderboard flow</div>
+              </div>
             </div>
           </div>
         </div>
@@ -554,48 +657,52 @@
         <div class="meta"><span>01</span></div>
       </div>
       <div class="slide-body">
-        <div class="label">Personalization engine</div>
-        <h2 class="t3 mb-8">Every fan gets their<br>own World Cup</h2>
+        <div class="label">Personalization</div>
+        <h2 class="t3 mb-6">Every fan gets their<br>own World Cup</h2>
 
-        <div class="feature-grid">
-          <div class="feature-col">
-            <div class="feature-icon">🎯</div>
-            <div class="feature-title">Team-Based</div>
-            <div class="feature-body">Content filtered by selected team. Notifications only for your team's matches. Leaderboard shows tribal competition.</div>
+        <div class="split-layout" style="margin-top: var(--space-12);">
+          <div class="split-col narrow">
+            <div class="journey-row" style="flex-direction: column; gap: var(--space-4);">
+              <div class="journey-card">
+                <div class="feature-icon" style="margin-bottom: var(--space-3);">🎯</div>
+                <div class="journey-title">Team-Based</div>
+                <div class="journey-body">Content filtered by selected team. Notifications for your matches only.</div>
+              </div>
+
+              <div class="journey-card">
+                <div class="feature-icon" style="margin-bottom: var(--space-3);">📊</div>
+                <div class="journey-title">Performance</div>
+                <div class="journey-body">Adaptive difficulty. Personalized challenges target weak areas.</div>
+              </div>
+
+              <div class="journey-card">
+                <div class="feature-icon" style="margin-bottom: var(--space-3);">⏰</div>
+                <div class="journey-title">Behavioral</div>
+                <div class="journey-body">Optimal notification timing. Quiz types matched to patterns.</div>
+              </div>
+            </div>
           </div>
 
-          <div class="feature-col">
-            <div class="feature-icon">📊</div>
-            <div class="feature-title">Performance-Based</div>
-            <div class="feature-body">Adaptive difficulty adjusts to accuracy. Personalized challenges target weak areas.</div>
-          </div>
+          <div class="split-col wide">
+            <div class="img-panel" style="min-height: 440px; margin-bottom: var(--space-8);">
+              <div style="text-align: center; color: var(--text-muted);">
+                <div style="font-size: 48px; margin-bottom: 16px;">🔔</div>
+                <div>Personalization UI placeholder</div>
+                <div style="font-size: 14px; margin-top: 8px;">Push notification → Team filter → Adaptive quiz</div>
+              </div>
+            </div>
 
-          <div class="feature-col">
-            <div class="feature-icon">⏰</div>
-            <div class="feature-title">Behavioral</div>
-            <div class="feature-body">Notifications sent at user's preferred time. Quiz types matched to engagement patterns.</div>
-          </div>
-        </div>
+            <div class="stats-grid-2col" style="grid-template-columns: repeat(2, 1fr); gap: var(--space-6);">
+              <div class="stat">
+                <div class="stat-num">70%</div>
+                <div class="stat-label">Notification open rate (vs 20% industry avg)</div>
+              </div>
 
-        <div class="stats-grid mt-12">
-          <div class="stat">
-            <div class="stat-num">70%</div>
-            <div class="stat-label">Notification open rate target (vs 20% industry average)</div>
-          </div>
-
-          <div class="stat">
-            <div class="stat-num">4</div>
-            <div class="stat-label">Languages: English, Spanish, French, Arabic</div>
-          </div>
-
-          <div class="stat">
-            <div class="stat-num">2M+</div>
-            <div class="stat-label">Quiz completions across tournament</div>
-          </div>
-
-          <div class="stat">
-            <div class="stat-num">500K</div>
-            <div class="stat-label">Active users target by tournament end</div>
+              <div class="stat">
+                <div class="stat-num">4+</div>
+                <div class="stat-label">Sessions per user per week</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -620,27 +727,27 @@
         <div class="label">The opportunity</div>
         <h2 class="t3 mb-8">Underutilized<br>sponsorship asset</h2>
 
-        <div class="body-text max-w-960">Qatar Airways pays $50M annually for FIFA partnership through 2030. Current activation: jersey sleeve branding and hospitality. Digital engagement: minimal. Emirates, Etihad, Turkish Airlines have the same gap. First mover wins.</div>
+        <div class="body-text max-w-800 mb-8">Qatar Airways pays $50M annually for FIFA partnership through 2030. Current activation: jersey branding and hospitality. Digital engagement: minimal.</div>
 
         <div class="stats-grid mt-12">
           <div class="stat">
             <div class="stat-num">$100M+</div>
-            <div class="stat-label">Annual spend on sports sponsorships (FIFA, PSG, Bayern, Formula E)</div>
+            <div class="stat-label">Annual spend on sports sponsorships</div>
           </div>
 
           <div class="stat">
             <div class="stat-num">5B</div>
-            <div class="stat-label">Global viewers for FIFA World Cup 2026</div>
+            <div class="stat-label">Global viewers for World Cup 2026</div>
           </div>
 
           <div class="stat">
             <div class="stat-num">104</div>
-            <div class="stat-label">Matches (48 teams, USA/Canada/Mexico)</div>
+            <div class="stat-label">Matches across tournament</div>
           </div>
 
           <div class="stat">
             <div class="stat-num">0</div>
-            <div class="stat-label">Competitors with integrated fan engagement platforms</div>
+            <div class="stat-label">Competitors with integrated platforms</div>
           </div>
         </div>
       </div>
@@ -656,41 +763,41 @@
         <div class="label">Return on investment</div>
         <h2 class="t3 mb-8">$2.5B lifetime value<br>on $504K investment</h2>
 
-        <div class="stats-grid-2col" style="grid-template-columns: repeat(2, 1fr); gap: var(--space-12); margin-top: var(--space-12);">
-          <div class="card" style="padding: var(--space-12);">
-            <div class="label mb-8">Investment (Year 1)</div>
+        <div class="stats-grid-2col" style="grid-template-columns: repeat(2, 1fr); gap: var(--space-12); margin-top: var(--space-8);">
+          <div class="card" style="padding: var(--space-10);">
+            <div class="journey-num mb-6">Investment</div>
             <div class="stat mb-8">
               <div class="stat-num">$504K</div>
               <div class="stat-label">Total FIFA 2026 budget</div>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 16px;">
-              <div class="body-text">Development: $170K</div>
-              <div class="body-text">Infrastructure: $14K</div>
-              <div class="body-text">Content: $30K</div>
-              <div class="body-text">Operations: $175K</div>
-              <div class="body-text">Rewards: $45K</div>
-              <div class="body-text">Marketing: $70K</div>
+            <div style="display: flex; flex-direction: column; gap: 12px; font-size: 18px; color: var(--text-body);">
+              <div>Development: $170K</div>
+              <div>Operations: $175K</div>
+              <div>Marketing: $70K</div>
+              <div>Rewards: $45K</div>
+              <div>Content: $30K</div>
+              <div>Infrastructure: $14K</div>
             </div>
           </div>
 
-          <div class="card" style="padding: var(--space-12);">
-            <div class="label mb-8">Return</div>
+          <div class="card" style="padding: var(--space-10);">
+            <div class="journey-num mb-6">Return</div>
             <div class="stat mb-8">
               <div class="stat-num">$2.515B</div>
               <div class="stat-label">Total value generated</div>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 16px;">
-              <div class="body-text">100K new Privilege Club members</div>
-              <div class="body-text">$2.5B lifetime value ($5K avg LTV × 10 years)</div>
-              <div class="body-text">$15M earned media value</div>
-              <div class="body-text">26x sponsorship activation multiplier</div>
-              <div class="body-text">"Most engaged sponsor" positioning</div>
+            <div style="display: flex; flex-direction: column; gap: 12px; font-size: 18px; color: var(--text-body);">
+              <div>100K new Privilege Club members</div>
+              <div>$2.5B lifetime value ($5K × 10 yrs)</div>
+              <div>$15M earned media value</div>
+              <div>26x sponsorship activation</div>
+              <div>"Most engaged sponsor" status</div>
             </div>
           </div>
         </div>
 
         <div class="stat mt-12" style="text-align: center;">
-          <div class="stat-num" style="font-size: 72px;">4,990x ROI</div>
+          <div class="stat-num" style="font-size: 64px;">4,990x ROI</div>
         </div>
       </div>
     </div>
@@ -702,39 +809,39 @@
         <div class="meta"><span>02</span></div>
       </div>
       <div class="slide-body">
-        <div class="label">Platform foundation</div>
-        <h2 class="t3 mb-8">FIFA is Phase 1 of<br>3-year roadmap</h2>
+        <div class="label">Scalability</div>
+        <h2 class="t3 mb-6">Build once for FIFA<br>Deploy everywhere</h2>
 
-        <div class="body-text max-w-960 mb-8">Build once for FIFA. Deploy everywhere for PSG, Formula E, Tennis, Concerts at <$2K per partnership. Universal event architecture enables zero-refactor expansion.</div>
+        <div class="body-text max-w-800 mb-8">Universal event architecture enables expansion to all Qatar Airways partnerships at <$2K per partnership. No re-engineering required.</div>
 
-        <div class="phase-grid">
+        <div class="phase-grid" style="margin-top: var(--space-8);">
           <div class="phase-col">
-            <div class="phase-num">2026 — FIFA Core</div>
-            <div class="phase-title">Build Universal Platform</div>
+            <div class="phase-num">2026 — FIFA</div>
+            <div class="phase-title">Universal Platform</div>
             <div class="phase-body">Event-agnostic architecture. AI content generation. Plug-and-play handlers.</div>
-            <div class="stat mt-12">
+            <div class="stat mt-8">
               <div class="stat-num">$504K</div>
-              <div class="stat-label">One-time core investment</div>
+              <div class="stat-label">One-time investment</div>
             </div>
           </div>
 
           <div class="phase-col">
             <div class="phase-num">2027 — Multi-Sport</div>
-            <div class="phase-title">Expand to All QA Partnerships</div>
-            <div class="phase-body">PSG, Bayern, Roma (soccer). Formula E. Tennis Grand Slams.</div>
-            <div class="stat mt-12">
+            <div class="phase-title">All QA Partnerships</div>
+            <div class="phase-body">PSG, Bayern, Roma. Formula E. Tennis Grand Slams.</div>
+            <div class="stat mt-8">
               <div class="stat-num">$30K</div>
-              <div class="stat-label">5 partnerships × 2 days each</div>
+              <div class="stat-label">5 partnerships</div>
             </div>
           </div>
 
           <div class="phase-col">
             <div class="phase-num">2028 — Lifestyle</div>
-            <div class="phase-title">Privilege Club Collection</div>
-            <div class="phase-body">Concerts, dining, cultural experiences. In-app Avios redemption.</div>
-            <div class="stat mt-12">
+            <div class="phase-title">Privilege Club</div>
+            <div class="phase-body">Concerts, dining, cultural. In-app Avios redemption.</div>
+            <div class="stat mt-8">
               <div class="stat-num">$30K</div>
-              <div class="stat-label">3 lifestyle handlers + redemption flow</div>
+              <div class="stat-label">3 lifestyle categories</div>
             </div>
           </div>
         </div>
@@ -742,22 +849,22 @@
         <div class="stats-grid mt-12">
           <div class="stat">
             <div class="stat-num">$564K</div>
-            <div class="stat-label">Total 3-year investment (FIFA + 10 partnerships)</div>
+            <div class="stat-label">Total 3-year investment</div>
           </div>
 
           <div class="stat">
             <div class="stat-num">99.8%</div>
-            <div class="stat-label">Cost reduction per partnership after FIFA (vs custom app)</div>
+            <div class="stat-label">Cost reduction vs custom apps</div>
           </div>
 
           <div class="stat">
             <div class="stat-num">10+</div>
-            <div class="stat-label">Partnerships activated by 2028</div>
+            <div class="stat-label">Partnerships by 2028</div>
           </div>
 
           <div class="stat">
             <div class="stat-num">5M</div>
-            <div class="stat-label">Users by 2028 (10x FIFA base)</div>
+            <div class="stat-label">Users by 2028</div>
           </div>
         </div>
       </div>
@@ -779,46 +886,46 @@
         <div class="meta"><span>03</span></div>
       </div>
       <div class="slide-body">
-        <div class="label">Timeline</div>
-        <h2 class="t3 mb-8">May to August 2026</h2>
+        <div class="label">8-phase roadmap</div>
+        <h2 class="t3 mb-6">May to August 2026</h2>
 
-        <div class="feature-grid">
-          <div class="feature-col">
-            <div class="phase-num">Phase 1-2 — May</div>
-            <div class="feature-title">Foundation + Backend</div>
-            <div class="feature-body">Universal event architecture. Match scheduler. Quiz engine. Leaderboard service. Firebase + Redis setup.</div>
+        <div class="phase-grid" style="margin-top: var(--space-8);">
+          <div class="phase-col">
+            <div class="phase-num">May — Phases 1-2</div>
+            <div class="phase-title">Foundation</div>
+            <div class="phase-body">Universal event architecture. Match scheduler. Quiz engine. Leaderboard.</div>
           </div>
 
-          <div class="feature-col">
-            <div class="phase-num">Phase 3-4 — June</div>
-            <div class="feature-title">Frontend + Content</div>
-            <div class="feature-body">Angular UI refresh. Push notifications. AI content generation for 2,080 questions.</div>
+          <div class="phase-col">
+            <div class="phase-num">June — Phases 3-4</div>
+            <div class="phase-title">Build</div>
+            <div class="phase-body">Angular UI. Push notifications. AI content generation (2,080 questions).</div>
           </div>
 
-          <div class="feature-col">
-            <div class="phase-num">Phase 5 — July</div>
-            <div class="feature-title">Beta Testing</div>
-            <div class="feature-body">10K beta users. Performance testing. Bug fixes. Analytics dashboard.</div>
+          <div class="phase-col">
+            <div class="phase-num">July — Phase 5</div>
+            <div class="phase-title">Beta</div>
+            <div class="phase-body">10K beta users. Performance testing. Bug fixes. Analytics dashboard.</div>
           </div>
         </div>
 
-        <div class="feature-grid mt-12">
-          <div class="feature-col">
-            <div class="phase-num">Phase 6 — August</div>
-            <div class="feature-title">Public Launch</div>
-            <div class="feature-body">Press release. Social campaign. In-flight promo. 100K downloads Week 1.</div>
+        <div class="phase-grid mt-8">
+          <div class="phase-col">
+            <div class="phase-num">August — Phase 6</div>
+            <div class="phase-title">Launch</div>
+            <div class="phase-body">Press release. Social campaign. In-flight promo. 100K downloads Week 1.</div>
           </div>
 
-          <div class="feature-col">
-            <div class="phase-num">Phase 7 — June-July</div>
-            <div class="feature-title">Tournament Ops</div>
-            <div class="feature-body">24/7 coverage. Content team publishes 4 quizzes per match. DevOps monitors 99.9% uptime.</div>
+          <div class="phase-col">
+            <div class="phase-num">June-July — Phase 7</div>
+            <div class="phase-title">Tournament Ops</div>
+            <div class="phase-body">24/7 coverage. 4 quizzes per match. 99.9% uptime monitoring.</div>
           </div>
 
-          <div class="feature-col">
-            <div class="phase-num">Phase 8 — August</div>
-            <div class="feature-title">Grand Prize</div>
-            <div class="feature-body">Livestreamed draw. Winner receives 2 Final tickets + flights. Retrospective.</div>
+          <div class="phase-col">
+            <div class="phase-num">August — Phase 8</div>
+            <div class="phase-title">Grand Prize</div>
+            <div class="phase-body">Livestreamed draw. 2 Final tickets + flights. Retrospective.</div>
           </div>
         </div>
       </div>
@@ -832,57 +939,57 @@
       </div>
       <div class="slide-body">
         <div class="label">Resources</div>
-        <h2 class="t3 mb-8">Team & technology</h2>
+        <h2 class="t3 mb-6">Team & technology</h2>
 
-        <div class="stats-grid-2col" style="grid-template-columns: 1fr 1fr; gap: var(--space-12); margin-top: var(--space-12);">
-          <div class="card" style="padding: var(--space-12);">
-            <div class="label mb-8">Core Team (6 months)</div>
-            <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div class="stats-grid-2col" style="grid-template-columns: 1fr 1fr; gap: var(--space-12); margin-top: var(--space-8);">
+          <div class="card" style="padding: var(--space-10);">
+            <div class="journey-num mb-6">Core Team (6 months)</div>
+            <div style="display: flex; flex-direction: column; gap: 16px; font-size: 18px; color: var(--text-body);">
               <div>
-                <div class="feature-title">2 Backend Engineers</div>
-                <div class="caption">Universal event system, quiz engine, leaderboard, Avios API</div>
+                <div style="font-weight: 500; color: var(--text-default); margin-bottom: 4px;">2 Backend Engineers</div>
+                <div style="font-size: 16px; color: var(--text-muted);">Event system, quiz engine, Avios API</div>
               </div>
               <div>
-                <div class="feature-title">1 Frontend Engineer</div>
-                <div class="caption">Angular 18, TypeScript, progressive web app</div>
+                <div style="font-weight: 500; color: var(--text-default); margin-bottom: 4px;">1 Frontend Engineer</div>
+                <div style="font-size: 16px; color: var(--text-muted);">Angular 18, TypeScript, PWA</div>
               </div>
               <div>
-                <div class="feature-title">2 Content Editors</div>
-                <div class="caption">AI-assisted question generation, editorial review</div>
+                <div style="font-weight: 500; color: var(--text-default); margin-bottom: 4px;">2 Content Editors</div>
+                <div style="font-size: 16px; color: var(--text-muted);">AI-assisted generation, editorial review</div>
               </div>
               <div>
-                <div class="feature-title">1 Product Manager</div>
-                <div class="caption">Roadmap, stakeholder coordination, FIFA partnership</div>
+                <div style="font-weight: 500; color: var(--text-default); margin-bottom: 4px;">1 Product Manager</div>
+                <div style="font-size: 16px; color: var(--text-muted);">Roadmap, stakeholder coordination</div>
               </div>
               <div>
-                <div class="feature-title">1 DevOps Engineer</div>
-                <div class="caption">GCP infrastructure, monitoring, incident response</div>
+                <div style="font-weight: 500; color: var(--text-default); margin-bottom: 4px;">1 DevOps Engineer</div>
+                <div style="font-size: 16px; color: var(--text-muted);">GCP infrastructure, monitoring</div>
               </div>
             </div>
           </div>
 
-          <div class="card" style="padding: var(--space-12);">
-            <div class="label mb-8">Technology Stack</div>
-            <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div class="card" style="padding: var(--space-10);">
+            <div class="journey-num mb-6">Technology Stack</div>
+            <div style="display: flex; flex-direction: column; gap: 16px; font-size: 18px; color: var(--text-body);">
               <div>
-                <div class="feature-title">Frontend</div>
-                <div class="caption">Angular 18, TypeScript, Flow Design System, GitHub Pages</div>
+                <div style="font-weight: 500; color: var(--text-default); margin-bottom: 4px;">Frontend</div>
+                <div style="font-size: 16px; color: var(--text-muted);">Angular 18, TypeScript, FDS, GitHub Pages</div>
               </div>
               <div>
-                <div class="feature-title">Backend</div>
-                <div class="caption">Node.js, Firebase (Auth, Firestore, Cloud Messaging), Redis</div>
+                <div style="font-weight: 500; color: var(--text-default); margin-bottom: 4px;">Backend</div>
+                <div style="font-size: 16px; color: var(--text-muted);">Node.js, Firebase, Redis</div>
               </div>
               <div>
-                <div class="feature-title">AI Content</div>
-                <div class="caption">GPT-4 integration for quiz generation (80% automated)</div>
+                <div style="font-weight: 500; color: var(--text-default); margin-bottom: 4px;">AI Content</div>
+                <div style="font-size: 16px; color: var(--text-muted);">GPT-4 (80% automated)</div>
               </div>
               <div>
-                <div class="feature-title">Infrastructure</div>
-                <div class="caption">Google Cloud Platform, Firebase Hosting, BigQuery analytics</div>
+                <div style="font-weight: 500; color: var(--text-default); margin-bottom: 4px;">Infrastructure</div>
+                <div style="font-size: 16px; color: var(--text-muted);">Google Cloud Platform, BigQuery</div>
               </div>
               <div>
-                <div class="feature-title">Integrations</div>
-                <div class="caption">FIFA Match API, Qatar Airways Avios API, OneSignal push</div>
+                <div style="font-weight: 500; color: var(--text-default); margin-bottom: 4px;">Integrations</div>
+                <div style="font-size: 16px; color: var(--text-muted);">FIFA API, Avios API, OneSignal</div>
               </div>
             </div>
           </div>
@@ -897,13 +1004,13 @@
         <div class="meta"><span>03</span></div>
       </div>
       <div class="slide-body">
-        <div class="label">Measurement</div>
-        <h2 class="t3 mb-8">How we define success</h2>
+        <div class="label">Success criteria</div>
+        <h2 class="t3 mb-6">Phase 2 expansion gate</h2>
 
-        <div class="stats-grid mt-12">
+        <div class="stats-grid mt-8">
           <div class="stat">
             <div class="stat-num">500K+</div>
-            <div class="stat-label">Active users by tournament end</div>
+            <div class="stat-label">Active users</div>
           </div>
 
           <div class="stat">
@@ -913,27 +1020,27 @@
 
           <div class="stat">
             <div class="stat-num">4+</div>
-            <div class="stat-label">Sessions per user per week</div>
+            <div class="stat-label">Sessions per user/week</div>
           </div>
 
           <div class="stat">
             <div class="stat-num">2M+</div>
-            <div class="stat-label">Quiz completions across tournament</div>
+            <div class="stat-label">Quiz completions</div>
           </div>
 
           <div class="stat">
             <div class="stat-num">100K</div>
-            <div class="stat-label">New Privilege Club sign-ups</div>
+            <div class="stat-label">Privilege Club sign-ups</div>
           </div>
 
           <div class="stat">
             <div class="stat-num">99.9%</div>
-            <div class="stat-label">Platform uptime during tournament</div>
+            <div class="stat-label">Platform uptime</div>
           </div>
 
           <div class="stat">
             <div class="stat-num">50%</div>
-            <div class="stat-label">Day 7 retention rate</div>
+            <div class="stat-label">Day 7 retention</div>
           </div>
 
           <div class="stat">
@@ -942,36 +1049,36 @@
           </div>
         </div>
 
-        <div class="body-text mt-12 max-w-960" style="text-align: center; margin-left: auto; margin-right: auto;">If we hit these targets, we approve Phase 2 expansion to PSG, Formula E, and Tennis for <$100K total.</div>
+        <div class="body-text mt-12 max-w-800" style="text-align: center; margin-left: auto; margin-right: auto; font-size: 22px;">If these targets are met, approve Phase 2 expansion to PSG, Formula E, and Tennis for <$100K.</div>
       </div>
     </div>
 
     <!-- SLIDE 13: CLOSING -->
     <div class="slide" data-slide="13">
       <div class="slide-body center">
-        <div class="label mb-8">The decision</div>
+        <div class="label mb-6">Next steps</div>
         <h2 class="t2 mb-8">Approve $504K for<br>FIFA 2026 launch</h2>
-        <p class="slide-subtitle" style="text-align: center;">Prove the model. Validate scalability. Unlock 3-year roadmap for all Qatar Airways partnerships.</p>
+        <p class="slide-subtitle" style="text-align: center; max-width: 800px;">Prove the model. Validate scalability. Unlock 3-year roadmap for all Qatar Airways partnerships.</p>
 
-        <div class="stats-grid mt-12" style="max-width: 1200px;">
+        <div class="stats-grid mt-16" style="max-width: 1200px;">
           <div class="stat">
             <div class="stat-num">$504K</div>
-            <div class="stat-label">Year 1 investment</div>
+            <div class="stat-label">Investment</div>
           </div>
 
           <div class="stat">
             <div class="stat-num">4,990x</div>
-            <div class="stat-label">ROI projection</div>
+            <div class="stat-label">ROI</div>
           </div>
 
           <div class="stat">
             <div class="stat-num">$2.5B</div>
-            <div class="stat-label">Lifetime value generated</div>
+            <div class="stat-label">Lifetime value</div>
           </div>
 
           <div class="stat">
             <div class="stat-num">10+</div>
-            <div class="stat-label">Partnerships unlocked (2027-2028)</div>
+            <div class="stat-label">Partnerships unlocked</div>
           </div>
         </div>
       </div>
