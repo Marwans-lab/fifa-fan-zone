@@ -374,12 +374,44 @@ const SEGMENTS = buildSegments();
                 r="21"
                 style="fill: var(--c-lt-bg); pointer-events: none;"
               />
-              <!-- Inner white circle -->
+              <!-- Progress track (background ring) -->
+              <circle
+                class="spin-wheel__progress-ring-track"
+                cx="50"
+                cy="50"
+                r="17"
+                style="
+                  fill: none;
+                  stroke: var(--f-brand-color-border-default);
+                  stroke-width: 2.8;
+                  pointer-events: none;
+                "
+              />
+              <!-- Progress ring (fills as questions are answered) -->
+              <circle
+                class="spin-wheel__progress-ring"
+                cx="50"
+                cy="50"
+                r="17"
+                [attr.stroke-dasharray]="centreProgressCircumference"
+                [attr.stroke-dashoffset]="centreProgressOffset()"
+                style="
+                  fill: none;
+                  stroke: var(--f-brand-color-flight-status-confirmed);
+                  stroke-width: 2.8;
+                  stroke-linecap: round;
+                  pointer-events: none;
+                  transform: rotate(-90deg);
+                  transform-origin: 50px 50px;
+                  transition: stroke-dashoffset var(--f-brand-motion-duration-quick) var(--f-brand-motion-easing-default);
+                "
+              />
+              <!-- Inner white circle (70% of original r=18 → r=12.6) -->
               <circle
                 class="spin-wheel__centre-disc"
                 cx="50"
                 cy="50"
-                r="18"
+                r="12.6"
                 style="fill: var(--c-lt-surface); pointer-events: none;"
               />
               <!-- Current value number -->
@@ -587,6 +619,15 @@ export class SpinWheelQuizPage implements OnInit, OnDestroy {
 
   /** Action button is always enabled (all segments are valid values). */
   readonly canAct = computed(() => true);
+
+  /** Circumference of the centre progress ring (r=17). */
+  readonly centreProgressCircumference = 2 * Math.PI * 17;
+
+  /** Stroke-dashoffset for the centre progress ring countdown. */
+  readonly centreProgressOffset = computed(() => {
+    const pct = this.progressPercent() / 100;
+    return this.centreProgressCircumference * (1 - pct);
+  });
 
   /** CSS styles for the rotating SVG group. */
   readonly wheelGroupStyle = computed((): Record<string, string> => ({
